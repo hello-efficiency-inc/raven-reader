@@ -25,7 +25,8 @@ app.on('ready', function () {
         minWidth: 1024,
         minHeight: 600,
         width: mainWindowState.width,
-        height: mainWindowState.height
+        height: mainWindowState.height,
+        resizable:false
     });
 
     if (mainWindowState.isMaximized) {

@@ -114,6 +114,11 @@ body{
         top:12px;
       }
     }
+
+    .dashboard-list-item:hover{
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.85);
+    }
   }
 }
 
@@ -137,6 +142,56 @@ body{
   right:0;
   bottom:0;
   min-width:550px;
+
+  .manage-article{
+    width:100%;
+    height:45px;
+    background:#fafafa;
+    border-bottom:1px solid rgba(55,53,112,0.1);
+    box-shadow:0 1px 3px rgba(55,53,112,0.08);
+    line-height:45px;
+    position:absolute;
+    z-index:99;
+
+    button:not(.btn-flat){
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      -ms-appearance: none;
+      -o-appearance: none;
+      appearance: none;
+      background: #fff;
+      background-clip: padding-box;
+      border-radius: 3px;
+      border: 1px solid rgba(55,53,112,0.1);
+      box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+      display: inline-block;
+      font-family:inherit;
+      cursor:pointer;
+      font-size: 0.7em;
+      font-weight: bold;
+      height: 28px;
+      line-height: 0.7;
+      margin-right: 10px;
+      outline: none;
+      padding: 0.58rem;
+      position: relative;
+      top: -1px;
+    }
+
+    .edit-article-tags{
+      display:inline-block;
+      position:relative;
+      margin-left:20px;
+    }
+  }
+
+  img{
+    border:0;
+    vertical-align: middle;
+    max-width:100%;
+    display:block;
+    height:auto;
+  }
 }
 
 .articles{
@@ -186,4 +241,56 @@ body{
       }
     }
   }
+}
+
+.add-feed-container{
+  left:300px;
+  position:absolute;
+  padding:30px;
+  top:0;
+  left:300px;
+  right:0;
+  bottom:0;
+}
+
+.add-feed-input{
+  .form-control{
+    display: block;
+    width:320px;
+    font-family:inherit;
+    height: 30px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  }
+}
+
+.add-button{
+  background:#444B6E;
+  border:none;
+  border-radius:3px;
+  box-shadow: 0 1px 0 0 rgba(0,0,0,0.08) inset 0 -1px 0 0 #444B6E;
+  color:white;
+  font-weight:500;
+  letter-spacing:1px;
+  outline:none;
+  padding:10px 12px;
+  text-align:center;
+  text-decoration:none;
+  text-transform:uppercase;;
+  float:left;
+  font-size:0.8em;
+  position:relative;
+  top:8px;
+  right:0;
+  font-family:inherit;
+  cursor:pointer;
 }

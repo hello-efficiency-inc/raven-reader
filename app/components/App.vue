@@ -5,13 +5,13 @@
         <h3 class="sidebar-header-text">Articles</h3>
       </div>
       <ul class="dashboard-list">
-        <li class="dashboard-list-item">
+        <li class="dashboard-list-item" v-on:click="allArticles()">
           <i class="fa fa-fw fa-book"></i> All Articles
         </li>
       </ul>
       <div class="sidebar-header">
         <h3 class="sidebar-header-text">Feeds</h3>
-        <button class="btn-add-feed" type="button"><i class="fa fa-plus"></i></button>
+        <button v-on:click="addFeed()" class="btn-add-feed" type="button"><i class="fa fa-plus"></i></button>
       </div>
       <ul class="dashboard-list">
         <li class="dashboard-list-item">
@@ -24,4 +24,14 @@
   </div>
 </template>
 <script>
+export default{
+  methods: {
+    allArticles(){
+      return this.$route.router.go({path: '/',replace: true})
+    },
+    addFeed(){
+      return this.$route.router.go({path:'/article/add' ,replace: true})
+    }
+  }
+}
 </script>

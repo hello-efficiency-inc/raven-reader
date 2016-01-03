@@ -4,6 +4,15 @@
   </div>
   <div class="dashboard-articles">
     <ul class="articles">
+      <li class="article" v-on:click="articleDetail()">
+        <h3>11 PREDICTIONS FOR WEARABLE TECH IN 2016</h3>
+        <div class="description">
+          Next year is go time for many wearable categories. As early adopters are now educated on what the tech is, they will (and have already) begin to question why doesn’t translate into value. 2016 will ...
+        </div>
+        <ul class="article-tags">
+          <li>politics</li>
+        </ul>
+      </li>
       <li class="article">
         <h3>11 PREDICTIONS FOR WEARABLE TECH IN 2016</h3>
         <div class="description">
@@ -46,3 +55,12 @@
     <router-view></router-view>
   </div>
 </template>
+<script>
+export default{
+  methods:{
+    articleDetail(){
+      return this.$route.router.go({path: '/article/1',replace: true})
+    }
+  }
+}
+</script>

@@ -23,6 +23,7 @@ const destDir = projectDir.cwd(dest)
 const filesToCopy = [
     './app/app.html',
     './app/fonts/**/*',
+    './app/helpers/**/*',
     './app/background.js',
     './app/vendor/**/*',
     './app/node_modules/**/*',

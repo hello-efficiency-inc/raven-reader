@@ -9,6 +9,14 @@ import Router from 'vue-router'
 import App from './components/App.vue'
 import Main from './components/Main.vue'
 import AddArticle from './components/AddArticle.vue'
+import Article from './components/Article.vue'
+
+// Check if directory for storing article exists or not
+var dirYes = jetpack.exists(useDataDir.path('streams'))
+
+if(dirYes){
+  fs.mkdir(useDataDir.path('streams'))
+}
 
 Vue.use(Router);
 
@@ -19,7 +27,12 @@ var router = new Router({
 
 router.map({
   '/':{
-    component: Main
+    component: Main,
+    subRoutes: {
+      'article/:id':{
+        component: Article
+      }
+    }
   },
   '/article/add':{
     component: AddArticle
