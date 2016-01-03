@@ -1,10 +1,10 @@
 {
-  "name": "electron-boilerplate-vue",
-  "productName": "Electron Boilerplate Vue",
-  "identifier": "com.example.electron-boilerplate-vue",
-  "description": "Starter for your Electron application with Vue.js. Out of the box ready for serious stuff.",
+  "name": "rss-reader",
+  "productName": "RSS Reader",
+  "identifier": "com.celertron.rss-reader",
+  "description": "Simple RSS Reader",
   "version": "0.1.0",
-  "author": "Mr Gumby <gumby@sillywalks.com>",
+  "author": "Meet Godhani <meetgodhani23@gmail.com>",
   "main": "background.js",
   "config": {
     "target": "development"
@@ -12,13 +12,22 @@
   "dependencies": {
     "babel-loader": "5.4.0",
     "babel-runtime": "5.8.34",
+    "bootstrap": "^3.3.6",
+    "cheerio": "^0.19.0",
     "css-loader": "0.23.0",
     "fs-jetpack": "^0.7.0",
+    "is-online": "^5.0.1",
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.1",
+    "nedb": "^1.5.1",
+    "select2": "^4.0.1",
     "style-loader": "0.13.0",
     "vue": "^1.0.1",
     "vue-hot-reload-api": "1.2.2",
     "vue-html-loader": "1.0.0",
     "vue-loader": "^6.0.0",
+    "vue-router": "^0.7.7",
+    "vuex": "^0.2.0",
     "webpack": "1.12.9"
   }
 }

@@ -11,14 +11,27 @@ module.exports = {
     path: './build',
     filename: '[name].js',
   },
+  plugins: [
+    new webpack.IgnorePlugin(/vertx/),
+  ],
+  node: {
+    console: true,
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  },
   module: {
     loaders: [
       {
-        test: /\.vue$/,
+        test: /\.json/,
+        loader: "json-loader"
+      },
+      {
+        test: /\.vue/,
         loader: 'vue'
       },
       {
-        test: /\.js$/,
+        test: /\.js/,
         exclude: /(node_modules|bower_components)/,
         loader: 'babel'
       },

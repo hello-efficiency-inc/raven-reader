@@ -7,6 +7,8 @@ const gutil = require('gulp-util')
 const source = require('vinyl-source-stream')
 const path = require('path')
 const jetpack = require('fs-jetpack')
+const sass = require('gulp-sass');
+const minifyCss = require('gulp-minify-css');
 
 
 const utils = require('./utils')
@@ -20,7 +22,7 @@ const destDir = projectDir.cwd(dest)
 
 const filesToCopy = [
     './app/app.html',
-    './app/stylesheets/**/*',
+    './app/fonts/**/*',
     './app/background.js',
     './app/vendor/**/*',
     './app/node_modules/**/*',
@@ -46,6 +48,15 @@ gulp.task('webpack:build-dev', function(callback) {
         callback()
     })
 })
+
+var sassTask = function () {
+    return gulp.src('app/stylesheets/main.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(minifyCss({compatibility: 'ie8'}))
+    .pipe(gulp.dest(destDir.path('stylesheets')));
+};
+gulp.task('sass', ['clean'], sassTask);
+gulp.task('sass-watch', sassTask)
 
 gulp.task('finalize', ['clean'], function () {
   const manifest = srcDir.read('package.json', 'json')
@@ -73,11 +84,11 @@ gulp.task('finalize', ['clean'], function () {
 
 // Dev builds of assets with source maps and debug enabled
 gulp.task('build-dev', ['clean', 'copy', 'webpack:build-dev'])
-gulp.task('build', ['build-dev', 'finalize'])
+gulp.task('build', ['build-dev','sass','finalize'])
 
 const filesToWatch = [
-  './**/*.coffee', 
-  './**/*.js', 
+  './**/*.coffee',
+  './**/*.js',
   './**/*.vue',
   '!./vendor/**',
   '!./node_modules/**',
@@ -85,5 +96,6 @@ const filesToWatch = [
 
 gulp.task('watch', function() {
   gulp.watch(filesToCopy, ['copy'])
+  gulp.watch('./**/*.scss', ['sass-watch'])
   gulp.watch(filesToWatch, { cwd: 'app' }, ['webpack:build-dev'])  // This is watchign too many files and making things very angry.
 })

@@ -1,29 +1,29 @@
-// Here is the starting point for code of your own application.
-// All stuff below is just to show you how it works. You can delete all of it.
-
-// Modules which you authored in this project are intended to be
-// imported through new ES6 syntax.
-import { greet } from './hello_world/hello_world'
-console.log(greet())
-
-// Node.js modules and those from npm
-// are required the same way as always.
 const app = require('remote').require('app')
 const jetpack = require('fs-jetpack').cwd(app.getAppPath())
+const fs = require('fs')
+const useDataDir = jetpack.cwd(app.getPath("userData"))
+const $ = require('jquery')
+const select2 = require('select2')
+import Vue from 'vue'
+import Router from 'vue-router'
+import App from './components/App.vue'
+import Main from './components/Main.vue'
+import AddArticle from './components/AddArticle.vue'
 
-// Holy crap! This is browser window with HTML and stuff, but I can read
-// here files like it is node.js! Welcome to Electron world :)
-console.log(jetpack.read('package.json', 'json'))
+Vue.use(Router);
 
-const Vue = require('vue')
-// Vue.component('hello-world', require('./components/HelloWorld.vue'))
+var router = new Router({
+  hashbang:false,
+  abstract:true
+})
 
-new Vue({
-  el: "#app",
-  data: {
-    
+router.map({
+  '/':{
+    component: Main
   },
-  components: {
-    'hello-world': require('./components/HelloWorld.vue')
+  '/article/add':{
+    component: AddArticle
   }
 })
+
+router.start(App,'#app')
