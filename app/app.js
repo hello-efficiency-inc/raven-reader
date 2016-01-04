@@ -39,6 +39,9 @@ router.map({
       }
     }
   },
+  '/:feed':{
+    component: Main
+  },
   '/article/add':{
     component: AddArticle
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-header">
-    <h2>All Articles</h2>
+    <h2>{{ title }}</h2>
   </div>
   <div class="dashboard-articles">
     <ul class="articles">
@@ -26,9 +26,25 @@
 import store from '../store'
 
 export default{
+  route: {
+    data({ to }){
+      if(typeof to.params.feed != 'undefined'){
+        this.title = to.params.feed
+      }
+    }
+  },
+  data(){
+    return {
+      title: "All Articles"
+    }
+  },
   computed:{
     articles(){
-      return store.state.articles;
+      if(this.title !== "All Articles"){
+        return _.where(store.state.articles, { 'feed': this.title });
+      } else {
+        return store.state.articles;
+      }
     }
   },
   methods:{
