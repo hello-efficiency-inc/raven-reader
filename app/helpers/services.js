@@ -43,6 +43,16 @@ export default {
         return resolve(doc);
       })
     });
+  },
+  markRead(id){
+    article.update({ _id: id },{ $set: { read: true } },function(err,num){
+
+    })
+  },
+  markUnread(id){
+    article.update({ _id: id },{ $set: { read: false } },function(err,num){
+      
+    })
   }
 
 }
