@@ -6,9 +6,13 @@
         Edit Tags
       </button>
     </div>
-    <button type="button" class="toggle-tag-editor">
+    <button v-if="!markedread" v-on:click="markRead()" type="button" class="toggle-tag-editor">
       <i class="fa fa-fw fa-check"></i>
       Mark as read
+    </button>
+    <button v-if="markedread" v-on:click="markUnread()" type="button" class="toggle-tag-editor">
+      <i class="fa fa-fw fa-history"></i>
+      Mark as unread
     </button>
   </div>
   <div class="article-read">
@@ -30,11 +34,13 @@
         var self = this;
         return service.fetchOne(to.params.id).then(function(item){
             var data = jetpack.read(useDataDir.path(item.file))
+            self.id = item._id
             self.title = item.title;
             self.author = item.author;
             self.favicon = item.favicon;
             self.feed = item.feed;
             self.pubDate = item.pubDate
+            self.markedread = item.read
             read(data,function(err,article,res){
               self.content = article.content;
             });
@@ -43,13 +49,25 @@
     },
     data(){
       return {
+        id: '',
         title: '',
         author: '',
         content: '',
         favicon: '',
         feed: '',
         pubDate: '',
-        content: ''
+        content: '',
+        markedread:'',
+      }
+    },
+    methods: {
+      markRead(){
+          service.markRead(this.id);
+          this.markedread = true
+      },
+      markUnread(){
+          service.markUnread(this.id);
+          this.markedread = false
       }
     }
   }
