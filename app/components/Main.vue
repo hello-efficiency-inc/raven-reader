@@ -30,6 +30,8 @@ export default{
     data({ to }){
       if(typeof to.params.feed != 'undefined'){
         this.title = to.params.feed
+      }else {
+        this.title = "All Articles"
       }
     }
   },
@@ -49,7 +51,11 @@ export default{
   },
   methods:{
     articleDetail(id){
-      return this.$route.router.go({path: '/article/' + id,replace: true})
+      if(this.title == "All Articles"){
+        return this.$route.router.go({path: '/article/' + id,replace: true})
+      } else {
+        return this.$route.router.go({path: '/' + this.title + '/' + id,replace: true})
+      }
     }
   }
 }

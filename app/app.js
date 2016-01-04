@@ -40,7 +40,12 @@ router.map({
     }
   },
   '/:feed':{
-    component: Main
+    component: Main,
+    subRoutes: {
+      '/:id':{
+        component: Article
+      }
+    }
   },
   '/article/add':{
     component: AddArticle
