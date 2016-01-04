@@ -10,12 +10,17 @@ import App from './components/App.vue'
 import Main from './components/Main.vue'
 import AddArticle from './components/AddArticle.vue'
 import Article from './components/Article.vue'
+import store from './store'
 
 // Check if directory for storing article exists or not
 var dirYes = jetpack.exists(useDataDir.path('streams'))
+var dirFavi = jetpack.exists(useDataDir.path('favicons'))
 
-if(dirYes){
+if(!dirYes){
   fs.mkdir(useDataDir.path('streams'))
+}
+if(!dirFavi){
+  fs.mkdir(useDataDir.path('favicons'))
 }
 
 Vue.use(Router);
@@ -38,5 +43,8 @@ router.map({
     component: AddArticle
   }
 })
+
+store.actions.getFeed()
+store.actions.getArticles()
 
 router.start(App,'#app')

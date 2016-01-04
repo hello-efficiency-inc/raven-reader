@@ -14,9 +14,10 @@
         <button v-on:click="addFeed()" class="btn-add-feed" type="button"><i class="fa fa-plus"></i></button>
       </div>
       <ul class="dashboard-list">
-        <li class="dashboard-list-item">
-          Betakit
-          <span class="tagged-count">150</span>
+        <li v-for="feed in feeds" class="dashboard-list-item">
+          <img v-bind:src="feed.favicon" width="20" height="20" alt="{{ feed.title }}"/>
+          {{ feed.title }}
+          <span class="tagged-count">{{ feed.count }}</span>
         </li>
       </ul>
     </div>
@@ -24,7 +25,18 @@
   </div>
 </template>
 <script>
+import store from '../store'
+
 export default{
+  computed: {
+    feeds(){
+      return store.state.feeds.map(function(item){
+        var data = _.where(store.state.articles, { 'feed': item.title,'read': false })
+        item.count = data.length
+        return item
+      })
+    }
+  },
   methods: {
     allArticles(){
       return this.$route.router.go({path: '/',replace: true})

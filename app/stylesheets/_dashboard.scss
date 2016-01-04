@@ -100,6 +100,12 @@ body{
       line-height:42px;
       padding:0 20px;
 
+      img{
+        position:relative;
+        top:5px;
+        margin-right:5px;
+      }
+
       .tagged-count{
         background:rgba(255,255,255,0.1);
         border-radius:100px;
@@ -185,6 +191,31 @@ body{
     }
   }
 
+  .article-read{
+    top:45px;
+    position:absolute;
+    left:0;
+    bottom:0;
+    right:0;
+    word-wrap: break-word;
+    overflow-x:hidden;
+    overflow-y:auto;
+    line-height: 1.5;
+    padding:20px;
+
+    .source-provider{
+      img{
+        float:left;
+        margin-right:10px;
+      }
+      font-size:1em;
+      color:#adadad;
+      .pubDate{
+        margin-left:50px;
+      }
+    }
+  }
+
   img{
     border:0;
     vertical-align: middle;
@@ -213,6 +244,17 @@ body{
       color:#444B6E;
       font-size:1em;
       margin:0 0 10px 0;
+    }
+    .provider{
+      font-size:0.75em;
+      line-height:1.5;
+      padding-bottom:5px;
+      color:#ADADAD;
+      img{
+        margin-right:5px;
+        position:relative;
+        top:3px;
+      }
     }
     .description{
       color:#28343d;
@@ -293,4 +335,14 @@ body{
   right:0;
   font-family:inherit;
   cursor:pointer;
+}
+
+.add-button:disabled{
+  background:rgba(68,75,110,0.3);
+}
+
+.alert{
+  p{
+    color:red;
+  }
 }

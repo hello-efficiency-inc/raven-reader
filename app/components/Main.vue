@@ -4,49 +4,16 @@
   </div>
   <div class="dashboard-articles">
     <ul class="articles">
-      <li class="article" v-on:click="articleDetail()">
-        <h3>11 PREDICTIONS FOR WEARABLE TECH IN 2016</h3>
-        <div class="description">
-          Next year is go time for many wearable categories. As early adopters are now educated on what the tech is, they will (and have already) begin to question why doesn’t translate into value. 2016 will ...
+      <li v-for="article in articles" class="article" v-on:click="articleDetail(article._id)">
+        <h3>{{ article.title }}</h3>
+        <div class="provider">
+          <img v-bind:src="article.favicon" width="15" height="15" alt={{ article.title }}> {{ article.feed }}
         </div>
-        <ul class="article-tags">
-          <li>politics</li>
-        </ul>
-      </li>
-      <li class="article">
-        <h3>11 PREDICTIONS FOR WEARABLE TECH IN 2016</h3>
         <div class="description">
-          Next year is go time for many wearable categories. As early adopters are now educated on what the tech is, they will (and have already) begin to question why doesn’t translate into value. 2016 will ...
+            {{ article.summary }}
         </div>
-        <ul class="article-tags">
-          <li>politics</li>
-        </ul>
-      </li>
-      <li class="article">
-        <h3>11 PREDICTIONS FOR WEARABLE TECH IN 2016</h3>
-        <div class="description">
-          Next year is go time for many wearable categories. As early adopters are now educated on what the tech is, they will (and have already) begin to question why doesn’t translate into value. 2016 will ...
-        </div>
-        <ul class="article-tags">
-          <li>politics</li>
-        </ul>
-      </li>
-      <li class="article">
-        <h3>11 PREDICTIONS FOR WEARABLE TECH IN 2016</h3>
-        <div class="description">
-          Next year is go time for many wearable categories. As early adopters are now educated on what the tech is, they will (and have already) begin to question why doesn’t translate into value. 2016 will ...
-        </div>
-        <ul class="article-tags">
-          <li>politics</li>
-        </ul>
-      </li>
-      <li class="article">
-        <h3>11 PREDICTIONS FOR WEARABLE TECH IN 2016</h3>
-        <div class="description">
-          Next year is go time for many wearable categories. As early adopters are now educated on what the tech is, they will (and have already) begin to question why doesn’t translate into value. 2016 will ...
-        </div>
-        <ul class="article-tags">
-          <li>politics</li>
+        <ul v-for="tag in article.tags" class="article-tags">
+          <li>{{ tag.text }}</li>
         </ul>
       </li>
     </ul>
@@ -56,10 +23,17 @@
   </div>
 </template>
 <script>
+import store from '../store'
+
 export default{
+  computed:{
+    articles(){
+      return store.state.articles;
+    }
+  },
   methods:{
-    articleDetail(){
-      return this.$route.router.go({path: '/article/1',replace: true})
+    articleDetail(id){
+      return this.$route.router.go({path: '/article/' + id,replace: true})
     }
   }
 }
