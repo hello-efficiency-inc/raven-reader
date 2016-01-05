@@ -1,10 +1,15 @@
 <template>
   <div class="manage-article">
     <div class="edit-article-tags">
-      <button type="button" class="toggle-tag-editor">
+      <button type="button" v-on:click="showTag()" class="toggle-tag-editor">
         <i class="fa fa-fw fa-tag"></i>
         Edit Tags
       </button>
+      <div v-if="showModal" class="tags-dropdown">
+        <select v-select="selected" :options="options">
+        </select>
+        <button type="button" class="btn-block" v-on:click="saveTags(id,selected)">Save</button>
+      </div>
     </div>
     <button v-if="!markedread" v-on:click="markRead()" type="button" class="toggle-tag-editor">
       <i class="fa fa-fw fa-check"></i>
@@ -38,6 +43,7 @@
     route: {
       data({ to }){
         var self = this;
+         this.showModal = false
         return service.fetchOne(to.params.id).then(function(item){
             var data = jetpack.read(useDataDir.path(item.file))
             self.id = item._id
@@ -64,6 +70,13 @@
         pubDate: '',
         content: '',
         markedread:'',
+        showModal: false,
+        selected: []
+      }
+    },
+    computed: {
+      options(){
+        return store.state.tags
       }
     },
     methods: {
@@ -74,6 +87,16 @@
       markUnread(){
           markUnread(this.id)
           this.markedread = false
+      },
+      saveTags(id,selected){
+
+      },
+      showTag(){
+        if(this.showModal){
+          this.showModal = false
+        } else {
+          this.showModal = true
+        }
       }
     }
   }

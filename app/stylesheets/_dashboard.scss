@@ -188,6 +188,34 @@ body{
       display:inline-block;
       position:relative;
       margin-left:20px;
+      .tags-dropdown {
+        transform:translate(-50%,0);
+        background:#fff;
+        background-clip:padding-box;
+        border:1px solid rgba(55,53,112,0.1);
+        border-radius:3px;
+        box-shadow:0 1px 1px rgba(0,0,0,0.08);
+        margin-top:2px;
+        padding:15px;
+        position:absolute;
+        top:100%;
+        left:50%;
+        width:250px;
+      }
+      .tags-dropdown:before{
+        transform:translateX(-50%) rotate(45deg);
+        width:12px;
+        height:12px;
+        background:#fff;
+        background-clip:padding-box;
+        border-top:1px solid rgba(55,53,112,0.1);
+        border-left:1px solid rgba(55,53,112,0.1);
+        content: '';
+        position:absolute;
+        top:-6px;
+        left:50%;
+        z-index:99;
+      }
     }
   }
 
