@@ -51,7 +51,12 @@ export default {
   },
   markUnread(id){
     article.update({ _id: id },{ $set: { read: false } },function(err,num){
-      
+
+    })
+  },
+  updateFeedCount(id,count){
+    feed.update({ _id: id },{ $set: { count: count } },function(err,num){
+
     })
   }
 

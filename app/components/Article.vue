@@ -23,10 +23,16 @@
 </template>
 <script>
   var service = require('../helpers/services.js');
+  var store = require('../store.js')
   var read = require('node-read')
   var app = require('remote').require('app')
   var jetpack = require('fs-jetpack')
   var useDataDir = jetpack.cwd(app.getPath("userData") + '/streams/')
+
+  const {
+    markRead,
+    markUnread
+  } = store.actions
 
   export default{
     route: {
@@ -62,11 +68,11 @@
     },
     methods: {
       markRead(){
-          service.markRead(this.id);
+          markRead(this.id)
           this.markedread = true
       },
       markUnread(){
-          service.markUnread(this.id);
+          markUnread(this.id)
           this.markedread = false
       }
     }

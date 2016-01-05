@@ -57,19 +57,22 @@
                   var path = useDataDirFavicon.path(randomstring.generate() + '.' + data.format);
                   useDataDirFavicon.writeAsync(path,data.bytes);
                   meta_data.favicon = path;
+                  meta_data.count = articles.length
                   addFeed(meta_data);
-                  articles.forEach(function(item){
+                  articles.map(function(item){
                     var html_filename = randomstring.generate() + '.html';
                     item.feed = meta_data.title;
                     item.file = html_filename;
                     item.read = false;
                     item.favicon = path;
                     got.stream(item.link).pipe(useDataDirStream.createWriteStream(html_filename))
-                    addArticles(item);
+                    return item;
                   })
+                  addArticles(articles);
                 })
               } else {
                 console.log("Feed Exists");
+                self.processed = false
               }
             })
             self.processed = false

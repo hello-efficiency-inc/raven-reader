@@ -12,6 +12,8 @@ const SET_TAG = 'SET_TAG'
 const SET_FEED = 'SET_FEED'
 const ADD_FEED = 'ADD_FEED'
 const REMOVE_FEED = 'REMOVE_FEED'
+const MARK_READ = 'MARK_READ'
+const MARK_UNREAD = 'MARK_UNREAD'
 
 const state = {
   articles : [],
@@ -26,7 +28,9 @@ const actions = {
   updateTag: UPDATE_TAG,
   addFeed: ADD_FEED,
   getFeed: SET_FEED,
-  removeFeed: REMOVE_FEED
+  removeFeed: REMOVE_FEED,
+  markRead: MARK_READ,
+  markUnread: MARK_UNREAD
 }
 
 const mutations = {
@@ -42,13 +46,33 @@ const mutations = {
   },
   [ADD_ARTICLE] (state,text) {
     service.addArticles(text,function(docs){
-      state.articles.unshift(docs)
+      if(state.articles.length == 0){
+        state.articles = docs
+      } else {
+        state.articles = state.articles.concat(docs)
+      }
     })
   },
   [ADD_FEED] (state,feed){
     service.addFeed(feed,function(docs){
       state.feeds.unshift(docs)
     })
+  },
+  [MARK_READ] (state,id){
+    service.markRead(id);
+    var index = _.findIndex(state.articles, { '_id': id });
+    var feed = state.articles[index].feed
+    var feedIndex = _.findIndex(state.feeds,{ 'title': feed });
+    state.feeds[feedIndex].count--
+    service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
+  },
+  [MARK_UNREAD] (state,id){
+    service.markUnread(id);
+    var index = _.findIndex(state.articles, { '_id': id });
+    var feed = state.articles[index].feed
+    var feedIndex = _.findIndex(state.feeds,{ 'title': feed });
+    state.feeds[feedIndex].count++
+    service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
   }
 }
 

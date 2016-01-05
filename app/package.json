@@ -40,6 +40,7 @@
     "vue-html-loader": "1.0.0",
     "vue-loader": "^6.0.0",
     "vue-router": "^0.7.7",
+    "vue-spinner": "^1.0.0",
     "vuex": "^0.2.0",
     "webpack": "1.12.9",
     "xhr-request": "^1.0.1"

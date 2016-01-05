@@ -3,7 +3,7 @@
     <h2>{{ title }}</h2>
   </div>
   <div class="dashboard-articles">
-    <ul class="articles">
+    <ul v-if="articles.length > 0" class="articles">
       <li v-for="article in articles" class="article" v-on:click="articleDetail(article._id)">
         <h3>{{ article.title }}</h3>
         <div class="provider">
@@ -17,6 +17,7 @@
         </ul>
       </li>
     </ul>
+    <pulse-loader v-if="articles.length == 0"></pulse-loader>
   </div>
   <div class="dashboard-article-detail">
     <router-view></router-view>
@@ -24,6 +25,7 @@
 </template>
 <script>
 import store from '../store'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
 export default{
   route: {
@@ -34,6 +36,9 @@ export default{
         this.title = "All Articles"
       }
     }
+  },
+  components: {
+    PulseLoader
   },
   data(){
     return {

@@ -30,11 +30,7 @@ import store from '../store'
 export default{
   computed: {
     feeds(){
-      return store.state.feeds.map(function(item){
-        var data = _.where(store.state.articles, { 'feed': item.title,'read': false })
-        item.count = data.length
-        return item
-      })
+      return store.state.feeds
     }
   },
   methods: {
