@@ -12,7 +12,7 @@
   "dependencies": {
     "babel-loader": "5.4.0",
     "babel-runtime": "5.8.34",
-    "bootstrap": "^3.3.6",
+    "bootstrap-sass": "^3.3.6",
     "buffer-to-arraybuffer": "0.0.4",
     "cheerio": "^0.19.0",
     "css-loader": "0.23.0",

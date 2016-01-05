@@ -1,10 +1,11 @@
 .select2-container{
   width:250px !important;
   margin-bottom:10px;
+  line-height:1.5 !important;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice{
-  line-height:1.5 !important;
+.select2-dropdown{
+  margin-left:8px;
 }
 
 .btn-block{
