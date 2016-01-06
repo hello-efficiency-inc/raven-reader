@@ -1,6 +1,9 @@
 <template>
   <div class="dashboard-header">
-    <h2>{{ title }}</h2>
+    <h2>{{ title }} </h2>
+    <div class="settings-trigger refresh" dropdown>
+      <i class="fa fa-refresh fa-fw"></i>
+    </div>
   </div>
   <div class="dashboard-articles">
     <ul v-if="articles.length > 0" class="articles">
@@ -17,15 +20,48 @@
         </ul>
       </li>
     </ul>
-    <pulse-loader v-if="articles.length == 0"></pulse-loader>
+    <div class="v-spinner" v-if="articles.length == 0">No feeds available</div>
   </div>
   <div class="dashboard-article-detail">
-    <router-view></router-view>
+    <div class="manage-article" v-if="content">
+      <div class="edit-article-tags">
+        <button type="button" v-on:click="showTag()" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-tag"></i>
+          Edit Tags
+        </button>
+        <div v-if="showModal" class="tags-dropdown">
+          <select v-select="selected" :options="options">
+          </select>
+          <button type="button" class="btn-block" v-on:click="saveTags(id,selected)">Save</button>
+        </div>
+      </div>
+      <button v-if="!markedread" v-on:click="markRead()" type="button" class="toggle-tag-editor">
+        <i class="fa fa-fw fa-check"></i>
+        Mark as read
+      </button>
+      <button v-if="markedread" v-on:click="markUnread()" type="button" class="toggle-tag-editor">
+        <i class="fa fa-fw fa-history"></i>
+        Mark as unread
+      </button>
+    </div>
+    <article-detail :articletitle="articletitle" :pubDate="pubDate" :feed="feed" :content="content" :favicon="favicon" v-if="content"></article-detail>
+    <div class="v-spinner" v-if="!content">Nothing selected</div>
   </div>
 </template>
 <script>
 import store from '../store'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import Article from './Article.vue'
+var read = require('node-read')
+var app = require('remote').require('app')
+var jetpack = require('fs-jetpack')
+var useDataDir = jetpack.cwd(app.getPath("userData") + '/streams/')
+var service = require('../helpers/services.js');
+
+const {
+  markRead,
+  markUnread
+} = store.actions
 
 export default{
   route: {
@@ -38,11 +74,23 @@ export default{
     }
   },
   components: {
-    PulseLoader
+    PulseLoader,
+    'article-detail': Article
   },
   data(){
     return {
-      title: "All Articles"
+      title: "All Articles",
+      id: '',
+      articletitle: '',
+      author: '',
+      content: '',
+      favicon: '',
+      feed: '',
+      pubDate: '',
+      content: '',
+      markedread:'',
+      showModal: false,
+      selected: []
     }
   },
   computed:{
@@ -52,14 +100,45 @@ export default{
       } else {
         return store.state.articles;
       }
+    },
+    options(){
+      return store.state.tags
     }
   },
   methods:{
     articleDetail(id){
-      if(this.title == "All Articles"){
-        return this.$route.router.go({path: '/article/' + id,replace: true})
+      var self = this;
+      this.showModal = false
+      return service.fetchOne(id).then(function(item){
+          var data = jetpack.read(useDataDir.path(item.file))
+          self.id = item._id
+          self.articletitle = item.title;
+          self.author = item.author;
+          self.favicon = item.favicon;
+          self.feed = item.feed;
+          self.pubDate = item.pubDate
+          self.markedread = item.read
+          read(data,function(err,article,res){
+            self.content = article.content;
+          });
+      })
+    },
+    markRead(){
+        markRead(this.id)
+        this.markedread = true
+    },
+    markUnread(){
+        markUnread(this.id)
+        this.markedread = false
+    },
+    saveTags(id,selected){
+
+    },
+    showTag(){
+      if(this.showModal){
+        this.showModal = false
       } else {
-        return this.$route.router.go({path: '/' + this.title + '/' + id,replace: true})
+        this.showModal = true
       }
     }
   }

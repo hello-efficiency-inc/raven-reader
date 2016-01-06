@@ -1,7 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
+import got from 'got'
+import jetpack from 'fs-jetpack'
 var service = require('./helpers/services.js')
+var feed = require('./helpers/feed.js')
+const app = require('remote').require('app')
+const useDataDirStream = jetpack.cwd(app.getPath("userData") + '/streams/')
+const randomstring = require("randomstring")
 
 Vue.use(Vuex)
 
@@ -37,7 +43,33 @@ const mutations = {
   [SET_FEED] (state){
     service.fetchFeeds().then(function(feeds){
       state.feeds = feeds
-    })
+      // if(feeds.length > 0){
+      //   feeds.forEach(function(item,index){
+      //     var favicon = item.favicon;
+      //     var title = item.title;
+      //     var count = item.count;
+      //     feed.fetchNewArticles(item.url).then(function(newarticles){
+      //       var newArticles = newarticles.articles;
+      //       service.fetchArticles().then(function(articles){
+      //         var oldArticles = articles;
+      //         newArticles.forEach(function(articleItem){
+      //           if(_.where(oldArticles,{ title: articleItem.title }).length == 0){
+      //             var html_filename = randomstring.generate() + '.html';
+      //             articleItem.feed = title;
+      //             articleItem.file = html_filename;
+      //             articleItem.read = false;
+      //             articleItem.favicon = favicon;
+      //             got.stream(articleItem.link).pipe(useDataDirStream.createWriteStream(html_filename))
+      //             service.addArticles(articleItem,function(docs){})
+      //             state.feeds[index].count++;
+      //             service.updateFeedCount(state.feeds[index]._id,state.feeds[index].count)
+      //           }
+      //         });
+      //       });
+      //     });
+      //   });
+      // }
+    });
   },
   [SET_ARTICLE] (state){
     service.fetchArticles().then(function(articles){

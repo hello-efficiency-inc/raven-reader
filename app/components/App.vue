@@ -26,11 +26,15 @@
 </template>
 <script>
 import store from '../store'
+import string from 'underscore.string'
 
 export default{
   computed: {
     feeds(){
-      return store.state.feeds
+      return store.state.feeds.map(function(item){
+        item.title = string.prune(item.title,20)
+        return item
+      })
     }
   },
   methods: {

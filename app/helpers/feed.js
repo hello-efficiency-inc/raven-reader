@@ -3,6 +3,7 @@ import cheerio from 'cheerio'
 import striptags from 'striptags'
 import string from 'underscore.string'
 import he from 'he'
+import service from './services.js'
 var urlUtil = require('url')
 var iconv = require('iconv-lite')
 var feedParser = require('feedParser')
@@ -143,6 +144,20 @@ export default{
 
     return promise;
 
-  }
+  },
+  fetchNewArticles(url){
+    var self = this;
+    var promise = new Promise(function(resolve,reject){
+      got(url,(error,body,response) => {
+        if(!error){
+          self.feedParser(body)
+          .then(function(data){
+            resolve(data)
+          });
+        }
+      })
+    });
 
+    return promise;
+  }
 }

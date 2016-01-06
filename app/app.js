@@ -10,6 +10,7 @@ import App from './components/App.vue'
 import Main from './components/Main.vue'
 import AddArticle from './components/AddArticle.vue'
 import Article from './components/Article.vue'
+import Default from './components/Default.vue'
 import store from './store'
 
 // Check if directory for storing article exists or not
@@ -60,23 +61,14 @@ var router = new Router({
 router.map({
   '/':{
     component: Main,
-    subRoutes: {
-      'article/:id':{
-        component: Article
-      }
-    }
   },
   '/:feed':{
-    component: Main,
-    subRoutes: {
-      '/:id':{
-        component: Article
-      }
-    }
+    component: Main
   },
   '/article/add':{
     component: AddArticle
-  }
+  },
+
 })
 
 store.actions.getFeed()

@@ -21,6 +21,18 @@ body{
   position:absolute;
   left:300px;
   right:0;
+  .settings-trigger{
+    display:inline-block;
+    line-height:1;
+    margin-left:5px;
+    margin-right:10px;
+    top:0px;
+    color:black;
+    font-size: 1.2em;
+  }
+  .refresh:hover{
+    color:#444B6E;
+  }
   h2{
     color:#28343d;
     display:inline-block;
@@ -379,6 +391,7 @@ body{
   position: absolute;
   top: 50%;
   left: 50%;
+  font-weight:bold;
   transform: translate(-50%,-50%);
   .v-pulse{
     background-color:black !important;
