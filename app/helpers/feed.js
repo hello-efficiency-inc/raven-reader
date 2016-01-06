@@ -134,7 +134,6 @@ export default{
                 }
               });
             } else {
-              console.log("NO FEED FOUND")
               resolve(null)
             }
           });

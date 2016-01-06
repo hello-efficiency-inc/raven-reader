@@ -44,7 +44,7 @@
         Mark as unread
       </button>
     </div>
-    <article-detail :articletitle="articletitle" :pubDate="pubDate" :feed="feed" :content="content" :favicon="favicon" v-if="content"></article-detail>
+    <article-detail :articletitle="articletitle" :pubdate="pubDate" :feed="feed" :content="content" :favicon="favicon" v-if="content"></article-detail>
     <div class="v-spinner" v-if="!content">Nothing selected</div>
   </div>
 </template>
@@ -116,6 +116,7 @@ export default{
           self.author = item.author;
           self.favicon = item.favicon;
           self.feed = item.feed;
+          console.log(item.pubDate)
           self.pubDate = item.pubDate
           self.markedread = item.read
           read(data,function(err,article,res){

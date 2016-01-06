@@ -10,7 +10,6 @@ import App from './components/App.vue'
 import Main from './components/Main.vue'
 import AddArticle from './components/AddArticle.vue'
 import Article from './components/Article.vue'
-import Default from './components/Default.vue'
 import store from './store'
 
 // Check if directory for storing article exists or not

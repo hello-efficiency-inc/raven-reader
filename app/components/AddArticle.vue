@@ -47,6 +47,7 @@
         articles.then(function(data){
           if(data === null){
             self.alert = true;
+            self.processed = false
           } else {
             self.alert = false;
             var meta_data = data.meta
