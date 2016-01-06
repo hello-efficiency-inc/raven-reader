@@ -30,6 +30,13 @@ export default {
       })
     })
   },
+  fetchSpecific(title){
+    return new Promise((resolve,reject) => {
+      feed.find({title: title},function(err,docs){
+        resolve(docs)
+      })
+    })
+  },
   fetchArticles(){
     return new Promise((resolve,reject) => {
       article.find({}).sort({ feed: 1 }).exec(function(err,docs){

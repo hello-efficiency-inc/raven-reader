@@ -84,8 +84,8 @@ gulp.task('finalize', ['clean'], function () {
 })
 
 // Dev builds of assets with source maps and debug enabled
-gulp.task('build-dev', ['clean', 'copy', 'webpack:build-dev'])
-gulp.task('build', ['build-dev','sass','finalize'])
+gulp.task('build-dev', ['clean', 'copy', 'webpack:build-dev','sass'])
+gulp.task('build', ['build-dev','finalize'])
 
 const filesToWatch = [
   './**/*.coffee',

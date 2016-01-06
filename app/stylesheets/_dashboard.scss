@@ -38,6 +38,34 @@ body{
     display:inline-block;
     margin:0 0 0 20px;
   }
+  label[for=searchbar]{
+    position:relative;
+    .telescope{
+      appearance:none;
+      transition:all 200ms linear;
+      border-radius:15px;
+      border:2px solid rgba(101,131,153,0.5);
+      box-shadow:none;
+      color:#444B6E;
+      display:inline-block;
+      font-size:0.9em;
+      height:30px;
+      outline:none;
+      padding:0 12px 0 34px;
+      position:relative;
+      top:-4px;
+      left:20px;
+      width:300px;
+      font-family:inherit;
+    }
+    .fa{
+      position:absolute;
+      top:-1px;
+      left:34px;
+      z-index:11;
+      color:#444B6E;
+    }
+  }
 }
 
 .dashboard-sidebar{
@@ -394,6 +422,6 @@ body{
   font-weight:bold;
   transform: translate(-50%,-50%);
   .v-pulse{
-    background-color:black !important;
+    background-color:#444B6E !important;
   }
 }

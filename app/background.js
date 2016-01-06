@@ -101,6 +101,7 @@ app.on('ready', function () {
   });
 });
 
+app.commandLine.appendSwitch('--disable-http-cache');
 app.on('window-all-closed', function () {
   app.quit();
 });

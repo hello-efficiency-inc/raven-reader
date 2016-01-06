@@ -1,13 +1,17 @@
 <template>
   <div class="dashboard-header">
     <h2>{{ title }} </h2>
-    <div class="settings-trigger refresh" dropdown>
+    <div v-on:click="refreshFeed()" class="settings-trigger refresh" dropdown>
       <i class="fa fa-refresh fa-fw"></i>
     </div>
+    <label for="searchbar">
+      <input type="text" id="searchbar" class="telescope" placeholder="Search" v-model="searchQuery">
+      <i class="fa fa-search"></i>
+    </label>
   </div>
   <div class="dashboard-articles">
-    <ul v-if="articles.length > 0" class="articles">
-      <li v-for="article in articles" class="article" v-on:click="articleDetail(article._id)">
+    <ul v-if="articles.length > 0 && refreshing == false" class="articles">
+      <li v-for="article in articles | filterBy searchQuery in 'title' 'summary'" class="article" v-on:click="articleDetail(article._id)">
         <h3>{{ article.title }}</h3>
         <div class="provider">
           <img v-bind:src="article.favicon" width="15" height="15" alt={{ article.title }}> {{ article.feed }}
@@ -21,6 +25,7 @@
       </li>
     </ul>
     <div class="v-spinner" v-if="articles.length == 0">No feeds available</div>
+    <pulse-loader v-if="refreshing"></pulse-loader>
   </div>
   <div class="dashboard-article-detail">
     <div class="manage-article" v-if="content">
@@ -52,6 +57,7 @@
 import store from '../store'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import Article from './Article.vue'
+import refresh from '../helpers/refresh.js'
 var read = require('node-read')
 var app = require('remote').require('app')
 var jetpack = require('fs-jetpack')
@@ -90,6 +96,7 @@ export default{
       content: '',
       markedread:'',
       showModal: false,
+      refreshing: false,
       selected: []
     }
   },
@@ -116,7 +123,6 @@ export default{
           self.author = item.author;
           self.favicon = item.favicon;
           self.feed = item.feed;
-          console.log(item.pubDate)
           self.pubDate = item.pubDate
           self.markedread = item.read
           read(data,function(err,article,res){
@@ -141,6 +147,13 @@ export default{
       } else {
         this.showModal = true
       }
+    },
+    refreshFeed(){
+      var self = this;
+      this.refreshing = true;
+      refresh.refreshfeed(this.title).then(function(){
+        self.refreshing = false;
+      });
     }
   }
 }
