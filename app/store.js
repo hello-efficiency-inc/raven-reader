@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
+import online from 'is-online'
 var service = require('./helpers/services.js')
 
 Vue.use(Vuex)
@@ -15,11 +16,13 @@ const REMOVE_FEED = 'REMOVE_FEED'
 const MARK_READ = 'MARK_READ'
 const MARK_UNREAD = 'MARK_UNREAD'
 const INCREMENT_FEEDCOUNT = 'INCREMENT_FEEDCOUNT'
+const CHECK_OFFLINE = 'CHECK_OFFLINE'
 
 const state = {
   articles : [],
   tags: [],
-  feeds: []
+  feeds: [],
+  offline: ''
 }
 
 const actions = {
@@ -32,7 +35,8 @@ const actions = {
   removeFeed: REMOVE_FEED,
   markRead: MARK_READ,
   markUnread: MARK_UNREAD,
-  incrementCount: INCREMENT_FEEDCOUNT
+  incrementCount: INCREMENT_FEEDCOUNT,
+  checkOffline: CHECK_OFFLINE
 }
 
 const mutations = {
@@ -80,6 +84,11 @@ const mutations = {
     var feedIndex = _.findIndex(state.feeds,{ 'title': feed });
     state.feeds[feedIndex].count++
     service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
+  },
+  [CHECK_OFFLINE] (state){
+    online(function(err,online){
+      state.offline = online
+    })
   }
 }
 

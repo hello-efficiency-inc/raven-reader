@@ -3,6 +3,7 @@ import cheerio from 'cheerio'
 import striptags from 'striptags'
 import string from 'underscore.string'
 import he from 'he'
+import store from '../store.js'
 import service from './services.js'
 var urlUtil = require('url')
 var iconv = require('iconv-lite')
@@ -98,6 +99,7 @@ export default{
 
     // Find feed url inside html
     var findFeedUrlInHtml = function(body,url){
+      console.log(url);
       var dom = cheerio.load(body);
       var href= dom('link[type="application/rss+xml"]').attr('href');
       if(!href){
@@ -116,35 +118,52 @@ export default{
       url = 'http://' + url;
     }
 
-    console.log('Fetching ' + url);
+    var blacklisted = [
+      'http://readwrite.com',
+      'http://www.readwrite.com',
+    ];
 
-    var promise = new Promise(function(resolve,reject){
-      got(url,(error,body,response) => {
-        if(!error){
-          self.feedParser(body,url)
-          .then(function(data){
-            resolve(data)
-          },function(err){
-            var url = findFeedUrlInHtml(body,url)
-            if(url !== null){
-              got(url,(error,body,response) => {
-                if(!error){
-                  self.feedParser(body,url)
-                  .then(function(data){
-                    resolve(data)
+    var checkUrl = _.includes(blacklisted, url);
+
+      var promise = new Promise(function(resolve,reject){
+
+        if(store.state.offline && !checkUrl){
+
+          console.log('Fetching ' + url);
+
+          got(url,(error,body,response) => {
+
+            var link = url;
+
+            if(!error){
+              self.feedParser(body,url)
+              .then(function(data){
+                resolve(data)
+              },function(err){
+                var url = findFeedUrlInHtml(body,link)
+                if(url !== null){
+                  got(url,(error,body,response) => {
+                    if(!error){
+                      self.feedParser(body,url)
+                      .then(function(data){
+                        resolve(data)
+                      });
+                    }
                   });
+                } else {
+                  resolve(null)
                 }
               });
-            } else {
-              resolve(null)
             }
           });
         }
+        else {
+          reject("blacklisted");
+        }
+        
       });
-    });
 
-    return promise;
-
+      return promise;
   },
   fetchNewArticles(url){
     var self = this;

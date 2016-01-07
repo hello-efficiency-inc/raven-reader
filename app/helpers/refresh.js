@@ -3,6 +3,7 @@ import feed from './feed.js'
 import service from './services.js'
 import store from '../store.js'
 import jetpack from 'fs-jetpack'
+import online from 'is-online'
 const app = require('remote').require('app')
 const useDataDirStream = jetpack.cwd(app.getPath("userData") + '/streams/')
 const randomstring = require("randomstring")

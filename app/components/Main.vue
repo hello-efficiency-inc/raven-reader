@@ -108,8 +108,18 @@ export default{
         return store.state.articles;
       }
     },
+    offline(){
+      return store.state.offline
+    },
     options(){
       return store.state.tags
+    }
+  },
+  ready(){
+    if(this.offline){
+      setTimeout(function(){
+        refresh.refreshfeed(this.title)
+      },900000)
     }
   },
   methods:{
@@ -126,7 +136,8 @@ export default{
           self.pubDate = item.pubDate
           self.markedread = item.read
           read(data,function(err,article,res){
-            self.content = article.content;
+            console.log(article.content);
+              self.content = article.content;
           });
       })
     },
@@ -151,9 +162,13 @@ export default{
     refreshFeed(){
       var self = this;
       this.refreshing = true;
-      refresh.refreshfeed(this.title).then(function(){
-        self.refreshing = false;
-      });
+      if(this.offline){
+        refresh.refreshfeed(this.title).then(function(){
+          self.refreshing = false;
+        });
+      } else {
+        alert("You need to be online in order to perform this action.")
+      }
     }
   }
 }

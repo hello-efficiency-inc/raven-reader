@@ -8,7 +8,6 @@ var BrowserWindow = require('browser-window');
 var env = require('./vendor/electron_boilerplate/env_config');
 var devHelper = require('./vendor/electron_boilerplate/dev_helper');
 var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
-
 var mainWindow;
 
 // Preserver of the window size and position between app launches.
@@ -16,6 +15,8 @@ var mainWindowState = windowStateKeeper('main', {
   width: 1300,
   height: 760
 });
+
+
 
 app.on('ready', function () {
 
