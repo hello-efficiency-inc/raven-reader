@@ -17,7 +17,7 @@ export default {
   refreshfeed(title){
     var self = this;
     return new Promise(function(resolve,reject){
-      if(title == "All Articles"){
+      if(title === "All Articles"){
         service.fetchFeeds()
         .then(function(feeds){
           setTimeout(function(){
@@ -55,10 +55,10 @@ export default {
         .then(function(articles){
           var oldArticles = articles;
 
-          // // Process each new article
+          //   Process each new article
           newArticles.forEach(function(newItem){
             if(_.where(oldArticles,{ title: newItem.title }).length == 0){
-              console.log("added " + newItem.title);
+              console.log("Added " + newItem.title);
               var html_filename = randomstring.generate() + '.html';
               newItem.feed = title;
               newItem.file = html_filename;
@@ -71,14 +71,12 @@ export default {
               incrementCount(item.title)
               // Update Feed Count
               service.updateFeedCount(item._id,count++)
+            } else {
+              console.log("not added");
             }
-            console.log("not added");
           });
-
         });
-
       })
-
     });
   }
 }

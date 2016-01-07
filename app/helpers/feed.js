@@ -12,7 +12,7 @@ var moment = require('moment')
 
 export default{
 
-  feedParser(body){
+  feedParser(body,url){
     // Parse Feed
     var parseFeed = function(body){
       var meta;
@@ -37,14 +37,16 @@ export default{
       s.emit('data',body)
       s.emit('end')
 
+      var checkTitle = meta.title.indexOf("|");
+
       return {
 
         meta : {
-          title: meta.title,
+          title: checkTitle > -1 ? meta.title.substring(0,checkTitle != -1 ? checkTitle : meta.title.length) : meta.title,
           description: meta.description,
           link: meta.link,
           favicon: meta.favicon,
-          url: meta.xmlUrl
+          url: meta.xmlUrl ? meta.xmlUrl : url
         },
         articles: articles.map(function(item){
           return {
@@ -119,7 +121,7 @@ export default{
     var promise = new Promise(function(resolve,reject){
       got(url,(error,body,response) => {
         if(!error){
-          self.feedParser(body)
+          self.feedParser(body,url)
           .then(function(data){
             resolve(data)
           },function(err){
@@ -127,7 +129,7 @@ export default{
             if(url !== null){
               got(url,(error,body,response) => {
                 if(!error){
-                  self.feedParser(body)
+                  self.feedParser(body,url)
                   .then(function(data){
                     resolve(data)
                   });

@@ -68,7 +68,8 @@ const mutations = {
     service.markRead(id);
     var index = _.findIndex(state.articles, { '_id': id });
     var feed = state.articles[index].feed;
-    var feedIndex = _.findIndex(state.feeds,{ 'title': feed });
+    var feedIndex = _.findIndex(state.feeds,{ 'title': String(feed) });
+    console.log(feedIndex);
     state.feeds[feedIndex].count--;
     service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
   },

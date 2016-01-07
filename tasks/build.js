@@ -97,6 +97,6 @@ const filesToWatch = [
 
 gulp.task('watch', function() {
   gulp.watch(filesToCopy, ['copy'])
-  gulp.watch('./**/*.scss', ['sass-watch'])
+  gulp.watch('./app/stylesheets/**/*.scss', ['sass-watch'])
   gulp.watch(filesToWatch, { cwd: 'app' }, ['webpack:build-dev'])  // This is watchign too many files and making things very angry.
 })

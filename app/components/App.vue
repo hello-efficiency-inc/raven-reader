@@ -14,7 +14,7 @@
         <button v-on:click="addFeed()" class="btn-add-feed" type="button"><i class="fa fa-plus"></i></button>
       </div>
       <ul class="dashboard-list">
-        <li v-on:click="goFeed(feed.title)" v-for="feed in feeds" class="dashboard-list-item">
+        <li v-on:click="goFeed(feed.orgtitle ? feed.orgtitle : feed.title)" v-for="feed in feeds" class="dashboard-list-item">
           <img v-bind:src="feed.favicon" width="20" height="20" alt="{{ feed.title }}"/>
           {{ feed.title }}
           <span class="tagged-count">{{ feed.count }}</span>
@@ -32,6 +32,9 @@ export default{
   computed: {
     feeds(){
       return store.state.feeds.map(function(item){
+        if(item.title.length >= 20){
+          item.orgtitle = item.title
+        }
         item.title = string.prune(item.title,20)
         return item
       })
