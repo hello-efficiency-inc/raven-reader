@@ -77,5 +77,6 @@ router.beforeEach((transition) => {
 
 store.actions.getFeed()
 store.actions.getArticles()
+store.actions.getTags()
 
 router.start(App,'#app')

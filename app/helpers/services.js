@@ -51,6 +51,88 @@ export default {
       })
     });
   },
+  fetchTags(){
+    return new Promise((resolve,reject) => {
+      tag.find({}).sort({ id : 1 }).exec(function(err,docs){
+        resolve(docs)
+      })
+    });
+  },
+  addTag(value,callback){
+    _.mixin({
+      'findByValues': function(collection, property, values) {
+        return _.filter(collection, function(item) {
+          return _.contains(values, item[property]);
+        });
+      }
+    });
+
+    tag.find({},function(err,docs){
+
+      // Tags already exists
+      if(docs.length > 0){
+
+        var current_text = _.pluck(docs,'text')
+        var exists = _.findByValues(docs,"text",value)
+        var result = _.remove(value, function(n) {
+          return current_text.indexOf(n) < 0
+        })
+
+        //check rejected result
+        if(result.length > 0){
+
+          var tags = result.map(function(obj,index){
+            var id = (_.last(_.sortBy(docs,'id')).id + index) + 1
+
+            var newObj = {
+              id : id,
+              text : obj
+            }
+            return newObj
+          })
+
+          tag.insert(tags,function(err,newdocs){
+            newdocs.forEach(function(item){
+              exists.push(item)
+            })
+            return callback(exists)
+          })
+
+        } else {
+
+          // Tag already exists
+
+          tag.find({ text: { $in: value }}, function (err, docs) {
+            return callback(docs)
+          });
+
+        }
+
+      } else {
+
+        //If there is no tags in database
+
+        var value_tags = value.map(function(obj,index){
+          var newObj = {
+            id : index + 1,
+            text : obj
+          }
+          return newObj
+        })
+
+        tag.insert(value_tags,function(err,docs){
+          return callback(docs)
+        })
+
+      }
+
+    })
+  },
+  updateTag(value,id){
+    article.update({_id : id},{ $set: { tags : value} },function(err,num){
+
+    })
+  },
   markRead(id){
     article.update({ _id: id },{ $set: { read: true } },function(err,num){
 

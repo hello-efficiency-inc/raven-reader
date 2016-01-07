@@ -19,8 +19,8 @@
         <div class="description">
             {{ article.summary }}
         </div>
-        <ul v-for="tag in article.tags" class="article-tags">
-          <li>{{ tag.text }}</li>
+        <ul class="article-tags">
+          <li v-for="tag in article.tags">{{ tag.text }}</li>
         </ul>
       </li>
     </ul>
@@ -66,7 +66,8 @@ var service = require('../helpers/services.js');
 
 const {
   markRead,
-  markUnread
+  markUnread,
+  updateTag
 } = store.actions
 
 export default{
@@ -136,7 +137,6 @@ export default{
           self.pubDate = item.pubDate
           self.markedread = item.read
           read(data,function(err,article,res){
-            console.log(article.content);
               self.content = article.content;
           });
       })
@@ -150,12 +150,18 @@ export default{
         this.markedread = false
     },
     saveTags(id,selected){
-
+      var self = this;
+      updateTag(this.id,this.selected)
+      this.showModal = false
     },
     showTag(){
       if(this.showModal){
         this.showModal = false
       } else {
+        var self = this;
+        service.fetchOne(this.id).then(function(item){
+          self.selected = _.pluck(item.tags,'id')
+        })
         this.showModal = true
       }
     },

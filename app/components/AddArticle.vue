@@ -3,7 +3,7 @@
     <h2>Add Feed</h2>
     <p>Type or copy/paste link to website you want to subscribe to (it could be URL to entire site, or direct link to RSS file).</p>
     <div class="add-feed-input">
-      <input type="url" class="form-control" v-model="feedurl" placeholder="Put link here">
+      <input type="url" class="form-control" v-model="feedurl" v-on:keyup.enter="addFeed()" placeholder="Put link here">
     </div>
     <div v-if="alert" class="alert danger">
       <p>{{ alertmessage }}</p>

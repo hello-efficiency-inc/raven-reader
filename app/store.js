@@ -89,6 +89,24 @@ const mutations = {
     online(function(err,online){
       state.offline = online
     })
+  },
+  [SET_TAG] (state){
+    service.fetchTags().then(function(tag){
+      state.tags = tag
+    })
+  },
+  [UPDATE_TAG] (state,id,value){
+    var current_text = _.pluck(state.tags,"text")
+    service.addTag(value,function(item){
+      service.updateTag(item,id)
+      var index = _.findIndex(state.articles, '_id', id)
+      state.articles[index].tags = item
+      item.forEach(function(item){
+        if(current_text.indexOf(item.text) < 0){
+          state.tags.push(item)
+        }
+      })
+    })
   }
 }
 
