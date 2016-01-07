@@ -70,7 +70,9 @@ export default {
               // Update count
               incrementCount(item.title)
               // Update Feed Count
-              service.updateFeedCount(item._id,count++)
+              console.log(item._id)
+              item.count++
+              service.updateFeedCount(item._id,item.count)
             } else {
               console.log("not added");
             }
