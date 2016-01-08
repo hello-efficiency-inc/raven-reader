@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-header">
     <h2>{{ title }} </h2>
-    <div v-on:click="refreshFeed()" class="settings-trigger refresh" dropdown>
+    <div v-if="state != 'tag'" v-on:click="refreshFeed()" class="settings-trigger refresh" dropdown>
       <i class="fa fa-refresh fa-fw"></i>
     </div>
     <label for="searchbar">
@@ -17,10 +17,10 @@
           <img v-bind:src="article.favicon" width="15" height="15" alt={{ article.title }}> {{ article.feed }}
         </div>
         <div class="description">
-            {{ article.summary }}
+          {{ article.summary }}
         </div>
         <ul class="article-tags">
-          <li v-for="tag in article.tags">{{ tag.text }}</li>
+          <li v-for="tag in article.tags" v-on:click="setTag(tag)">{{ tag.text }}</li>
         </ul>
       </li>
     </ul>
@@ -63,6 +63,7 @@ var app = require('remote').require('app')
 var jetpack = require('fs-jetpack')
 var useDataDir = jetpack.cwd(app.getPath("userData") + '/streams/')
 var service = require('../helpers/services.js');
+var moment = require('moment')
 
 const {
   markRead,
@@ -73,10 +74,17 @@ const {
 export default{
   route: {
     data({ to }){
-      if(typeof to.params.feed != 'undefined'){
-        this.title = to.params.feed
-      }else {
+      if(to.params.type === "feed"){
+        this.title = to.params.name
+        this.state = 'feed'
+      }
+      else if(to.params.type === "tag"){
+        this.state = 'tag'
+        this.title = to.params.name
+      }
+      else {
         this.title = "All Articles"
+        this.state = "all"
       }
     }
   },
@@ -98,14 +106,20 @@ export default{
       markedread:'',
       showModal: false,
       refreshing: false,
-      selected: []
+      selected: [],
+      state: ''
     }
   },
   computed:{
     articles(){
-      if(this.title !== "All Articles"){
+      if(this.state === "feed" ){
         return _.where(store.state.articles, { 'feed': this.title });
-      } else {
+      }
+      else if(this.state === "tag"){
+        var tag = _.where(store.state.tags,{ 'text': this.title })
+        return _.where(store.state.articles, { 'tags' : [tag[0]] });
+      }
+      else {
         return store.state.articles;
       }
     },
@@ -128,26 +142,26 @@ export default{
       var self = this;
       this.showModal = false
       return service.fetchOne(id).then(function(item){
-          var data = jetpack.read(useDataDir.path(item.file))
-          self.id = item._id
-          self.articletitle = item.title;
-          self.author = item.author;
-          self.favicon = item.favicon;
-          self.feed = item.feed;
-          self.pubDate = item.pubDate
-          self.markedread = item.read
-          read(data,function(err,article,res){
-              self.content = article.content;
-          });
+        var data = jetpack.read(useDataDir.path(item.file))
+        self.id = item._id
+        self.articletitle = item.title;
+        self.author = item.author;
+        self.favicon = item.favicon;
+        self.feed = item.feed;
+        self.pubDate = moment.unix(item.pubDate).format("MMMM Do YYYY")
+        self.markedread = item.read
+        read(data,function(err,article,res){
+          self.content = article.content;
+        });
       })
     },
     markRead(){
-        markRead(this.id)
-        this.markedread = true
+      markRead(this.id)
+      this.markedread = true
     },
     markUnread(){
-        markUnread(this.id)
-        this.markedread = false
+      markUnread(this.id)
+      this.markedread = false
     },
     saveTags(id,selected){
       var self = this;
@@ -164,6 +178,9 @@ export default{
         })
         this.showModal = true
       }
+    },
+    setTag(item){
+      return this.$route.router.go({ path: '/tag/' + item.text })
     },
     refreshFeed(){
       var self = this;

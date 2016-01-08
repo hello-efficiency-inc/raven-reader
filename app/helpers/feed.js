@@ -58,7 +58,7 @@ export default{
             summary : string.prune(he.decode(striptags(item.summary)),120),
             guid : item.guid,
             link : item.origlink ? item.origlink : item.link,
-            pubDate : moment(item.pubDate).format("MMMM Do YYYY")
+            pubDate : moment(item.pubDate).format("X")
           }
         })
       }
@@ -160,7 +160,7 @@ export default{
         else {
           reject("blacklisted");
         }
-        
+
       });
 
       return promise;

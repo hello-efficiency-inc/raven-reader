@@ -39,7 +39,7 @@ export default {
   },
   fetchArticles(){
     return new Promise((resolve,reject) => {
-      article.find({}).sort({ feed: 1 }).exec(function(err,docs){
+      article.find({}).sort({ pubDate: -1 }).exec(function(err,docs){
         resolve(docs)
       })
     })
