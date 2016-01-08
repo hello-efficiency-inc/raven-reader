@@ -1,6 +1,7 @@
 <template>
   <div class="add-feed-container">
     <h2>Manage Feeds</h2>
+    <br/>
     <ul class="list-feeds">
       <li v-for="feed in feeds">
         <img v-bind:src="feed.favicon" width="20" height="20"> {{ feed.title }}

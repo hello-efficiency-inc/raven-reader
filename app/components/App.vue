@@ -6,7 +6,13 @@
       </div>
       <ul class="dashboard-list">
         <li class="dashboard-list-item" v-on:click="allArticles()">
-          <i class="fa fa-fw fa-book"></i> All Articles
+          <i class="fa fa-fw fa-list"></i> All Articles
+        </li>
+        <li class="dashboard-list-item" v-on:click="allArticles()">
+          <i class="fa fa-fw fa-check"></i> Read Articles
+        </li>
+        <li class="dashboard-list-item" v-on:click="allArticles()">
+          <i class="fa fa-fw fa-history"></i> Unread Articles
         </li>
       </ul>
       <div class="sidebar-header">
