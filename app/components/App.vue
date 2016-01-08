@@ -45,7 +45,6 @@ export default{
       return this.$route.router.go({path: '/',replace: true})
     },
     goFeed(title){
-      console.log(title);
       return this.$route.router.go({path: '/feed/' + title })
     },
     addFeed(){

@@ -14,7 +14,7 @@
       <li v-for="article in articles | filterBy searchQuery in 'title' 'summary'" class="article" v-on:click="articleDetail(article._id)">
         <h3>{{ article.title }}</h3>
         <div class="provider">
-          <img v-bind:src="article.favicon" width="15" height="15" alt={{ article.title }}> {{ article.feed }}
+          <img v-bind:src="article.favicon" width="15" height="15" alt={{ article.title }}> {{ article.feed }} <span class="published-date">{{ article.pubDate }}</span>
         </div>
         <div class="description">
           {{ article.summary }}
@@ -112,16 +112,25 @@ export default{
   },
   computed:{
     articles(){
+      var articles;
       if(this.state === "feed" ){
-        return _.where(store.state.articles, { 'feed': this.title });
+        var foundarticle = _.where(store.state.articles, { 'feed': this.title });
+        articles = _.sortByOrder(foundarticle,'pubDate','desc');
       }
       else if(this.state === "tag"){
         var tag = _.where(store.state.tags,{ 'text': this.title })
-        return _.where(store.state.articles, { 'tags' : [tag[0]] });
+        articles = _.where(store.state.articles, { 'tags' : [tag[0]] })
       }
       else {
-        return store.state.articles;
+        articles = store.state.articles
       }
+      return articles.map(function(item){
+        var checkValid = moment(item.pubDate,"MMMM Do YYYY",true).isValid();
+        if(!checkValid){
+          item.pubDate = moment.unix(item.pubDate).format("MMMM Do YYYY")
+        }
+        return item
+      });
     },
     offline(){
       return store.state.offline
