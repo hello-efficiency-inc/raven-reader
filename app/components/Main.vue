@@ -8,6 +8,9 @@
       <input type="text" id="searchbar" class="telescope" placeholder="Search" v-model="searchQuery">
       <i class="fa fa-search"></i>
     </label>
+    <div class="manage-feed" v-on:click="manageFeed()">
+      <i class="fa fa-fw fa-cog"></i> Manage feeds
+    </div>
   </div>
   <div class="dashboard-articles">
     <ul v-if="articles.length > 0 && refreshing == false" class="articles">
@@ -190,6 +193,9 @@ export default{
     },
     setTag(item){
       return this.$route.router.go({ path: '/tag/' + item.text })
+    },
+    manageFeed(){
+      return this.$route.router.go({ path: '/manage/feeds' })
     },
     refreshFeed(){
       var self = this;
