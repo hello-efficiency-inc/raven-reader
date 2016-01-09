@@ -21,9 +21,9 @@ npm run release   // package app, will create app in release directory.
 - [x] Tagging Articles
 - [x] Search Articles
 - [x] Marking as read/unread
-- [x] Refresh feed for new articles 
+- [x] Refresh feed for new articles
 - [ ] Improving readability for articles having dynamic html
 
-## Screenshot
+## Demo
 
 ![img](./images/rssreaderdemo.gif)
