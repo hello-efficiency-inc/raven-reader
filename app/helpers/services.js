@@ -147,6 +147,16 @@ export default {
     feed.update({ _id: id },{ $set: { count: count } },function(err,num){
 
     })
+  },
+  deleteArticle(id){
+    article.remove({ _id: id }, {}, function (err, numRemoved) {
+      
+    });
+  },
+  deleteFeed(title){
+    feed.remove({ title: title },{}, function(err, num){
+
+    });
   }
 
 }
