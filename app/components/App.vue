@@ -8,10 +8,10 @@
         <li class="dashboard-list-item" v-on:click="allArticles()">
           <i class="fa fa-fw fa-list"></i> All Articles
         </li>
-        <li class="dashboard-list-item" v-on:click="allArticles()">
+        <li class="dashboard-list-item" v-on:click="readArticles()">
           <i class="fa fa-fw fa-check"></i> Read Articles
         </li>
-        <li class="dashboard-list-item" v-on:click="allArticles()">
+        <li class="dashboard-list-item" v-on:click="unreadArticles()">
           <i class="fa fa-fw fa-history"></i> Unread Articles
         </li>
       </ul>
@@ -49,6 +49,12 @@ export default{
   methods: {
     allArticles(){
       return this.$route.router.go({path: '/',replace: true})
+    },
+    unreadArticles(){
+      return this.$route.router.go({path: '/article/unread' });
+    },
+    readArticles(){
+      return this.$route.router.go({path: '/article/read' });
     },
     goFeed(title){
       return this.$route.router.go({path: '/feed/' + title })

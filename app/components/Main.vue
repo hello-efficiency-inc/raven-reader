@@ -77,6 +77,7 @@ const {
 export default{
   route: {
     data({ to }){
+      console.log(to.params.name)
       if(to.params.type === "feed"){
         this.title = to.params.name
         this.state = 'feed'
@@ -84,6 +85,14 @@ export default{
       else if(to.params.type === "tag"){
         this.state = 'tag'
         this.title = to.params.name
+      }
+      else if(to.params.type === "article" && to.params.name === "read"){
+        this.state = 'read'
+        this.title = "Read Articles"
+      }
+      else if(to.params.type === "article" && to.params.name === "unread"){
+        this.state = "unread"
+        this.title = "Unread Articles"
       }
       else {
         this.title = "All Articles"
@@ -123,6 +132,12 @@ export default{
       else if(this.state === "tag"){
         var tag = _.where(store.state.tags,{ 'text': this.title })
         articles = _.where(store.state.articles, { 'tags' : [tag[0]] })
+      }
+      else if(this.state === "read"){
+        articles = _.where(store.state.articles,{ 'read' : true })
+      }
+      else if(this.state === "unread"){
+        articles = _.where(store.state.articles,{ 'read' : false })
       }
       else {
         articles = store.state.articles

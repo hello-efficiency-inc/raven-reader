@@ -75,8 +75,8 @@ const mutations = {
     var index = _.findIndex(state.articles, { '_id': id });
     var feed = state.articles[index].feed;
     var feedIndex = _.findIndex(state.feeds,{ 'title': String(feed) });
-    console.log(feedIndex);
     state.feeds[feedIndex].count--;
+    state.articles[index].read = true
     service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
   },
   [MARK_UNREAD] (state,id){
@@ -85,6 +85,7 @@ const mutations = {
     var feed = state.articles[index].feed
     var feedIndex = _.findIndex(state.feeds,{ 'title': feed });
     state.feeds[feedIndex].count++
+    state.articles[index].read = false
     service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
   },
   [CHECK_OFFLINE] (state){
