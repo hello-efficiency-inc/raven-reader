@@ -23,7 +23,7 @@ const state = {
   articles : [],
   tags: [],
   feeds: [],
-  offline: ''
+  offline: true
 }
 
 const actions = {

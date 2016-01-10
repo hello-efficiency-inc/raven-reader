@@ -158,6 +158,11 @@ export default{
     }
   },
   ready(){
+
+    setTimeout(function(){
+      store.actions.checkOffline()
+    },1000)
+
     if(this.offline){
       setTimeout(function(){
         refresh.refreshfeed(this.title)

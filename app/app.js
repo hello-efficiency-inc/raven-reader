@@ -74,11 +74,6 @@ router.map({
 
 })
 
-router.beforeEach((transition) => {
-  store.actions.checkOffline()
-  transition.next()
-});
-
 store.actions.getFeed()
 store.actions.getArticles()
 store.actions.getTags()

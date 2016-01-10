@@ -46,6 +46,11 @@
       }
     },
     ready(){
+
+      setTimeout(function(){
+        store.actions.checkOffline()
+      },1000)
+      
       if(!this.offline){
         this.processed = true
         this.alert = true
