@@ -14,7 +14,7 @@
   </div>
   <div class="dashboard-articles">
     <ul v-if="articles.length > 0 && refreshing == false" class="articles">
-      <li v-for="article in articles | filterBy searchQuery in 'title' 'summary' 'tags'" class="article" v-on:click="articleDetail(article._id)">
+      <li :class="{ readed : article.read }" v-for="article in articles | filterBy searchQuery in 'title' 'summary' 'tags'" class="article" v-on:click="articleDetail(article._id)">
         <h3>{{ article.title }}</h3>
         <div class="provider">
           <img v-bind:src="article.favicon" width="15" height="15" alt={{ article.title }}> {{ article.feed }} <span class="published-date">{{ article.pubDate }}</span>
@@ -182,6 +182,12 @@ export default{
         self.feed = item.feed;
         self.pubDate = moment.unix(item.pubDate).format("MMMM Do YYYY")
         self.markedread = item.read
+        if(!item.read){
+            self.markedread = true
+            markRead(id)
+        } else {
+          self.markedread = item.read
+        }
         read(data,function(err,article,res){
           self.content = article.content;
         });
