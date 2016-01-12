@@ -57,7 +57,13 @@ const mutations = {
       if(state.articles.length == 0){
         state.articles = docs
       } else {
-        state.articles = state.articles.concat(docs)
+        if(docs.length > 0){
+          docs.forEach(function(item){
+            state.articles.unshift(item)
+          })
+        } else {
+          state.articles.unshift(item)
+        }
       }
     })
   },
