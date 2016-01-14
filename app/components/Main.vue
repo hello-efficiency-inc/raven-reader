@@ -28,7 +28,14 @@
       </li>
     </ul>
     <div class="v-spinner" v-if="articles.length == 0">No feeds available</div>
-    <pulse-loader v-if="refreshing"></pulse-loader>
+    <div class="v-spinner" v-if="refreshing">
+      <pulse-loader></pulse-loader>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <p>Fetching new articles ...</p>
+    </div>
   </div>
   <div class="dashboard-article-detail">
     <div class="manage-article" v-if="content">
@@ -77,7 +84,6 @@ const {
 export default{
   route: {
     data({ to }){
-      console.log(to.params.name)
       if(to.params.type === "feed"){
         this.title = to.params.name
         this.state = 'feed'

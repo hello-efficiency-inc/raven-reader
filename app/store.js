@@ -62,7 +62,7 @@ const mutations = {
             state.articles.unshift(item)
           })
         } else {
-          state.articles.unshift(item)
+          state.articles.unshift(docs)
         }
       }
     })

@@ -21,20 +21,22 @@ export default {
       if(title === "All Articles"){
         service.fetchFeeds()
         .then(function(feeds){
+          var timeout = 4500 * feeds.length;
           setTimeout(function(){
             self.processFeed(feeds)
             console.log("Added new articles");
             resolve("Done");
-          },10000);
+          },timeout);
         });
       } else {
         service.fetchSpecific(title)
         .then(function(feeds){
           setTimeout(function(){
+            var timeout = 4500 * feeds.length;
             self.processFeed(feeds)
             console.log("Added new articles");
             resolve("Done");
-          },10000);
+          },timeout);
         });
       }
     });
