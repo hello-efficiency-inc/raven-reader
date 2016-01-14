@@ -10,6 +10,7 @@
     "target": "development"
   },
   "dependencies": {
+    "async": "^1.5.2",
     "babel-loader": "5.4.0",
     "babel-runtime": "5.8.34",
     "bootstrap-sass": "^3.3.6",

@@ -31,8 +31,8 @@ export default {
       } else {
         service.fetchSpecific(title)
         .then(function(feeds){
+          var timeout = 4500 * feeds.length;
           setTimeout(function(){
-            var timeout = 4500 * feeds.length;
             self.processFeed(feeds)
             console.log("Added new articles");
             resolve("Done");

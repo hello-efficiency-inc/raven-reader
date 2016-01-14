@@ -104,6 +104,23 @@ export default{
         this.title = "All Articles"
         this.state = "all"
       }
+    },
+    activate(transition){
+      var self = this;
+      if(typeof transition.from.path === 'undefined'){
+        this.refreshing = true;
+        if(this.offline){
+          refresh.refreshfeed("All Articles").then(function(){
+            self.refreshing = false;
+          });
+        }
+      }
+      return new Promise((resolve) => {
+        resolve()
+      })
+    },
+    canReuse(transition){
+      return true;
     }
   },
   components: {
@@ -164,6 +181,8 @@ export default{
     }
   },
   ready(){
+
+    var self = this;
 
     setTimeout(function(){
       store.actions.checkOffline()
