@@ -21,7 +21,8 @@
       </div>
       <ul class="dashboard-list">
         <li v-on:click="goFeed(feed.orgtitle ? feed.orgtitle : feed.title)" v-for="feed in feeds" class="dashboard-list-item">
-          <img v-bind:src="feed.favicon" width="20" height="20" alt="{{ feed.title }}"/>
+          <img v-if="feed.favicon !== null" v-bind:src="feed.favicon" width="20" height="20" alt="{{ feed.title }}"/>
+          <i class="fa fa-fw fa-rss" v-if="feed.favicon === null"></i>
           {{ feed.title }}
           <span class="tagged-count">{{ feed.count }}</span>
         </li>

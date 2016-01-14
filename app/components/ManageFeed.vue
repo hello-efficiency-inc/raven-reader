@@ -5,7 +5,7 @@
     <br/>
     <ul class="list-feeds" v-if="feeds.length > 0">
       <li v-for="feed in feeds">
-        <img v-bind:src="feed.favicon" width="20" height="20"> {{ feed.title }}
+        <img v-if="feed.favicon !== null" v-bind:src="feed.favicon" width="20" height="20"> <i v-if="feed.favicon === null" class="fa fa-fw fa-rss"></i> {{ feed.title }}
         <button class="delete-btn" type="button" v-on:click="deleteFeed(feed.title)">Delete</button>
       </li>
     </ul>

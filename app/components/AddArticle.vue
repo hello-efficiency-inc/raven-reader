@@ -16,15 +16,11 @@
   import feed from '../helpers/feed'
   import favicon from '../helpers/favicon'
   import service from '../helpers/services'
-  import jetpack from 'fs-jetpack'
+  import queue from '../helpers/queue'
   import store from '../store'
-  import got from 'got'
   import _ from 'lodash'
   import online from 'is-online'
-  const app = require('remote').require('app')
-  const useDataDirFavicon = jetpack.cwd(app.getPath("userData") + '/favicons/')
-  const useDataDirStream = jetpack.cwd(app.getPath("userData") + '/streams/')
-  const randomstring = require("randomstring")
+
 
   const {
     addFeed,
@@ -50,7 +46,7 @@
       setTimeout(function(){
         store.actions.checkOffline()
       },1000)
-      
+
       if(!this.offline){
         this.processed = true
         this.alert = true
@@ -74,18 +70,20 @@
             service.checkFeed(meta_data.title,function(count){
               if(count === 0){
                 var icon = favicon.fetchIcon(data.meta.link).then(function(data){
-                  var path = useDataDirFavicon.path(randomstring.generate() + '.' + data.format);
-                  useDataDirFavicon.writeAsync(path,data.bytes);
+                  if(data !== null){
+                    var path = queue.queueTask('favicon',data);
+                  } else {
+                    var path = null;
+                  }
                   meta_data.favicon = path;
                   meta_data.count = articles.length
                   addFeed(meta_data);
                   articles.map(function(item){
-                    var html_filename = randomstring.generate() + '.html';
+                    var html_filename = queue.queueTask('html',item.link)
                     item.feed = meta_data.title;
                     item.file = html_filename;
                     item.read = false;
                     item.favicon = path;
-                    got.stream(item.link).pipe(useDataDirStream.createWriteStream(html_filename))
                     return item;
                   })
                   addArticles(articles);

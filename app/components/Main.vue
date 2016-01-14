@@ -17,7 +17,7 @@
       <li :class="{ readed : article.read }" v-for="article in articles | filterBy searchQuery in 'title' 'summary' 'tags'" class="article" v-on:click="articleDetail(article._id)">
         <h3>{{ article.title }}</h3>
         <div class="provider">
-          <img v-bind:src="article.favicon" width="15" height="15" alt={{ article.title }}> {{ article.feed }} <span class="published-date">{{ article.pubDate }}</span>
+          <img v-if="article.favicon !== null" v-bind:src="article.favicon"  width="15" height="15" alt={{ article.title }}> <i v-if="article.favicon === null" class="fa fa-fw fa-rss"></i> {{ article.feed }} <span class="published-date">{{ article.pubDate }}</span>
         </div>
         <div class="description">
           {{ article.summary }}

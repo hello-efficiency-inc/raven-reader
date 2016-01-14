@@ -51,6 +51,8 @@ export default {
               resolve({bytes: buf,format:imageType})
             }
           });
+        } else {
+          resolve(null)
         }
       });
     });

@@ -1,5 +1,6 @@
 import got from 'got'
 import feed from './feed.js'
+import queue from './queue.js'
 import service from './services.js'
 import store from '../store.js'
 import jetpack from 'fs-jetpack'
@@ -21,7 +22,7 @@ export default {
       if(title === "All Articles"){
         service.fetchFeeds()
         .then(function(feeds){
-          var timeout = 4500 * feeds.length;
+          var timeout = 1000 * feeds.length;
           setTimeout(function(){
             self.processFeed(feeds)
             console.log("Added new articles");
@@ -31,7 +32,7 @@ export default {
       } else {
         service.fetchSpecific(title)
         .then(function(feeds){
-          var timeout = 4500 * feeds.length;
+          var timeout = 1000 * feeds.length;
           setTimeout(function(){
             self.processFeed(feeds)
             console.log("Added new articles");
@@ -62,18 +63,16 @@ export default {
           newArticles.forEach(function(newItem){
             if(_.where(oldArticles,{ title: newItem.title }).length == 0){
               console.log("Added " + newItem.title);
-              var html_filename = randomstring.generate() + '.html';
+              var html_filename = queue.queueTask('html',newItem.link)
               newItem.feed = title;
               newItem.file = html_filename;
               newItem.read = false;
               newItem.favicon = favicon;
-              got.stream(newItem.link).pipe(useDataDirStream.createWriteStream(html_filename))
               // Add article
               addArticles(newItem)
               // Update count
               incrementCount(item.title)
               // Update Feed Count
-              console.log(item._id)
               item.count++
               service.updateFeedCount(item._id,item.count)
             } else {
