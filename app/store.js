@@ -118,13 +118,12 @@ const mutations = {
       })
     })
   },
-  [REMOVE_FEED] (state,title){
-    var index = _.findIndex(state.feeds, 'title', title);
-    service.deleteFeed(title);
+  [REMOVE_FEED] (state,id){
+    var index = _.findIndex(state.feeds, '_id', id);
+    service.deleteFeed(id);
     state.feeds.splice(index,1)
   },
   [REMOVE_ARTICLE] (state,id){
-    console.log(id)
     var index = _.findIndex(state.articles, '_id', id);
     service.deleteArticle(id)
     state.articles.splice(index,1)

@@ -6,7 +6,7 @@
     <ul class="list-feeds" v-if="feeds.length > 0">
       <li v-for="feed in feeds">
         <img v-if="feed.favicon !== null" v-bind:src="feed.favicon" width="20" height="20"> <i v-if="feed.favicon === null" class="fa fa-fw fa-rss"></i> {{ feed.title }}
-        <button class="delete-btn" type="button" v-on:click="deleteFeed(feed.title)">Delete</button>
+        <button class="delete-btn" type="button" v-on:click="deleteFeed(feed._id)">Delete</button>
       </li>
     </ul>
     <div class="v-spinner" v-if="feeds.length == 0">
@@ -32,15 +32,14 @@ export default{
     }
   },
   methods: {
-    deleteFeed(title){
-      var articles = _.where(store.state.articles, { 'feed': title });
-
+    deleteFeed(id){
+      var articles = _.where(store.state.articles, { 'feed_id': id });
       articles.forEach(function(item){
         jetpack.remove(useDataDir.path(item.file))
         removeArticle(item._id)
       });
 
-      removeFeed(title)
+      removeFeed(id)
     }
   }
 }
