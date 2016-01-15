@@ -67,9 +67,10 @@ const mutations = {
       }
     })
   },
-  [ADD_FEED] (state,feed){
+  [ADD_FEED] (state,feed,callback){
     service.addFeed(feed,function(docs){
       state.feeds.unshift(docs)
+      callback(docs)
     })
   },
   [INCREMENT_FEEDCOUNT] (state,title){
@@ -79,8 +80,8 @@ const mutations = {
   [MARK_READ] (state,id){
     service.markRead(id);
     var index = _.findIndex(state.articles, { '_id': id });
-    var feed = state.articles[index].feed;
-    var feedIndex = _.findIndex(state.feeds,{ 'title': String(feed) });
+    var feed = state.articles[index].feed_id;
+    var feedIndex = _.findIndex(state.feeds,{ '_id': feed });
     state.feeds[feedIndex].count--;
     state.articles[index].read = true
     service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
@@ -88,8 +89,8 @@ const mutations = {
   [MARK_UNREAD] (state,id){
     service.markUnread(id);
     var index = _.findIndex(state.articles, { '_id': id });
-    var feed = state.articles[index].feed
-    var feedIndex = _.findIndex(state.feeds,{ 'title': feed });
+    var feed = state.articles[index].feed_id
+    var feedIndex = _.findIndex(state.feeds,{ '_id': feed });
     state.feeds[feedIndex].count++
     state.articles[index].read = false
     service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)

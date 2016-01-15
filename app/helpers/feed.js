@@ -140,7 +140,7 @@ export default{
               .then(function(data){
                 resolve(data)
               },function(err){
-                var url = findFeedUrlInHtml(body,link)
+                var url = findFeedUrlInHtml(body,link);
                 if(url !== null){
                   got(url,(error,body,response) => {
                     if(!error){

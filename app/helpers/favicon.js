@@ -38,19 +38,23 @@ export default {
     console.log("Fetching favicon for " + url);
 
     var promise = new Promise(function(resolve,reject){
-      got(url,(error,body,response) => {
-        var faviconUrl = findFaviconHTML(url,body);
-        if(faviconUrl){
-          request(faviconUrl, {
-            responseType: 'arraybuffer'
-          }, function (err, data) {
-            if (err) throw err
-            var buf = new Buffer(new Uint8Array(data));
-            var imageType = discoverImageType(buf);
-            if(imageType){
-              resolve({bytes: buf,format:imageType})
-            }
-          });
+      got(url,{retries: 0},(error,body,response) => {
+        if(!error){
+          var faviconUrl = findFaviconHTML(url,body);
+          if(faviconUrl){
+            request(faviconUrl, {
+              responseType: 'arraybuffer'
+            }, function (err, data) {
+              if (err) throw err
+              var buf = new Buffer(new Uint8Array(data));
+              var imageType = discoverImageType(buf);
+              if(imageType){
+                resolve({bytes: buf,format:imageType})
+              }
+            });
+          } else {
+            resolve(null)
+          }
         } else {
           resolve(null)
         }
