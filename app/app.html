@@ -12,16 +12,5 @@
   <div id="app">
   </div>
   <script src="app.js"></script>
-  <script>
-  const ipcRenderer = require('ipc');
-  var updateOnlineStatus = function() {
-    ipcRenderer.send('online-status-changed', navigator.onLine ? 'online' : 'offline');
-  };
-
-  window.addEventListener('online',  updateOnlineStatus);
-  window.addEventListener('offline',  updateOnlineStatus);
-
-  updateOnlineStatus();
-  </script>
 </body>
 </html>

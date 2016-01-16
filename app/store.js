@@ -78,21 +78,21 @@ const mutations = {
     state.feeds[index].count++;
   },
   [MARK_READ] (state,id){
-    service.markRead(id);
     var index = _.findIndex(state.articles, { '_id': id });
+    state.articles[index].read = true
     var feed = state.articles[index].feed_id;
     var feedIndex = _.findIndex(state.feeds,{ '_id': feed });
     state.feeds[feedIndex].count--;
-    state.articles[index].read = true
+    service.markRead(id);
     service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
   },
   [MARK_UNREAD] (state,id){
-    service.markUnread(id);
     var index = _.findIndex(state.articles, { '_id': id });
+    state.articles[index].read = false
     var feed = state.articles[index].feed_id
     var feedIndex = _.findIndex(state.feeds,{ '_id': feed });
     state.feeds[feedIndex].count++
-    state.articles[index].read = false
+    service.markUnread(id);
     service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
   },
   [CHECK_OFFLINE] (state){

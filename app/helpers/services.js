@@ -150,11 +150,11 @@ export default {
   },
   deleteArticle(id){
     article.remove({ _id: id }, {}, function (err, numRemoved) {
-      
+
     });
   },
   deleteFeed(title){
-    feed.remove({ title: title },{}, function(err, num){
+    feed.remove({ _id: title },{}, function(err, num){
 
     });
   }

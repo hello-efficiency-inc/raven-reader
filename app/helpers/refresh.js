@@ -47,6 +47,7 @@ export default {
 
       var favicon = item.favicon;
       var title = item.title;
+      var id = item._id;
       var count = item.count;
 
       // Fetch New Articles
@@ -65,6 +66,7 @@ export default {
               console.log("Added " + newItem.title);
               var html_filename = queue.queueTask('html',newItem.link)
               newItem.feed = title;
+              newItem.feed_id = id;
               newItem.file = html_filename;
               newItem.read = false;
               newItem.favicon = favicon;
