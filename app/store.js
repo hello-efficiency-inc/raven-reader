@@ -17,6 +17,7 @@ const REMOVE_ARTICLE = 'REMOVE_ARTICLE'
 const MARK_READ = 'MARK_READ'
 const MARK_UNREAD = 'MARK_UNREAD'
 const INCREMENT_FEEDCOUNT = 'INCREMENT_FEEDCOUNT'
+const DECREMENT_FEEDCOUNT = 'DECREMENT_FEEDCOUNT'
 const CHECK_OFFLINE = 'CHECK_OFFLINE'
 
 const state = {
@@ -38,6 +39,7 @@ const actions = {
   markRead: MARK_READ,
   markUnread: MARK_UNREAD,
   incrementCount: INCREMENT_FEEDCOUNT,
+  decrementCount: DECREMENT_FEEDCOUNT,
   checkOffline: CHECK_OFFLINE
 }
 
@@ -73,27 +75,25 @@ const mutations = {
       callback(docs)
     })
   },
-  [INCREMENT_FEEDCOUNT] (state,title){
-    var index = _.findIndex(state.feeds,{'title': title})
+  [INCREMENT_FEEDCOUNT] (state,id){
+    var index = _.findIndex(state.feeds,{'_id': id})
     state.feeds[index].count++;
+    service.updateFeedCount(state.feeds[index]._id,state.feeds[index].count)
+  },
+  [DECREMENT_FEEDCOUNT] (state,id){
+    var index = _.findIndex(state.feeds,{'_id': id})
+    state.feeds[index].count--;
+    service.updateFeedCount(state.feeds[index]._id,state.feeds[index].count)
   },
   [MARK_READ] (state,id){
     var index = _.findIndex(state.articles, { '_id': id });
     state.articles[index].read = true
-    var feed = state.articles[index].feed_id;
-    var feedIndex = _.findIndex(state.feeds,{ '_id': feed });
-    state.feeds[feedIndex].count--;
     service.markRead(id);
-    service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
   },
   [MARK_UNREAD] (state,id){
     var index = _.findIndex(state.articles, { '_id': id });
     state.articles[index].read = false
-    var feed = state.articles[index].feed_id
-    var feedIndex = _.findIndex(state.feeds,{ '_id': feed });
-    state.feeds[feedIndex].count++
     service.markUnread(id);
-    service.updateFeedCount(state.feeds[feedIndex]._id,state.feeds[feedIndex].count)
   },
   [CHECK_OFFLINE] (state){
     online(function(err,online){

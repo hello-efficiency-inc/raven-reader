@@ -78,7 +78,9 @@ var moment = require('moment')
 const {
   markRead,
   markUnread,
-  updateTag
+  updateTag,
+  incrementCount,
+  decrementCount
 } = store.actions
 
 export default{
@@ -205,11 +207,12 @@ export default{
         self.author = item.author;
         self.favicon = item.favicon;
         self.feed = item.feed;
+        self.feed_id = item.feed_id;
         self.pubDate = moment.unix(item.pubDate).format("MMMM Do YYYY")
-        self.markedread = item.read
         if(!item.read){
             self.markedread = true
             markRead(id)
+            decrementCount(item.feed_id)
         } else {
           self.markedread = item.read
         }
@@ -220,10 +223,12 @@ export default{
     },
     markRead(){
       markRead(this.id)
+      decrementCount(this.feed_id)
       this.markedread = true
     },
     markUnread(){
       markUnread(this.id)
+      incrementCount(this.feed_id)
       this.markedread = false
     },
     saveTags(id,selected){

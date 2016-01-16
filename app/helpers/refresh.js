@@ -48,7 +48,6 @@ export default {
       var favicon = item.favicon;
       var title = item.title;
       var id = item._id;
-      var count = item.count;
 
       // Fetch New Articles
       feed.fetchNewArticles(item.url)
@@ -73,10 +72,7 @@ export default {
               // Add article
               addArticles(newItem)
               // Update count
-              incrementCount(item.title)
-              // Update Feed Count
-              item.count++
-              service.updateFeedCount(item._id,item.count)
+              incrementCount(id)
             } else {
               console.log("not added");
             }
