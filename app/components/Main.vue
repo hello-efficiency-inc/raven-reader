@@ -255,8 +255,8 @@ export default{
     },
     refreshFeed(){
       var self = this;
-      this.refreshing = true;
       if(this.offline){
+        this.refreshing = true;
         refresh.refreshfeed(this.title).then(function(){
           self.refreshing = false;
         });
