@@ -44,6 +44,7 @@
     "vue-spinner": "^1.0.0",
     "vuex": "^0.2.0",
     "webpack": "1.12.9",
-    "xhr-request": "^1.0.1"
+    "xhr-request": "^1.0.1",
+    "xmlbuilder": "^4.2.1"
   }
 }
