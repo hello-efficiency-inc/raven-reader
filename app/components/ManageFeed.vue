@@ -1,17 +1,23 @@
 <template>
   <div class="add-feed-container">
-    <h2>Manage Feeds</h2>
-    <p>Note: This would purge feed including webpages stored for offline purpose.</p>
+    <section>
+      <h2>Organize Feed</h2>
+      <p>Note: This would purge feed including webpages stored for offline purpose.</p>
+      <br/>
+      <ul class="list-feeds" v-if="feeds.length > 0">
+        <li v-for="feed in feeds">
+          <img v-if="feed.favicon !== null" v-bind:src="feed.favicon" width="20" height="20"> <i v-if="feed.favicon === null" class="fa fa-fw fa-rss"></i> {{ feed.title }}
+          <button class="delete-btn" type="button" v-on:click="deleteFeed(feed._id)">Delete</button>
+        </li>
+      </ul>
+      <div v-if="feeds.length == 0">
+        No feeds found.
+      </div>
+    </section>
     <br/>
-    <ul class="list-feeds" v-if="feeds.length > 0">
-      <li v-for="feed in feeds">
-        <img v-if="feed.favicon !== null" v-bind:src="feed.favicon" width="20" height="20"> <i v-if="feed.favicon === null" class="fa fa-fw fa-rss"></i> {{ feed.title }}
-        <button class="delete-btn" type="button" v-on:click="deleteFeed(feed._id)">Delete</button>
-      </li>
-    </ul>
-    <div class="v-spinner" v-if="feeds.length == 0">
-      No feeds found.
-    </div>
+    <section>
+      <h2>Export Feed</h2>
+    </section>
   </div>
 </template>
 <script>
