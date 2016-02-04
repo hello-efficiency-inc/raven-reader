@@ -28,3 +28,7 @@ npm run release   // package app, will create app in release directory.
 ## Demo
 
 ![img](./images/rssreaderdemo.gif)
+
+## Support / Contribution
+
+Please feel free to give suggestion or report bug by [creating issue](https://github.com/mrgodhani/rss-reader/issues).
