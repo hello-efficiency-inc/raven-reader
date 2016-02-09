@@ -4,14 +4,16 @@
       <h2>Organize Feed</h2>
       <p>Note: This would purge feed including webpages stored for offline purpose.</p>
       <br/>
-      <ul class="list-feeds" v-if="feeds.length > 0">
-        <li v-for="feed in feeds">
-          <img v-if="feed.favicon !== null" v-bind:src="feed.favicon" width="20" height="20"> <i v-if="feed.favicon === null" class="fa fa-fw fa-rss"></i> {{ feed.title }}
-          <button class="delete-btn" type="button" v-on:click="deleteFeed(feed._id)">Delete</button>
-        </li>
-      </ul>
+      <div id="feedlist">
+        <ul class="list-feeds" v-if="feeds.length > 0">
+          <li v-for="feed in feeds">
+            <img v-if="feed.favicon !== null" v-bind:src="feed.favicon" width="20" height="20"> <i v-if="feed.favicon === null" class="fa fa-fw fa-rss"></i> {{ feed.title }}
+            <button class="delete-btn" type="button" v-on:click="deleteFeed(feed._id)">Delete</button>
+          </li>
+        </ul>
+      </div>
       <div v-if="feeds.length == 0">
-        No feeds found.
+        <strong>No feeds found.</strong>
       </div>
     </section>
     <br/>
@@ -25,6 +27,7 @@ import store from '../store.js'
 var app = require('remote').require('app')
 var jetpack = require('fs-jetpack')
 var useDataDir = jetpack.cwd(app.getPath("userData") + '/streams/')
+var Ps = require('perfect-scrollbar');
 
 const {
   removeFeed,
@@ -36,6 +39,10 @@ export default{
     feeds(){
       return store.state.feeds
     }
+  },
+  ready(){
+    var container = document.getElementById('feedlist');
+    Ps.initialize(container);
   },
   methods: {
     deleteFeed(id){
