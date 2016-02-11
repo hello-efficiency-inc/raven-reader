@@ -20,6 +20,8 @@
     <section>
       <h2>Export Feed</h2>
       <p> If you want to use feeds in another application, click button below. All feeds will be exported in one file and you can then import this file to other reader.</p>
+      <br/>
+      <button v-on:click="openFile()">Export feed</button>
     </section>
   </div>
 </template>
@@ -29,6 +31,8 @@ var app = require('remote').require('app')
 var jetpack = require('fs-jetpack')
 var useDataDir = jetpack.cwd(app.getPath("userData") + '/streams/')
 var Ps = require('perfect-scrollbar');
+var dialog = require('remote').require('dialog')
+var opmlexport = require('../helpers/opml.js')
 
 const {
   removeFeed,
@@ -52,8 +56,20 @@ export default{
         jetpack.remove(useDataDir.path(item.file))
         removeArticle(item._id)
       });
-
       removeFeed(id)
+    },
+    openFile(){
+      // Open dialog to save file to destination specified by user.
+      dialog.showSaveDialog({
+        defaultPath:'rssfeed-export',
+        filters: [
+          { name: 'opml' , extensions: ['opml'] }
+        ]
+      },
+      function(fileName){
+        if (fileName === undefined) return;
+        opmlexport.exportFeed(fileName)
+      });
     }
   }
 }
