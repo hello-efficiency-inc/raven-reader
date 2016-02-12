@@ -21,7 +21,7 @@
       <h2>Export Feed</h2>
       <p> If you want to use feeds in another application, click button below. All feeds will be exported in one file and you can then import this file to other reader.</p>
       <br/>
-      <button v-on:click="openFile()">Export feed</button>
+      <button class="export-btn" type="button" v-on:click="openFile()">Save feed as a file</button>
     </section>
   </div>
 </template>
