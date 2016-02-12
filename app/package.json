@@ -29,6 +29,7 @@
     "moment": "^2.11.0",
     "nedb": "^1.5.1",
     "node-read": "^0.1.7",
+    "perfect-scrollbar": "^0.6.10",
     "randomstring": "^1.1.3",
     "select2": "^4.0.1",
     "stream": "0.0.2",

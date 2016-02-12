@@ -107,7 +107,6 @@ export default {
         item.favicon = data.meta.favicon;
         return item;
       })
-      console.log(data.articles);
       addArticles(data.articles);
       callback(null,'done');
     },
