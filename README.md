@@ -23,7 +23,7 @@ npm run release   // package app, will create app in release directory.
 - [x] Marking as read/unread
 - [x] Refresh feed for new articles
 - [ ] Improving readability for articles having dynamic html
-- [ ] Exporting feed in OPML format
+- [x] Exporting feed in OPML format
 
 ## Demo
 
