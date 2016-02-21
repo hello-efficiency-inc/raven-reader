@@ -1,7 +1,7 @@
 RSS Reader
 ==============
 
-Simple rss reader where you can subscribe to rss feed and read it for later offline.
+Simple rss reader where you can subscribe to rss feed and read it later offline.
 
 ## Usage
 
@@ -28,3 +28,7 @@ npm run release   // package app, will create app in release directory.
 ## Demo
 
 ![img](./images/rssreaderdemo.gif)
+
+## Support / Contribution
+
+Please feel free to give suggestion or report bug by [creating issue](https://github.com/mrgodhani/rss-reader/issues).
