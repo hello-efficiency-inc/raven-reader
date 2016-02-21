@@ -29,6 +29,9 @@ export default {
       fs.writeFile(fileName,root.end({ pretty: true }));
     })
 
+  },
+  importFeed(fileName){
+    
   }
 
 }
