@@ -8,6 +8,9 @@
         <li class="dashboard-list-item" v-on:click="allArticles()">
           <i class="fa fa-fw fa-list"></i> All Articles
         </li>
+        <li class="dashboard-list-item" v-on:click="tags()">
+          <i class="fa fa-fw fa-tags"></i> Tags
+        </li>
         <li class="dashboard-list-item" v-on:click="readArticles()">
           <i class="fa fa-fw fa-check"></i> Read Articles
         </li>
@@ -50,6 +53,9 @@ export default{
   methods: {
     allArticles(){
       return this.$route.router.go({path: '/',replace: true})
+    },
+    tags(){
+      return this.$route.router.go({path: '/tags',replace: true})
     },
     unreadArticles(){
       return this.$route.router.go({path: '/article/unread' });
