@@ -159,7 +159,7 @@ export default {
     });
   },
   deleteTag(id){
-    tag.remove({_id: id },{}, function(err, num){
+    tag.remove({  _id: id },{}, function(err, num){
 
     });
   }

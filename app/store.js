@@ -14,6 +14,7 @@ const SET_FEED = 'SET_FEED'
 const ADD_FEED = 'ADD_FEED'
 const REMOVE_FEED = 'REMOVE_FEED'
 const REMOVE_ARTICLE = 'REMOVE_ARTICLE'
+const REMOVE_TAG = 'REMOVE_TAG'
 const MARK_READ = 'MARK_READ'
 const MARK_UNREAD = 'MARK_UNREAD'
 const INCREMENT_FEEDCOUNT = 'INCREMENT_FEEDCOUNT'
@@ -36,6 +37,7 @@ const actions = {
   getFeed: SET_FEED,
   removeFeed: REMOVE_FEED,
   removeArticle: REMOVE_ARTICLE,
+  removeTag: REMOVE_TAG,
   markRead: MARK_READ,
   markUnread: MARK_UNREAD,
   incrementCount: INCREMENT_FEEDCOUNT,
@@ -127,6 +129,11 @@ const mutations = {
     var index = _.findIndex(state.articles, '_id', id);
     service.deleteArticle(id)
     state.articles.splice(index,1)
+  },
+  [REMOVE_TAG] (state,id){
+    var index = _.findIndex(state.tags,'_id',id);
+    service.deleteTag(id)
+    state.tags.splice(index,1)
   }
 }
 

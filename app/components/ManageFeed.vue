@@ -33,10 +33,12 @@ var useDataDir = jetpack.cwd(app.getPath("userData") + '/streams/')
 var Ps = require('perfect-scrollbar');
 var dialog = require('remote').require('dialog')
 var opmlexport = require('../helpers/opml.js')
+var services = require('../helpers/services.js')
 
 const {
   removeFeed,
   removeArticle,
+  removeTag
 } = store.actions
 
 export default{
@@ -52,10 +54,21 @@ export default{
   methods: {
     deleteFeed(id){
       var articles = _.where(store.state.articles, { 'feed_id': id });
+      var tags = [];
       articles.forEach(function(item){
+        if(item.tags){
+          tags.push(item.tags);
+        }
         jetpack.remove(useDataDir.path(item.file))
         removeArticle(item._id)
       });
+      tags.forEach(function(tag){
+          articles = _.where(store.state.articles, { 'tags' : [tag[0]] })
+          if(articles.length <= 1)
+          {
+            removeTag(tag._id)
+          }
+      })
       removeFeed(id)
     },
     openFile(){
