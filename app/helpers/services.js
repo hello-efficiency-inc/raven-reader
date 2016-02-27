@@ -157,6 +157,10 @@ export default {
     feed.remove({ _id: title },{}, function(err, num){
 
     });
-  }
+  },
+  deleteTag(id){
+    tag.remove({  _id: id },{}, function(err, num){
 
+    });
+  }
 }

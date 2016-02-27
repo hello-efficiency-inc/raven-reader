@@ -19,6 +19,7 @@ npm run release   // package app, will create app in release directory.
 - [x] Offline reading
 - [x] Subscribing to news feed
 - [x] Tagging Articles
+- [x] Browse Articles by Tags
 - [x] Search Articles
 - [x] Marking as read/unread
 - [x] Refresh feed for new articles
