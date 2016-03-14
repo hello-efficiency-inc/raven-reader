@@ -58,8 +58,12 @@
         <i class="fa fa-fw fa-history"></i>
         Mark as unread
       </button>
+      <button v-on:click="openInBrowser()" type="button" class="toggle-tag-editor">
+        <i class="fa fa-fw fa-globe"></i>
+        Open in Browser
+      </button>
     </div>
-    <article-detail :articletitle="articletitle" :pubdate="pubDate" :feed="feed" :content="content" :favicon="favicon" v-if="content"></article-detail>
+    <article-detail :articletitle="articletitle" :link="link" :pubdate="pubDate" :feed="feed" :content="content" :favicon="favicon" v-if="content"></article-detail>
     <div class="v-spinner" v-if="!content">Nothing selected</div>
   </div>
 </template>
@@ -140,6 +144,7 @@ export default{
       feed: '',
       pubDate: '',
       content: '',
+      link: '',
       markedread:'',
       showModal: false,
       refreshing: false,
@@ -208,7 +213,8 @@ export default{
         self.favicon = item.favicon;
         self.feed = item.feed;
         self.feed_id = item.feed_id;
-        self.pubDate = moment.unix(item.pubDate).format("MMMM Do YYYY")
+        self.pubDate = moment.unix(item.pubDate).format("MMMM Do YYYY");
+        self.link = item.link;
         if(!item.read){
             self.markedread = true
             markRead(id)
@@ -230,6 +236,11 @@ export default{
       markUnread(this.id)
       incrementCount(this.feed_id)
       this.markedread = false
+    },
+    openInBrowser(){
+      // window.open(this.link);
+      // window.open(this.link,'post','width=400,height=200,toolbar=yes,location=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,resizable=yes')
+      require("shell").openExternal(this.link);
     },
     saveTags(id,selected){
       var self = this;

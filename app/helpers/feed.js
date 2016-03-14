@@ -7,7 +7,7 @@ import store from '../store.js'
 import service from './services.js'
 var urlUtil = require('url')
 var iconv = require('iconv-lite')
-var feedParser = require('feedParser')
+var feedParser = require('feedparser')
 var Stream = require('stream')
 var moment = require('moment')
 
