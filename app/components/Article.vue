@@ -10,6 +10,6 @@
 </template>
 <script>
   export default{
-    props: ['articletitle','feed','pubdate','content','favicon']
+    props: ['articletitle','link','feed','pubdate','content','favicon']
   }
 </script>
