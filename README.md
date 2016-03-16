@@ -32,4 +32,4 @@ npm run release   // package app, will create app in release directory.
 
 ## Support / Contribution
 
-Please feel free to give suggestion or report bug by [creating issue](https://github.com/mrgodhani/rss-reader/issues).
+Please feel free to give suggestion or report bug by [creating issue](https://github.com/mrgodhani/rss-reader/issues) or letting me know on twitter [@mrgodhani](https://twitter.com/mrgodhani).
