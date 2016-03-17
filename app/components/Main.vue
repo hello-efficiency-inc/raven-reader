@@ -18,6 +18,25 @@
 
   <div class="articles-wrapper">
     <div class="dashboard-articles">
+      <div class="manage-feeds">
+        <button type="button" v-on:click="allArticles()" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-list"></i>
+          All Articles
+        </button>
+        <button v-on:click="tags()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-tags"></i>
+          Tags
+        </button>
+        <button v-on:click="readArticles()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-check"></i>
+          Read
+        </button>
+        <button v-on:click="unreadArticles()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-history"></i>
+          Unread
+        </button>
+      </div>
+
       <ul v-if="articles.length > 0 && refreshing == false" class="articles">
         <li :class="{ readed : article.read }" v-for="article in articles | filterBy searchQuery in 'title' 'summary' 'tags'" class="article" v-on:click="articleDetail(article._id)">
           <h3>{{ article.title }}</h3>
@@ -32,7 +51,7 @@
           </ul>
         </li>
       </ul>
-      <div class="v-spinner" v-if="articles.length == 0">No feeds available</div>
+      <div class="v-spinner" v-if="articles.length == 0">No feeds/articles available</div>
       <div class="v-spinner" v-if="refreshing">
         <pulse-loader></pulse-loader>
         <br/>
@@ -289,6 +308,24 @@ export default{
       // transform: translate3d(0, 0, 0)
       var $sidebar = $('.dashboard-sidebar');
       $sidebar.css({transform: 'translate3d(0, 0, 0)'});
+    },
+    allArticles(){
+      return this.$route.router.go({path: '/',replace: true})
+    },
+    tags(){
+      return this.$route.router.go({path: '/tags',replace: true})
+    },
+    unreadArticles(){
+      return this.$route.router.go({path: '/article/unread' });
+    },
+    readArticles(){
+      return this.$route.router.go({path: '/article/read' });
+    },
+    goFeed(title){
+      return this.$route.router.go({path: '/feed/' + title })
+    },
+    addFeed(){
+      return this.$route.router.go({path:'/article/add' ,replace: true})
     }
   }
 }
