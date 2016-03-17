@@ -1,8 +1,8 @@
 <template>
   <div class="dashboard-header">
-    <!-- <div class="toggle-menu" v-on:click="toggleMenu()" class="menu-closed">
-      <i class="fa fa-fw fa-bars"></i>
-    </div> -->
+    <div class="menu-btn" v-on:click="toggleMenu()" v-el:menu-btn>
+      <i v-bind:class="['fa', 'fa-fw', $parent.menuOpen ? 'fa-times' : 'fa-bars']"></i>
+    </div>
     <h2>{{ title }} </h2>
     <div v-if="state != 'tag'" v-on:click="refreshFeed()" class="settings-trigger refresh" dropdown>
       <i class="fa fa-refresh fa-fw"></i>
@@ -11,18 +11,11 @@
       <input type="text" id="searchbar" class="telescope" placeholder="Search" v-model="searchQuery">
       <i class="fa fa-search"></i>
     </label>
-    <div class="manage-feed" v-on:click="manageFeed()">
-      <i class="fa fa-fw fa-cog"></i> Manage feeds
-    </div>
   </div>
 
   <div class="articles-wrapper">
     <div class="dashboard-articles">
       <div class="manage-feeds">
-        <button type="button" v-on:click="allArticles()" class="toggle-tag-editor">
-          <i class="fa fa-fw fa-list"></i>
-          All Articles
-        </button>
         <button v-on:click="tags()" type="button" class="toggle-tag-editor">
           <i class="fa fa-fw fa-tags"></i>
           Tags
@@ -304,10 +297,7 @@ export default{
       }
     },
     toggleMenu(){
-      var self = this;
-      // transform: translate3d(0, 0, 0)
-      var $sidebar = $('.dashboard-sidebar');
-      $sidebar.css({transform: 'translate3d(0, 0, 0)'});
+      this.$parent.toggleMenu();
     },
     allArticles(){
       return this.$route.router.go({path: '/',replace: true})

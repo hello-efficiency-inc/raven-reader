@@ -1,10 +1,7 @@
 <template>
   <div class="dashboard-header">
-    <!-- <div class="toggle-menu" v-on:click="toggleMenu()" class="menu-closed">
-      <i class="fa fa-fw fa-bars"></i>
-    </div> -->
-    <div class="back" v-on:click="back()">
-      <i class="fa fa-fw fa-arrow-left"></i> Back
+    <div class="menu-btn" v-on:click="toggleMenu()" v-el:menu-btn>
+      <i v-bind:class="['fa', 'fa-fw', $parent.menuOpen ? 'fa-times' : 'fa-bars']"></i>
     </div>
 
     <h2>Tags</h2>
@@ -38,8 +35,8 @@ export default {
     goToTag(text){
       return this.$route.router.go({ path: '/tag/' + text })
     },
-    back() {
-      return this.$route.router.go({ path: '/'});
+    toggleMenu() {
+      this.$parent.toggleMenu();
     }
   }
 }

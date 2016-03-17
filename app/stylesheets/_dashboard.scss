@@ -2,9 +2,13 @@ body{
   font-family: 'Source Sans Pro';
 }
 
+.transformer.is-open {
+  transform: translate3d(300px, 0, 0);
+}
+
 .dashboard{
   background:white;
-  overflow-y:hidden;
+  overflow:hidden;
   position:absolute;
   top:0;
   left:0;
@@ -25,6 +29,13 @@ body{
   position: fixed;
   @include span(12);
 
+  .menu-btn {
+    display: inline-block;
+    margin: 0 0 0 40px;
+    color: #444B6E;
+    cursor: pointer;
+  }
+
   .settings-trigger{
     display:inline-block;
     line-height:1;
@@ -40,7 +51,7 @@ body{
   h2{
     color:#28343d;
     display:inline-block;
-    margin: 0 0 0 40px;
+    margin: 0 20px;
   }
   label[for=searchbar]{
     position:relative;
@@ -95,7 +106,11 @@ body{
   overflow-y:auto;
   top:0px;
   bottom:0;
-  @include span(3);
+  // @include span(3);
+  width: 300px;
+  left: -300px;
+  position: fixed;
+  // transform: translate3d(300px,0,0);
 
   .sidebar-header{
     color:rgba(255,255,255,0.3);
@@ -316,7 +331,7 @@ body{
   border-right:1px solid rgba(55,53,112,0.1);
   box-shadow:1px 0 3px rgba(55,53,112,0.08);
   list-style-type:none;
-  margin:0;
+  margin: 43px 0 0 0;
   padding:0;
   width:100%;
   overflow-y: scroll;
@@ -384,13 +399,13 @@ body{
 }
 
 .add-feed-container{
-  // position:absolute;
-  padding:30px;
-  top:0;
+  top: 62px;
+  left: 0;
+  bottom: 0;
+  position: fixed;
+  overflow-y: scroll;
   @include span(5)
-  right:0;
-  bottom:0;
-  margin-top: 40px;
+  padding: 40px;
 
   .list-feeds{
     list-style:none;
@@ -455,6 +470,10 @@ body{
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
   }
+}
+
+.add-feed-section {
+  padding-bottom: 80px;
 }
 
 .add-button{
