@@ -1,3 +1,17 @@
+@import 'susy';
+
+
+body, html {
+  @include container(100%);
+}
+
+$susy: (
+  columns: 12,
+  gutter-override: no-gutters,
+  math: fluid,
+);
+
+
 @import 'fonts';
 @import 'font-awesome';
 @import '../node_modules/select2/src/scss/core';

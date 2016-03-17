@@ -10,6 +10,7 @@ body{
   left:0;
   right:0;
   bottom:0;
+  @include span(12);
 }
 
 .dashboard-header{
@@ -18,9 +19,12 @@ body{
   color:white;
   height:60px;
   line-height:60px;
-  position:absolute;
-  left:300px;
-  right:0;
+  right: 0;
+  left: 0;
+  top: 0;
+  position: fixed;
+  @include span(12);
+
   .settings-trigger{
     display:inline-block;
     line-height:1;
@@ -36,7 +40,7 @@ body{
   h2{
     color:#28343d;
     display:inline-block;
-    margin:0 0 0 20px;
+    margin: 0 0 0 40px;
   }
   label[for=searchbar]{
     position:relative;
@@ -80,12 +84,9 @@ body{
 .dashboard-sidebar{
   background:#3D315B;
   overflow-y:auto;
-  overflow-x:hidden;
-  position:absolute;
   top:0px;
   bottom:0;
-  left:0;
-  width:300px;
+  @include span(3);
 
   .sidebar-header{
     color:rgba(255,255,255,0.3);
@@ -96,6 +97,7 @@ body{
     padding:15px 20px;
     position:relative;
     text-transform:uppercase;
+
     .sidebar-header-text{
       display:inline-block;
       margin:0;
@@ -177,26 +179,37 @@ body{
   }
 }
 
+.articles-wrapper {
+  @include span(5);
+}
+
 .dashboard-articles{
-  position:absolute;
+  // position:absolute;
   top:62px;
   bottom:0;
-  left:300px;
+  left: 0;
   background:#fafafa;
-  overflow-y:auto;
-  overflow-x:hidden;
-  width:420px;
+  position: fixed;
+  overflow-y: scroll;
+  @include span(5);
+  overflow-x: wrap;
+}
+
+.article-detail-wrapper {
+  // position: absolute;
+  @include span(8 at 4);
+  // position: fixed;
 }
 
 .dashboard-article-detail{
   background:white;
   color:#28343d;
-  position:absolute;
   top:62px;
-  left:720px;
-  right:0;
-  bottom:0;
-  min-width:550px;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  overflow-y: scroll;
+  @include span(8 at 4);
 
   .manage-article{
     width:100%;
@@ -249,7 +262,8 @@ body{
         position:absolute;
         top:100%;
         left:50%;
-        width:250px;
+        // width:250px;
+        @include span(5 at 7);
       }
       .tags-dropdown:before{
         transform:translateX(-50%) rotate(45deg);
@@ -270,7 +284,6 @@ body{
 
   .article-read{
     top:45px;
-    position:absolute;
     left:0;
     bottom:0;
     right:0;
@@ -278,7 +291,8 @@ body{
     overflow-x:hidden;
     overflow-y:auto;
     line-height: 1.5;
-    padding:20px;
+    padding: 20px 20px;
+    margin-top: 20px;
 
     .source-provider{
       img{
@@ -309,6 +323,8 @@ body{
   margin:0;
   padding:0;
   width:100%;
+  overflow-y: scroll;
+
   .readed{
     opacity:0.6;
   }
@@ -320,6 +336,8 @@ body{
     display:block;
     margin:0;
     padding:20px;
+    padding-right: 100px;
+
     h3{
       color:#444B6E;
       font-size:1em;
@@ -370,11 +388,10 @@ body{
 }
 
 .add-feed-container{
-  left:300px;
   position:absolute;
   padding:30px;
   top:0;
-  left:300px;
+  @include span(5 at 7)
   right:0;
   bottom:0;
 
@@ -474,8 +491,9 @@ body{
 
 .v-spinner{
   position: absolute;
+  // @include span(5 at 7);
   top: 50%;
-  left: 50%;
+  left: 35%;
   font-weight:bold;
   transform: translate(-50%,-50%);
   .v-pulse{

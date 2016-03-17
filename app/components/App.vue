@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard">
+<!-- 
     <div class="dashboard-sidebar">
       <div class="sidebar-header">
         <h3 class="sidebar-header-text">Articles</h3>
@@ -30,7 +31,7 @@
           <span class="tagged-count">{{ feed.count }}</span>
         </li>
       </ul>
-    </div>
+    </div> -->
     <router-view></router-view>
   </div>
 </template>
