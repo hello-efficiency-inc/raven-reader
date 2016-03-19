@@ -19,7 +19,9 @@
       </div>
       <p><button v-bind:disabled="processed" v-on:click="addFeed()" type="button" class="add-button">Add</button></p>
     </section>
+    <br/>
     <section>
+      <h2>Feed List</h2>
       <p>Note: This would purge feed including webpages stored for offline purpose.</p>
       <div id="feedlist">
         <ul class="list-feeds" v-if="feeds.length > 0">
@@ -34,8 +36,13 @@
       </div>
     </section>
     <br/>
+    <section class="add-feed-section">
+      <h2>Import Feeds</h2>
+      <button class="add-button" v-bind:disabled="processed" type="button" v-on:click="importFile()">Select file to import</button>
+    </section>
+    <br/>
     <section>
-      <h2>Export Feed</h2>
+      <h2>Export Feeds</h2>
       <p> If you want to use feeds in another application, click button below. All feeds will be exported in one file and you can then import this file to other reader.</p>
       <br/>
       <button class="export-btn" type="button" v-on:click="openFile()">Save feed as a file</button>
@@ -56,7 +63,7 @@ var jetpack = require('fs-jetpack')
 var useDataDir = jetpack.cwd(app.getPath("userData") + '/streams/')
 var Ps = require('perfect-scrollbar');
 var dialog = require('remote').require('dialog')
-var opmlexport = require('../helpers/opml.js')
+var opml = require('../helpers/opml.js')
 var services = require('../helpers/services.js')
 
 const {
@@ -120,6 +127,34 @@ export default{
       })
       removeFeed(id)
     },
+    importFile(){
+      var self = this;
+      self.processed = true;
+
+      dialog.showOpenDialog({
+        title: 'Select OPML File',
+        filters: [
+          { name: 'opml', extensions: ['opml']}
+        ],
+        properties: [ 'openFile', 'openDirectory']
+      },
+      function(fileNames) {
+        if (fileNames) {
+          opml.importFeed(fileNames[0], function(err, feeds) {
+            if (err) {
+              self.alert = true;
+              self.alertmessage = "Sorry. There was a problem reading the file.";
+              self.processed = false
+            }
+            feeds.forEach(function(feed) {
+              self.feedurl = feed.feedUrl;
+              self.addFeed();
+            })
+          });
+        }
+      }
+    );
+    },
     openFile(){
       // Open dialog to save file to destination specified by user.
       dialog.showSaveDialog({
@@ -130,7 +165,7 @@ export default{
       },
       function(fileName){
         if (fileName === undefined) return;
-        opmlexport.exportFeed(fileName)
+        opml.exportFeed(fileName)
       });
     },
     fetchFeed(callback){
