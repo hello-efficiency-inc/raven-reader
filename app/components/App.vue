@@ -67,6 +67,7 @@ export default{
   },
   methods: {
     allArticles(){
+      this.toggleMenu();
       return this.$route.router.go({path: '/',replace: true})
     },
     tags(){
@@ -79,12 +80,14 @@ export default{
       return this.$route.router.go({path: '/article/read' });
     },
     goFeed(title){
+      this.toggleMenu();
       return this.$route.router.go({path: '/feed/' + title })
     },
     addFeed(){
       return this.$route.router.go({path:'/article/add' ,replace: true})
     },
     manageFeed(){
+      this.toggleMenu();
       return this.$route.router.go({ path: '/manage/feeds' })
     },
     toggleMenu(){
