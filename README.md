@@ -25,6 +25,7 @@ npm run release   // package app, will create app in release directory.
 - [x] Refresh feed for new articles
 - [ ] Improving readability for articles having dynamic html
 - [x] Exporting feed in OPML format
+- [ ] Updating and making it compatible to latest version of Electron
 
 ## Demo
 
