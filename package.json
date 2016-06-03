@@ -10,6 +10,7 @@
     "gulp-util": "^3.0.7",
     "json-loader": "^0.5.4",
     "q": "^1.4.1",
+    "susy": "^2.2.12",
     "tree-kill": "^0.1.1",
     "vinyl-source-stream": "^1.1.0",
     "webpack": "^1.12.2",

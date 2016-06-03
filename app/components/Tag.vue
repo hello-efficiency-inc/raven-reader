@@ -1,7 +1,14 @@
 <template>
+  <div class="dashboard-header">
+    <div class="menu-btn" v-on:click="toggleMenu()" v-el:menu-btn>
+      <i v-bind:class="['fa', 'fa-fw', $parent.menuOpen ? 'fa-times' : 'fa-bars']"></i>
+    </div>
+
+    <h2>Tags</h2>
+  </div>
+
   <div class="add-feed-container">
     <section>
-      <h2>Tags</h2>
       <br/>
       <div id="feedlist">
         <ul class="list-feeds" v-if="tags.length > 0">
@@ -27,6 +34,9 @@ export default {
   methods : {
     goToTag(text){
       return this.$route.router.go({ path: '/tag/' + text })
+    },
+    toggleMenu() {
+      this.$parent.toggleMenu();
     }
   }
 }

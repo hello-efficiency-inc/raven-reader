@@ -1,5 +1,8 @@
 <template>
   <div class="dashboard-header">
+    <div class="menu-btn" v-on:click="toggleMenu()" v-el:menu-btn>
+      <i v-bind:class="['fa', 'fa-fw', $parent.menuOpen ? 'fa-times' : 'fa-bars']"></i>
+    </div>
     <h2>{{ title }} </h2>
     <div v-if="state != 'tag'" v-on:click="refreshFeed()" class="settings-trigger refresh" dropdown>
       <i class="fa fa-refresh fa-fw"></i>
@@ -8,64 +11,84 @@
       <input type="text" id="searchbar" class="telescope" placeholder="Search" v-model="searchQuery">
       <i class="fa fa-search"></i>
     </label>
-    <div class="manage-feed" v-on:click="manageFeed()">
-      <i class="fa fa-fw fa-cog"></i> Manage feeds
-    </div>
   </div>
-  <div class="dashboard-articles">
-    <ul v-if="articles.length > 0 && refreshing == false" class="articles">
-      <li :class="{ readed : article.read }" v-for="article in articles | filterBy searchQuery in 'title' 'summary' 'tags'" class="article" v-on:click="articleDetail(article._id)">
-        <h3>{{ article.title }}</h3>
-        <div class="provider">
-          <img v-if="article.favicon !== null" v-bind:src="article.favicon"  width="15" height="15" alt={{ article.title }}> <i v-if="article.favicon === null" class="fa fa-fw fa-rss"></i> {{ article.feed }} <span class="published-date">{{ article.pubDate }}</span>
-        </div>
-        <div class="description">
-          {{ article.summary }}
-        </div>
-        <ul class="article-tags">
-          <li v-for="tag in article.tags" v-on:click="setTag(tag)">{{ tag.text }}</li>
-        </ul>
-      </li>
-    </ul>
-    <div class="v-spinner" v-if="articles.length == 0">No feeds available</div>
-    <div class="v-spinner" v-if="refreshing">
-      <pulse-loader></pulse-loader>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <p>Fetching new articles ...</p>
-    </div>
-  </div>
-  <div class="dashboard-article-detail">
-    <div class="manage-article" v-if="content">
-      <div class="edit-article-tags">
-        <button type="button" v-on:click="showTag()" class="toggle-tag-editor">
-          <i class="fa fa-fw fa-tag"></i>
-          Edit Tags
+
+  <div class="articles-wrapper">
+    <div class="dashboard-articles">
+      <div class="manage-feeds">
+        <button v-on:click="tags()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-tags"></i>
+          Tags
         </button>
-        <div v-if="showModal" class="tags-dropdown">
-          <select v-select="selected" :options="options">
-          </select>
-          <button type="button" class="btn-block" v-on:click="saveTags(id,selected)">Save</button>
-        </div>
+        <button v-on:click="readArticles()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-check"></i>
+          Read
+        </button>
+        <button v-on:click="unreadArticles()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-history"></i>
+          Unread
+        </button>
       </div>
-      <button v-if="!markedread" v-on:click="markRead()" type="button" class="toggle-tag-editor">
-        <i class="fa fa-fw fa-check"></i>
-        Mark as read
-      </button>
-      <button v-if="markedread" v-on:click="markUnread()" type="button" class="toggle-tag-editor">
-        <i class="fa fa-fw fa-history"></i>
-        Mark as unread
-      </button>
-      <button v-on:click="openInBrowser()" type="button" class="toggle-tag-editor">
-        <i class="fa fa-fw fa-globe"></i>
-        Open in Browser
-      </button>
+
+      <ul v-if="articles.length > 0 && refreshing == false" class="articles">
+        <li :class="{ readed : article.read }" v-for="article in articles | filterBy searchQuery in 'title' 'summary' 'tags'" class="article" v-on:click="articleDetail(article._id)">
+          <h3>{{ article.title }}</h3>
+          <div class="provider">
+            <img v-if="article.favicon !== null" v-bind:src="article.favicon"  width="15" height="15" alt={{ article.title }}> <i v-if="article.favicon === null" class="fa fa-fw fa-rss"></i> {{ article.feed }} <span class="published-date">{{ article.pubDate }}</span>
+          </div>
+          <div class="description">
+            {{ article.summary }}
+          </div>
+          <ul class="article-tags">
+            <li v-for="tag in article.tags" v-on:click="setTag(tag)">{{ tag.text }}</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="v-spinner" v-if="articles.length == 0">No feeds/articles available</div>
+      <div class="v-spinner" v-if="refreshing">
+        <pulse-loader></pulse-loader>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <p>Fetching new articles ...</p>
+      </div>
     </div>
-    <article-detail :articletitle="articletitle" :link="link" :pubdate="pubDate" :feed="feed" :content="content" :favicon="favicon" v-if="content"></article-detail>
-    <div class="v-spinner" v-if="!content">Nothing selected</div>
   </div>
+
+  <div class="article-detail-wrapper">
+    <div class="dashboard-article-detail">
+      <div class="manage-article" v-if="content">
+        <div class="edit-article-tags">
+          <button type="button" v-on:click="showTag()" class="toggle-tag-editor">
+            <i class="fa fa-fw fa-tag"></i>
+            Edit Tags
+          </button>
+          <div v-if="showModal" class="tags-dropdown">
+            <select v-select="selected" :options="options">
+            </select>
+            <button type="button" class="btn-block" v-on:click="saveTags(id,selected)">Save</button>
+          </div>
+        </div>
+        <button v-if="!markedread" v-on:click="markRead()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-check"></i>
+          Mark as read
+        </button>
+        <button v-if="markedread" v-on:click="markUnread()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-history"></i>
+          Mark as unread
+        </button>
+        <button v-on:click="openInBrowser()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-globe"></i>
+          Open in Browser
+        </button>
+      </div>
+      <article-detail :articletitle="articletitle" :link="link" :pubdate="pubDate" :feed="feed" :content="content" :favicon="favicon" v-if="content"></article-detail>
+      <div class="v-spinner" v-if="!content">Nothing selected</div>
+    </div>
+  </div>
+
+
 </template>
 <script>
 import store from '../store'
@@ -238,8 +261,6 @@ export default{
       this.markedread = false
     },
     openInBrowser(){
-      // window.open(this.link);
-      // window.open(this.link,'post','width=400,height=200,toolbar=yes,location=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,resizable=yes')
       require("shell").openExternal(this.link);
     },
     saveTags(id,selected){
@@ -274,6 +295,27 @@ export default{
       } else {
         alert("You need to be online in order to perform this action.")
       }
+    },
+    toggleMenu(){
+      this.$parent.toggleMenu();
+    },
+    allArticles(){
+      return this.$route.router.go({path: '/',replace: true})
+    },
+    tags(){
+      return this.$route.router.go({path: '/tags',replace: true})
+    },
+    unreadArticles(){
+      return this.$route.router.go({path: '/article/unread' });
+    },
+    readArticles(){
+      return this.$route.router.go({path: '/article/read' });
+    },
+    goFeed(title){
+      return this.$route.router.go({path: '/feed/' + title })
+    },
+    addFeed(){
+      return this.$route.router.go({path:'/article/add' ,replace: true})
     }
   }
 }

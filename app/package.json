@@ -28,6 +28,7 @@
     "lodash": "^3.10.1",
     "moment": "^2.11.0",
     "nedb": "^1.5.1",
+    "node-opml-parser": "^1.0.0",
     "node-read": "^0.1.7",
     "perfect-scrollbar": "^0.6.10",
     "randomstring": "^1.1.3",

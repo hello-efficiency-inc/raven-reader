@@ -52,7 +52,11 @@ gulp.task('webpack:build-dev', function(callback) {
 
 var sassTask = function () {
     return gulp.src('app/stylesheets/main.scss')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass({
+      includePaths: [
+        'node_modules/susy/sass'
+      ]
+    }).on('error', sass.logError))
     .pipe(minifyCss({compatibility: 'ie8'}))
     .pipe(gulp.dest(destDir.path('stylesheets')));
 };
@@ -96,7 +100,7 @@ const filesToWatch = [
 ]
 
 gulp.task('watch', function() {
-  gulp.watch(filesToCopy, ['copy'])
+  // gulp.watch(filesToCopy, ['copy'])  // Commenting this line also fixes the too many files issue.
   gulp.watch('./app/stylesheets/**/*.scss', ['sass-watch'])
   gulp.watch(filesToWatch, { cwd: 'app' }, ['webpack:build-dev'])  // This is watchign too many files and making things very angry.
 })
