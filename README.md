@@ -1,7 +1,7 @@
-RSS Reader
+RSS Reader (*Updated version coming soon*)
 ==============
 
-Simple rss reader where you can subscribe to rss feed and read it later offline.
+Simple rss reader where you can subscribe to rss feed and read it later offline. 
 
 ## Usage
 
