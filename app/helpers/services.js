@@ -1,166 +1,125 @@
-const DB = require('../db.js')
-var db = new DB(window.env)
-var connect = db.init()
-var article = connect.article
-var tag = connect.tag
-var feed = connect.feed
+import DB from '../db'
+let db = new DB()
+let connect = db.init()
+let article = connect.article
+let tag = connect.tag
+let feed = connect.feed
 
 export default {
-
-  addFeed(feed_data,callback){
-    feed.insert(feed_data,function(err,docs){
-      return callback(docs)
-    })
-  },
-  addArticles(article_data,callback){
-    article.insert(article_data,function(err,docs){
-      return callback(docs)
-    })
-  },
-  checkFeed(feed_name,callback){
-    feed.count({ title: feed_name }, function (err, count) {
-        return callback(count)
-    });
-
-  },
-  fetchFeeds(){
-    return new Promise((resolve,reject) => {
-      feed.find({},function(err,docs){
-        resolve(docs)
-      })
-    })
-  },
-  fetchSpecific(title){
-    return new Promise((resolve,reject) => {
-      feed.find({title: title},function(err,docs){
-        resolve(docs)
-      })
-    })
-  },
-  fetchArticles(){
-    return new Promise((resolve,reject) => {
-      article.find({}).sort({ pubDate: -1 }).exec(function(err,docs){
-        resolve(docs)
-      })
-    })
-  },
-  fetchOne(id){
-    return new Promise(function(resolve, reject) {
-      article.findOne({_id: id},function(err,doc){
-        return resolve(doc);
-      })
-    });
-  },
-  fetchTags(){
-    return new Promise((resolve,reject) => {
-      tag.find({}).sort({ id : 1 }).exec(function(err,docs){
-        resolve(docs)
-      })
-    });
-  },
-  addTag(value,callback){
-    _.mixin({
-      'findByValues': function(collection, property, values) {
-        return _.filter(collection, function(item) {
-          return _.contains(values, item[property]);
-        });
+  addFeed (feedData, callback) {
+    feed.insert(feedData, (err, docs) => {
+      if (err) {
       }
-    });
-
-    tag.find({},function(err,docs){
-
-      // Tags already exists
-      if(docs.length > 0){
-
-        var current_text = _.pluck(docs,'text')
-        var exists = _.findByValues(docs,"text",value)
-        var result = _.remove(value, function(n) {
-          return current_text.indexOf(n) < 0
-        })
-
-        //check rejected result
-        if(result.length > 0){
-
-          var tags = result.map(function(obj,index){
-            var id = (_.last(_.sortBy(docs,'id')).id + index) + 1
-
-            var newObj = {
-              id : id,
-              text : obj
-            }
-            return newObj
-          })
-
-          tag.insert(tags,function(err,newdocs){
-            newdocs.forEach(function(item){
-              exists.push(item)
-            })
-            return callback(exists)
-          })
-
-        } else {
-
-          // Tag already exists
-
-          tag.find({ text: { $in: value }}, function (err, docs) {
-            return callback(docs)
-          });
-
+      return callback(docs)
+    })
+  },
+  deleteFeed (title) {
+    feed.remove({ _id: title }, {}, (err, num) => {
+      if (err) {}
+    })
+  },
+  addArticles (articleData, callback) {
+    article.insert(articleData, (err, docs) => {
+      if (err) {
+      }
+      return callback(docs)
+    })
+  },
+  deleteArticle (id) {
+    article.remove({_id: id}, {}, (err, numRemoved) => {
+      if (err) {}
+    })
+  },
+  checkFeed (feedName, callback) {
+    feed.count({ title: feedName }, (err, count) => {
+      if (err) {
+      }
+      return callback(count)
+    })
+  },
+  fetchFeeds () {
+    return new Promise((resolve, reject) => {
+      feed.find({}, (err, docs) => {
+        if (err) {
         }
-
-      } else {
-
-        //If there is no tags in database
-
-        var value_tags = value.map(function(obj,index){
-          var newObj = {
-            id : index + 1,
-            text : obj
-          }
-          return newObj
-        })
-
-        tag.insert(value_tags,function(err,docs){
-          return callback(docs)
-        })
-
+        resolve(docs)
+      })
+    })
+  },
+  fetchSpecific (title) {
+    return new Promise((resolve, reject) => {
+      feed.find({title: title}, (err, docs) => {
+        if (err) {
+        }
+        resolve(docs)
+      })
+    })
+  },
+  fetchArticles () {
+    return new Promise((resolve, reject) => {
+      article.find({}).sort({ pubDate: -1 }).exec((err, docs) => {
+        if (err) {
+        }
+        resolve(docs)
+      })
+    })
+  },
+  fetchOneArticle (id) {
+    return new Promise((resolve, reject) => {
+      article.findOne({_id: id}, (err, doc) => {
+        if (err) {}
+        return resolve(doc)
+      })
+    })
+  },
+  favouriteArticle (id) {
+    article.update({ _id: id }, { $set: { favourite: true } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  unFavouriteArticle (id) {
+    article.update({ _id: id }, { $set: { favourite: false } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  markRead (id) {
+    article.update({ _id: id }, { $set: { read: true } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  markUnread (id) {
+    article.update({ _id: id }, { $set: { read: false } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  updateFeedCount (id, count) {
+    feed.update({ _id: id }, { $set: { count: count } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  fetchTags () {
+    return new Promise((resolve, reject) => {
+      tag.find({}).sort({id: 1}).exec((err, docs) => {
+        if (err) {}
+        resolve(docs)
+      })
+    })
+  },
+  addTag (value, callback) {
+    tag.insert(value, (err, docs) => {
+      if (err) {}
+      return callback(docs)
+    })
+  },
+  updateTag (value, id) {
+    article.update({_id: id}, { $set: { tags: value } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  deleteTag (id) {
+    tag.remove({ _id: id }, {}, (err, num) => {
+      if (err) {
       }
-
     })
-  },
-  updateTag(value,id){
-    article.update({_id : id},{ $set: { tags : value} },function(err,num){
-
-    })
-  },
-  markRead(id){
-    article.update({ _id: id },{ $set: { read: true } },function(err,num){
-
-    })
-  },
-  markUnread(id){
-    article.update({ _id: id },{ $set: { read: false } },function(err,num){
-
-    })
-  },
-  updateFeedCount(id,count){
-    feed.update({ _id: id },{ $set: { count: count } },function(err,num){
-
-    })
-  },
-  deleteArticle(id){
-    article.remove({ _id: id }, {}, function (err, numRemoved) {
-
-    });
-  },
-  deleteFeed(title){
-    feed.remove({ _id: title },{}, function(err, num){
-
-    });
-  },
-  deleteTag(id){
-    tag.remove({  _id: id },{}, function(err, num){
-
-    });
   }
 }
