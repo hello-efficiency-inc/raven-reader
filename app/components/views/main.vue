@@ -17,7 +17,7 @@
     </div>
     <div class="dashboard-articles">
       <ul v-if="getArticles.length > 0" class="articles">
-        <li class="article" :class="{ readed : article.read }" v-for="article in getArticles | filterBy searchQuery in 'title' 'summary' 'tags'" @click="articleDetail(article)">
+        <li class="article" v-for="article in getArticles | filterBy searchQuery in 'title' 'summary' 'tags'" @click="articleDetail(article)">
           <h3>{{ article.title }}</h3>
           <div class="provider">
             <img v-if="article.favicon" v-bind:src="article.favicon" height="15"><i v-if="article.favicon === null" class="fa fa-fw fa-rss"></i> <span class="published-date">{{ article.pubDate }}</span>
@@ -146,14 +146,14 @@ export default {
   computed: {
     getFeed () {
       if (this.state === 'feed') {
-        let foundfeed = _.filter(this.feeds, { 'title': this.title })
+        let foundfeed = _.filter(this.feeds, { 'title': this.feedtitle })
         return foundfeed[0]
       }
     },
     getArticles () {
       let articlesdata
       if (this.state === 'feed') {
-        let foundarticle = _.filter(this.articles, { 'feed': this.title })
+        let foundarticle = _.filter(this.articles, { 'feed': this.feedtitle })
         articlesdata = _.sortBy(foundarticle, ['pubDate', 'desc'])
       } else if (this.state === 'read') {
         let readarticles = _.filter(this.articles, { 'read': true })
@@ -184,6 +184,8 @@ export default {
         jetpack.remove(useDataDir.path(item.file))
         self.removeArticle(item._id)
       })
+      this.content = ''
+      this.title = ''
       return this.$route.router.go({path: '/', replace: true})
     },
     articleDetail (item) {
