@@ -2,7 +2,7 @@
   <div>
     <div class="dashboard-header">
       <div class="dashboard-content">
-        <h2>{{ title }}</h2>
+        <h2>{{ feedtitle }}</h2>
         <div class="manage-feed" v-if="state === 'feed'" v-on:click="deleteFeed(title)">
           <i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
         </div>
@@ -10,36 +10,94 @@
           <input type="text" id="searchbar" class="telescope" placeholder="Search" v-model="searchQuery">
           <i class="fa fa-search"></i>
         </label>
-        <div class="manage-feed">
-          Mark all as read <i class="fa fa-fw fa-check" aria-hidden="true"></i>
-        </div>
         <div class="manage-feed" v-on:click="manageFeed()">
           <i class="fa fa-fw fa-lg fa-cog"></i>
         </div>
       </div>
     </div>
     <div class="dashboard-articles">
-      <articlelist :filterquery="searchQuery" :state="state" :title="title" :selectedarticle.sync="articleItem"></articlelist>
+      <ul v-if="getArticles.length > 0" class="articles">
+        <li class="article" :class="{ readed : article.read }" v-for="article in getArticles | filterBy searchQuery in 'title' 'summary' 'tags'" @click="articleDetail(article)">
+          <h3>{{ article.title }}</h3>
+          <div class="provider">
+            <img v-if="article.favicon" v-bind:src="article.favicon" height="15"><i v-if="article.favicon === null" class="fa fa-fw fa-rss"></i> <span class="published-date">{{ article.pubDate }}</span>
+          </div>
+          <div class="description">
+            {{ article.summary }}
+          </div>
+          <ul class="article-tags" v-if="article.tags.length > 0">
+            <li v-for="item in article.tags" v-on:click="setTag(tag)">
+              {{ item.name }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div class="v-spinner" v-if="getArticles.length == 0">No feeds available</div>
     </div>
     <div class="dashboard-article-detail">
-      <articledetail :articledetails="articleItem"></articledetail>
+      <div class="manage-article" v-if="content">
+        <div class="edit-article-tags">
+          <button type="button" v-on:click="showTag()" class="toggle-tag-editor">
+            <i class="fa fa-fw fa-tag"></i>
+            Edit tags
+          </button>
+          <div v-if="showModal" class="tags-dropdown">
+            <multiselect :options="taggingOptions" :selected="taggingSelected" :multiple="true" :searchable="true" :on-tag="addArticleTag" :taggable="true" tag-placeholder="Add new tag" placeholder="Add tag" :on-change="updateArticleTag" :limit="3" :show-labels="true" label="name" key="code">
+              <br/>
+            <button type="button" class="btn-block" v-on:click="saveTags(id,selected)">Save</button>
+          </div>
+        </div>
+        <button v-if="!markedread" v-on:click="markAsRead()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-check"></i>
+          Mark as read
+        </button>
+        <button v-if="markedread" v-on:click="markAsUnread()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-history"></i>
+          Mark as unread
+        </button>
+        <button v-if="!favourited" type="button" v-on:click="favourite()" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-star-o"></i>
+          Favourite
+        </button>
+        <button v-if="favourited" type="button" @click="unFavourite()" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-star"></i>
+          Favourited
+        </button>
+        <button @click="openInBrowser()" type="button" class="toggle-tag-editor">
+          <i class="fa fa-fw fa-globe"></i>
+          Open in Browser
+        </button>
+      </div>
+      <articledetail :articletitle='title' :link='link' :feed='feed' :pubdate='pubDate' :content='content' :favicon='favicon' v-if='content'></articledetail>
+      <div class="v-spinner" v-if="!content">Nothing selected</div>
     </div>
   </div>
 </template>
 <script>
-import { removeFeed, removeArticle } from '../../vuex/actions'
-import {remote} from 'electron'
+import { incrementCount, decrementCount, markRead, markUnread, favouriteArticle, unFavouriteArticle, addTag, updateTag, removeFeed, removeArticle } from '../../vuex/actions'
+import {shell, remote} from 'electron'
 import jetpack from 'fs-jetpack'
 import _ from 'lodash'
+import moment from 'moment'
+import read from 'node-read'
 const useDataDir = jetpack.cwd(remote.app.getPath('userData') + '/streams/')
 
 export default {
   vuex: {
     getters: {
       feeds: state => state.feeds,
-      articles: state => state.articles
+      articles: state => state.articles,
+      tags: state => state.tags
     },
     actions: {
+      incrementCount,
+      decrementCount,
+      markRead,
+      markUnread,
+      favouriteArticle,
+      unFavouriteArticle,
+      addTag,
+      updateTag,
       removeFeed,
       removeArticle
     }
@@ -47,19 +105,19 @@ export default {
   route: {
     data ({ to }) {
       if (to.params.type === 'feed') {
-        this.title = to.params.name
+        this.feedtitle = to.params.name
         this.state = 'feed'
       } else if (to.params.type === 'article' && to.params.name === 'read') {
         this.state = 'read'
-        this.title = 'Read Articles'
+        this.feedtitle = 'Read Articles'
       } else if (to.params.type === 'article' && to.params.name === 'unread') {
         this.state = 'unread'
-        this.title = 'Unread Articles'
+        this.feedtitle = 'Unread Articles'
       } else if (to.params.type === 'article' && to.params.name === 'favourites') {
         this.state = 'favourites'
-        this.title = 'Favourites'
+        this.feedtitle = 'Favourites'
       } else {
-        this.title = 'All Articles'
+        this.feedtitle = 'All Articles'
         this.state = 'all'
       }
     }
@@ -68,9 +126,21 @@ export default {
     return {
       queryData: '',
       articleItem: '',
+      id: '',
       count: '',
+      feedtitle: '',
       title: '',
-      state: ''
+      feed: '',
+      feed_id: '',
+      state: '',
+      content: '',
+      link: '',
+      pubDate: '',
+      markedread: '',
+      favourited: '',
+      taggingOptions: [],
+      taggingSelected: [],
+      showModal: false
     }
   },
   computed: {
@@ -85,8 +155,25 @@ export default {
       if (this.state === 'feed') {
         let foundarticle = _.filter(this.articles, { 'feed': this.title })
         articlesdata = _.sortBy(foundarticle, ['pubDate', 'desc'])
+      } else if (this.state === 'read') {
+        let readarticles = _.filter(this.articles, { 'read': true })
+        articlesdata = _.sortBy(readarticles, ['pubDate', 'desc'])
+      } else if (this.state === 'unread') {
+        let unreadarticles = _.filter(this.articles, { 'read': false })
+        articlesdata = _.sortBy(unreadarticles, ['pubDate', 'desc'])
+      } else if (this.state === 'favourites') {
+        let favouritedarticles = _.filter(this.articles, { 'favourite': true })
+        articlesdata = _.sortBy(favouritedarticles, ['pubDate', 'desc'])
+      } else {
+        articlesdata = this.articles
       }
-      return articlesdata
+      return articlesdata.map(item => {
+        let checkValid = moment(item.pubDate, 'MMMM Do YYYY', true).isValid()
+        if (!checkValid) {
+          item.pubDate = moment.unix(item.pubDate).format('MMMM Do YYYY')
+        }
+        return item
+      })
     }
   },
   methods: {
@@ -98,6 +185,67 @@ export default {
         self.removeArticle(item._id)
       })
       return this.$route.router.go({path: '/', replace: true})
+    },
+    articleDetail (item) {
+      let self = this
+      this.showModal = false
+      let data = jetpack.read(useDataDir.path(item.file))
+      this.id = item._id
+      this.title = item.title
+      this.favicon = item.favicon
+      this.feed = item.feed
+      this.feed_id = item.feed_id
+      this.pubDate = moment.unix(item.pubDate).format('MMMM Do YYYY')
+      this.link = item.link
+      this.markedread = item.read
+      this.favourited = item.favourite
+      if (!item.read) {
+        this.markedread = true
+        this.markRead(this.id)
+        this.decrementCount(item.feed_id)
+      } else {
+        this.markedread = item.read
+      }
+      read(data, (err, article, res) => {
+        if (err) {}
+        self.content = article.content
+      })
+    },
+    updateArticleTag (value) {
+      this.updateTag(this.id, value)
+    },
+    addArticleTag (newTag) {
+      const tag = {
+        name: newTag,
+        code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+      }
+      this.addTag(this.id, tag)
+      this.taggingOptions.push(tag)
+      this.taggingSelected.push(tag)
+    },
+    showTag () {
+      this.showModal = !this.showModal
+    },
+    openInBrowser () {
+      shell.openExternal(this.link)
+    },
+    favourite (id) {
+      this.favouriteArticle(this.id)
+      this.favourited = true
+    },
+    unFavourite (id) {
+      this.unFavouriteArticle(this.id)
+      this.favourited = false
+    },
+    markAsRead () {
+      this.markRead(this.id)
+      this.decrementCount(this.feed_id)
+      this.markedread = true
+    },
+    markAsUnread () {
+      this.markUnread(this.id)
+      this.incrementCount(this.feedId)
+      this.markedread = false
     }
   }
 }
