@@ -1,4 +1,4 @@
-import feed from './feed.js'
+import Feed from './feeds.js'
 import queue from './queue.js'
 import service from './services.js'
 import {incrementCount, addArticles} from '../vuex/actions.js'
@@ -36,6 +36,7 @@ export default {
       let favicon = item.favicon
       let title = item.title
       let id = item._id
+      let feed = new Feed()
 
       // Fetch New Articles
       feed.fetchNewArticles(item.url)

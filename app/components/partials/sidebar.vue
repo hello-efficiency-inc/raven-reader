@@ -127,7 +127,6 @@ export default {
       })
     },
     checkFeed (data, callback) {
-      console.log(data.meta.title)
       service.checkFeed(data.meta.title, count => {
         if (count === 0) {
           callback(null, data)
@@ -139,7 +138,6 @@ export default {
     fetchIcon (data, callback) {
       let favicon = new Favicon(data.meta.link)
       favicon.init().then(result => {
-        console.log(result)
         let path
         if (result !== null) {
           path = queue.queueTask('favicon', result)

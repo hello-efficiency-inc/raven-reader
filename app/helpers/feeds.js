@@ -137,6 +137,22 @@ export default class {
     return promise
   }
 
+  fetchNewArticles (url) {
+    console.log(url)
+    let self = this
+    let promise = new Promise((resolve, reject) => {
+      got(url, (error, body, response) => {
+        if (!error) {
+          self.feedParser(body)
+          .then((data) => {
+            resolve(data)
+          })
+        }
+      })
+    })
+    return promise
+  }
+
   init () {
     if (!this.url.match(/^http/)) {
       this.url = 'http://' + this.url

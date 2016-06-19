@@ -77,6 +77,7 @@ import jetpack from 'fs-jetpack'
 import _ from 'lodash'
 import moment from 'moment'
 import read from 'node-read'
+import refresh from '../../helpers/refresh.js'
 const useDataDir = jetpack.cwd(remote.app.getPath('userData') + '/streams/')
 
 export default {
@@ -84,7 +85,8 @@ export default {
     getters: {
       feeds: state => state.feeds,
       articles: state => state.articles,
-      tags: state => state.tags
+      tags: state => state.tags,
+      offline: state => state.offline
     },
     actions: {
       incrementCount,
@@ -140,6 +142,9 @@ export default {
       showModal: false
     }
   },
+  created () {
+    setInterval(this.refreshFeed, 70000)
+  },
   computed: {
     getFeed () {
       if (this.state === 'feed') {
@@ -191,6 +196,7 @@ export default {
       let data = jetpack.read(useDataDir.path(item.file))
       this.id = item._id
       this.title = item.title
+      console.log(item.favicon)
       this.favicon = item.favicon
       this.feed = item.feed
       this.feed_id = item.feed_id
@@ -239,6 +245,12 @@ export default {
       this.markUnread(this.id)
       this.incrementCount(this.feed_id)
       this.markedread = false
+    },
+    refreshFeed () {
+      if (!this.offline) {
+        refresh.refreshfeed(this.feedtitle).then(() => {
+        })
+      }
     }
   }
 }
