@@ -1,7 +1,10 @@
-RSS Reader (*Updated version coming soon*)
+RSS Reader v2.0
 ==============
 
-Simple rss reader where you can subscribe to rss feed and read it later offline. 
+![img](screenshot.png)
+
+Simple rss reader where you can subscribe to rss feed and read it later offline. For previous version please refer [legacy branch](https://github.com/mrgodhani/rss-reader/tree/legacy).
+Project is based upon [Electron Boilerplate for Vuejs](https://github.com/bradstewart/electron-boilerplate-vue) by bradstewart.
 
 ## Usage
 
@@ -14,22 +17,24 @@ npm run release   // package app, will create app in release directory.
 
 ```
 
+## Packaging apps for Windows
+
+If you are packaging app for Windows from non-windows operating system. Make sure you install [Wine](https://www.winehq.org/). You can also install it via [Homebrew](http://brew.sh/)
+
 ## Features
 
 - [x] Offline reading
 - [x] Subscribing to news feed
-- [x] Tagging Articles
-- [x] Browse Articles by Tags
+- [ ] Updated version for tagging Articles
+- [ ] Browse Articles by Tags
 - [x] Search Articles
+- [x] Badge counters for unread articles
 - [x] Marking as read/unread
-- [x] Refresh feed for new articles
-- [ ] Improving readability for articles having dynamic html
-- [x] Exporting feed in OPML format
-- [ ] Updating and making it compatible to latest version of Electron
-
-## Demo
-
-![img](./images/rssreaderdemo.gif)
+- [x] Marking as favourite
+- [x] Open article link in external browser
+- [ ] Exporting feed in OPML format
+- [x] Resizable dialog window
+- [x] Updating and making it compatible to latest version of Electron
 
 ## Support / Contribution
 

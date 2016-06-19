@@ -3,106 +3,51 @@
 // It doesn't have any windows which you can see on screen, but we can open
 // window from here.
 
-var app = require('app');
-var BrowserWindow = require('browser-window');
-var env = require('./vendor/electron_boilerplate/env_config');
-var devHelper = require('./vendor/electron_boilerplate/dev_helper');
-var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
-var mainWindow;
+import { app, BrowserWindow, ipcMain } from 'electron'
+import path from 'path'
+import os from 'os'
 
-// Preserver of the window size and position between app launches.
-var mainWindowState = windowStateKeeper('main', {
-  width: 1300,
-  height: 760
-});
+let mainWindow
 
-
-
-app.on('ready', function () {
-
+app.on('ready', () => {
   mainWindow = new BrowserWindow({
-    x: mainWindowState.x,
-    y: mainWindowState.y,
-    minWidth: 1024,
-    minHeight: 600,
-    width: mainWindowState.width,
-    height: mainWindowState.height,
-    resizable:false
-  });
+    width: 1300,
+    height: 760,
+    minWidth: 1300,
+    minHeight: 760
+  })
 
-  if (mainWindowState.isMaximized) {
-    mainWindow.maximize();
+  // Load the HTML file directly from the webpack dev server if
+  // hot reload is enabled, otherwise load the local file.
+  const mainURL = process.env.HOT
+  ? `http://localhost:${process.env.PORT}/main.html`
+  : 'file://' + path.join(__dirname, 'main.html')
+
+  mainWindow.loadURL(mainURL)
+
+  if (process.env.NODE_ENV !== 'production') {
+    mainWindow.openDevTools()
   }
 
-  if (env.name === 'test') {
-    mainWindow.loadUrl('file://' + __dirname + '/spec.html');
-  } else {
-    mainWindow.loadUrl('file://' + __dirname + '/app.html');
-  }
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
+})
 
-  if (env.name !== 'production') {
-    devHelper.setDevMenu();
-    mainWindow.openDevTools();
-  }
+ipcMain.on('online-status-changed', (event, status) => {
+  event.sender.send('online-status-check', status)
+})
 
-  // open url in default browser
-  mainWindow.webContents.on("will-navigate", function (event, url) {
-    if(!url.startsWith("file://")) {
-      event.preventDefault();
-      require("shell").openExternal(url);
+if (os.platform() === 'darwin') {
+  ipcMain.on('counter', (event, counter) => {
+    if (counter > 0) {
+      app.dock.setBadge(counter.toString())
+    } else {
+      app.dock.setBadge('')
     }
-  });
+  })
+}
 
-  var template = [
-    {
-      label: 'Edit',
-      submenu: [
-        {
-          label: 'Undo',
-          accelerator: 'Command+Z',
-          selector: 'undo:'
-        },
-        {
-          label: 'Redo',
-          accelerator: 'Shift+Command+Z',
-          selector: 'redo:'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Cut',
-          accelerator: 'Command+X',
-          selector: 'cut:'
-        },
-        {
-          label: 'Copy',
-          accelerator: 'Command+C',
-          selector: 'copy:'
-        },
-        {
-          label: 'Paste',
-          accelerator: 'Command+V',
-          selector: 'paste:'
-        },
-        {
-          label: 'Select All',
-          accelerator: 'Command+A',
-          selector: 'selectAll:'
-        }
-      ]
-    }
-  ];
-  var Menu = require("menu");
-  var menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
-
-  mainWindow.on('close', function () {
-    mainWindowState.saveState(mainWindow);
-  });
-});
-
-app.commandLine.appendSwitch('--disable-http-cache');
-app.on('window-all-closed', function () {
-  app.quit();
-});
+app.on('window-all-closed', () => {
+  app.quit()
+})

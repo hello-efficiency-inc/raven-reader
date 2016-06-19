@@ -1,89 +1,77 @@
-"use strict";
+import jetpack from 'fs-jetpack'
+import fs from 'fs'
+import DataStore from 'nedb'
+import { remote } from 'electron'
 
-var jetpack = require('fs-jetpack');
-var app = require('remote').require('app');
-
-function DB() {
-  this.db = null;
-  this.config = window.env;
-  this.useDataDir = jetpack.cwd(app.getPath("userData"));
-}
-
-DB.prototype.init = function() {
-
-  if (this.db) {
-    return this.db;
+export default class {
+  constructor () {
+    this.db = null
+    this.useDataDir = jetpack.cwd(remote.app.getPath('userData'))
   }
-  var fs = require("fs");
-  var DataStore = require('nedb');
-  var self = this;
 
-  function createOrReadDatabase(dbname) {
+  createOrReadDatabase (dbname) {
+    let yesArticle = fs.existsSync(this.useDataDir.path(dbname.article))
+    let yesTag = fs.existsSync(this.useDataDir.path(dbname.tag))
+    let yesFeed = fs.existsSync(this.useDataDir.path(dbname.feed))
+    if (yesArticle && yesTag && yesFeed) {
+      let articleData = fs.readFileSync(this.useDataDir.path(dbname.article))
+      let tagData = fs.readFileSync(this.useDataDir.path(dbname.tag))
+      let feedData = fs.readFileSync(this.useDataDir.path(dbname.feed))
+      let database = {}
 
-    var yes_article = fs.existsSync(self.useDataDir.path(dbname.article));
-    var yes_tag = fs.existsSync(self.useDataDir.path(dbname.tag));
-    var yes_feed = fs.existsSync(self.useDataDir.path(dbname.feed));
-
-    if (yes_article && yes_tag && yes_feed) {
-
-      var article_data = fs.readFileSync(self.useDataDir.path(dbname.article));
-      var tag_data = fs.readFileSync(self.useDataDir.path(dbname.tag));
-      var feed_data = fs.readFileSync(self.useDataDir.path(dbname.feed));
-
-      if (!article_data && !tag_data && !feed_data) {
-        return;
+      if (!articleData && !tagData && !feedData) {
+        return
       }
-
-      var database = {};
 
       database.article = new DataStore({
-        filename: self.useDataDir.path(dbname.article),
+        filename: this.useDataDir.path(dbname.article),
         autoload: true
-      });
+      })
       database.tag = new DataStore({
-        filename: self.useDataDir.path(dbname.tag),
+        filename: this.useDataDir.path(dbname.tag),
         autoload: true
-      });
+      })
       database.feed = new DataStore({
-        filename: self.useDataDir.path(dbname.feed),
+        filename: this.useDataDir.path(dbname.feed),
         autoload: true
-      });
-
-      return database;
-
+      })
+      return database
     } else {
       try {
+        this.useDataDir.write(dbname.article)
+        this.useDataDir.write(dbname.tag)
+        this.useDataDir.write(dbname.feed)
 
-        self.useDataDir.write(dbname.article);
-        self.useDataDir.write(dbname.tag);
-        self.useDataDir.write(dbname.feed);
-
-        var database = {};
+        let database = {}
 
         database.article = new DataStore({
-          filename: self.useDataDir.path(dbname.article),
+          filename: this.useDataDir.path(dbname.article),
           autoload: true
-        });
+        })
         database.tag = new DataStore({
-          filename: self.useDataDir.path(dbname.tag),
+          filename: this.useDataDir.path(dbname.tag),
           autoload: true
-        });
+        })
         database.feed = new DataStore({
-          filename: self.useDataDir.path(dbname.feed),
+          filename: this.useDataDir.path(dbname.feed),
           autoload: true
-        });
-
-        return database;
-
+        })
+        return database
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
-
     }
-
   }
-  this.db = createOrReadDatabase(this.config.dbFileNames);
-  return this.db;
-}
 
-module.exports = exports = DB;
+  init () {
+    if (this.db) {
+      return this.db
+    }
+    this.db = this.createOrReadDatabase({
+      'article': 'articles.db',
+      'tag': 'tags.db',
+      'feed': 'feeds.db'
+    })
+    return this.db
+  }
+}

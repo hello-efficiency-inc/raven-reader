@@ -1,0 +1,44 @@
+<!-- 
+  The majority of the devtools-related code was taken from vuejs/vue-devtools. 
+  I modified shell/dev to work with electron and just decided to include the built
+  files for now, rather than important all of devtools' various dependencies. 
+
+  There's probably a better way to do it. But this mostly works.
+-->
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf8">
+    <title>Vue Devtools</title>
+    <style>
+      #target {
+        flex: 1;
+        border: none;
+        border-bottom: 1px solid #ccc;
+      }
+      #container {
+        display: flex;
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+        
+
+  </head>
+  <body>
+    <div id="container"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

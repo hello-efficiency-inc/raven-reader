@@ -1,9 +1,10 @@
-node_modules
-*.log
 .DS_Store
 Thumbs.db
-
-/app/spec.js
-/build/
-/releases/
-/tmp/
+node_modules/
+app/dist/
+dist/
+releases/
+npm-debug.log*
+selenium-debug.log
+test/unit/coverage
+test/e2e/reports
