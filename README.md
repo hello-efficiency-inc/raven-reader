@@ -22,14 +22,14 @@ If you are packaging app for Windows from non-windows operating system. Make sur
 
 - [x] Offline reading
 - [x] Subscribing to news feed
-- [] Updated version for tagging Articles
-- [] Browse Articles by Tags
+- [ ] Updated version for tagging Articles
+- [ ] Browse Articles by Tags
 - [x] Search Articles
 - [x] Badge counters for unread articles
 - [x] Marking as read/unread
 - [x] Marking as favourite
 - [x] Open article link in external browser
-- [] Exporting feed in OPML format
+- [ ] Exporting feed in OPML format
 - [x] Updating and making it compatible to latest version of Electron
 
 
