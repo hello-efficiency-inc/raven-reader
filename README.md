@@ -31,6 +31,7 @@ If you are packaging app for Windows from non-windows operating system. Make sur
 - [x] Marking as favourite
 - [x] Open article link in external browser
 - [ ] Exporting feed in OPML format
+- [x] Resizable dialog window
 - [x] Updating and making it compatible to latest version of Electron
 
 
