@@ -18,18 +18,15 @@ npm run release   // package app, will create app in release directory.
 
 - [x] Offline reading
 - [x] Subscribing to news feed
-- [x] Tagging Articles
-- [x] Browse Articles by Tags
+- [] Updated version for tagging Articles
+- [] Browse Articles by Tags
 - [x] Search Articles
 - [x] Marking as read/unread
-- [x] Refresh feed for new articles
-- [ ] Improving readability for articles having dynamic html
-- [x] Exporting feed in OPML format
+- [x] Marking as favourite
+- [] Background job for updating articles from feed
+- [] Exporting feed in OPML format
 - [x] Updating and making it compatible to latest version of Electron
 
-## Demo
-
-![img](./images/rssreaderdemo.gif)
 
 ## Support / Contribution
 

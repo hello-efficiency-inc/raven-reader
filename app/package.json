@@ -22,6 +22,7 @@
     "node-read": "^0.1.7",
     "node-readability": "^2.2.0",
     "perfect-scrollbar": "^0.6.11",
+    "queue": "^4.0.0",
     "randomstring": "^1.1.5",
     "select2": "^4.0.3",
     "stream": "0.0.2",

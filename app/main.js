@@ -2,8 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App'
 import Main from './components/views/main'
-import Tag from './components/views/tag'
-import ManageFeed from './components/views/managefeed'
 import RegisterComponent from './components/register'
 import {remote} from 'electron'
 import jetpack from 'fs-jetpack'
@@ -31,12 +29,6 @@ const router = new VueRouter({
 router.map({
   '/:type/:name': {
     component: Main
-  },
-  '/tags/': {
-    component: Tag
-  },
-  '/manage/feeds': {
-    component: ManageFeed
   },
   '/': {
     component: Main

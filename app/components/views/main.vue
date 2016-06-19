@@ -194,18 +194,11 @@ export default {
       this.favicon = item.favicon
       this.feed = item.feed
       this.feed_id = item.feed_id
-      this.pubDate = moment.unix(item.pubDate).format('MMMM Do YYYY')
+      this.pubDate = item.pubDate
       this.link = item.link
       this.markedread = item.read
       this.favourited = item.favourite
       this.taggingSelected = item.tags
-      if (!item.read) {
-        this.markedread = true
-        this.markRead(this.id)
-        this.decrementCount(item.feed_id)
-      } else {
-        this.markedread = item.read
-      }
       read(data, (err, article, res) => {
         if (err) {}
         self.content = article.content
@@ -244,7 +237,7 @@ export default {
     },
     markAsUnread () {
       this.markUnread(this.id)
-      this.incrementCount(this.feedId)
+      this.incrementCount(this.feed_id)
       this.markedread = false
     }
   }
