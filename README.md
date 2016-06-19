@@ -1,6 +1,8 @@
 RSS Reader v2.0
 ==============
 
+![img](screenshot.png)
+
 Simple rss reader where you can subscribe to rss feed and read it later offline. For previous version please refer [legacy branch](https://github.com/mrgodhani/rss-reader/tree/legacy).
 Project is based upon [Electron Boilerplate for Vuejs](https://github.com/bradstewart/electron-boilerplate-vue) by bradstewart.
 
@@ -33,7 +35,6 @@ If you are packaging app for Windows from non-windows operating system. Make sur
 - [ ] Exporting feed in OPML format
 - [x] Resizable dialog window
 - [x] Updating and making it compatible to latest version of Electron
-
 
 ## Support / Contribution
 
