@@ -1,7 +1,7 @@
 RSS Reader v2.0
 ==============
 
-Simple rss reader where you can subscribe to rss feed and read it later offline.
+Simple rss reader where you can subscribe to rss feed and read it later offline. For previous version please refer [legacy branch](https://github.com/mrgodhani/rss-reader/tree/legacy).
 
 ## Usage
 
@@ -14,6 +14,10 @@ npm run release   // package app, will create app in release directory.
 
 ```
 
+## Packaging apps for Windows
+
+If you are packaging app for Windows from non-windows operating system. Make sure you install [Wine](https://www.winehq.org/). You can also install it via [Homebrew](http://brew.sh/)
+
 ## Features
 
 - [x] Offline reading
@@ -21,9 +25,10 @@ npm run release   // package app, will create app in release directory.
 - [] Updated version for tagging Articles
 - [] Browse Articles by Tags
 - [x] Search Articles
+- [x] Badge counters for unread articles
 - [x] Marking as read/unread
 - [x] Marking as favourite
-- [] Background job for updating articles from feed
+- [x] Open article link in external browser
 - [] Exporting feed in OPML format
 - [x] Updating and making it compatible to latest version of Electron
 
