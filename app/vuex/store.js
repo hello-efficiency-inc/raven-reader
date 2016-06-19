@@ -40,6 +40,7 @@ const mutations = {
         }
       }
       let unread = _.filter(state.articles, {'read': false}).length
+      state.count = unread
       ipcRenderer.send('counter', unread)
     })
   },
@@ -78,6 +79,7 @@ const mutations = {
     let index = _.findIndex(state.articles, { '_id': id })
     state.articles[index].read = true
     state.count--
+    console.log(state.count)
     ipcRenderer.send('counter', state.count)
     service.markRead(id)
   },
