@@ -20,6 +20,7 @@
     "jsdom": "^9.2.1",
     "nedb": "^1.8.0",
     "node-read": "^0.1.7",
+    "node-readability": "^2.2.0",
     "perfect-scrollbar": "^0.6.11",
     "randomstring": "^1.1.5",
     "select2": "^4.0.3",

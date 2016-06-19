@@ -10,9 +10,6 @@
           <input type="text" id="searchbar" class="telescope" placeholder="Search" v-model="searchQuery">
           <i class="fa fa-search"></i>
         </label>
-        <div class="manage-feed" v-on:click="manageFeed()">
-          <i class="fa fa-fw fa-lg fa-cog"></i>
-        </div>
       </div>
     </div>
     <div class="dashboard-articles">
@@ -37,7 +34,7 @@
     <div class="dashboard-article-detail">
       <div class="manage-article" v-if="content">
         <div class="edit-article-tags">
-          <button type="button" v-on:click="showTag()" class="toggle-tag-editor">
+          <!-- <button type="button" v-on:click="showTag()" class="toggle-tag-editor">
             <i class="fa fa-fw fa-tag"></i>
             Edit tags
           </button>
@@ -45,7 +42,7 @@
             <multiselect :options="taggingOptions" :selected="taggingSelected" :multiple="true" :searchable="true" :on-tag="addArticleTag" :taggable="true" tag-placeholder="Add new tag" placeholder="Add tag" :on-change="updateArticleTag" :limit="3" :show-labels="true" label="name" key="code">
               <br/>
             <button type="button" class="btn-block" v-on:click="saveTags(id,selected)">Save</button>
-          </div>
+          </div> -->
         </div>
         <button v-if="!markedread" v-on:click="markAsRead()" type="button" class="toggle-tag-editor">
           <i class="fa fa-fw fa-check"></i>
@@ -201,6 +198,7 @@ export default {
       this.link = item.link
       this.markedread = item.read
       this.favourited = item.favourite
+      this.taggingSelected = item.tags
       if (!item.read) {
         this.markedread = true
         this.markRead(this.id)

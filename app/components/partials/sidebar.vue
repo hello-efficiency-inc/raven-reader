@@ -8,9 +8,9 @@
         <li class="dashboard-list-item" v-on:click="allArticles()">
           <i class="fa fa-fw fa-list"></i> All
         </li>
-        <li class="dashboard-list-item" v-on:click="tags()">
+        <!-- <li class="dashboard-list-item" v-on:click="tags()">
           <i class="fa fa-fw fa-tags"></i> Tags
-        </li>
+        </li> -->
         <li class="dashboard-list-item" v-on:click="favourites()">
           <i class="fa fa-fw fa-star-o"></i> Favourites
         </li>
