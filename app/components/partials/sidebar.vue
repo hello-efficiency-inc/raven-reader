@@ -59,7 +59,7 @@ import Favicon from '../../helpers/favicon'
 import queue from '../../helpers/queue'
 import service from '../../helpers/services'
 import { addArticles, addFeed } from '../../vuex/actions'
-import string from 'underscore.string'
+import _ from 'lodash'
 import async from 'async'
 
 export default {
@@ -79,7 +79,7 @@ export default {
         if (item.title.length >= 20) {
           item.origtitle = item.title
         }
-        item.title = string.prune(item.title, 20)
+        item.title = _.truncate(item.title, { length: 20 })
         return item
       })
     }

@@ -25,7 +25,6 @@
     "select2": "^4.0.3",
     "stream": "0.0.2",
     "striptags": "^2.1.1",
-    "underscore.string": "^3.3.4",
     "vue-multiselect": "^0.2.0",
     "vue-spinner": "^1.0.2",
     "xhr-request": "^1.0.1",
