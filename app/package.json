@@ -17,6 +17,7 @@
     "image-type": "^2.1.0",
     "jquery": "2.2.2",
     "jsdom": "^9.2.1",
+    "lodash": "^4.15.0",
     "nedb": "^1.8.0",
     "node-read": "^0.1.7",
     "perfect-scrollbar": "^0.6.11",

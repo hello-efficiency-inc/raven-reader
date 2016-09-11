@@ -1,7 +1,6 @@
 import got from 'got'
 import cheerio from 'cheerio'
 import striptags from 'striptags'
-import string from 'underscore.string'
 import he from 'he'
 import Parsefeed from 'feedparser'
 import Stream from 'stream'
@@ -57,7 +56,7 @@ export default class {
           title: he.decode(item.title),
           read: false,
           favourite: false,
-          summary: string.prune(he.decode(striptags(item.summary)), 120),
+          summary: _.truncate.prune(he.decode(striptags(item.summary)), 120),
           tags: [],
           link: item.origlink ? item.origlink : item.link,
           pubDate: moment(item.pubDate).format('X')
