@@ -30,19 +30,30 @@
         </v-subheader>
       </v-flex>
       <v-flex xs6 class="text-xs-right">
-        <v-btn small flat>edit</v-btn>
+        <v-btn small icon @click.stop="dialog = !dialog">
+          <v-icon>add</v-icon>
+        </v-btn>
       </v-flex>
     </v-layout>
-    <v-layout align-center>
-      <v-flex xs6>
-        <v-subheader>
-          Subscriptions
-        </v-subheader>
-      </v-flex>
-      <v-flex xs6 class="text-xs-right">
-        <v-btn small flat>edit</v-btn>
-      </v-flex>
-    </v-layout>
+    <v-list>
+      <v-list-tile avatar v-for="item in categories" :key="item._id" @click="">
+        <v-list-tile-action>
+           <v-icon :style="{ color: item.color }">fiber_manual_record</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+      </v-list-tile>
+    </v-list>
+    <v-subheader>
+      Subscriptions
+    </v-subheader>
+    <v-list>
+      <v-list-tile avatar v-for="item in feeds" :key="item._id" @click="">
+        <v-list-tile-avatar>
+          <img :src="item.favicon">
+        </v-list-tile-avatar>
+        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+      </v-list-tile>
+    </v-list>
   </v-navigation-drawer>
   <v-toolbar fixed app dark color="primary" :clipped-left="$vuetify.breakpoint.lgAndUp">
     <v-toolbar-side-icon @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
@@ -72,27 +83,76 @@
       </v-slide-y-transition>
     </v-container>
   </v-content>
+  <v-dialog v-model="dialog" width="500px">
+    <v-card>
+      <v-card-title
+      class="grey lighten-4 py-4 title"
+      >
+      Add new category
+    </v-card-title>
+    <v-container grid-list-sm class="pa-4">
+      <v-layout row wrap>
+        <v-flex xs12 align-center justify-space-between>
+          <v-layout align-center>
+            <v-text-field
+            type="url"
+            placeholder="Enter category name"
+            v-model="category.name"
+            required
+            ></v-text-field>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-card-actions>
+      <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
+      <v-btn flat @click="addCategory">Save</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
 </v-app>
 </div>
 </template>
-
 <script>
+import randomcolor from 'randomcolor'
+
 export default {
   name: 'rss-reader',
-  data: () => ({
-    clipped: true,
-    drawer: true,
-    fixed: true,
-    items: [
-      { icon: 'apps', title: 'All Articles', to: '/' },
-      { icon: 'bubble_chart', title: 'Unread', to: '/inspire' },
-      { icon: 'star_outline', title: 'Favourites', to: '/inspire' }
-    ],
-    miniVariant: false,
-    right: true,
-    rightDrawer: false,
-    title: 'All Articles'
-  })
+  data () {
+    return {
+      dialog: false,
+      clipped: true,
+      drawer: false,
+      fixed: true,
+      category: {
+        name: null
+      },
+      items: [
+        { icon: 'apps', title: 'All Articles', to: '/' },
+        { icon: 'history', title: 'Unread', to: '/unread' },
+        { icon: 'star_outline', title: 'Favourites', to: '/favourites' }
+      ],
+      title: 'All Articles'
+    }
+  },
+  mounted () {
+    this.$store.dispatch('loadFeed')
+    this.$store.dispatch('loadArticles')
+    this.$store.dispatch('loadCategory')
+  },
+  computed: {
+    feeds () {
+      return this.$store.state.Feed.feeds
+    },
+    categories () {
+      return this.$store.state.Category.categories
+    }
+  },
+  methods: {
+    addCategory () {
+      this.$store.dispatch('addCategory', { name: this.category.name, color: randomcolor() })
+    }
+  }
 }
 </script>
 
@@ -100,4 +160,18 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,700');
 /* Global CSS */
+#app .speed-dial,
+#app .btn--floating {
+  position: fixed;
+}
+#app .btn--floating {
+  margin: 0 0 16px 16px;
+}
+
+#app .btn--floating .icon {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  font-size: 32px;
+}
 </style>
