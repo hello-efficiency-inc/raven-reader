@@ -14,10 +14,24 @@
             <v-chip color="red" text-color="white">News</v-chip>
           </v-list-tile-action>
           <v-list-tile-action>
-            <v-menu bottom left transition="v-slide-y-transition">
+            <v-menu bottom left transition="slide-y-transition">
               <v-btn icon="icon" slot="activator">
                 <v-icon>more_vert</v-icon>
               </v-btn>
+              <v-list>
+                <v-list-item>
+                  <v-list-tile>
+                    <v-list-tile-title>Mark as favourite</v-list-tile-title>
+                    <!-- <v-list-tile-title v-else>Mark as unfavourite</v-list-tile-title> -->
+                  </v-list-tile>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-tile>
+                    <v-list-tile-title>Mark Read</v-list-tile-title>
+                    <!-- <v-list-tile-title v-else>Mark as unfavourite</v-list-tile-title> -->
+                  </v-list-tile>
+                </v-list-item>
+              </v-list>
             </v-menu>
           </v-list-tile-action>
         </v-list-tile>

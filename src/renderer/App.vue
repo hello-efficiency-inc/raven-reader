@@ -41,6 +41,9 @@
            <v-icon :style="{ color: item.color }">fiber_manual_record</v-icon>
         </v-list-tile-action>
         <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+        <v-list-tile-action class="text-xs-right">
+           <v-icon>clear</v-icon>
+        </v-list-tile-action>
       </v-list-tile>
     </v-list>
     <v-subheader>
@@ -151,6 +154,7 @@ export default {
   methods: {
     addCategory () {
       this.$store.dispatch('addCategory', { name: this.category.name, color: randomcolor() })
+      this.dialog = false
     }
   }
 }

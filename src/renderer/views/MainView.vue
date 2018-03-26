@@ -33,6 +33,18 @@
             ></v-text-field>
           </v-layout>
         </v-flex>
+        <v-flex xs12>
+          <v-layout align-center>
+            <v-select
+              :items="$store.state.Category.categories"
+              item-text="name"
+              item-value="_id"
+              v-model="feed.category"
+              label="Select Category"
+              required
+            ></v-select>
+          </v-layout>
+        </v-flex>
       </v-layout>
     </v-container>
     <v-card-actions>
@@ -51,7 +63,8 @@ export default {
     return {
       valid: false,
       feed: {
-        link: null
+        link: null,
+        category: null
       },
       dialog: false
     }
@@ -59,7 +72,7 @@ export default {
   methods: {
     async saveFeed () {
       const helper = new FeedHelper()
-      const data = await helper.fetchFeed(this.feed.link)
+      const data = await helper.fetchFeed(this.feed.link, this.feed.category)
       this.$store.dispatch('addFeed', data.meta)
       data.articles.forEach(value => {
         this.$store.dispatch('addArticles', value)
