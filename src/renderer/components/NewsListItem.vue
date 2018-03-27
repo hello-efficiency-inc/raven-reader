@@ -19,18 +19,14 @@
                 <v-icon>more_vert</v-icon>
               </v-btn>
               <v-list>
-                <v-list-item>
-                  <v-list-tile>
-                    <v-list-tile-title>Mark as favourite</v-list-tile-title>
-                    <!-- <v-list-tile-title v-else>Mark as unfavourite</v-list-tile-title> -->
-                  </v-list-tile>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-tile>
-                    <v-list-tile-title>Mark Read</v-list-tile-title>
-                    <!-- <v-list-tile-title v-else>Mark as unfavourite</v-list-tile-title> -->
-                  </v-list-tile>
-                </v-list-item>
+                <v-list-tile>
+                  <v-list-tile-title>Mark as favourite</v-list-tile-title>
+                  <!-- <v-list-tile-title v-else>Mark as unfavourite</v-list-tile-title> -->
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-title>Mark Read</v-list-tile-title>
+                  <!-- <v-list-tile-title v-else>Mark as unfavourite</v-list-tile-title> -->
+                </v-list-tile>
               </v-list>
             </v-menu>
           </v-list-tile-action>

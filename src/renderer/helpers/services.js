@@ -62,5 +62,11 @@ export default {
       }
       return cb(docs)
     })
+  },
+  deleteCategory (id, cb) {
+    return category.remove({ _id: id }, {}, (err, numRemoved) => {
+      if (err) {}
+      cb(numRemoved)
+    })
   }
 }

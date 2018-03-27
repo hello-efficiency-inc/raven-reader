@@ -16,10 +16,10 @@ Platform:
 npm manifest: 
   {
     "name": "rss-reader",
-    "version": "0.0.0",
+    "version": "3.0.0",
     "author": "Meet Godhani <meetgodhani23@gmail.com>",
     "description": "Simple RSS Reader made using VueJS",
-    "license": null,
+    "license": "MIT",
     "main": "./dist/electron/main.js",
     "scripts": {
       "build": "node .electron-vue/build.js && electron-builder",
@@ -69,19 +69,24 @@ npm manifest:
       }
     },
     "dependencies": {
+      "async": "^2.6.0",
       "axios": "^0.16.1",
       "cheerio": "^1.0.0-rc.2",
+      "datauri": "^1.1.0",
       "feedparser": "^2.2.9",
       "fs-jetpack": "^1.3.0",
       "got": "^8.3.0",
-      "greenlet": "^0.1.2",
       "image-type": "^3.0.0",
       "lodash": "^4.17.5",
+      "luxon": "^1.0.0",
       "nedb": "^1.8.0",
+      "randomcolor": "^0.5.3",
       "read-art": "^0.5.4",
+      "uuid": "^3.2.1",
       "vue": "^2.4.2",
       "vue-electron": "^1.0.6",
       "vue-router": "^2.5.3",
+      "vue-timeago": "^3.4.4",
       "vuetify": "1.0.0",
       "vuex": "^2.3.1"
     },
@@ -450,7 +455,7 @@ Lockfile:
     version "1.5.2"
     resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
   
-  async@^2.1.2, async@^2.4.1:
+  async@^2.1.2, async@^2.4.1, async@^2.6.0:
     version "2.6.0"
     resolved "https://registry.yarnpkg.com/async/-/async-2.6.0.tgz#61a29abb6fcc026fea77e56d1c6ec53a795951f4"
     dependencies:
@@ -2445,6 +2450,14 @@ Lockfile:
     dependencies:
       assert-plus "^1.0.0"
   
+  datauri@^1.1.0:
+    version "1.1.0"
+    resolved "https://registry.yarnpkg.com/datauri/-/datauri-1.1.0.tgz#c6184ff6b928ede4e41ccc23ab954c7839c4fb39"
+    dependencies:
+      image-size "^0.6.2"
+      mimer "^0.3.2"
+      semver "^5.5.0"
+  
   date-now@^0.1.4:
     version "0.1.4"
     resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -3815,8 +3828,8 @@ Lockfile:
       ini "^1.3.4"
   
   globals@^11.0.1:
-    version "11.3.0"
-    resolved "https://registry.yarnpkg.com/globals/-/globals-11.3.0.tgz#e04fdb7b9796d8adac9c8f64c14837b2313378b0"
+    version "11.4.0"
+    resolved "https://registry.yarnpkg.com/globals/-/globals-11.4.0.tgz#b85c793349561c16076a3c13549238a27945f1bc"
   
   globals@^9.18.0:
     version "9.18.0"
@@ -3899,10 +3912,6 @@ Lockfile:
   "graceful-readlink@>= 1.0.0":
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
-  
-  greenlet@^0.1.2:
-    version "0.1.2"
-    resolved "https://registry.yarnpkg.com/greenlet/-/greenlet-0.1.2.tgz#6fe3a88a9cd324b021b7a1fe1fa74f720c3d391c"
   
   handle-thing@^1.2.5:
     version "1.2.5"
@@ -4249,8 +4258,8 @@ Lockfile:
       postcss "^6.0.1"
   
   ieee754@^1.1.4:
-    version "1.1.10"
-    resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.10.tgz#719a6f7b026831e64bdb838b0de1bb0029bbf716"
+    version "1.1.11"
+    resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.11.tgz#c16384ffe00f5b7835824e67b6f2bd44a5229455"
   
   iferr@^0.1.5:
     version "0.1.5"
@@ -4259,6 +4268,10 @@ Lockfile:
   ignore@^3.3.3, ignore@^3.3.5, ignore@^3.3.6:
     version "3.3.7"
     resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.7.tgz#612289bfb3c220e186a58118618d5be8c1bab021"
+  
+  image-size@^0.6.2:
+    version "0.6.2"
+    resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.6.2.tgz#8ee316d4298b028b965091b673d5f1537adee5b4"
   
   image-type@^3.0.0:
     version "3.0.0"
@@ -5168,6 +5181,10 @@ Lockfile:
       pseudomap "^1.0.2"
       yallist "^2.1.2"
   
+  luxon@^1.0.0:
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.0.0.tgz#ec1cba8cf53be14d2375c2f17e3468eb195c20bb"
+  
   macaddress@^0.2.8:
     version "0.2.8"
     resolved "https://registry.yarnpkg.com/macaddress/-/macaddress-0.2.8.tgz#5904dc537c39ec6dbefeae902327135fa8511f12"
@@ -5311,6 +5328,10 @@ Lockfile:
   mime@^2.2.0:
     version "2.2.0"
     resolved "https://registry.yarnpkg.com/mime/-/mime-2.2.0.tgz#161e541965551d3b549fa1114391e3a3d55b923b"
+  
+  mimer@^0.3.2:
+    version "0.3.2"
+    resolved "https://registry.yarnpkg.com/mimer/-/mimer-0.3.2.tgz#0b83aabdf48eaacfd2e093ed4c0ed3d38eda8073"
   
   mimic-fn@^1.0.0:
     version "1.2.0"
@@ -6455,6 +6476,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/randombytes/-/randombytes-2.0.6.tgz#d302c522948588848a8d300c932b44c24231da80"
     dependencies:
       safe-buffer "^5.1.0"
+  
+  randomcolor@^0.5.3:
+    version "0.5.3"
+    resolved "https://registry.yarnpkg.com/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"
   
   randomfill@^1.0.3:
     version "1.0.4"
@@ -7914,7 +7939,7 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   
-  uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
+  uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0, uuid@^3.2.1:
     version "3.2.1"
     resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
   
@@ -8004,6 +8029,10 @@ Lockfile:
   vue-template-es2015-compiler@^1.6.0:
     version "1.6.0"
     resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
+  
+  vue-timeago@^3.4.4:
+    version "3.4.4"
+    resolved "https://registry.yarnpkg.com/vue-timeago/-/vue-timeago-3.4.4.tgz#a878c9ba5840816939a89659451902f84ebdf23f"
   
   vue@^2.4.2:
     version "2.5.16"

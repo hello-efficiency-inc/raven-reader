@@ -14,8 +14,9 @@ const mutations = {
       state.categories.unshift(data)
     }
   },
-  DELETE_CATEGORY (state) {
-    state.main++
+  DELETE_CATEGORY (state, num) {
+    const index = _.findIndex(state.categories, { '_id': num })
+    state.categories.splice(index, 1)
   }
 }
 
@@ -30,8 +31,10 @@ const actions = {
       commit('ADD_CATEGORY', docs)
     })
   },
-  deleteCategory ({ commit }) {
-    commit('DELETE_CATEGORY')
+  deleteCategory ({ commit }, _id) {
+    db.deleteCategory(_id, num => {
+      commit('DELETE_CATEGORY', num)
+    })
   }
 }
 
