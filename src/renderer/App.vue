@@ -10,6 +10,11 @@
   }
 </script>
 
-<style>
-  /* CSS */
+<style lang="scss">
+  @import 'node_modules/bootstrap/scss/bootstrap';
+
+  body {
+     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 </style>
