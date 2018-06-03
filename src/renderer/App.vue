@@ -13,8 +13,94 @@
 <style lang="scss">
   @import 'node_modules/bootstrap/scss/bootstrap';
 
+  html,
+  #app,
   body {
-     -webkit-font-smoothing: antialiased;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  .feather {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    vertical-align: text-bottom;
+  }
+
+  .feather-filled {
+    fill: #000;
+  }
+
+  .sidebar {
+    position: relative;
+    flex-grow: 0;
+    width: 300px;
+    height: 100%;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  @supports ((position: -webkit-sticky) or (position: sticky)) {
+    .sidebar-sticky {
+        position: -webkit-sticky;
+        position: sticky;
+    }
+}
+.sidebar .nav-link {
+    font-weight: 600;
+    color: #000;
+}
+
+.sidebar .nav-link .feather {
+    margin-right: 10px;
+    color: #999;
+}
+
+.sidebar .nav-link.active {
+    color: #007bff;
+}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+    color: inherit;
+}
+
+.sidebar-heading {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.list-group a {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.list-group-item:first-of-type {
+  border-top: 0;
+}
+
+.list-group-item {
+  border-left: 0;
+  border-right: 0;
+}
 </style>
