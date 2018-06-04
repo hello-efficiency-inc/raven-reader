@@ -4,12 +4,16 @@ import VueAwesome from 'vue-awesome'
 import {remote} from 'electron'
 import jetpack from 'fs-jetpack'
 import fs from 'fs'
+import BootstrapVue from 'bootstrap-vue'
 
 import App from './App'
 import router from './router'
 import store from './store'
 
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 Vue.component('icon', VueAwesome)
+Vue.use(BootstrapVue)
 
 const useDataDir = jetpack.cwd(remote.app.getAppPath()).cwd(remote.app.getPath('userData'))
 

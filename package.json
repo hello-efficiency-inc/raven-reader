@@ -55,6 +55,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap": "^4.1.1",
+    "bootstrap-vue": "^2.0.0-rc.11",
     "cheerio": "^1.0.0-rc.2",
     "dayjs": "^1.6.2",
     "feather-icons": "^4.7.3",

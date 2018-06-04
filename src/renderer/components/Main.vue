@@ -2,12 +2,15 @@
   <div class="app-wrapper">
     <nav class="bg-light sidebar">
       <div class="subscribe-toolbar">
-        <button class="btn btn-subscribe">
+        <button class="btn btn-subscribe" v-b-modal.addfeed>
           <svg class="feather">
             <use xlink:href="static/feather-sprite.svg#plus"/>
           </svg>
           Add
         </button>
+        <b-modal id="addfeed" hide-header hide-footer size="lg">
+          <p class="my-4">Hello from modal!</p>
+        </b-modal>
       </div>
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
