@@ -54,7 +54,7 @@
       position: absolute;
       left: 0;
       bottom: 0;
-      width: 100%;
+      width: 99.5%;
       height: 20px;
       background: linear-gradient(
       rgba(255, 255, 255, 0.5),

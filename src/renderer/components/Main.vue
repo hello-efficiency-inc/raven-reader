@@ -8,8 +8,45 @@
           </svg>
           Add
         </button>
-        <b-modal id="addfeed" hide-header hide-footer size="lg">
-          <p class="my-4">Hello from modal!</p>
+        <b-modal id="addfeed" ref="addFeedModal" hide-header :hide-footer="!feeddata" size="lg" @shown="focusMyElement" centered @hidden="onHidden">
+          <form v-on:submit.prevent="fetchFeed">
+          <b-input-group size="md">
+            <b-input-group-text slot="prepend">
+              <strong>Add <svg class="feather">
+                <use xlink:href="static/feather-sprite.svg#plus"/>
+              </svg></strong>
+            </b-input-group-text>
+            <b-input-group-text slot="append">
+              <div class="bouncing-loader" v-if="loading">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+              <div class="favicon-img" v-if="feeddata !== null && !loading">
+                <img :src="feeddata.site.favicon" height="20">
+              </div>
+            </b-input-group-text>
+            <b-form-input class="no-border" placeholder="Enter website or feed url" ref="focusThis" v-model="feed_url"></b-form-input>
+          </b-input-group>
+          </form>
+          <div v-if="feeddata" class="subscription-content col pt-3">
+            <template v-for="(feed, index) in feeddata.feedUrls">
+              <b-input-group size="md">
+                <b-input-group-text slot="append">
+                  <b-form-checkbox :id="index" v-model="selected_feed" :value="feed">
+                  </b-form-checkbox>
+                </b-input-group-text>
+                <b-form-input v-model="feed.title"></b-form-input>
+              </b-input-group>
+              <b-form-text id="inputLiveHelp" class="mb-3">
+                {{ feed.url }}
+              </b-form-text>
+            </template>
+          </div>
+          <div slot="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
         </b-modal>
       </div>
       <div class="sidebar-sticky">
@@ -158,6 +195,45 @@
     </div>
   </div>
 </template>
+<script>
+import finder from 'rss-finder'
+export default {
+  name: 'dashboard',
+  data () {
+    return {
+      feed_url: '',
+      loading: false,
+      feeddata: null,
+      selected_feed: []
+    }
+  },
+  methods: {
+    fetchFeed () {
+      this.loading = true
+      finder(this.feed_url).then((res) => {
+        this.loading = false
+        this.feeddata = res
+      })
+    },
+    focusMyElement (e) {
+      this.$refs.focusThis.focus()
+    },
+    resetForm () {
+      this.feed_url = ''
+      this.feeddata = null
+      this.url = ''
+      this.loading = false
+    },
+    hideModal () {
+      this.resetForm()
+      this.$refs.addFeedModal.hide()
+    },
+    onHidden () {
+      this.resetForm()
+    }
+  }
+}
+</script>
 <style lang="scss">
 .app-wrapper {
   display: flex;
@@ -228,6 +304,11 @@
   .form-control {
     border-radius: 0;
     border: 0;
+
+    &:focus {
+      box-shadow: none;
+      outline: 0;
+    }
   }
 }
 
@@ -339,8 +420,76 @@
   color: #3399FF;
   font-weight: 700;
 
+  &:focus {
+    outline: 0;
+    box-shadow: none;
+  }
+
   .feather {
     margin-right: 5px;
   }
+}
+
+#addfeed {
+  form {
+    background: #f4f6f8;
+    padding: 0.8rem;
+  }
+
+  .modal-body {
+    padding: 0rem;
+  }
+  .input-group-text {
+    background: transparent;
+    border: 0;
+  }
+  .no-border {
+    border: 0;
+    background: #f4f6f8;
+
+    &:focus {
+      outline: 0;
+      box-shadow: none;
+    }
+  }
+}
+
+@keyframes bouncing-loader {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0.1;
+    transform: translateY(-1rem);
+  }
+}
+.bouncing-loader {
+  display: flex;
+  justify-content: center;
+}
+.bouncing-loader > div {
+  width: 0.4rem;
+  height: 0.4rem;
+  margin: 1rem 0rem;
+  background: #000;
+  border-radius: 50%;
+  animation: bouncing-loader 0.6s infinite alternate;
+}
+.bouncing-loader > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.bouncing-loader > div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.favicon-img {
+  display: flex;
+  justify-content: center;
+}
+
+.subscription-content {
+  background: #fff;
+  border-top: 1px solid #f4f6f8;
 }
 </style>
