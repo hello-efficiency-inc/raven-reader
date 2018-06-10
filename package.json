@@ -66,12 +66,10 @@
     "normalize-url": "^3.0.1",
     "rss-finder": "^2.0.5",
     "vue": "^2.5.16",
-    "vue-awesome": "^3.0.0",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
     "vuetify": "^1.0.18",
-    "vuex": "^3.0.1",
-    "zlib": "^1.0.5"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
