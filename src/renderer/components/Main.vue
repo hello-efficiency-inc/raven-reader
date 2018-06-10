@@ -33,7 +33,7 @@
             <template v-for="(feed, index) in feeddata.feedUrls">
               <b-input-group size="md">
                 <b-input-group-text slot="append">
-                  <b-form-checkbox :id="index" v-model="selected_feed" :value="feed">
+                  <b-form-checkbox v-model="selected_feed" :value="feed">
                   </b-form-checkbox>
                 </b-input-group-text>
                 <b-form-input v-model="feed.title"></b-form-input>
@@ -45,7 +45,7 @@
           </div>
           <div slot="modal-footer">
             <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" @click="subscribe">Subscribe</button>
           </div>
         </b-modal>
       </div>
@@ -197,6 +197,9 @@
 </template>
 <script>
 import finder from 'rss-finder'
+import normalizeUrl from 'normalize-url'
+import { parseFeed } from '../parsers/feed'
+
 export default {
   name: 'dashboard',
   data () {
@@ -210,7 +213,7 @@ export default {
   methods: {
     fetchFeed () {
       this.loading = true
-      finder(this.feed_url).then((res) => {
+      finder(normalizeUrl(this.feed_url)).then((res) => {
         this.loading = false
         this.feeddata = res
       })
@@ -227,6 +230,13 @@ export default {
     hideModal () {
       this.resetForm()
       this.$refs.addFeedModal.hide()
+    },
+    subscribe () {
+      console.log(this.selected_feed)
+      this.selected_feed.forEach(async function (feed) {
+        const posts = await parseFeed(feed.url)
+        console.log(posts)
+      })
     },
     onHidden () {
       this.resetForm()
