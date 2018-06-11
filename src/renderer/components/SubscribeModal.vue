@@ -77,9 +77,10 @@ export default {
     subscribe () {
       const self = this
       this.selected_feed.forEach(async function (feed) {
-        const posts = await parseFeed(feed.url)
-        self.$store.dispatch('addFeed', self.feeddata.site)
-        posts.forEach((post) => {
+        const feeditem = await parseFeed(feed.url)
+        feeditem.meta.favicon = self.feeddata.site.favicon
+        self.$store.dispatch('addFeed', feed.meta)
+        feeditem.posts.forEach((post) => {
           self.$store.dispatch('addArticle', post)
         })
       })

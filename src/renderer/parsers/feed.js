@@ -33,18 +33,22 @@ export async function ReadFeed (url) {
  * @constructor
  */
 export async function ReadFeedStream (stream) {
-  const posts = []
+  const feed = {
+    meta: '',
+    posts: []
+  }
   return new Promise((resolve, reject) => {
     stream.pipe(new FeedParser())
       .on('error', reject)
       .on('end', () => {
-        resolve(posts)
+        resolve(feed)
       })
       .on('readable', function () {
         const streamFeed = this
+        feed.meta = this.meta
         let item
         while ((item = streamFeed.read())) {
-          posts.push(item)
+          feed.posts.push(item)
         }
       })
   })
@@ -55,9 +59,10 @@ export async function ReadFeedStream (stream) {
  * @param array posts
  * @constructor
  */
-export function ParseFeedPost (posts) {
-  return posts.map((item) => {
+export function ParseFeedPost (feed) {
+  feed.posts.map((item) => {
     item.pubDate = dayjs(item.pubDate).fromNow()
     return item
   })
+  return feed
 }
