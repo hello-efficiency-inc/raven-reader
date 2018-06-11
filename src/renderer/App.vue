@@ -27,21 +27,6 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  .feather {
-    width: 18px;
-    height: 18px;
-    stroke: currentColor;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    fill: none;
-    vertical-align: text-bottom;
-  }
-
-  .feather-filled {
-    fill: #000;
-  }
-
   .sidebar {
     position: relative;
     flex-grow: 0;

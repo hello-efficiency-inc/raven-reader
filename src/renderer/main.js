@@ -5,6 +5,7 @@ import {remote} from 'electron'
 import jetpack from 'fs-jetpack'
 import fs from 'fs'
 import BootstrapVue from 'bootstrap-vue'
+import Register from './components/register'
 
 import App from './App'
 import router from './router'
@@ -27,6 +28,8 @@ if (!dirStreams) {
 if (!dirFav) {
   fs.mkdir(useDataDir.path('favicons'))
 }
+
+Register.registerComponents()
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios

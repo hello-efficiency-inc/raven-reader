@@ -10,26 +10,19 @@ export default class {
   }
 
   createOrReadDatabase (db) {
-    const existsArticle = fs.existsSync(this.userDataDir.path(db.article))
-    const existsCategory = fs.existsSync(this.useDataDir.path(db.categories))
+    const existsArticle = fs.existsSync(this.useDataDir.path(db.article))
     const existsFeed = fs.existsSync(this.useDataDir.path(db.feed))
     const existsRecentReads = fs.existsSync(this.useDataDir.path(db.recentreads))
     let database = {}
 
-    if (!existsArticle && !existsCategory && !existsFeed && !existsRecentReads) {
-      this.useDataDir.write(db.article)
-      this.useDataDir.write(db.categories)
-      this.useDataDir.write(db.feed)
-      this.useDataDir.write(db.recentreads)
+    if (!existsArticle && !existsFeed && !existsRecentReads) {
+      this.useDataDir.write(db.article, '')
+      this.useDataDir.write(db.feed, '')
+      this.useDataDir.write(db.recentreads, '')
     }
 
     database.article = new DataStore({
       filename: this.useDataDir.path(db.article),
-      autoload: true
-    })
-
-    database.category = new DataStore({
-      filename: this.useDataDir.path(db.categories),
       autoload: true
     })
 
@@ -52,10 +45,11 @@ export default class {
     }
 
     this.db = this.createOrReadDatabase({
-      'article': 'articles.db',
-      'categories': 'tags.db',
-      'feed': 'feeds.db',
-      'recentreads': 'recentreads.db'
+      article: 'articles.db',
+      feed: 'feeds.db',
+      recentreads: 'recentreads.db'
     })
+
+    return this.db
   }
 }
