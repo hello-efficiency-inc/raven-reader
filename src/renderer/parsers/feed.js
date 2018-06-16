@@ -12,7 +12,7 @@ dayjs.extend(relativeTime)
  */
 export async function parseFeed (feedUrl) {
   const stream = await ReadFeed(feedUrl)
-  const posts = await ReadFeedStream(stream)
+  const posts = await ReadFeedStream(stream, feedUrl)
   const response = await ParseFeedPost(posts)
   return response
 }
@@ -32,7 +32,7 @@ export async function ReadFeed (url) {
  * @param Stream stream
  * @constructor
  */
-export async function ReadFeedStream (stream) {
+export async function ReadFeedStream (stream, feedUrl) {
   const feed = {
     meta: '',
     posts: []
@@ -45,7 +45,12 @@ export async function ReadFeedStream (stream) {
       })
       .on('readable', function () {
         const streamFeed = this
-        feed.meta = this.meta
+        feed.meta = {
+          link: this.meta.link,
+          xmlurl: this.meta.xmlurl ? this.meta.xmlurl : feedUrl,
+          favicon: this.meta.favicon,
+          title: this.meta.title
+        }
         let item
         while ((item = streamFeed.read())) {
           feed.posts.push(item)

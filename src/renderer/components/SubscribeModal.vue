@@ -76,14 +76,16 @@ export default {
     },
     subscribe () {
       const self = this
+      const favicon = this.feeddata.site.favicon
       this.selected_feed.forEach(async function (feed) {
         const feeditem = await parseFeed(feed.url)
-        feeditem.meta.favicon = self.feeddata.site.favicon
-        self.$store.dispatch('addFeed', feed.meta)
+        feeditem.meta.favicon = favicon
+        self.$store.dispatch('addFeed', feeditem.meta)
         feeditem.posts.forEach((post) => {
           self.$store.dispatch('addArticle', post)
         })
       })
+      this.hideModal()
     },
     onHidden () {
       this.resetForm()

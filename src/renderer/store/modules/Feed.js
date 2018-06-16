@@ -9,6 +9,7 @@ const mutations = {
     state.feeds = feed
   },
   ADD_FEED (state, docs) {
+    state.feeds.unshift(docs)
   },
   DELETE_FEED (state) {
   }
@@ -16,8 +17,9 @@ const mutations = {
 
 const actions = {
   loadFeeds ({ commit }) {
-    // do something async
-    commit('LOAD_FEEDS')
+    db.fetchFeeds(docs => {
+      commit('LOAD_FEEDS', docs)
+    })
   },
   addFeed ({ commit, state }, feed) {
     db.addFeed(feed, docs => {
