@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="addfeed" ref="addFeedModal" hide-header :hide-footer="!feeddata" size="lg" @shown="focusMyElement" centered @hidden="onHidden">
+  <b-modal id="addfeed" ref="addFeedModal" hide-header :hide-footer="feeddata === null" size="lg" @shown="focusMyElement" centered @hidden="onHidden">
     <form v-on:submit.prevent="fetchFeed">
       <b-input-group size="md">
         <b-input-group-text slot="prepend">
@@ -18,7 +18,7 @@
         <b-form-input class="no-border" placeholder="Enter website or feed url" ref="focusThis" v-model="feed_url"></b-form-input>
       </b-input-group>
     </form>
-    <div v-if="feeddata" class="subscription-content col pt-3">
+    <div v-if="feeddata !== null" class="subscription-content col pt-3">
       <template v-for="(feed, index) in feeddata.feedUrls">
         <b-input-group size="md">
           <b-input-group-text slot="append">
@@ -42,6 +42,7 @@
 import finder from 'rss-finder'
 import normalizeUrl from 'normalize-url'
 import { parseFeed } from '../parsers/feed'
+import he from 'he'
 
 export default {
   name: 'addfeed-modal',
@@ -58,7 +59,19 @@ export default {
       this.loading = true
       finder(normalizeUrl(this.feed_url)).then((res) => {
         this.loading = false
-        this.feeddata = res
+        res.feedUrls.map((item) => {
+          item.title = he.unescape(item.title)
+          return item
+        })
+        if (res.feedUrls.length === 0) {
+          this.feeddata = null
+          this.$toast('No feed found', {
+            className: 'et-alert',
+            horizontalPosition: 'center'
+          })
+        } else {
+          this.feeddata = res
+        }
       })
     },
     focusMyElement (e) {
@@ -68,6 +81,7 @@ export default {
       this.feed_url = ''
       this.feeddata = null
       this.url = ''
+      this.selected_feed = []
       this.loading = false
     },
     hideModal () {
@@ -82,6 +96,7 @@ export default {
         feeditem.meta.favicon = favicon
         self.$store.dispatch('addFeed', feeditem.meta)
         feeditem.posts.forEach((post) => {
+          post.meta.favicon = post.meta.favicon ? post.meta.favicon : favicon
           self.$store.dispatch('addArticle', post)
         })
       })

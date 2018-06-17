@@ -4,35 +4,33 @@
       <article-search></article-search>
       <div class="articles">
         <div class="list-group">
-          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+          <a v-if="articles.length > 0" href="#" class="list-group-item list-group-item-action flex-column align-items-start" v-for="article in articles">
             <div class="d-flex w-100 justify-content-between mb-3">
-              <small><img src="https://techcrunch.com/wp-content/uploads/2015/02/cropped-cropped-favicon-gradient.png?w=32" width="16" height="16"> Techcrunch</small>
-              <small>3 days ago</small>
+              <small><img :src="article.meta.favicon" width="16" height="16"> {{ article.meta.title }}</small>
+              <small>{{ article.pubdate }}</small>
             </div>
-            <h6><strong>Looks like macOS 10.14 will have a new dark mode and an Apple News app</strong></h6>
-            <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+            <h6><strong>{{ article.title }}</strong></h6>
           </a>
-          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between mb-3">
-              <small><img src="https://techcrunch.com/wp-content/uploads/2015/02/cropped-cropped-favicon-gradient.png?w=32" width="16" height="16"> Techcrunch</small>
-              <small>3 days ago</small>
-            </div>
-            <h6><strong>Looks like macOS 10.14 will have a new dark mode and an Apple News app</strong></h6>
-            <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-          </a>
-          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between mb-3">
-              <small><img src="https://techcrunch.com/wp-content/uploads/2015/02/cropped-cropped-favicon-gradient.png?w=32" width="16" height="16"> Techcrunch</small>
-              <small>3 days ago</small>
-            </div>
-            <h6><strong>Looks like macOS 10.14 will have a new dark mode and an Apple News app</strong></h6>
-            <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-          </a>
+          <div class="no-articles" v-if="articles.length === 0">
+            No articles available
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+<script>
+import _ from 'lodash'
+
+export default {
+  computed: {
+    articles () {
+      const orderedArticles = _.orderBy(this.$store.state.Article.articles, ['pubDate'], ['desc'])
+      return orderedArticles
+    }
+  }
+}
+</script>
 <style lang="scss">
 .articles-inner {
   position: absolute;
@@ -70,5 +68,12 @@
   overflow-y: auto;
   background: #fff;
   overflow-x: hidden;
+}
+
+.no-articles {
+  display: flex;
+  height: 90vh;
+  justify-content: center;
+  align-items: center;
 }
 </style>

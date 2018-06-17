@@ -43,10 +43,15 @@
         </ul>
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Subscriptions</span>
-          <a class="d-flex align-items-center text-muted" href="#">
-            <feather-icon name="plus-circle"></feather-icon>
-          </a>
         </h6>
+        <ul class="nav flex-column">
+          <li v-for="feed in feeds" class="nav-item">
+            <a class="nav-link" href="#">
+              <img :src="feed.favicon" height="16" width="16" class="mr-1">
+              {{ feed.title }}
+            </a>
+          </li>
+        </ul>
       </div>
     </nav>
     <article-list></article-list>
@@ -58,6 +63,11 @@ export default {
   mounted () {
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
+  },
+  computed: {
+    feeds () {
+      return this.$store.state.Feed.feeds
+    }
   }
 }
 </script>

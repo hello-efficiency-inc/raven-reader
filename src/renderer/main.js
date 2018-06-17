@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import axios from 'axios'
-import VueAwesome from 'vue-awesome'
 import {remote} from 'electron'
 import jetpack from 'fs-jetpack'
 import fs from 'fs'
+import Toast from 'vue-easy-toast'
 import BootstrapVue from 'bootstrap-vue'
 import Register from './components/register'
 
@@ -13,8 +13,8 @@ import store from './store'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-Vue.component('icon', VueAwesome)
 Vue.use(BootstrapVue)
+Vue.use(Toast)
 
 const useDataDir = jetpack.cwd(remote.app.getAppPath()).cwd(remote.app.getPath('userData'))
 

@@ -1,9 +1,6 @@
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import FeedParser from 'feedparser'
 import got from 'got'
-
-dayjs.extend(relativeTime)
+import he from 'he'
 
 /**
  * Parse feed
@@ -66,7 +63,9 @@ export async function ReadFeedStream (stream, feedUrl) {
  */
 export function ParseFeedPost (feed) {
   feed.posts.map((item) => {
-    item.pubDate = dayjs(item.pubDate).fromNow()
+    if (item.summary) {
+      item.summary = he.unescape(item.summary)
+    }
     return item
   })
   return feed
