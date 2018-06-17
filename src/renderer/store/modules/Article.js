@@ -1,6 +1,7 @@
 import db from '../../services/db'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import _ from 'lodash'
 
 dayjs.extend(relativeTime)
 
@@ -19,6 +20,26 @@ const mutations = {
     articles.pubdate = dayjs(articles.pubdate).fromNow()
     state.articles.unshift(articles)
   },
+  MARK_FAVOURITE (state, id) {
+    const index = _.findIndex(state.articles, { '_id': id })
+    db.markFavourite(id)
+    state.articles[index].favourite = true
+  },
+  MARK_UNFAVOURITE (state, id) {
+    db.markUnfavourite(id)
+    const index = _.findIndex(state.articles, { '_id': id })
+    state.articles[index].favourite = false
+  },
+  MARK_READ (state, id) {
+    const index = _.findIndex(state.articles, { '_id': id })
+    db.markRead(id)
+    state.articles[index].read = true
+  },
+  MARK_UNREAD (state, id) {
+    const index = _.findIndex(state.articles, { '_id': id })
+    db.markUnread(id)
+    state.articles[index].read = false
+  },
   DELETE_ARTICLES (state) {
   }
 }
@@ -33,6 +54,18 @@ const actions = {
     db.addArticles(article, docs => {
       commit('ADD_ARTICLES', docs)
     })
+  },
+  markFavourite ({ commit }, id) {
+    commit('MARK_FAVOURITE', id)
+  },
+  markUnfavourite ({ commit }, id) {
+    commit('MARK_UNFAVOURITE', id)
+  },
+  markRead ({ commit }, id) {
+    commit('MARK_READ', id)
+  },
+  markUnread ({ commit }, id) {
+    commit('MARK_UNREAD', id)
   },
   deleteArticle ({ commit }) {
     commit('DELETE_ARTICLES')

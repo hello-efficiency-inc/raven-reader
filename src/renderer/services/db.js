@@ -35,5 +35,25 @@ export default {
       if (err) {}
       return cb(docs)
     })
+  },
+  markFavourite (id) {
+    article.update({ _id: id }, { $set: { favourite: true } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  markUnfavourite (id) {
+    article.update({ _id: id }, { $set: { favourite: false } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  markRead (id) {
+    article.update({ _id: id }, { $set: { read: true } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  markUnread (id) {
+    article.update({ _id: id }, { $set: { read: false } }, (err, num) => {
+      if (err) {}
+    })
   }
 }

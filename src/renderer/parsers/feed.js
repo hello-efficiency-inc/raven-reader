@@ -63,6 +63,8 @@ export async function ReadFeedStream (stream, feedUrl) {
  */
 export function ParseFeedPost (feed) {
   feed.posts.map((item) => {
+    item.favourite = false
+    item.read = false
     if (item.summary) {
       item.summary = he.unescape(item.summary)
     }

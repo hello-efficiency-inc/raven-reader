@@ -2,7 +2,7 @@
   <div class="article-detail">
     <div class="content-wrapper">
       <div class="article-toolbar">
-        <div class="site-info" v-if="id">
+        <div class="site-info" v-if="article">
           <div class="wrap">
             <button class="btn btn-toolbar">
               <span class="favicon-wrap">
@@ -12,15 +12,15 @@
             </button>
           </div>
         </div>
-        <div class="article-buttons" v-if="id">
+        <div class="article-buttons" v-if="article">
           <div class="wrap">
-            <button class="btn btn-toolbar">
-              <feather-icon name="star"></feather-icon>
+            <button class="btn btn-toolbar" @click="markFavourite">
+              <feather-icon name="star" :filled="article.favourite"></feather-icon>
             </button>
           </div>
           <div class="wrap">
-            <button class="btn btn-toolbar">
-              <feather-icon name="circle"></feather-icon>
+            <button class="btn btn-toolbar" @click="markRead">
+              <feather-icon name="circle" :filled="article.read"></feather-icon>
             </button>
           </div>
           <div class="wrap">
@@ -48,6 +48,24 @@ export default {
     },
     article: {
       type: Object
+    }
+  },
+  methods: {
+    markFavourite () {
+      if (this.article.favourite) {
+        this.$store.dispatch('markUnfavourite', this.$route.params.id)
+      } else {
+        this.$store.dispatch('markFavourite', this.$route.params.id)
+      }
+      this.article.favourite = !this.article.favourite
+    },
+    markRead () {
+      if (this.article.read) {
+        this.$store.dispatch('markUnread', this.$route.params.id)
+      } else {
+        this.$store.dispatch('markRead', this.$route.params.id)
+      }
+      this.article.read = !this.article.read
     }
   }
 }

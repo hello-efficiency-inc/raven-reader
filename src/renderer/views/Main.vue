@@ -76,12 +76,16 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     const self = this
+    this.$store.dispatch('markRead', to.params.id)
     db.fetchArticle(to.params.id, async function (article) {
       const link = article.origlink ? article.origlink : article.link
       const data = await parseArticle(link)
       data.body.date_published = data.body.date_published ? dayjs(data.body.date_published).format('MMMM D, YYYY') : null
       data.body.favicon = article.meta.favicon
       data.body.sitetitle = article.meta.title
+      data.body._id = article._id
+      data.body.favourite = article.favourite
+      data.body.read = article.read
       data.body.readtime = stat(data.body.content).text
       self.articleData = data.body
     })
