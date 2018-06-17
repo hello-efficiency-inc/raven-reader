@@ -18,6 +18,12 @@ export default {
       cb(docs)
     })
   },
+  fetchArticle (id, cb) {
+    return article.findOne({ _id: id }, (err, doc) => {
+      if (err) {}
+      return cb(doc)
+    })
+  },
   addFeed (data, cb) {
     return feed.insert(data, (err, docs) => {
       if (err) {}

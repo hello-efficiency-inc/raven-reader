@@ -1,8 +1,18 @@
 <template>
-  <div class="article-detail px-5">
+  <div class="article-detail">
     <div class="content-wrapper">
       <div class="article-toolbar">
-        <div class="article-buttons">
+        <div class="site-info" v-if="id">
+          <div class="wrap">
+            <button class="btn btn-toolbar">
+              <span class="favicon-wrap">
+                <img :src="article.favicon" width="16" height="16">
+              </span>
+              <span class="ml-4">{{ article.sitetitle }}</span>
+            </button>
+          </div>
+        </div>
+        <div class="article-buttons" v-if="id">
           <div class="wrap">
             <button class="btn btn-toolbar">
               <feather-icon name="star"></feather-icon>
@@ -20,11 +30,28 @@
           </div>
         </div>
       </div>
-      <div class="article-content">
+      <div class="article-contentarea  px-4" v-if="article">
+        <h2>
+          <strong>{{ article.title }}</strong><br/>
+          <small><span v-if="article.date_published">{{ article.date_published }}</span> <span v-if="article.author">by {{ article.author }}</span> <span><strong>&#183;</strong></span> {{ article.readtime }}</small>
+        </h2>
+        <div class="article-detail" v-html="article.content"></div>
       </div>
     </div>
   </div>
 </template>
+<script>
+export default {
+  props: {
+    id: {
+      type: String
+    },
+    article: {
+      type: Object
+    }
+  }
+}
+</script>
 <style lang="scss">
 .article-detail {
   position: relative;
@@ -67,22 +94,34 @@
   height: 41px;
 }
 
+.site-info,
 .article-buttons {
   display: block;
   position: absolute;
   top: 0;
-  right:0 ;
   width: 270px;
   height: 40px;
   z-index: 1;
   background-image: linear-gradient(to right, rgba(255,255,255,0) 0%, #fff 10%);
+}
+
+.site-info {
+  left: 0;
+
+  .wrap {
+    float: left;
+  }
+}
+
+.article-buttons {
+  right:0 ;
 
   .wrap {
     float: right;
   }
 }
 
-.article-content {
+.article-contentarea {
   background-color: #fff;
   display: block;
   position: absolute;
@@ -96,6 +135,29 @@
   overflow-y: auto;
   z-index: 2;
   padding: 15px;
+
+  h2 {
+    small {
+      font-size: 14px;
+    }
+  }
+}
+
+.article-detail {
+  img {
+    display: block;
+    max-width: 100%;
+    margin-bottom: 15px;
+  }
+
+  h2 {
+    margin-bottom: 25px;
+  }
+
+  .col {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .btn-toolbar {
@@ -108,5 +170,18 @@
   height: 40px;
   padding: 0;
   position: relative;
+}
+
+.favicon-wrap {
+  position: absolute;
+  box-shadow: none;
+  height: 20px;
+  width: 20px;
+  left: 12px;
+  top: 17px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 0;
 }
 </style>

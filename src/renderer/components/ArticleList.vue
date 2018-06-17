@@ -4,13 +4,13 @@
       <article-search></article-search>
       <div class="articles">
         <div class="list-group">
-          <a v-if="articles.length > 0" href="#" class="list-group-item list-group-item-action flex-column align-items-start" v-for="article in articles">
+          <router-link v-if="articles.length > 0" :to="`/article/${article._id}`" class="list-group-item list-group-item-action flex-column align-items-start" v-for="article in articles" :key="article._id">
             <div class="d-flex w-100 justify-content-between mb-3">
               <small><img :src="article.meta.favicon" width="16" height="16"> {{ article.meta.title }}</small>
               <small>{{ article.pubdate }}</small>
             </div>
             <h6><strong>{{ article.title }}</strong></h6>
-          </a>
+          </router-link>
           <div class="no-articles" v-if="articles.length === 0">
             No articles available
           </div>

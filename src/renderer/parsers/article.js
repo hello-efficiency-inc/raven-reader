@@ -1,16 +1,16 @@
-import axios from 'axios'
+// import axios from 'axios'
+import got from 'got'
 import { MERCURY_API_TOKEN } from '../config'
 
 const apiUri = 'https://mercury.postlight.com/parser'
 
 export async function parseArticle (url) {
-  const result = await axios.get(apiUri, {
+  const result = await got(apiUri + `?url=${url}`, {
+    method: 'GET',
+    json: true,
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': MERCURY_API_TOKEN
-    },
-    params: {
-      url: url
     }
   })
   return result

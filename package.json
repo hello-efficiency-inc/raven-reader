@@ -65,6 +65,7 @@
     "he": "^1.1.1",
     "nedb": "^1.8.0",
     "normalize-url": "^3.0.1",
+    "reading-time": "^1.1.2",
     "rss-finder": "^2.0.5",
     "vue": "^2.5.16",
     "vue-easy-toast": "^1.0.5",

@@ -55,14 +55,37 @@
       </div>
     </nav>
     <article-list></article-list>
-    <article-detail></article-detail>
+    <article-detail :id="$route.params.id" :article="articleData"></article-detail>
   </div>
 </template>
 <script>
+import db from '../services/db'
+import { parseArticle } from '../parsers/article'
+import dayjs from 'dayjs'
+import stat from 'reading-time'
+
 export default {
+  data () {
+    return {
+      articleData: null
+    }
+  },
   mounted () {
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
+  },
+  beforeRouteUpdate (to, from, next) {
+    const self = this
+    db.fetchArticle(to.params.id, async function (article) {
+      const link = article.origlink ? article.origlink : article.link
+      const data = await parseArticle(link)
+      data.body.date_published = data.body.date_published ? dayjs(data.body.date_published).format('MMMM D, YYYY') : null
+      data.body.favicon = article.meta.favicon
+      data.body.sitetitle = article.meta.title
+      data.body.readtime = stat(data.body.content).text
+      self.articleData = data.body
+    })
+    next()
   },
   computed: {
     feeds () {

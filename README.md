@@ -1,6 +1,8 @@
-# rss-reader
+# RSS Reader
 
 > Simple Desktop RSS Reader made using VueJS
+
+![screenshot](/screenshot.png)
 
 #### Build Setup
 
