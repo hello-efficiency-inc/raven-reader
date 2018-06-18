@@ -24,18 +24,25 @@
             </button>
           </div>
           <div class="wrap">
-            <button class="btn btn-toolbar">
+            <a :href="article.url" class="btn btn-toolbar js-external-link">
               <feather-icon name="external-link"></feather-icon>
-            </button>
+            </a>
           </div>
         </div>
       </div>
       <div class="article-contentarea  px-4" v-if="article">
         <h2>
           <strong>{{ article.title }}</strong><br/>
-          <small><span v-if="article.date_published">{{ article.date_published }}</span> <span v-if="article.author">by {{ article.author }}</span> <span><strong>&#183;</strong></span> {{ article.readtime }}</small>
+          <small><span v-if="article.date_published">{{ article.date_published }}</span> <span v-if="article.author">by {{ article.author }} <strong>&#183;</strong></span> {{ article.readtime }}</small>
         </h2>
         <div class="article-detail" v-html="article.content"></div>
+      </div>
+      <div class="article-contentarea loading-state px-4" v-if="!article">
+        <div class="bouncing-loader" v-if="loading">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -48,6 +55,9 @@ export default {
     },
     article: {
       type: Object
+    },
+    loading: {
+      type: Boolean
     }
   },
   methods: {
@@ -75,21 +85,6 @@ export default {
   position: relative;
   flex-grow: 1;
   height: 100%;
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 30px;
-    background: linear-gradient(
-    rgba(255, 255, 255, 0.001),
-    white
-    ); /* transparent keyword is broken in Safari */
-    pointer-events: none;
-    z-index: 3;
-  }
 }
 
 .content-wrapper {
@@ -172,6 +167,13 @@ export default {
     margin-bottom: 25px;
   }
 
+  iframe {
+    display:block;
+    width: 100%;
+    height: 500px;
+    border: 0;
+  }
+
   .col {
     padding-left: 0;
     padding-right: 0;
@@ -179,7 +181,8 @@ export default {
 }
 
 .btn-toolbar {
-  display: block;
+  color: black;
+  display: block !important;
   z-index: 2;
   background: transparent;
   border: none;
@@ -188,6 +191,10 @@ export default {
   height: 40px;
   padding: 0;
   position: relative;
+
+  &:hover {
+    color: black;
+  }
 }
 
 .favicon-wrap {
@@ -201,5 +208,11 @@ export default {
   align-items: center;
   pointer-events: none;
   z-index: 0;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

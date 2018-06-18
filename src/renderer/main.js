@@ -11,6 +11,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+import './helper/external_links.js'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue)

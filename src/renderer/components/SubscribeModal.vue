@@ -96,6 +96,7 @@ export default {
         feeditem.meta.favicon = favicon
         self.$store.dispatch('addFeed', feeditem.meta)
         feeditem.posts.forEach((post) => {
+          post.feed_id = feeditem._id
           post.meta.favicon = post.meta.favicon ? post.meta.favicon : favicon
           self.$store.dispatch('addArticle', post)
         })

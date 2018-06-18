@@ -5,34 +5,28 @@
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link class="nav-link" to="/all" active-class="active">
               <feather-icon name="list"></feather-icon>
               All Feeds <span class="sr-only">(current)</span>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link class="nav-link" to="/favourites" active-class="active">
               <feather-icon name="star"></feather-icon>
               Favourites
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <feather-icon name="archive"></feather-icon>
-              Archives
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link class="nav-link" to="/unread" active-class="active">
               <feather-icon name="circle"></feather-icon>
               Unread Articles
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link class="nav-link" to="/read" active-class="active">
               <feather-icon name="circle" filled></feather-icon>
               Recently Read
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">
@@ -54,8 +48,8 @@
         </ul>
       </div>
     </nav>
-    <article-list></article-list>
-    <article-detail :id="$route.params.id" :article="articleData"></article-detail>
+    <article-list :type="articleType"></article-list>
+    <article-detail :id="$route.params.id" :article="articleData" :loading="loading"></article-detail>
   </div>
 </template>
 <script>
@@ -67,33 +61,53 @@ import stat from 'reading-time'
 export default {
   data () {
     return {
-      articleData: null
+      articleData: null,
+      articleType: 'all',
+      loading: false
     }
   },
   mounted () {
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
   },
-  beforeRouteUpdate (to, from, next) {
-    const self = this
-    this.$store.dispatch('markRead', to.params.id)
-    db.fetchArticle(to.params.id, async function (article) {
-      const link = article.origlink ? article.origlink : article.link
-      const data = await parseArticle(link)
-      data.body.date_published = data.body.date_published ? dayjs(data.body.date_published).format('MMMM D, YYYY') : null
-      data.body.favicon = article.meta.favicon
-      data.body.sitetitle = article.meta.title
-      data.body._id = article._id
-      data.body.favourite = article.favourite
-      data.body.read = article.read
-      data.body.readtime = stat(data.body.content).text
-      self.articleData = data.body
-    })
-    next()
+  watch: {
+    // call again the method if the route changes
+    '$route.params.type': 'typeChange',
+    '$route.params.id': 'fetchData'
   },
   computed: {
     feeds () {
       return this.$store.state.Feed.feeds
+    }
+  },
+  methods: {
+    typeChange () {
+      if (this.$route.params.type) {
+        this.articleType = this.$route.params.type
+      }
+    },
+    fetchData () {
+      const self = this
+      if (this.$route.params.id) {
+        this.$store.dispatch('markRead', this.$route.params.id)
+        self.articleData = null
+        self.loading = true
+        db.fetchArticle(this.$route.params.id, async function (article) {
+          const link = article.origlink ? article.origlink : article.link
+          const data = await parseArticle(link)
+          if (data) {
+            data.body.date_published = data.body.date_published ? dayjs(data.body.date_published).format('MMMM D, YYYY') : null
+            data.body.favicon = article.meta.favicon
+            data.body.sitetitle = article.meta.title
+            data.body._id = article._id
+            data.body.favourite = article.favourite
+            data.body.read = article.read
+            data.body.readtime = stat(data.body.content).text
+            self.articleData = data.body
+            self.loading = false
+          }
+        })
+      }
     }
   }
 }

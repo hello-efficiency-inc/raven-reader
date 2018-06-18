@@ -5,88 +5,88 @@
 </template>
 
 <script>
-  export default {
-    name: 'rss-reader'
-  }
+export default {
+  name: 'rss-reader'
+}
 </script>
 
 <style lang="scss">
-  @import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap/scss/bootstrap';
 
-  html,
-  #app,
-  body {
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    margin: 0;
+html,
+#app,
+body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sidebar {
+  position: relative;
+  flex-grow: 0;
+  width: 300px;
+  height: 100%;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 99.5%;
+    height: 20px;
+    background: linear-gradient(
+    rgba(255, 255, 255, 0.5),
+    white
+    ); /* transparent keyword is broken in Safari */
+    pointer-events: none;
   }
+}
 
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: 0.5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
-  .sidebar {
-    position: relative;
-    flex-grow: 0;
-    width: 300px;
-    height: 100%;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
-
-    &::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 99.5%;
-      height: 20px;
-      background: linear-gradient(
-      rgba(255, 255, 255, 0.5),
-      white
-      ); /* transparent keyword is broken in Safari */
-      pointer-events: none;
-    }
-  }
-
+@supports ((position: -webkit-sticky) or (position: sticky)) {
   .sidebar-sticky {
-    position: relative;
-    top: 0;
-    height: calc(100vh - 48px);
-    padding-top: 0.5rem;
-    overflow-x: hidden;
-    overflow-y: auto;
+    position: -webkit-sticky;
+    position: sticky;
   }
-
-  @supports ((position: -webkit-sticky) or (position: sticky)) {
-    .sidebar-sticky {
-        position: -webkit-sticky;
-        position: sticky;
-    }
 }
 .sidebar .nav-link {
-    font-weight: 600;
-    color: #000;
+  font-weight: 600;
+  color: #000;
 }
 
 .sidebar .nav-link .feather {
-    margin-right: 10px;
-    color: #999;
+  margin-right: 10px;
+  color: #999;
 }
 
 .sidebar .nav-link.active {
-    color: #007bff;
+  color: #007bff;
 }
 
 .sidebar .nav-link:hover .feather,
 .sidebar .nav-link.active .feather {
-    color: inherit;
+  color: inherit;
 }
 
 .sidebar-heading {
-    font-weight: 600;
-    font-size: 0.85rem;
-    text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
 }
 
 .list-group a {

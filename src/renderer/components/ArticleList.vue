@@ -4,7 +4,7 @@
       <article-search></article-search>
       <div class="articles">
         <div class="list-group">
-          <router-link v-if="articles.length > 0" :to="`/article/${article._id}`" :class="{ 'article-read': article.read }" class="list-group-item list-group-item-action flex-column align-items-start" v-for="article in articles" :key="article._id">
+          <router-link v-if="articles.length > 0" :to="`/article/${article._id}`" :class="{ 'article-read': article.read }" class="list-group-item list-group-item-action flex-column align-items-start" v-for="article in filteredArticles" :key="article._id">
             <div class="d-flex w-100 justify-content-between mb-3">
               <small><img :src="article.meta.favicon" width="16" height="16"> {{ article.meta.title }}</small>
               <small>{{ article.pubdate }}</small>
@@ -22,11 +22,27 @@
 <script>
 import _ from 'lodash'
 
+const filters = {
+  unread: articles => articles.filter(article => !article.read),
+  read: articles => articles.filter(article => article.read),
+  favourites: articles => articles.filter(article => article.favourite),
+  all: articles => articles
+}
+
 export default {
+  props: {
+    type: {
+      type: String,
+      default: 'all'
+    }
+  },
   computed: {
     articles () {
       const orderedArticles = _.orderBy(this.$store.state.Article.articles, ['pubDate'], ['desc'])
       return orderedArticles
+    },
+    filteredArticles () {
+      return filters[this.type](this.articles)
     }
   }
 }
