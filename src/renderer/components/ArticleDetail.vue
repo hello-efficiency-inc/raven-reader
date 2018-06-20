@@ -33,7 +33,7 @@
       <div class="article-contentarea  px-4" v-if="article">
         <h2>
           <strong>{{ article.title }}</strong><br/>
-          <small><span v-if="article.date_published">{{ article.date_published }}</span> <span v-if="article.author">by {{ article.author }} <strong>&#183;</strong></span> {{ article.readtime }}</small>
+          <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
         </h2>
         <div class="article-detail" v-html="article.content"></div>
       </div>
