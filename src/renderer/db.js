@@ -12,13 +12,11 @@ export default class {
   createOrReadDatabase (db) {
     const existsArticle = fs.existsSync(this.useDataDir.path(db.article))
     const existsFeed = fs.existsSync(this.useDataDir.path(db.feed))
-    const existsRecentReads = fs.existsSync(this.useDataDir.path(db.recentreads))
     let database = {}
 
-    if (!existsArticle && !existsFeed && !existsRecentReads) {
+    if (!existsArticle && !existsFeed) {
       this.useDataDir.write(db.article, '')
       this.useDataDir.write(db.feed, '')
-      this.useDataDir.write(db.recentreads, '')
     }
 
     database.article = new DataStore({
@@ -28,11 +26,6 @@ export default class {
 
     database.feed = new DataStore({
       filename: this.useDataDir.path(db.feed),
-      autoload: true
-    })
-
-    database.recentreads = new DataStore({
-      filename: this.useDataDir.path(db.recentreads),
       autoload: true
     })
 
@@ -46,8 +39,7 @@ export default class {
 
     this.db = this.createOrReadDatabase({
       article: 'articles.db',
-      feed: 'feeds.db',
-      recentreads: 'recentreads.db'
+      feed: 'feeds.db'
     })
 
     return this.db

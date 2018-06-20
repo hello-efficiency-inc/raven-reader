@@ -1,6 +1,6 @@
 {
   "name": "rss-reader",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "author": "Meet Godhani <meetgodhani23@gmail.com>",
   "description": "Simple Desktop RSS Reader made using VueJS",
   "license": "MIT",
@@ -67,6 +67,7 @@
     "normalize-url": "^3.0.1",
     "reading-time": "^1.1.2",
     "rss-finder": "^2.0.5",
+    "uuid": "^3.2.1",
     "vue": "^2.5.16",
     "vue-easy-toast": "^1.0.5",
     "vue-electron": "^1.0.6",

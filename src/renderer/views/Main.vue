@@ -40,15 +40,15 @@
         </h6>
         <ul class="nav flex-column">
           <li v-for="feed in feeds" class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link class="nav-link" :to="`/feed/${feed.id}`">
               <img :src="feed.favicon" height="16" width="16" class="mr-1">
               {{ feed.title }}
-            </a>
+            </router-link>
           </li>
         </ul>
       </div>
     </nav>
-    <article-list :type="articleType"></article-list>
+    <article-list :type="articleType" :feed="feed"></article-list>
     <article-detail :id="$route.params.id" :article="articleData" :loading="loading"></article-detail>
   </div>
 </template>
@@ -63,6 +63,7 @@ export default {
     return {
       articleData: null,
       articleType: 'all',
+      feed: null,
       loading: false
     }
   },
@@ -72,6 +73,7 @@ export default {
   },
   watch: {
     // call again the method if the route changes
+    '$route.params.feedid': 'feedChange',
     '$route.params.type': 'typeChange',
     '$route.params.id': 'fetchData'
   },
@@ -84,6 +86,12 @@ export default {
     typeChange () {
       if (this.$route.params.type) {
         this.articleType = this.$route.params.type
+      }
+    },
+    feedChange () {
+      if (this.$route.params.feedid) {
+        this.articleType = 'feed'
+        this.feed = this.$route.params.feedid
       }
     },
     fetchData () {
