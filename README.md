@@ -17,6 +17,10 @@
 
 ![screenshot](/screenshot.png)
 
+## Download
+
+To download, please visit [https://github.com/mrgodhani/rss-reader/releases](https://github.com/mrgodhani/rss-reader/releases)
+
 ## Features
 
 - [x] Full Article Read
@@ -27,6 +31,7 @@
 - [x] Responsive
 - [ ] Exporting feed in OPML format
 - [ ] Offline reading
+- [ ] Windows support
 
 
 ## Developer Notes
@@ -58,3 +63,11 @@ cd src/renderer/config.example.js config.js
 - [Vue](https://www.vuejs.org) & [Vuex](https://vuex.vuejs.org)
 - [NeDB](https://github.com/louischatriot/nedb)
 - [Mercury Parser](https://mercury.postlight.com/web-parser/)
+
+
+## Support / Contribution
+
+Please feel free to give us suggestions or report a bug by creating a [new issue](https://github.com/mrgodhani/rss-reader/issues) via Github or messaging on  Twitter: [@mrgodhani](https://twitter.com/mrgodhani).
+
+## License
+[MIT](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)
