@@ -10,7 +10,9 @@ const mutations = {
     state.feeds = feed
   },
   ADD_FEED (state, docs) {
-    state.feeds.unshift(docs)
+    if (docs) {
+      state.feeds.unshift(docs)
+    }
   },
   DELETE_FEED (state, id) {
     const index = _.findIndex(state.feeds, { 'id': id })
