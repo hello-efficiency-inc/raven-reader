@@ -1,6 +1,6 @@
 {
   "name": "@mrgodhani/rss-reader",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Meet Godhani <meetgodhani23@gmail.com>",
   "description": "Simple Desktop RSS Reader made using VueJS",
   "license": "MIT",
