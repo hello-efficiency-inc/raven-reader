@@ -1,6 +1,6 @@
 {
   "name": "feedbox",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "author": "Meet Godhani <meetgodhani23@gmail.com>",
   "description": "Simple Desktop RSS Reader made using VueJS",
   "license": "MIT",
