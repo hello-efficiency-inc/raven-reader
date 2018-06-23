@@ -15,7 +15,7 @@
         <div class="list-group">
           <router-link v-if="articles.length > 0" :to="`/article/${article._id}`" :class="{ 'article-read': article.read }" class="list-group-item list-group-item-action flex-column align-items-start" v-for="article in filteredArticles" :key="article._id">
             <div class="d-flex w-100 justify-content-between mb-3">
-              <small><img :src="article.meta.favicon" width="16" height="16"> {{ article.meta.title }}</small>
+              <small><img v-if="article.meta.favicon" :src="article.meta.favicon" width="16" height="16"> {{ article.meta.title }}</small>
               <small>{{ article.pubdate }}</small>
             </div>
             <h6><strong>{{ article.title }}</strong></h6>

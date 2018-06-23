@@ -41,7 +41,7 @@
         <ul class="nav flex-column">
           <li v-for="feed in feeds" class="nav-item">
             <router-link class="nav-link" :to="`/feed/${feed.id}`">
-              <img :src="feed.favicon" height="16" width="16" class="mr-1">
+              <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1">
               {{ feed.title }}
             </router-link>
           </li>
