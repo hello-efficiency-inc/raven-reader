@@ -5,10 +5,10 @@
         <div class="site-info" v-if="article">
           <div class="wrap">
             <button class="btn btn-toolbar">
-              <span class="favicon-wrap">
+              <span v-if="article.favicon" class="favicon-wrap">
                 <img :src="article.favicon" width="16" height="16">
               </span>
-              <span class="ml-4">{{ article.sitetitle }}</span>
+              <span :class="{ 'ml-4': article.favicon }">{{ article.sitetitle }}</span>
             </button>
           </div>
         </div>
