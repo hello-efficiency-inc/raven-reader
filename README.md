@@ -47,6 +47,9 @@ npm run build
 # lint all JS/Vue component files in `src/`
 npm run lint
 
+# copy config.example.js in renderer to config.js by executing cp config.example.js config.js and set Mercury parser token
+cd src/renderer/config.example.js config.js
+
 ```
 
 ## Powered by
