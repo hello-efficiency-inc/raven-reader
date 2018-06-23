@@ -6,14 +6,30 @@
 <a href="https://travis-ci.org/mrgodhani/rss-reader">
 <img src="https://travis-ci.org/mrgodhani/rss-reader.svg?branch=master">
 </a>
-<a href="https://codeclimate.com/github/mrgodhani/rss-reader/maintainability"><img src="https://api.codeclimate.com/v1/badges/8d9991777a7a3c4b4de5/maintainability" /></a>
+<a href="https://codeclimate.com/github/mrgodhani/rss-reader/maintainability"><img src="https://api.codeclimate.com/v1/badges/8d9991777a7a3c4b4de5/maintainability" />
+</a>
 <a href="https://david-dm.org/mrgodhani/rss-reader">
 <img src="https://david-dm.org/mrgodhani/rss-reader" />
 </a>
-<a href="https://david-dm.org/mrgodhani/rss-reader?type=dev" title="devDependencies status"><img src="https://david-dm.org/mrgodhani/rss-reader/dev-status.svg"/></a>
+<a href="https://david-dm.org/mrgodhani/rss-reader?type=dev" title="devDependencies status">
+<img src="https://david-dm.org/mrgodhani/rss-reader/dev-status.svg"/></a>
 </p>
 
 ![screenshot](/screenshot.png)
+
+## Features
+
+- [x] Full Article Read
+- [x] Subscribing to news feed
+- [x] Marking as read/unread
+- [x] Marking as favourite
+- [x] Open article link in external browser
+- [x] Responsive
+- [ ] Exporting feed in OPML format
+- [ ] Offline reading
+
+
+## Developer Notes
 
 #### Build Setup
 
