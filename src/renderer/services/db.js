@@ -6,6 +6,11 @@ const article = connect.article
 const feed = connect.feed
 
 export default {
+  ensureIndex (db, field) {
+    db.ensureIndex({ fieldName: field, unique: true }, (err) => {
+      if (err) {}
+    })
+  },
   fetchFeeds (cb) {
     return feed.find({}, (err, docs) => {
       if (err) {}
@@ -25,9 +30,7 @@ export default {
     })
   },
   addFeed (data, cb) {
-    feed.ensureIndex({ fieldName: 'xmlurl', unique: true }, (err) => {
-      if (err) {}
-    })
+    this.ensureIndex(feed, 'xmlurl')
     return feed.insert(data, (err, docs) => {
       if (err) {}
       return cb(docs)
@@ -39,9 +42,7 @@ export default {
     })
   },
   addArticles (data, cb) {
-    article.ensureIndex({ fieldName: 'guid', unique: true }, (err) => {
-      if (err) {}
-    })
+    this.ensureIndex(article, 'guid')
     return article.insert(data, (err, docs) => {
       if (err) {}
       return cb(docs)
