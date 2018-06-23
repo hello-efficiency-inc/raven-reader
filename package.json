@@ -1,6 +1,6 @@
 {
-  "name": "feedbox",
-  "version": "0.0.0",
+  "name": "@mrgodhani/rss-reader",
+  "version": "0.1.1",
   "author": "Meet Godhani <meetgodhani23@gmail.com>",
   "description": "Simple Desktop RSS Reader made using VueJS",
   "license": "MIT",
@@ -27,8 +27,8 @@
         "repo": "rss-reader"
       }
     ],
-    "productName": "Feedbox",
-    "appId": "org.mrgodhani.feedbox",
+    "productName": "RSS Reader",
+    "appId": "org.mrgodhani.rssreader",
     "directories": {
       "output": "build"
     },
