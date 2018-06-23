@@ -25,6 +25,9 @@ export default {
     })
   },
   addFeed (data, cb) {
+    feed.ensureIndex({ fieldName: 'xmlurl', unique: true }, (err) => {
+      if (err) {}
+    })
     return feed.insert(data, (err, docs) => {
       if (err) {}
       return cb(docs)
@@ -36,6 +39,9 @@ export default {
     })
   },
   addArticles (data, cb) {
+    article.ensureIndex({ fieldName: 'guid', unique: true }, (err) => {
+      if (err) {}
+    })
     return article.insert(data, (err, docs) => {
       if (err) {}
       return cb(docs)

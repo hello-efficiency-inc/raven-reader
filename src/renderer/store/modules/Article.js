@@ -17,8 +17,10 @@ const mutations = {
     })
   },
   ADD_ARTICLES (state, articles) {
-    articles.pubdate = dayjs(articles.pubdate).fromNow()
-    state.articles.unshift(articles)
+    if (articles) {
+      articles.pubdate = dayjs(articles.pubdate).fromNow()
+      state.articles.unshift(articles)
+    }
   },
   MARK_FAVOURITE (state, id) {
     const index = _.findIndex(state.articles, { '_id': id })

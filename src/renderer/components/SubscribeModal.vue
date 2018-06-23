@@ -96,12 +96,15 @@ export default {
         const feeditem = await parseFeed(feed.url)
         feeditem.meta.favicon = favicon
         feeditem.meta.id = uuid()
-        self.$store.dispatch('addFeed', feeditem.meta)
-        feeditem.posts.forEach((post) => {
-          post.feed_id = feeditem.meta.id
-          post.meta.favicon = post.meta.favicon ? post.meta.favicon : favicon
-          self.$store.dispatch('addArticle', post)
-        })
+        try {
+          self.$store.dispatch('addFeed', feeditem.meta)
+          feeditem.posts.forEach((post) => {
+            post.feed_id = feeditem.meta.id
+            post.meta.favicon = post.meta.favicon ? post.meta.favicon : favicon
+            self.$store.dispatch('addArticle', post)
+          })
+        } catch (err) {
+        }
       })
       this.hideModal()
     },
