@@ -52,6 +52,7 @@ import db from '../services/db'
 import { parseArticle } from '../parsers/article'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
+import forever from 'async/forever'
 
 export default {
   data () {
@@ -63,8 +64,23 @@ export default {
     }
   },
   mounted () {
+    this.$store.dispatch('refreshFeeds')
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
+
+    // Feed Crawling
+    forever(
+      (next) => {
+        console.log('Refreshing')
+        this.$store.dispatch('refreshFeeds')
+        setTimeout(() => {
+          next()
+        }, 60000)
+      },
+      (err) => {
+        console.error(err)
+      }
+    )
   },
   watch: {
     // call again the method if the route changes

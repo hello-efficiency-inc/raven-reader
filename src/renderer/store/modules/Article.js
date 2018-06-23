@@ -1,4 +1,5 @@
 import db from '../../services/db'
+import helper from '../../services/helpers'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import _ from 'lodash'
@@ -48,6 +49,9 @@ const mutations = {
     articles.forEach((index) => {
       state.articles.splice(index, 1)
     })
+  },
+  REFRESH_FEEDS (state, feeds) {
+    helper.subscribe(feeds, null, true)
   }
 }
 
@@ -76,6 +80,11 @@ const actions = {
   },
   deleteArticle ({ commit }, id) {
     commit('DELETE_ARTICLES', id)
+  },
+  refreshFeeds ({ commit }) {
+    db.fetchFeeds(docs => {
+      commit('REFRESH_FEEDS', docs)
+    })
   }
 }
 

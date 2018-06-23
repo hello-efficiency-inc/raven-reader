@@ -41,9 +41,8 @@
 <script>
 import finder from 'rss-finder'
 import normalizeUrl from 'normalize-url'
-import { parseFeed } from '../parsers/feed'
 import he from 'he'
-import uuid from 'uuid/v4'
+import helper from '../services/helpers'
 
 export default {
   name: 'addfeed-modal',
@@ -90,22 +89,8 @@ export default {
       this.$refs.addFeedModal.hide()
     },
     subscribe () {
-      const self = this
       const favicon = this.feeddata.site.favicon
-      this.selected_feed.forEach(async function (feed) {
-        const feeditem = await parseFeed(feed.url)
-        feeditem.meta.favicon = favicon
-        feeditem.meta.id = uuid()
-        try {
-          self.$store.dispatch('addFeed', feeditem.meta)
-          feeditem.posts.forEach((post) => {
-            post.feed_id = feeditem.meta.id
-            post.meta.favicon = post.meta.favicon ? post.meta.favicon : favicon
-            self.$store.dispatch('addArticle', post)
-          })
-        } catch (err) {
-        }
-      })
+      helper.subscribe(this.selected_feed, favicon, false)
       this.hideModal()
     },
     onHidden () {
