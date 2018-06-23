@@ -2,7 +2,7 @@
 
 > Simple Desktop RSS Reader made using VueJS
 
-<p align="center">
+<p align="left">
 <a href="https://travis-ci.org/mrgodhani/rss-reader">
 <img src="https://travis-ci.org/mrgodhani/rss-reader.svg?branch=master">
 </a>
