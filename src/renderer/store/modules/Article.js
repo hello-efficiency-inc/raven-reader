@@ -40,7 +40,12 @@ const mutations = {
     db.markUnread(id)
     state.articles[index].read = false
   },
-  DELETE_ARTICLES (state) {
+  DELETE_ARTICLES (state, id) {
+    db.deleteArticles(id)
+    const articles = _.filter(state.articles, { 'feed_id': id })
+    articles.forEach((index) => {
+      state.articles.splice(index, 1)
+    })
   }
 }
 
@@ -67,8 +72,8 @@ const actions = {
   markUnread ({ commit }, id) {
     commit('MARK_UNREAD', id)
   },
-  deleteArticle ({ commit }) {
-    commit('DELETE_ARTICLES')
+  deleteArticle ({ commit }, id) {
+    commit('DELETE_ARTICLES', id)
   }
 }
 

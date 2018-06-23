@@ -30,10 +30,20 @@ export default {
       return cb(docs)
     })
   },
+  deleteFeed (id) {
+    feed.remove({ id: id }, {}, (err, numRemoved) => {
+      if (err) {}
+    })
+  },
   addArticles (data, cb) {
     return article.insert(data, (err, docs) => {
       if (err) {}
       return cb(docs)
+    })
+  },
+  deleteArticles (id) {
+    article.remove({ feed_id: id }, { multi: true }, (err, numRemoved) => {
+      if (err) {}
     })
   },
   markFavourite (id) {

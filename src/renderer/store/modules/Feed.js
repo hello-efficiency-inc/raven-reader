@@ -1,4 +1,5 @@
 import db from '../../services/db'
+import _ from 'lodash'
 
 const state = {
   feeds: []
@@ -11,7 +12,10 @@ const mutations = {
   ADD_FEED (state, docs) {
     state.feeds.unshift(docs)
   },
-  DELETE_FEED (state) {
+  DELETE_FEED (state, id) {
+    const index = _.findIndex(state.feeds, { 'id': id })
+    db.deleteFeed(id)
+    state.feeds.splice(index, 1)
   }
 }
 
@@ -21,13 +25,13 @@ const actions = {
       commit('LOAD_FEEDS', docs)
     })
   },
-  addFeed ({ commit, state }, feed) {
+  addFeed ({ commit }, feed) {
     db.addFeed(feed, docs => {
       commit('ADD_FEED', docs)
     })
   },
-  deleteFeed ({ commit }) {
-    commit('DELETE_FEED')
+  deleteFeed ({ commit }, id) {
+    commit('DELETE_FEED', id)
   }
 }
 
