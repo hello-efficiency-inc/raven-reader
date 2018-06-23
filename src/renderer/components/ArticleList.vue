@@ -32,6 +32,7 @@
 import _ from 'lodash'
 
 const filters = {
+  search: (articles, search) => articles.filter(article => article.title.match(search)),
   unread: articles => articles.filter(article => !article.read),
   read: articles => articles.filter(article => article.read),
   favourites: articles => articles.filter(article => article.favourite),
@@ -54,14 +55,24 @@ export default {
       type: String
     }
   },
+  watch: {
+    search (val) {
+      if (val) {
+        this.$emit('type-change', 'search')
+      }
+    }
+  },
   computed: {
     articles () {
       const orderedArticles = _.orderBy(this.$store.state.Article.articles, ['pubDate'], ['desc'])
       return orderedArticles
     },
     filteredArticles () {
-      if (this.type !== 'feed') {
+      if (this.type !== 'feed' && this.type !== 'search') {
         return filters[this.type](this.articles)
+      }
+      if (this.type === 'search') {
+        return this.articles.filter(article => article.title.toLowerCase().match(this.search.toLowerCase()))
       }
       return filters[this.type](this.articles, this.feed)
     }

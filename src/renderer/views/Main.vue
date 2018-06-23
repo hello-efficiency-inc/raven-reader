@@ -43,7 +43,7 @@
         </ul>
       </div>
     </nav>
-    <article-list :type="articleType" :feed="feed"></article-list>
+    <article-list :type="articleType" :feed="feed" @type-change="updateType"></article-list>
     <article-detail :id="$route.params.id" :article="articleData" :loading="loading"></article-detail>
   </div>
 </template>
@@ -94,6 +94,9 @@ export default {
     }
   },
   methods: {
+    updateType (newVal) {
+      this.articleType = newVal
+    },
     typeChange () {
       if (this.$route.params.type) {
         this.articleType = this.$route.params.type
