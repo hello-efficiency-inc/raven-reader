@@ -51,7 +51,9 @@ const mutations = {
     })
   },
   REFRESH_FEEDS (state, feeds) {
-    helper.subscribe(feeds, null, true)
+    if (feeds.length > 0) {
+      helper.subscribe(feeds, null, true)
+    }
   }
 }
 

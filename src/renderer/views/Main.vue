@@ -50,6 +50,7 @@
 <script>
 import db from '../services/db'
 import { parseArticle } from '../parsers/article'
+import cheerio from 'cheerio'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
 import forever from 'async/forever'
@@ -122,6 +123,9 @@ export default {
           const link = article.origlink ? article.origlink : article.link
           const data = await parseArticle(link)
           if (data) {
+            const $ = cheerio.load(data.body.content)
+            $('a').addClass('js-external-link')
+            data.body.content = $.html()
             data.body.date_published = data.body.date_published ? dayjs(data.body.date_published).format('MMMM D, YYYY') : null
             data.body.favicon = article.meta.favicon
             data.body.sitetitle = article.meta.title

@@ -64,14 +64,21 @@ export default {
           return item
         })
         if (res.feedUrls.length === 0) {
-          this.feeddata = null
-          this.$toast('No feed found', {
-            className: 'et-alert',
-            horizontalPosition: 'center'
-          })
+          this.showError()
         } else {
           this.feeddata = res
         }
+      }, (error) => {
+        if (error) {}
+        this.showError()
+      })
+    },
+    showError () {
+      this.loading = false
+      this.feeddata = null
+      this.$toast('No feed found', {
+        className: 'et-alert',
+        horizontalPosition: 'center'
       })
     },
     focusMyElement (e) {
