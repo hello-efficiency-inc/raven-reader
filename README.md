@@ -53,7 +53,7 @@ npm run build
 npm run lint
 
 # copy config.example.js in renderer to config.js by executing cp config.example.js config.js and set Mercury parser token
-cd src/renderer/config.example.js config.js
+cp src/renderer/config.example.js config.js
 
 ```
 
