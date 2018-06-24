@@ -167,6 +167,13 @@ export default {
     margin-bottom: 25px;
   }
 
+  h3 {
+    font-size: 22px;
+    margin-top: 15px;
+    line-height: 29px;
+    font-weight: 700;
+  }
+
   iframe {
     display:block;
     width: 100%;

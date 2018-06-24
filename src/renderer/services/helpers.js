@@ -17,7 +17,7 @@ export default {
         }
         feeditem.posts.forEach((post) => {
           post.feed_id = feeditem.meta.id
-          post.meta.favicon = post.meta.favicon ? post.meta.favicon : feeditem.meta.favicon
+          post.meta.favicon = post.meta.favicon ? post.meta.favicon : favicon
           store.dispatch('addArticle', post)
         })
       } catch (err) {
