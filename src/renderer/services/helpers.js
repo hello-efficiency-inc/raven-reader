@@ -22,7 +22,7 @@ export default {
           } else if (post.meta.favicon) {
             post.meta.favicon = post.meta.favicon
           } else {
-            post.meta.favicon = feeditem.favicon
+            post.meta.favicon = feed.favicon
           }
           store.dispatch('addArticle', post)
         })

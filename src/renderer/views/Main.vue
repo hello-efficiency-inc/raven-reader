@@ -120,7 +120,7 @@ export default {
         self.articleData = null
         self.loading = true
         db.fetchArticle(this.$route.params.id, async function (article) {
-          const link = article.origlink ? article.origlink : article.link
+          const link = article.origlink !== null ? article.origlink : article.link
           const data = await parseArticle(link)
           if (data) {
             const $ = cheerio.load(data.body.content)
