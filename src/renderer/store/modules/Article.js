@@ -23,25 +23,25 @@ const mutations = {
       state.articles.unshift(articles)
     }
   },
-  MARK_FAVOURITE (state, id) {
-    const index = _.findIndex(state.articles, { '_id': id })
-    db.markFavourite(id)
-    state.articles[index].favourite = true
+  MARK_FAVOURITE (state, data) {
+    const index = _.findIndex(state.articles, { '_id': data.id })
+    if (data.type === 'FAVOURITE') {
+      state.articles[index].favourite = true
+    }
+
+    if (data.type === 'UNFAVOURITE') {
+      state.articles[index].favourite = false
+    }
   },
-  MARK_UNFAVOURITE (state, id) {
-    db.markUnfavourite(id)
-    const index = _.findIndex(state.articles, { '_id': id })
-    state.articles[index].favourite = false
-  },
-  MARK_READ (state, id) {
-    const index = _.findIndex(state.articles, { '_id': id })
-    db.markRead(id)
-    state.articles[index].read = true
-  },
-  MARK_UNREAD (state, id) {
-    const index = _.findIndex(state.articles, { '_id': id })
-    db.markUnread(id)
-    state.articles[index].read = false
+  MARK_READ (state, data) {
+    const index = _.findIndex(state.articles, { '_id': data.id })
+    if (data.type === 'READ') {
+      state.articles[index].read = true
+    }
+
+    if (data.type === 'UNREAD') {
+      state.articles[index].read = false
+    }
   },
   DELETE_ARTICLES (state, id) {
     db.deleteArticles(id)
@@ -71,16 +71,20 @@ const actions = {
   markAction ({ commit }, data) {
     switch (data.type) {
       case 'FAVOURITE':
-        commit('MARK_FAVOURITE', data.id)
+        db.markFavourite(data.id)
+        commit('MARK_FAVOURITE', data)
         break
       case 'UNFAVOURITE':
-        commit('MARK_UNFAVOURITE', data.id)
+        db.markUnfavourite(data.id)
+        commit('MARK_FAVOURITE', data)
         break
       case 'READ':
-        commit('MARK_READ', data.id)
+        db.markRead(data.id)
+        commit('MARK_READ', data)
         break
       case 'UNREAD':
-        commit('MARK_UNREAD', data.id)
+        db.markUnread(data.id)
+        commit('MARK_UNREAD', data)
     }
   },
   deleteArticle ({ commit }, id) {
