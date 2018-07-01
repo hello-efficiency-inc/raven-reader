@@ -30,6 +30,12 @@
   </div>
 </template>
 <script>
+const markTypes = {
+  favourite: 'FAVOURITE',
+  unfavourite: 'UNFAVOURITE',
+  read: 'READ',
+  unread: 'UNREAD'
+}
 export default {
   props: {
     article: {
@@ -39,17 +45,29 @@ export default {
   methods: {
     markFavourite () {
       if (this.article.favourite) {
-        this.$store.dispatch('markUnfavourite', this.$route.params.id)
+        this.$store.dispatch('markAction', {
+          type: markTypes.unfavourite,
+          id: this.$route.params.id
+        })
       } else {
-        this.$store.dispatch('markFavourite', this.$route.params.id)
+        this.$store.dispatch('markAction', {
+          type: markTypes.favourite,
+          id: this.$route.params.id
+        })
       }
       this.article.favourite = !this.article.favourite
     },
     markRead () {
       if (this.article.read) {
-        this.$store.dispatch('markUnread', this.$route.params.id)
+        this.$store.dispatch('markAction', {
+          type: markTypes.unread,
+          id: this.$route.params.id
+        })
       } else {
-        this.$store.dispatch('markRead', this.$route.params.id)
+        this.$store.dispatch('markAction', {
+          type: markTypes.read,
+          id: this.$route.params.id
+        })
       }
       this.article.read = !this.article.read
     }

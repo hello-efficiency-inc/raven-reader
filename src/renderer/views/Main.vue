@@ -116,7 +116,10 @@ export default {
     fetchData () {
       const self = this
       if (this.$route.params.id) {
-        this.$store.dispatch('markRead', this.$route.params.id)
+        this.$store.dispatch('markAction', {
+          type: 'READ',
+          id: this.$route.params.id
+        })
         self.articleData = null
         self.loading = true
         db.fetchArticle(this.$route.params.id, async function (article) {

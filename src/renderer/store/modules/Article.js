@@ -68,17 +68,20 @@ const actions = {
       commit('ADD_ARTICLES', docs)
     })
   },
-  markFavourite ({ commit }, id) {
-    commit('MARK_FAVOURITE', id)
-  },
-  markUnfavourite ({ commit }, id) {
-    commit('MARK_UNFAVOURITE', id)
-  },
-  markRead ({ commit }, id) {
-    commit('MARK_READ', id)
-  },
-  markUnread ({ commit }, id) {
-    commit('MARK_UNREAD', id)
+  markAction ({ commit }, data) {
+    switch (data.type) {
+      case 'FAVOURITE':
+        commit('MARK_FAVOURITE', data.id)
+        break
+      case 'UNFAVOURITE':
+        commit('MARK_UNFAVOURITE', data.id)
+        break
+      case 'READ':
+        commit('MARK_READ', data.id)
+        break
+      case 'UNREAD':
+        commit('MARK_UNREAD', data.id)
+    }
   },
   deleteArticle ({ commit }, id) {
     commit('DELETE_ARTICLES', id)

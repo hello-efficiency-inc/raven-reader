@@ -19,8 +19,6 @@ export default {
           post.feed_id = feeditem.meta.id
           if (favicon) {
             post.meta.favicon = favicon
-          } else if (post.meta.favicon) {
-            post.meta.favicon = post.meta.favicon
           } else {
             post.meta.favicon = feed.favicon
           }
