@@ -23,7 +23,7 @@ const mutations = {
       state.articles.unshift(articles)
     }
   },
-  MARK_FAVOURITE (state, data) {
+  MARK_ACTION (state, data) {
     const index = _.findIndex(state.articles, { '_id': data.id })
     if (data.type === 'FAVOURITE') {
       state.articles[index].favourite = true
@@ -32,9 +32,6 @@ const mutations = {
     if (data.type === 'UNFAVOURITE') {
       state.articles[index].favourite = false
     }
-  },
-  MARK_READ (state, data) {
-    const index = _.findIndex(state.articles, { '_id': data.id })
     if (data.type === 'READ') {
       state.articles[index].read = true
     }
@@ -72,20 +69,17 @@ const actions = {
     switch (data.type) {
       case 'FAVOURITE':
         db.markFavourite(data.id)
-        commit('MARK_FAVOURITE', data)
         break
       case 'UNFAVOURITE':
         db.markUnfavourite(data.id)
-        commit('MARK_FAVOURITE', data)
         break
       case 'READ':
         db.markRead(data.id)
-        commit('MARK_READ', data)
         break
       case 'UNREAD':
         db.markUnread(data.id)
-        commit('MARK_UNREAD', data)
     }
+    commit('MARK_ACTION', data)
   },
   deleteArticle ({ commit }, id) {
     commit('DELETE_ARTICLES', id)
