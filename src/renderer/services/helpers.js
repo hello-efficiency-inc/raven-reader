@@ -1,8 +1,34 @@
 import store from '../store'
 import { parseFeed } from '../parsers/feed'
 import uuid from 'uuid/v4'
+import builder from 'xmlbuilder'
 
 export default {
+  exportOpml () {
+    const passFeedAttr = (element, feed) => {
+      element.att('text', feed.title || '')
+      element.att('type', 'rss')
+      element.att('xmlUrl', feed.xmlurl)
+      if (feed.link) {
+        element.att('htmlUrl', feed.link)
+      }
+    }
+
+    const root = builder.create('opml', {
+      version: '1.0',
+      encoding: 'UTF-8'
+    })
+
+    root.ele('head').ele('title', 'Your RSS Reader Subscriptions')
+
+    const body = root.ele('body')
+
+    store.state.Feed.feeds.forEach((feed) => {
+      passFeedAttr(body.ele('outline'), feed)
+    })
+
+    return root.end({ pretty: true })
+  },
   subscribe (feeds, favicon = null, refresh = false) {
     feeds.forEach(async function (feed) {
       const url = feed.url ? feed.url : feed.xmlurl

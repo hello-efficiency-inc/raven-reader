@@ -6,26 +6,30 @@ import {remote} from 'electron'
 export default class {
   constructor () {
     this.db = null
-    this.useDataDir = jetpack.cwd(remote.app.getPath('userData'))
+    this.useDataDir = jetpack.cwd(remote.app.getPath('home'))
   }
 
   createOrReadDatabase (db) {
-    const existsArticle = fs.existsSync(this.useDataDir.path(db.article))
-    const existsFeed = fs.existsSync(this.useDataDir.path(db.feed))
+    const existsDir = jetpack.exists(this.useDataDir.path('.rss-reader'))
+    if (!existsDir) {
+      fs.mkdir(this.useDataDir.path('.rss-reader'))
+    }
+    const existsArticle = fs.existsSync(this.useDataDir.path(`.rss-reader/${db.article}`))
+    const existsFeed = fs.existsSync(this.useDataDir.path(`.rss-reader/${db.feed}`))
     let database = {}
 
     if (!existsArticle && !existsFeed) {
-      this.useDataDir.write(db.article, '')
-      this.useDataDir.write(db.feed, '')
+      this.useDataDir.write(this.useDataDir.path(`.rss-reader/${db.article}`), '')
+      this.useDataDir.write(this.useDataDir.path(`.rss-reader/${db.feed}`), '')
     }
 
     database.article = new DataStore({
-      filename: this.useDataDir.path(db.article),
+      filename: this.useDataDir.path(`.rss-reader/${db.article}`),
       autoload: true
     })
 
     database.feed = new DataStore({
-      filename: this.useDataDir.path(db.feed),
+      filename: this.useDataDir.path(`.rss-reader/${db.feed}`),
       autoload: true
     })
 

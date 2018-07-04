@@ -28,6 +28,12 @@
               Recently Read
             </router-link>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" @click="exportOpml">
+              <feather-icon name="external-link"></feather-icon>
+              Export Subscriptions
+            </a>
+          </li>
         </ul>
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Subscriptions</span>
@@ -54,6 +60,8 @@ import cheerio from 'cheerio'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
 import forever from 'async/forever'
+import helper from '../services/helpers'
+import fs from 'fs'
 
 export default {
   data () {
@@ -95,6 +103,15 @@ export default {
     }
   },
   methods: {
+    exportOpml () {
+      fs.writeFile(`${this.$electron.remote.app.getPath('downloads')}/subscriptions.xml`, helper.exportOpml())
+      const notification = new Notification('RSS Reader', {
+        body: 'Successfully exported all subscriptions to downloads folder'
+      })
+      notification.onclick = () => {
+        console.log('Notification clicked')
+      }
+    },
     updateType (newVal) {
       this.articleType = newVal
     },

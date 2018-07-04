@@ -82,7 +82,9 @@
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
     "vuetify": "^1.0.18",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "xml2js": "^0.4.19",
+    "xmlbuilder": "^10.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
