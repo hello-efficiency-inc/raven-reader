@@ -10,11 +10,7 @@
         <div class="article-detail" v-html="article.content"></div>
       </div>
       <div class="article-contentarea loading-state px-4" v-if="!article">
-        <div class="bouncing-loader" v-if="loading">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <loader v-if="loading"></loader>
       </div>
     </div>
   </div>

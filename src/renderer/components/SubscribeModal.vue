@@ -6,11 +6,7 @@
           <strong>Add <feather-icon name="plus"></feather-icon></strong>
         </b-input-group-text>
         <b-input-group-text slot="append">
-          <div class="bouncing-loader" v-if="loading">
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
+          <loader v-if="loading"></loader>
           <div class="favicon-img" v-if="feeddata !== null && !loading">
             <img :src="feeddata.site.favicon" height="20">
           </div>
