@@ -3,6 +3,7 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import updateElectron from 'update-electron-app'
 import electronLog from 'electron-log'
+import jetpack from 'fs-jetpack'
 
 let myWindow = null
 
@@ -52,6 +53,18 @@ function createMenu () {
 }
 
 function createWindow () {
+  /**
+   * If there is already data in old directory. Moved it to new
+   */
+  const oldDirectory = jetpack.cwd(app.getPath('userData'))
+  const newDirectory = jetpack.cwd(app.getPath('home'))
+  const existsArticle = jetpack.exists(oldDirectory.path(`articles.db`))
+  const existsFeed = jetpack.exists(oldDirectory.path(`feeds.db`))
+  if (existsArticle && existsFeed) {
+    console.log('YASS')
+    jetpack.move(oldDirectory.path(`feeds.db`), newDirectory.path('.rss-reader/feeds.db'))
+    jetpack.move(oldDirectory.path(`articles.db`), newDirectory.path('.rss-reader/articles.db'))
+  }
   /**
   * Initial window options
   */
