@@ -20,6 +20,7 @@
 ## Download
 
 To download, please visit [https://github.com/mrgodhani/rss-reader/releases](https://github.com/mrgodhani/rss-reader/releases)
+
 Coming soon on Apple App Store.
 
 ## Features
