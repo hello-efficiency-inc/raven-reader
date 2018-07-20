@@ -20,13 +20,6 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "mrgodhani",
-        "repo": "rss-reader"
-      }
-    ],
     "productName": "RSS Reader",
     "appId": "org.mrgodhani.rssreader",
     "directories": {
@@ -103,7 +96,7 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^2.0.2",
-    "electron-builder": "^20.15.1",
+    "electron-builder": "20.23.1",
     "electron-debug": "^2.0.0",
     "electron-devtools-installer": "^2.2.4",
     "eslint": "^5.1.0",
