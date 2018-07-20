@@ -32,7 +32,7 @@ Coming soon on Apple App Store.
 - [x] Open article link in external browser
 - [x] Responsive
 - [x] Exporting feed in OPML format
-- [ ] Importing feeds
+- [x] Importing feeds
 - [ ] Offline reading
 - [ ] Windows support
 
