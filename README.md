@@ -63,7 +63,7 @@ cp src/renderer/config.example.js config.js
 ## Powered by
 
 - [Electron Vue](https://github.com/SimulatedGREG/electron-vue)
-- [Bootstrap][https://getbootstrap.com]
+- [Bootstrap](https://getbootstrap.com)
 - [Vue](https://www.vuejs.org) & [Vuex](https://vuex.vuejs.org)
 - [NeDB](https://github.com/louischatriot/nedb)
 - [Mercury Parser](https://mercury.postlight.com/web-parser/)
