@@ -1,6 +1,9 @@
 <template>
-  <b-modal id="importfeed" ref="importFeed" title="Import Feeds">
-    <b-form-file v-model="file" :state="Boolean(file)" placeholder="Choose a file..." accept=".xml"></b-form-file>
+  <b-modal id="importfeed" ref="importFeed" title="Import Subscriptions from OPML file" centered @hidden="onHidden">
+    <b-form-file v-model="file" placeholder="Choose a file..." accept=".xml"></b-form-file>
+    <b-form-text id="inputLiveHelp">
+      OPML is a standard format to import or export feed subscriptions. You can export OPML files from other readers and import it.
+    </b-form-text>
     <div slot="modal-footer">
       <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
       <button type="button" class="btn btn-primary" @click="importFeed">Import</button>
@@ -21,6 +24,9 @@ export default {
   methods: {
     hideModal () {
       this.$refs.importFeed.hide()
+    },
+    onHidden () {
+      this.file = null
     },
     importFeed () {
       const parser = new xml2js.Parser()
@@ -43,6 +49,7 @@ export default {
         })
       })
 
+      this.file = null
       this.hideModal()
     }
   }

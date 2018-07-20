@@ -42,9 +42,10 @@ const mutations = {
   },
   DELETE_ARTICLES (state, id) {
     db.deleteArticles(id)
-    const articles = _.filter(state.articles, { 'feed_id': id })
-    articles.forEach((index) => {
-      state.articles.splice(index, 1)
+    state.articles.forEach((element) => {
+      if (element.feed_id === id) {
+        state.articles.splice(element, 1)
+      }
     })
   },
   REFRESH_FEEDS (state, feeds) {

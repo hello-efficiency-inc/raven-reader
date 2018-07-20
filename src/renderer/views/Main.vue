@@ -37,7 +37,7 @@
           <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.importfeed>
               <feather-icon name="upload"></feather-icon>
-              Import Subscription
+              Import Subscriptions
             </a>
           </li>
         </ul>
@@ -136,6 +136,7 @@ export default {
     unsubscribeFeed (id) {
       this.$store.dispatch('deleteFeed', id)
       this.$store.dispatch('deleteArticle', id)
+      this.$store.dispatch('loadArticles')
     },
     fetchData () {
       const self = this
