@@ -31,7 +31,20 @@ export default {
   },
   subscribe (feeds, favicon = null, refresh = false) {
     feeds.forEach(async function (feed) {
-      const url = feed.url ? feed.url : feed.xmlurl
+      let url
+
+      if (feed.url) {
+        url = feed.url
+      }
+
+      if (feed.xmlurl) {
+        url = feed.xmlurl
+      }
+
+      if (feed.$) {
+        url = feed.$.xmlUrl
+      }
+
       const feeditem = await parseFeed(url)
       if (favicon) {
         feeditem.meta.favicon = favicon

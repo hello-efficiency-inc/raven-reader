@@ -34,6 +34,12 @@
               Export Subscriptions
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" v-b-modal.importfeed>
+              <feather-icon name="upload"></feather-icon>
+              Import Subscription
+            </a>
+          </li>
         </ul>
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Subscriptions</span>
@@ -51,6 +57,7 @@
     </nav>
     <article-list :type="articleType" :feed="feed" @type-change="updateType"></article-list>
     <article-detail :id="$route.params.id" :article="articleData" :loading="loading"></article-detail>
+    <import-modal></import-modal>
   </div>
 </template>
 <script>

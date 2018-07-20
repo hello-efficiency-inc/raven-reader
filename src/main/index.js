@@ -61,7 +61,6 @@ function createWindow () {
   const existsArticle = jetpack.exists(oldDirectory.path(`articles.db`))
   const existsFeed = jetpack.exists(oldDirectory.path(`feeds.db`))
   if (existsArticle && existsFeed) {
-    console.log('YASS')
     jetpack.move(oldDirectory.path(`feeds.db`), newDirectory.path('.rss-reader/feeds.db'))
     jetpack.move(oldDirectory.path(`articles.db`), newDirectory.path('.rss-reader/articles.db'))
   }
