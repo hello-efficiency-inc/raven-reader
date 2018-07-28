@@ -1,6 +1,6 @@
 <template>
   <b-modal id="importfeed" ref="importFeed" title="Import Subscriptions from OPML file" centered @hidden="onHidden">
-    <b-form-file v-model="file" placeholder="Choose a file..." accept=".xml"></b-form-file>
+    <b-form-file v-model="file" placeholder="Choose a file..." accept=".xml, .opml"></b-form-file>
     <b-form-text id="inputLiveHelp">
       OPML is a standard format to import or export feed subscriptions. You can export OPML files from other readers and import it.
     </b-form-text>
@@ -39,13 +39,20 @@ export default {
         }
         parser.parseString(data, (err, data) => {
           if (err) {
+            console.log(err)
             this.$toast('Oops! something went wrong', {
               className: 'et-alert',
               horizontalPosition: 'center'
             })
           }
-          const feeds = data.opml.body[0].outline
-          helper.subscribe(feeds)
+          data.opml.body[0].outline.forEach((item) => {
+            if (item.$.xmlUrl) {
+              console.log(item)
+              helper.subscribe(data.opml.body[0].outline)
+            } else {
+              helper.subscribe(item.outline)
+            }
+          })
         })
       })
 
