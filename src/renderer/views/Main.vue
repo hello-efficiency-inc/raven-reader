@@ -45,7 +45,7 @@
           <span>Subscriptions</span>
         </h6>
         <ul class="nav flex-column">
-          <li v-for="feed in feeds" class="nav-item d-flex justify-content-between align-items-center pr-2">
+          <li v-for="feed in feedsMapped" class="nav-item d-flex justify-content-between align-items-center pr-2">
             <router-link v-if="feed" class="nav-link" :to="`/feed/${feed.id}`">
               <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1">
               {{ feed.title }}
@@ -69,6 +69,7 @@ import stat from 'reading-time'
 import forever from 'async/forever'
 import helper from '../services/helpers'
 import fs from 'fs'
+import { mapGetters } from 'vuex'
 
 export default {
   data () {
@@ -105,13 +106,21 @@ export default {
     '$route.params.id': 'fetchData'
   },
   computed: {
-    feeds () {
-      return this.$store.state.Feed.feeds
-    }
+    ...mapGetters([
+      'feedsMapped'
+    ])
   },
   methods: {
     exportOpml () {
-      fs.writeFile(`${this.$electron.remote.app.getPath('downloads')}/subscriptions.xml`, helper.exportOpml())
+      const xmlData = helper.exportOpml()
+      const self = this
+      fs.unlink(`${self.$electron.remote.app.getPath('downloads')}/subscriptions.xml`, (err) => {
+        if (err && err.code !== 'ENOENT') throw err
+        fs.writeFile(`${self.$electron.remote.app.getPath('downloads')}/subscriptions.xml`, xmlData, {flag: 'w', encoding: 'utf8'}, (err) => {
+          if (err) throw err
+          console.log('XML Saved')
+        })
+      })
       const notification = new Notification('RSS Reader', {
         body: 'Successfully exported all subscriptions to downloads folder'
       })
@@ -125,6 +134,7 @@ export default {
     typeChange () {
       if (this.$route.params.type) {
         this.articleType = this.$route.params.type
+        this.$store.dispatch('changeType', this.$route.params.type)
       }
     },
     feedChange () {

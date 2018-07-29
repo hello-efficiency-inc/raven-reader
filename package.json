@@ -58,6 +58,7 @@
     "cheerio": "^1.0.0-rc.2",
     "dayjs": "^1.6.2",
     "electron-log": "^2.2.15",
+    "favicon": "^0.0.2",
     "feather-icons": "^4.7.3",
     "feedparser": "^2.2.9",
     "fs-jetpack": "^2.0.0",
@@ -76,7 +77,6 @@
     "vue-easy-toast": "^1.0.5",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
-    "vuetify": "^1.0.18",
     "vuex": "^3.0.1",
     "xml2js": "^0.4.19",
     "xmlbuilder": "^10.0.0"

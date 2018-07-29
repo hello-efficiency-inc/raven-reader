@@ -46,6 +46,7 @@ export async function ReadFeedStream (stream, feedUrl) {
           link: this.meta.link,
           xmlurl: this.meta.xmlurl ? this.meta.xmlurl : feedUrl,
           favicon: this.meta.favicon,
+          description: this.meta.description,
           title: this.meta.title
         }
         let item

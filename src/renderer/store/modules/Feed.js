@@ -5,6 +5,15 @@ const state = {
   feeds: []
 }
 
+const getters = {
+  feedsMapped: state => {
+    return state.feeds.map((item) => {
+      item.title = _.truncate(item.title, { length: 25 })
+      return item
+    })
+  }
+}
+
 const mutations = {
   LOAD_FEEDS (state, feed) {
     state.feeds = feed
@@ -39,6 +48,7 @@ const actions = {
 
 export default {
   state,
+  getters,
   mutations,
   actions
 }

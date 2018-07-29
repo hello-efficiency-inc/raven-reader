@@ -12,7 +12,7 @@
 </template>
 <script>
 import fs from 'fs'
-import xml2js from 'xml2js'
+import opmlParser from 'node-opml-parser'
 import helper from '../services/helpers'
 
 export default {
@@ -29,7 +29,6 @@ export default {
       this.file = null
     },
     importFeed () {
-      const parser = new xml2js.Parser()
       fs.readFile(this.file.path, 'utf8', (err, data) => {
         if (err) {
           this.$toast('Oops! something went wrong', {
@@ -37,22 +36,15 @@ export default {
             horizontalPosition: 'center'
           })
         }
-        parser.parseString(data, (err, data) => {
+
+        opmlParser(data, (err, data) => {
           if (err) {
-            console.log(err)
             this.$toast('Oops! something went wrong', {
               className: 'et-alert',
               horizontalPosition: 'center'
             })
           }
-          data.opml.body[0].outline.forEach((item) => {
-            if (item.$.xmlUrl) {
-              console.log(item)
-              helper.subscribe(data.opml.body[0].outline)
-            } else {
-              helper.subscribe(item.outline)
-            }
-          })
+          helper.subscribe(data, null, false, true)
         })
       })
 

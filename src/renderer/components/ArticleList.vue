@@ -13,8 +13,8 @@
       </form>
       <div class="articles">
         <div class="list-group">
-          <article-item v-if="articles.length > 0" :article="article" v-for="article in filteredArticles" :key="article._id"></article-item>
-          <div class="no-articles" v-if="articles.length === 0">
+          <article-item v-if="filteredArticles.length > 0" :article="article" v-for="article in filteredArticles" :key="article._id"></article-item>
+          <div class="no-articles" v-if="filteredArticles.length === 0">
             No articles available
           </div>
         </div>
@@ -23,16 +23,7 @@
   </div>
 </template>
 <script>
-import _ from 'lodash'
-
-const filters = {
-  search: (articles, search) => articles.filter(article => article.title.match(search)),
-  unread: articles => articles.filter(article => !article.read),
-  read: articles => articles.filter(article => article.read),
-  favourites: articles => articles.filter(article => article.favourite),
-  feed: (articles, feed) => articles.filter(article => article.feed_id === feed),
-  all: articles => articles
-}
+import { mapGetters } from 'vuex'
 
 export default {
   data () {
@@ -52,24 +43,15 @@ export default {
   watch: {
     search (val) {
       if (val) {
-        this.$emit('type-change', 'search')
+        this.$store.dispatch('changeType', 'search')
+        this.$store.dispatch('setSearch', val)
       }
     }
   },
   computed: {
-    articles () {
-      const orderedArticles = _.orderBy(this.$store.state.Article.articles, ['pubDate'], ['desc'])
-      return orderedArticles
-    },
-    filteredArticles () {
-      if (this.type !== 'feed' && this.type !== 'search') {
-        return filters[this.type](this.articles)
-      }
-      if (this.type === 'search') {
-        return this.articles.filter(article => article.title.toLowerCase().match(this.search.toLowerCase()))
-      }
-      return filters[this.type](this.articles, this.feed)
-    }
+    ...mapGetters([
+      'filteredArticles'
+    ])
   }
 }
 </script>

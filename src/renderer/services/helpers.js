@@ -1,39 +1,49 @@
 import store from '../store'
 import { parseFeed } from '../parsers/feed'
 import uuid from 'uuid/v4'
-import builder from 'xmlbuilder'
+import opmlGenerator from 'opml-generator'
+import async from 'async'
+import favicon from 'favicon'
 
 export default {
   exportOpml () {
-    const passFeedAttr = (element, feed) => {
-      element.att('text', feed.title || '')
-      element.att('type', 'rss')
-      element.att('xmlUrl', feed.xmlurl)
-      if (feed.link) {
-        element.att('htmlUrl', feed.link)
-      }
+    const header = {
+      'title': 'RSS Reader',
+      'dateCreated': new Date(2014, 2, 9)
     }
-
-    const root = builder.create('opml', {
-      version: '1.0',
-      encoding: 'UTF-8'
-    })
-
-    root.ele('head').ele('title', 'Your RSS Reader Subscriptions')
-
-    const body = root.ele('body')
-
+    const outlines = []
     store.state.Feed.feeds.forEach((feed) => {
-      passFeedAttr(body.ele('outline'), feed)
+      outlines.push({
+        text: feed.description ? feed.description : '',
+        title: feed.title,
+        type: 'rss',
+        xmlUrl: feed.xmlurl,
+        htmlUrl: feed.link
+      })
     })
 
-    return root.end({ pretty: true })
+    return opmlGenerator(header, outlines)
   },
-  subscribe (feeds, favicon = null, refresh = false) {
+  subscribe (feeds, faviconData = null, refresh = false, importData = false) {
+    const q = async.priorityQueue((task, cb) => {
+      if (!refresh) {
+        task.feed.meta.favicon = task.favicon
+        task.feed.meta.id = uuid()
+        store.dispatch('addFeed', task.feed.meta)
+      }
+      task.feed.posts.forEach((post) => {
+        post.feed_id = task.feed.meta.id
+        post.meta.favicon = task.favicon
+        store.dispatch('addArticle', post)
+      })
+      cb()
+    }, 1)
+
     feeds.forEach(async function (feed) {
+      let faviconUrl
       let url
 
-      if (feed.url) {
+      if (!importData) {
         url = feed.url
       }
 
@@ -41,30 +51,32 @@ export default {
         url = feed.xmlurl
       }
 
-      if (feed.$) {
-        url = feed.$.xmlUrl
+      if (feed.feedUrl) {
+        url = feed.feedUrl
       }
 
+      const htmlLink = feed.link ? feed.link : feed.url
       const feeditem = await parseFeed(url)
-      if (favicon) {
-        feeditem.meta.favicon = favicon
-      }
-      feeditem.meta.id = uuid()
-      try {
-        if (!refresh) {
-          store.dispatch('addFeed', feeditem.meta)
-        }
-        feeditem.posts.forEach((post) => {
-          post.feed_id = feeditem.meta.id
-          if (favicon) {
-            post.meta.favicon = favicon
-          } else {
-            post.meta.favicon = feed.favicon
-          }
-          store.dispatch('addArticle', post)
+      if (faviconData) {
+        faviconUrl = faviconData
+      } else {
+        faviconUrl = await new Promise((resolve, reject) => {
+          favicon(htmlLink, (err, url) => {
+            if (err) {
+              reject(err)
+            }
+            resolve(url)
+          })
         })
-      } catch (err) {
       }
+      q.push({ feed: feeditem, favicon: faviconUrl }, (err) => {
+        if (err) throw err
+        console.log(`Feed queued`)
+      })
     })
+
+    q.drain = () => {
+      console.log('all feeds are processed')
+    }
   }
 }
