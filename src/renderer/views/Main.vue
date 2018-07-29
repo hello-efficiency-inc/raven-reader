@@ -45,7 +45,7 @@
           <span>Subscriptions</span>
         </h6>
         <ul class="nav flex-column">
-          <li v-for="feed in feedsMapped" class="nav-item d-flex justify-content-between align-items-center pr-2">
+          <li v-for="feed in feeds" class="nav-item d-flex justify-content-between align-items-center pr-2">
             <router-link v-if="feed" class="nav-link" :to="`/feed/${feed.id}`">
               <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1">
               {{ feed.title }}
@@ -69,7 +69,6 @@ import stat from 'reading-time'
 import forever from 'async/forever'
 import helper from '../services/helpers'
 import fs from 'fs'
-import { mapGetters } from 'vuex'
 
 export default {
   data () {
@@ -106,9 +105,9 @@ export default {
     '$route.params.id': 'fetchData'
   },
   computed: {
-    ...mapGetters([
-      'feedsMapped'
-    ])
+    feeds () {
+      return this.$store.state.Feed.feeds
+    }
   },
   methods: {
     exportOpml () {
@@ -140,7 +139,8 @@ export default {
     feedChange () {
       if (this.$route.params.feedid) {
         this.articleType = 'feed'
-        this.feed = this.$route.params.feedid
+        this.$store.dispatch('setFeed', this.$route.params.feedid)
+        this.$store.dispatch('changeType', 'feed')
       }
     },
     unsubscribeFeed (id) {

@@ -9,7 +9,8 @@ dayjs.extend(relativeTime)
 const state = {
   articles: [],
   type: 'all',
-  search: ''
+  search: '',
+  feed: ''
 }
 
 const filters = {
@@ -30,7 +31,7 @@ const getters = {
     if (state.type === 'search') {
       return orderedArticles.filter(article => article.title.toLowerCase().match(state.search.toLowerCase()))
     }
-    return filters[this.type](orderedArticles, this.feed)
+    return filters[state.type](orderedArticles, state.feed)
   }
 }
 
@@ -44,6 +45,7 @@ const mutations = {
   },
   ADD_ARTICLES (state, articles) {
     if (articles) {
+      articles.meta.title = _.truncate(articles.meta.title, { length: 20 })
       articles.pubdate = dayjs(articles.pubdate).fromNow()
       state.articles.unshift(articles)
     }
@@ -78,6 +80,9 @@ const mutations = {
   },
   SET_SEARCH_TERM (state, search) {
     state.search = search
+  },
+  SET_FEED_ID (state, feed) {
+    state.feed = feed
   }
 }
 
@@ -121,6 +126,9 @@ const actions = {
   },
   setSearch ({ commit }, search) {
     commit('SET_SEARCH_TERM', search)
+  },
+  setFeed ({ commit }, feed) {
+    commit('SET_FEED_ID', feed)
   }
 }
 

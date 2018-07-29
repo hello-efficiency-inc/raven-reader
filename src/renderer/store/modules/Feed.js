@@ -5,18 +5,12 @@ const state = {
   feeds: []
 }
 
-const getters = {
-  feedsMapped: state => {
-    return state.feeds.map((item) => {
-      item.title = _.truncate(item.title, { length: 25 })
-      return item
-    })
-  }
-}
-
 const mutations = {
   LOAD_FEEDS (state, feed) {
-    state.feeds = feed
+    state.feeds = feed.map((item) => {
+      item.title = _.truncate(item.title, { length: 22 })
+      return item
+    })
   },
   ADD_FEED (state, docs) {
     if (docs) {
@@ -48,7 +42,6 @@ const actions = {
 
 export default {
   state,
-  getters,
   mutations,
   actions
 }

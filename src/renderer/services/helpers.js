@@ -4,6 +4,7 @@ import uuid from 'uuid/v4'
 import opmlGenerator from 'opml-generator'
 import async from 'async'
 import favicon from 'favicon'
+import normalizeUrl from 'normalize-url'
 
 export default {
   exportOpml () {
@@ -65,7 +66,7 @@ export default {
             if (err) {
               reject(err)
             }
-            resolve(url)
+            resolve(normalizeUrl(url))
           })
         })
       }
