@@ -3211,7 +3211,7 @@ extend-shallow@^3.0.0, extend-shallow@^3.0.2:
     assign-symbols "^1.0.0"
     is-extendable "^1.0.1"
 
-extend@^3.0.0, extend@^3.0.1, extend@~3.0.0, extend@~3.0.1:
+extend@^3.0.0, extend@^3.0.2, extend@~3.0.0, extend@~3.0.1:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
 
@@ -3701,7 +3701,7 @@ got@^6.7.1:
     unzip-response "^2.0.1"
     url-parse-lax "^1.0.0"
 
-got@^8.3.0, got@^8.3.1:
+got@^8.3.1, got@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/got/-/got-8.3.2.tgz#1d23f64390e97f776cac52e5b936e5f514d2e937"
   dependencies:
@@ -6506,12 +6506,12 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     inherits "^2.0.1"
 
 rss-finder@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/rss-finder/-/rss-finder-2.0.5.tgz#79de16d4b0e7076217f0fa9ed2bdc651f1b7a3af"
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/rss-finder/-/rss-finder-2.0.6.tgz#c8b20f544389b3a0914ef08eeed56c8230d5f397"
   dependencies:
-    extend "^3.0.1"
+    extend "^3.0.2"
     feedparser "^2.2.9"
-    got "^8.3.0"
+    got "^8.3.2"
     htmlparser2 "^3.9.2"
     pinkie-promise "^2.0.1"
 
@@ -7639,10 +7639,6 @@ vue-template-es2015-compiler@^1.6.0:
 vue@^2.5.16:
   version "2.5.16"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.16.tgz#07edb75e8412aaeed871ebafa99f4672584a0085"
-
-vuetify@^1.0.18:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.1.8.tgz#3aef842ddc9b7ec348e7ce273a24f2f8ebb1cea9"
 
 vuex@^3.0.1:
   version "3.0.1"
