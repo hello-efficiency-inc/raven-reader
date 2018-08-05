@@ -35,6 +35,7 @@ Coming soon on Apple App Store.
 - [x] Importing feeds
 - [ ] Offline reading
 - [ ] Windows support
+- [ ] Linux support
 
 
 ## Developer Notes
