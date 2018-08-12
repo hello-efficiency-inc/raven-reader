@@ -66,7 +66,7 @@ import { parseArticle } from '../parsers/article'
 import cheerio from 'cheerio'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
-import forever from 'async/forever'
+// import forever from 'async/forever'
 import helper from '../services/helpers'
 import fs from 'fs'
 
@@ -85,18 +85,18 @@ export default {
     this.$store.dispatch('loadArticles')
 
     // Feed Crawling
-    forever(
-      (next) => {
-        console.log('Refreshing')
-        this.$store.dispatch('refreshFeeds')
-        setTimeout(() => {
-          next()
-        }, 60000)
-      },
-      (err) => {
-        console.error(err)
-      }
-    )
+    // forever(
+    //   (next) => {
+    //     console.log('Refreshing')
+    //     this.$store.dispatch('refreshFeeds')
+    //     setTimeout(() => {
+    //       next()
+    //     }, 60000)
+    //   },
+    //   (err) => {
+    //     console.error(err)
+    //   }
+    // )
   },
   watch: {
     // call again the method if the route changes

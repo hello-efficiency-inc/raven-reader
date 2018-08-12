@@ -14,6 +14,7 @@ const mutations = {
   },
   ADD_FEED (state, docs) {
     if (docs) {
+      docs.title = _.truncate(docs.title, { length: 22 })
       state.feeds.unshift(docs)
     }
   },
