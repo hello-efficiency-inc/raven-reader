@@ -42,10 +42,8 @@ export default {
   },
   watch: {
     search (val) {
-      if (val) {
-        this.$store.dispatch('changeType', 'search')
-        this.$store.dispatch('setSearch', val)
-      }
+      this.$store.dispatch('changeType', 'search')
+      this.$store.dispatch('setSearch', val)
     }
   },
   computed: {

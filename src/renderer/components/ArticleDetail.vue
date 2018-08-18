@@ -2,14 +2,23 @@
   <div class="article-detail">
     <div class="content-wrapper">
       <article-toolbar :article="article"></article-toolbar>
-      <div class="article-contentarea  px-4" v-if="article">
+      <div class="article-contentarea  px-4" v-if="article !== null && article.content !== null && !emptyState">
         <h2>
           <strong>{{ article.title }}</strong><br/>
           <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
         </h2>
         <div class="article-detail" v-html="article.content"></div>
       </div>
-      <div class="article-contentarea loading-state px-4" v-if="!article">
+      <div class="article-contentarea  px-4" v-if="article !== null && article.content === null && emptyState">
+        <div class="article-detail d-flex flex-column justify-content-center align-items-center
+">
+          <h3 class="mb-4">Whoops! not able to load content.</h3>
+          <a :href="article.url" class="btn btn-primary btn-outline-primary js-external-link">
+            View it on web
+          </a>
+        </div>
+      </div>
+      <div class="article-contentarea loading-state px-4" v-if="loading">
         <loader v-if="loading"></loader>
       </div>
     </div>
@@ -23,6 +32,9 @@ export default {
     },
     article: {
       type: Object
+    },
+    emptyState: {
+      type: Boolean
     },
     loading: {
       type: Boolean

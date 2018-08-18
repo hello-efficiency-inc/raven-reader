@@ -23,6 +23,17 @@ const filters = {
   all: articles => articles
 }
 
+const searchOption = {
+  caseSensitive: true,
+  shouldSort: true,
+  threshold: 0.6,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 100,
+  minMatchCharLength: 1,
+  keys: ['title']
+}
+
 const getters = {
   filteredArticles: state => {
     const orderedArticles = _.orderBy(state.articles, ['pubDate'], ['desc'])
@@ -30,17 +41,11 @@ const getters = {
       return filters[state.type](orderedArticles)
     }
     if (state.type === 'search') {
-      const fuse = new Fuse(state.articles, {
-        caseSensitive: true,
-        shouldSort: true,
-        threshold: 0.6,
-        location: 0,
-        distance: 100,
-        maxPatternLength: 100,
-        minMatchCharLength: 1,
-        keys: ['title']
-      })
-      return fuse.search(state.search)
+      const fuse = new Fuse(state.articles, searchOption)
+      if (state.search !== '') {
+        return fuse.search(state.search)
+      }
+      return filters['all'](orderedArticles)
     }
     return filters[state.type](orderedArticles, state.feed)
   }
@@ -124,8 +129,9 @@ const actions = {
     }
     commit('MARK_ACTION', data)
   },
-  deleteArticle ({ commit }, id) {
+  async deleteArticle ({ dispatch, commit }, id) {
     commit('DELETE_ARTICLES', id)
+    await dispatch('loadArticles')
   },
   refreshFeeds ({ commit }) {
     db.fetchFeeds(docs => {

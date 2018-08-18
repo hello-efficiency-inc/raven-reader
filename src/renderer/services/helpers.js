@@ -5,7 +5,6 @@ import opmlGenerator from 'opml-generator'
 import async from 'async'
 import faviconoclast from 'faviconoclast'
 import db from './db.js'
-import got from 'got'
 
 export default {
   exportOpml () {
@@ -78,10 +77,6 @@ export default {
             resolve(iconUrl)
           })
         })
-        const results = await got(faviconUrl, { retry: 0 })
-        if (results.statusCode !== 200) {
-          faviconUrl = null
-        }
       }
       q.push({ feed: feeditem, favicon: faviconUrl })
     })

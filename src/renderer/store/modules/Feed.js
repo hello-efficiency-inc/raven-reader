@@ -36,7 +36,8 @@ const actions = {
       commit('ADD_FEED', docs)
     })
   },
-  deleteFeed ({ commit }, id) {
+  async deleteFeed ({ dispatch, commit }, id) {
+    await dispatch('deleteArticle', id)
     commit('DELETE_FEED', id)
   }
 }

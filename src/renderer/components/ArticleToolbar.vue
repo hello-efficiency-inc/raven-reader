@@ -1,6 +1,6 @@
 <template>
-  <div class="article-toolbar">
-    <div class="site-info" v-if="article">
+  <div class="article-toolbar" v-if="article !== null && article.content !== null">
+    <div class="site-info">
       <div class="wrap">
         <button class="btn btn-toolbar">
           <span v-if="article.favicon" class="favicon-wrap">
@@ -10,7 +10,7 @@
         </button>
       </div>
     </div>
-    <div class="article-buttons" v-if="article">
+    <div class="article-buttons">
       <div class="wrap">
         <button class="btn btn-toolbar" @click="markFavourite">
           <feather-icon name="star" :filled="article.favourite"></feather-icon>

@@ -56,7 +56,7 @@
       </div>
     </nav>
     <article-list :type="articleType" :feed="feed" @type-change="updateType"></article-list>
-    <article-detail :id="$route.params.id" :article="articleData" :loading="loading"></article-detail>
+    <article-detail :id="$route.params.id" :article="articleData" :emptyState="empty" :loading="loading"></article-detail>
     <import-modal></import-modal>
   </div>
 </template>
@@ -76,6 +76,7 @@ export default {
     return {
       articleData: null,
       articleType: 'all',
+      empty: null,
       feed: null,
       loading: false
     }
@@ -87,7 +88,7 @@ export default {
     this.$store.dispatch('loadArticles')
 
     // Feed Crawling
-    scheduler.scheduleJob('2 * * * *', () => {
+    scheduler.scheduleJob('*/10 * * * *', () => {
       const feeds = self.$store.state.Feed.feeds
       if (feeds.length === 0) {
         log.info('No feeds to process')
@@ -145,8 +146,6 @@ export default {
     },
     unsubscribeFeed (id) {
       this.$store.dispatch('deleteFeed', id)
-      this.$store.dispatch('deleteArticle', id)
-      this.$store.dispatch('loadArticles')
     },
     fetchData () {
       const self = this
@@ -160,7 +159,8 @@ export default {
         db.fetchArticle(this.$route.params.id, async function (article) {
           const link = article.origlink !== null ? article.origlink : article.link
           const data = await parseArticle(link)
-          if (data) {
+          if (data.statusCode === 200) {
+            self.empty = false
             const $ = cheerio.load(data.body.content)
             $('a').addClass('js-external-link')
             data.body.content = $.html()
@@ -172,6 +172,12 @@ export default {
             data.body.read = article.read
             data.body.readtime = stat(data.body.content).text
             self.articleData = data.body
+            self.loading = false
+          } else {
+            article.content = null
+            article.url = link
+            self.articleData = article
+            self.empty = true
             self.loading = false
           }
         })
