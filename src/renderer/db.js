@@ -10,26 +10,27 @@ export default class {
   }
 
   createOrReadDatabase (db) {
-    const existsDir = jetpack.exists(this.useDataDir.path('.rss-reader'))
+    const dirName = process.env.NODE_ENV === 'development' ? '.rss-reader-dev' : '.rss-reader'
+    const existsDir = jetpack.exists(this.useDataDir.path(dirName))
     if (!existsDir) {
-      fs.mkdir(this.useDataDir.path('.rss-reader'))
+      fs.mkdir(this.useDataDir.path(`${dirName}`))
     }
-    const existsArticle = fs.existsSync(this.useDataDir.path(`.rss-reader/${db.article}`))
-    const existsFeed = fs.existsSync(this.useDataDir.path(`.rss-reader/${db.feed}`))
+    const existsArticle = fs.existsSync(this.useDataDir.path(`${dirName}/${db.article}`))
+    const existsFeed = fs.existsSync(this.useDataDir.path(`${dirName}/${db.feed}`))
     let database = {}
 
     if (!existsArticle && !existsFeed) {
-      this.useDataDir.write(this.useDataDir.path(`.rss-reader/${db.article}`), '')
-      this.useDataDir.write(this.useDataDir.path(`.rss-reader/${db.feed}`), '')
+      this.useDataDir.write(this.useDataDir.path(`${dirName}/${db.article}`), '')
+      this.useDataDir.write(this.useDataDir.path(`${dirName}/${db.feed}`), '')
     }
 
     database.article = new DataStore({
-      filename: this.useDataDir.path(`.rss-reader/${db.article}`),
+      filename: this.useDataDir.path(`${dirName}/${db.article}`),
       autoload: true
     })
 
     database.feed = new DataStore({
-      filename: this.useDataDir.path(`.rss-reader/${db.feed}`),
+      filename: this.useDataDir.path(`${dirName}/${db.feed}`),
       autoload: true
     })
 
