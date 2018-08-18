@@ -88,7 +88,7 @@ export default {
     this.$store.dispatch('loadArticles')
 
     // Feed Crawling
-    scheduler.scheduleJob('*/10 * * * *', () => {
+    scheduler.scheduleJob('*/5 * * * *', () => {
       const feeds = self.$store.state.Feed.feeds
       if (feeds.length === 0) {
         log.info('No feeds to process')
