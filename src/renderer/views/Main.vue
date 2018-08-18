@@ -66,7 +66,8 @@ import { parseArticle } from '../parsers/article'
 import cheerio from 'cheerio'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
-// import forever from 'async/forever'
+import scheduler from 'node-schedule'
+import log from 'electron-log'
 import helper from '../services/helpers'
 import fs from 'fs'
 
@@ -80,23 +81,22 @@ export default {
     }
   },
   mounted () {
+    const self = this
     this.$store.dispatch('refreshFeeds')
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
 
     // Feed Crawling
-    // forever(
-    //   (next) => {
-    //     console.log('Refreshing')
-    //     this.$store.dispatch('refreshFeeds')
-    //     setTimeout(() => {
-    //       next()
-    //     }, 60000)
-    //   },
-    //   (err) => {
-    //     console.error(err)
-    //   }
-    // )
+    scheduler.scheduleJob('2 * * * *', () => {
+      const feeds = self.$store.state.Feed.feeds
+      if (feeds.length === 0) {
+        log.info('No feeds to process')
+      } else {
+        log.info(`Processing ${feeds.length} feeds`)
+        helper.subscribe(feeds, null, true, false)
+        self.$store.dispatch('loadArticles')
+      }
+    })
   },
   watch: {
     // call again the method if the route changes

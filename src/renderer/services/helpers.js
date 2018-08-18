@@ -3,8 +3,9 @@ import { parseFeed } from '../parsers/feed'
 import uuid from 'uuid/v4'
 import opmlGenerator from 'opml-generator'
 import async from 'async'
-import favicon from 'favicon'
-import normalizeUrl from 'normalize-url'
+import faviconoclast from 'faviconoclast'
+import db from './db.js'
+import got from 'got'
 
 export default {
   exportOpml () {
@@ -26,7 +27,7 @@ export default {
     return opmlGenerator(header, outlines)
   },
   subscribe (feeds, faviconData = null, refresh = false, importData = false) {
-    const q = async.priorityQueue((task, cb) => {
+    const q = async.queue((task, cb) => {
       if (!refresh) {
         task.feed.meta.favicon = task.favicon
         task.feed.meta.id = uuid()
@@ -35,10 +36,18 @@ export default {
       task.feed.posts.forEach((post) => {
         post.feed_id = task.feed.meta.id
         post.meta.favicon = task.favicon
-        store.dispatch('addArticle', post)
+        if (refresh) {
+          db.addArticles(post, docs => {})
+        } else {
+          store.dispatch('addArticle', post)
+        }
       })
       cb()
-    }, 1)
+    }, 2)
+
+    q.drain = () => {
+      console.log('all feeds are processed')
+    }
 
     feeds.forEach(async function (feed) {
       let faviconUrl
@@ -62,22 +71,19 @@ export default {
         faviconUrl = faviconData
       } else {
         faviconUrl = await new Promise((resolve, reject) => {
-          favicon(htmlLink, (err, url) => {
+          faviconoclast(htmlLink, (err, iconUrl) => {
             if (err) {
               reject(err)
             }
-            resolve(normalizeUrl(url))
+            resolve(iconUrl)
           })
         })
+        const results = await got(faviconUrl, { retry: 0 })
+        if (results.statusCode !== 200) {
+          faviconUrl = null
+        }
       }
-      q.push({ feed: feeditem, favicon: faviconUrl }, (err) => {
-        if (err) throw err
-        console.log(`Feed queued`)
-      })
+      q.push({ feed: feeditem, favicon: faviconUrl })
     })
-
-    q.drain = () => {
-      console.log('all feeds are processed')
-    }
   }
 }

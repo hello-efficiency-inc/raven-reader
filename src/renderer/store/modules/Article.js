@@ -3,6 +3,7 @@ import helper from '../../services/helpers'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import _ from 'lodash'
+import Fuse from 'fuse.js'
 
 dayjs.extend(relativeTime)
 
@@ -29,7 +30,17 @@ const getters = {
       return filters[state.type](orderedArticles)
     }
     if (state.type === 'search') {
-      return orderedArticles.filter(article => article.title.toLowerCase().match(state.search.toLowerCase()))
+      const fuse = new Fuse(state.articles, {
+        caseSensitive: true,
+        shouldSort: true,
+        threshold: 0.6,
+        location: 0,
+        distance: 100,
+        maxPatternLength: 100,
+        minMatchCharLength: 1,
+        keys: ['title']
+      })
+      return fuse.search(state.search)
     }
     return filters[state.type](orderedArticles, state.feed)
   }
