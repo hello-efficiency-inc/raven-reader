@@ -66,6 +66,10 @@ export default {
 
       const htmlLink = feed.link ? feed.link : feed.url
       const feeditem = await parseFeed(url)
+      if (refresh) {
+        feeditem.meta.id = feed.id
+      }
+      console.log(feeditem)
       if (faviconData) {
         faviconUrl = faviconData
       } else {
