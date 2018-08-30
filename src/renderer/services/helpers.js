@@ -69,7 +69,6 @@ export default {
       if (refresh) {
         feeditem.meta.id = feed.id
       }
-      console.log(feeditem)
       if (faviconData) {
         faviconUrl = faviconData
       } else {

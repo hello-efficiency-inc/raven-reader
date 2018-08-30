@@ -10,7 +10,7 @@
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
-    "publish": "build --mac -p always",
+    "publish": "build --mac --linux -p always",
     "dev": "node .electron-vue/dev-runner.js",
     "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src",
     "lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src",
@@ -48,6 +48,12 @@
         "github"
       ],
       "icon": "build/icons/icon.icns"
+    },
+    "linux": {
+      "publish": [
+        "github"
+      ],
+      "icon": "build/icons"
     }
   },
   "dependencies": {
@@ -83,8 +89,8 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.3",
-    "babel-loader": "^7.1.4",
+    "babel-eslint": "^9.0.0",
+    "babel-loader": "^8.0.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-0": "^6.24.1",
@@ -98,18 +104,18 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^2.0.7",
-    "electron-builder": "^20.24.4",
+    "electron-builder": "^20.28.3",
     "electron-debug": "^2.0.0",
     "electron-devtools-installer": "^2.2.4",
     "eslint": "^5.1.0",
-    "eslint-config-standard": "^11.0.0",
+    "eslint-config-standard": "^12.0.0",
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-html": "^4.0.3",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.0",
-    "eslint-plugin-standard": "^3.0.1",
+    "eslint-plugin-standard": "^4.0.0",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.0",
@@ -117,14 +123,14 @@
     "node-loader": "^0.6.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
-    "style-loader": "^0.22.1",
+    "style-loader": "^0.23.0",
     "url-loader": "^1.0.1",
     "vue-html-loader": "^1.2.4",
-    "vue-loader": "^15.2.4",
+    "vue-loader": "^15.4.1",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.4.2",
     "webpack": "^4.10.2",
-    "webpack-dev-server": "^3.1.4",
+    "webpack-dev-server": "^3.1.7",
     "webpack-hot-middleware": "^2.18.2",
     "webpack-merge": "^4.1.2"
   }
