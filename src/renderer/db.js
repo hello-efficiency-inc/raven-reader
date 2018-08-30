@@ -1,7 +1,7 @@
 import jetpack from 'fs-jetpack'
 import fs from 'fs'
 import DataStore from 'nedb'
-import {remote} from 'electron'
+import { remote } from 'electron'
 
 export default class {
   constructor () {

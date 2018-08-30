@@ -116,7 +116,7 @@ export default {
       const self = this
       fs.unlink(`${self.$electron.remote.app.getPath('downloads')}/subscriptions.xml`, (err) => {
         if (err && err.code !== 'ENOENT') throw err
-        fs.writeFile(`${self.$electron.remote.app.getPath('downloads')}/subscriptions.xml`, xmlData, {flag: 'w', encoding: 'utf8'}, (err) => {
+        fs.writeFile(`${self.$electron.remote.app.getPath('downloads')}/subscriptions.xml`, xmlData, { flag: 'w', encoding: 'utf8' }, (err) => {
           if (err) throw err
           console.log('XML Saved')
         })
