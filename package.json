@@ -10,7 +10,7 @@
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
-    "publish": "build --mac --linux -p always",
+    "publish": "build --mac --win -p always",
     "dev": "node .electron-vue/dev-runner.js",
     "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src",
     "lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src",
@@ -48,6 +48,12 @@
         "github"
       ],
       "icon": "build/icons/icon.icns"
+    },
+    "win": {
+      "publish": [
+        "github"
+      ],
+      "icon": "build/icons/icon.ico"
     },
     "linux": {
       "publish": [
