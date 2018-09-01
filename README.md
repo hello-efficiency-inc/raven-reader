@@ -34,7 +34,7 @@ Coming soon on Apple App Store.
 - [x] Exporting feed in OPML format
 - [x] Importing feeds
 - [ ] Offline reading
-- [ ] Windows support
+- [x] Windows support
 - [ ] Linux support
 
 
