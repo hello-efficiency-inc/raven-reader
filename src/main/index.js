@@ -1,9 +1,10 @@
 'use strict'
 
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, Tray } from 'electron'
 import updateElectron from 'update-electron-app'
 import electronLog from 'electron-log'
 import jetpack from 'fs-jetpack'
+import os from 'os'
 
 let myWindow = null
 
@@ -60,6 +61,17 @@ function createWindow () {
   const newDirectory = jetpack.cwd(app.getPath('home'))
   const existsArticle = jetpack.exists(oldDirectory.path(`articles.db`))
   const existsFeed = jetpack.exists(oldDirectory.path(`feeds.db`))
+  let trayImage
+  if (os.platform() === 'darwin') {
+    trayImage = require('path').join(__static, '/mactrayiconTemplate.png')
+  }
+
+  if (os.platform() === 'win32') {
+    trayImage = require('path').join(__static, '/windowstrayicon.ico')
+  }
+
+  const appIcon = new Tray(trayImage)
+
   if (existsArticle && existsFeed) {
     jetpack.move(oldDirectory.path(`feeds.db`), newDirectory.path('.rss-reader/feeds.db'))
     jetpack.move(oldDirectory.path(`articles.db`), newDirectory.path('.rss-reader/articles.db'))
@@ -77,10 +89,42 @@ function createWindow () {
     height: 768
   })
 
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'About RSS Reader', selector: 'orderFrontStandardAboutPanel:' },
+    {
+      label: 'Show App',
+      click: () => {
+        mainWindow.show()
+      }
+    },
+    {
+      label: 'Quit',
+      click: () => {
+        app.isQuiting = true
+        app.quit()
+      }
+    }
+  ])
+
+  appIcon.setContextMenu(contextMenu)
+
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+
+  mainWindow.on('close', (event) => {
+    if (!app.isQuiting) {
+      event.preventDefault()
+      mainWindow.minimize()
+      app.dock.hide()
+    }
+    return false
+  })
+
+  mainWindow.on('restore', (event) => {
+    app.dock.show()
   })
 
   createMenu()
