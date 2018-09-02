@@ -6,10 +6,10 @@ const path = require('path')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 let webConfig = {
   devtool: '#cheap-module-eval-source-map',
@@ -30,20 +30,16 @@ let webConfig = {
         }
       },
       {
-        test: /\.sass$/,
-        use: [
-          'vue-style-loader',
-          'css-loader',
-          'sass-loader'
-        ]
+        test: /\.scss$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
       },
       {
-        test: /\.scss$/,
-        use: [
-          'vue-style-loader',
-          'css-loader',
-          'sass-loader'
-        ]
+        test: /\.sass$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
+      },
+      {
+        test: /\.less$/,
+        use: ['vue-style-loader', 'css-loader', 'less-loader']
       },
       {
         test: /\.css$/,
@@ -67,7 +63,8 @@ let webConfig = {
             extractCSS: true,
             loaders: {
               sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
-              scss: 'vue-style-loader!css-loader!sass-loader'
+              scss: 'vue-style-loader!css-loader!sass-loader',
+              less: 'vue-style-loader!css-loader!less-loader'
             }
           }
         }
@@ -128,8 +125,8 @@ let webConfig = {
 }
 
 /**
-* Adjust webConfig for production settings
-*/
+ * Adjust webConfig for production settings
+ */
 if (process.env.NODE_ENV === 'production') {
   webConfig.devtool = ''
 

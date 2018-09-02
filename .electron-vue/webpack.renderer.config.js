@@ -7,10 +7,10 @@ const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 /**
  * List of node_modules to include in webpack bundle
@@ -43,20 +43,16 @@ let rendererConfig = {
         }
       },
       {
-        test: /\.sass$/,
-        use: [
-          'vue-style-loader',
-          'css-loader',
-          'sass-loader'
-        ]
+        test: /\.scss$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
       },
       {
-        test: /\.scss$/,
-        use: [
-          'vue-style-loader',
-          'css-loader',
-          'sass-loader'
-        ]
+        test: /\.sass$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
+      },
+      {
+        test: /\.less$/,
+        use: ['vue-style-loader', 'css-loader', 'less-loader']
       },
       {
         test: /\.css$/,
@@ -83,7 +79,8 @@ let rendererConfig = {
             extractCSS: process.env.NODE_ENV === 'production',
             loaders: {
               sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
-              scss: 'vue-style-loader!css-loader!sass-loader'
+              scss: 'vue-style-loader!css-loader!sass-loader',
+              less: 'vue-style-loader!css-loader!less-loader'
             }
           }
         }
