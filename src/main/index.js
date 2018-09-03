@@ -6,8 +6,6 @@ import electronLog from 'electron-log'
 import jetpack from 'fs-jetpack'
 import os from 'os'
 
-let myWindow = null
-
 updateElectron({
   repo: 'mrgodhani/rss-reader',
   updateInterval: '1 hour',
@@ -23,6 +21,8 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+let trayImage
+let tray
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 
 function createMenu () {
@@ -53,15 +53,7 @@ function createMenu () {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 }
 
-function createWindow () {
-  /**
-   * If there is already data in old directory. Moved it to new
-   */
-  const oldDirectory = jetpack.cwd(app.getPath('userData'))
-  const newDirectory = jetpack.cwd(app.getPath('home'))
-  const existsArticle = jetpack.exists(oldDirectory.path(`articles.db`))
-  const existsFeed = jetpack.exists(oldDirectory.path(`feeds.db`))
-  let trayImage
+function createTray () {
   if (os.platform() === 'darwin') {
     trayImage = require('path').join(__static, '/mactrayiconTemplate.png')
   }
@@ -70,7 +62,37 @@ function createWindow () {
     trayImage = require('path').join(__static, '/windowstrayicon.ico')
   }
 
-  const appIcon = new Tray(trayImage)
+  tray = new Tray(trayImage)
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Quit',
+      click: () => {
+        app.isQuiting = true
+        app.quit()
+      }
+    }
+  ])
+
+  tray.on('right-click', () => {
+    tray.popUpContextMenu(contextMenu)
+  })
+  tray.on('click', () => {
+    mainWindow.show()
+    if (process.platform === 'darwin' && !app.dock.isVisible()) {
+      app.dock.show()
+    }
+  })
+}
+
+function createWindow () {
+  /**
+   * If there is already data in old directory. Moved it to new
+   */
+  const oldDirectory = jetpack.cwd(app.getPath('userData'))
+  const newDirectory = jetpack.cwd(app.getPath('home'))
+  const existsArticle = jetpack.exists(oldDirectory.path(`articles.db`))
+  const existsFeed = jetpack.exists(oldDirectory.path(`feeds.db`))
 
   if (existsArticle && existsFeed) {
     jetpack.move(oldDirectory.path(`feeds.db`), newDirectory.path('.rss-reader/feeds.db'))
@@ -89,60 +111,43 @@ function createWindow () {
     height: 768
   })
 
-  const contextMenu = Menu.buildFromTemplate([
-    { label: 'About RSS Reader', selector: 'orderFrontStandardAboutPanel:' },
-    {
-      label: 'Show App',
-      click: () => {
-        mainWindow.show()
-      }
-    },
-    {
-      label: 'Quit',
-      click: () => {
-        app.isQuiting = true
-        app.quit()
-      }
-    }
-  ])
-
-  appIcon.setContextMenu(contextMenu)
-
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 
-  mainWindow.on('close', (event) => {
+  mainWindow.once('close', (event) => {
     if (!app.isQuiting) {
       event.preventDefault()
-      mainWindow.minimize()
-      app.dock.hide()
+      mainWindow.hide()
+      if (process.platform === 'darwin') {
+        app.dock.hide()
+      }
+      return false
     }
-    return false
-  })
-
-  mainWindow.on('restore', (event) => {
-    app.dock.show()
+    return true
   })
 
   createMenu()
+  createTray()
 }
 
-// Allow only one instance
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
-  if (myWindow) {
-    if (myWindow.isMinimized()) myWindow.restore()
-    myWindow.focus()
-  }
+  electronLog.info(
+    'Detected a newer instance. Closing this instance.',
+    app.getVersion()
+  )
+  app.quit()
 })
 
 if (isSecondInstance) {
-  app.quit()
+  electronLog.info('This is the newer version running.', app.getVersion())
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

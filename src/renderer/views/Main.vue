@@ -87,6 +87,8 @@ export default {
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
 
+    setTimeout(() => { log.info('WORKS') }, 1000)
+
     // Feed Crawling
     scheduler.scheduleJob('*/5 * * * *', () => {
       const feeds = self.$store.state.Feed.feeds
@@ -121,11 +123,18 @@ export default {
           console.log('XML Saved')
         })
       })
-      const notification = new Notification('RSS Reader', {
-        body: 'Successfully exported all subscriptions to downloads folder'
-      })
-      notification.onclick = () => {
-        console.log('Notification clicked')
+      if (Notification.isSupported()) {
+        const notification = new Notification('RSS Reader', {
+          body: 'Successfully exported all subscriptions to downloads folder'
+        })
+        notification.onclick = () => {
+          console.log('Notification clicked')
+        }
+      } else {
+        this.$toast('Exported successfully to downloads folder', {
+          className: 'et-info',
+          horizontalPosition: 'center'
+        })
       }
     },
     updateType (newVal) {

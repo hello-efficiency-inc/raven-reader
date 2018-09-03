@@ -88,6 +88,36 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@nodert-win10-au/windows.applicationmodel@^0.2.96":
+  version "0.2.96"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.applicationmodel/-/windows.applicationmodel-0.2.96.tgz#67a29c508abc997a59993d1e99901308e21299e9"
+  dependencies:
+    nan latest
+
+"@nodert-win10-au/windows.data.xml.dom@^0.2.96":
+  version "0.2.96"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.data.xml.dom/-/windows.data.xml.dom-0.2.96.tgz#9f5645330c2aa197df5f07a508f48d587a8b2e66"
+  dependencies:
+    nan latest
+
+"@nodert-win10-au/windows.foundation@^0.2.96":
+  version "0.2.96"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.foundation/-/windows.foundation-0.2.96.tgz#68c55c74b0c9855156e194da0abb9318c10a3d87"
+  dependencies:
+    nan latest
+
+"@nodert-win10-au/windows.ui.notifications@^0.2.96":
+  version "0.2.96"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.ui.notifications/-/windows.ui.notifications-0.2.96.tgz#e53d35a787efdfb8657a44d1dc916bb3c5ea6347"
+  dependencies:
+    nan latest
+
+"@nodert-win10-au/windows.ui.startscreen@^0.2.96":
+  version "0.2.96"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.ui.startscreen/-/windows.ui.startscreen-0.2.96.tgz#e25be59d80b8c9e0ed234f45a62ae3171c4cbd24"
+  dependencies:
+    nan latest
+
 "@sindresorhus/is@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.11.0.tgz#a65970040a5b55c4713452666703b92a6c331fdb"
@@ -1835,6 +1865,10 @@ chardet@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"
 
+check-os-tray-support@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/check-os-tray-support/-/check-os-tray-support-2.0.0.tgz#e52db1799c38e2e71becfae13e55186b7a3b96e4"
+
 cheerio@^1.0.0-rc.2:
   version "1.0.0-rc.2"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.0.0-rc.2.tgz#4b9f53a81b27e4d5dac31c0ffd0cfa03cc6830db"
@@ -2080,6 +2114,16 @@ concat-stream@1.6.2, concat-stream@^1.5.0:
     inherits "^2.0.3"
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
+
+conf@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/conf/-/conf-2.0.0.tgz#43f7e282b32faca31f4d18bf279d6841ad657d5a"
+  dependencies:
+    dot-prop "^4.1.0"
+    env-paths "^1.0.0"
+    make-dir "^1.0.0"
+    pkg-up "^2.0.0"
+    write-file-atomic "^2.3.0"
 
 configstore@^3.0.0:
   version "3.1.2"
@@ -2354,7 +2398,7 @@ de-indent@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
 
-debug@2, debug@2.6.9, debug@^2.1.2, debug@^2.1.3, debug@^2.2.0, debug@^2.3.3, debug@^2.6.6, debug@^2.6.8, debug@^2.6.9:
+debug@2, debug@2.6.9, debug@^2.1.2, debug@^2.1.3, debug@^2.2.0, debug@^2.3.3, debug@^2.5.1, debug@^2.6.6, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   dependencies:
@@ -2761,9 +2805,31 @@ electron-publish@20.28.3:
     lazy-val "^1.0.3"
     mime "^2.3.1"
 
+electron-store@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/electron-store/-/electron-store-2.0.0.tgz#1035cca2a95409d1f54c7466606345852450d64a"
+  dependencies:
+    conf "^2.0.0"
+
 electron-to-chromium@^1.3.47:
   version "1.3.62"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.62.tgz#2e8e2dc070c800ec8ce23ff9dfcceb585d6f9ed8"
+
+electron-windows-notifications@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/electron-windows-notifications/-/electron-windows-notifications-2.1.1.tgz#d538bf3d116af1a8aa9e1891570df9c6754e4b0e"
+  dependencies:
+    debug "^2.5.1"
+    is-electron-renderer "^2.0.1"
+    sanitize-xml-string "^1.1.0"
+    uuid "^3.2.1"
+    xml-escape "^1.1.0"
+  optionalDependencies:
+    "@nodert-win10-au/windows.applicationmodel" "^0.2.96"
+    "@nodert-win10-au/windows.data.xml.dom" "^0.2.96"
+    "@nodert-win10-au/windows.foundation" "^0.2.96"
+    "@nodert-win10-au/windows.ui.notifications" "^0.2.96"
+    "@nodert-win10-au/windows.ui.startscreen" "^0.2.96"
 
 electron@^2.0.7:
   version "2.0.8"
@@ -2816,6 +2882,10 @@ enhanced-resolve@^4.1.0:
 entities@^1.1.1, entities@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.1.tgz#6e5c2d0a5621b5dadaecef80b90edfb5cd7772f0"
+
+env-paths@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-1.0.0.tgz#4168133b42bb05c38a35b1ae4397c8298ab369e0"
 
 errno@^0.1.3, errno@~0.1.7:
   version "0.1.7"
@@ -4232,6 +4302,10 @@ is-descriptor@^1.0.0, is-descriptor@^1.0.2:
     is-data-descriptor "^1.0.0"
     kind-of "^6.0.2"
 
+is-electron-renderer@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/is-electron-renderer/-/is-electron-renderer-2.0.1.tgz#a469d056f975697c58c98c6023eb0aa79af895a2"
+
 is-extendable@^0.1.0, is-extendable@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/is-extendable/-/is-extendable-0.1.1.tgz#62b110e289a471418e3ec36a617d472e301dfc89"
@@ -5199,7 +5273,7 @@ mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
 
-nan@^2.10.0, nan@^2.9.2:
+nan@^2.10.0, nan@^2.9.2, nan@latest:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.0.tgz#574e360e4d954ab16966ec102c0c049fd961a099"
 
@@ -5864,6 +5938,12 @@ pkg-dir@^1.0.0:
 pkg-dir@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-2.0.0.tgz#f6d5d1109e19d63edf428e0bd57e12777615334b"
+  dependencies:
+    find-up "^2.1.0"
+
+pkg-up@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/pkg-up/-/pkg-up-2.0.0.tgz#c819ac728059a461cab1c3889a2be3c49a004d7f"
   dependencies:
     find-up "^2.1.0"
 
@@ -6546,6 +6626,10 @@ sanitize-filename@^1.6.1:
   resolved "https://registry.yarnpkg.com/sanitize-filename/-/sanitize-filename-1.6.1.tgz#612da1c96473fa02dccda92dcd5b4ab164a6772a"
   dependencies:
     truncate-utf8-bytes "^1.0.0"
+
+sanitize-xml-string@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/sanitize-xml-string/-/sanitize-xml-string-1.1.0.tgz#dd86686069ce102b4954912d9c7982037b928768"
 
 sass-graph@^2.2.4:
   version "2.2.4"
@@ -7704,8 +7788,8 @@ webpack-dev-server@^3.1.7:
     yargs "12.0.1"
 
 webpack-hot-middleware@^2.18.2:
-  version "2.23.0"
-  resolved "https://registry.yarnpkg.com/webpack-hot-middleware/-/webpack-hot-middleware-2.23.0.tgz#344d48f2f6d8f39bec9cee222f676f4c42ab973d"
+  version "2.23.1"
+  resolved "https://registry.yarnpkg.com/webpack-hot-middleware/-/webpack-hot-middleware-2.23.1.tgz#56b06abc25821466451fd7d2481a0014aef023bb"
   dependencies:
     ansi-html "0.0.7"
     html-entities "^1.2.0"
@@ -7835,7 +7919,7 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
 
-write-file-atomic@^2.0.0:
+write-file-atomic@^2.0.0, write-file-atomic@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-2.3.0.tgz#1ff61575c2e2a4e8e510d6fa4e243cce183999ab"
   dependencies:
@@ -7856,6 +7940,10 @@ xdg-basedir@^3.0.0:
 xml-char-classes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/xml-char-classes/-/xml-char-classes-1.0.0.tgz#64657848a20ffc5df583a42ad8a277b4512bbc4d"
+
+xml-escape@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/xml-escape/-/xml-escape-1.1.0.tgz#3904c143fa8eb3a0030ec646d2902a2f1b706c44"
 
 xml@^1.0.0:
   version "1.0.1"
