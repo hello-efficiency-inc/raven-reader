@@ -115,18 +115,21 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+    electronLog.info('Closing app')
   })
 
-  mainWindow.once('close', (event) => {
-    if (!app.isQuiting) {
+  mainWindow.on('close', (event) => {
+    if (app.isQuiting) {
+      mainWindow = null
+    } else {
       event.preventDefault()
       mainWindow.hide()
       if (process.platform === 'darwin') {
         app.dock.hide()
       }
+      electronLog.info('Hiding dock icon and browser window')
       return false
     }
-    return true
   })
 
   createMenu()
@@ -147,6 +150,11 @@ if (isSecondInstance) {
 
 app.on('ready', () => {
   createWindow()
+})
+
+app.on('before-quit', () => {
+  electronLog.info('Setting isQuiting to true')
+  app.isQuiting = true
 })
 
 app.on('window-all-closed', () => {
