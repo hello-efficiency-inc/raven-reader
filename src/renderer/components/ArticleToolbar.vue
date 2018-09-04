@@ -12,17 +12,17 @@
     </div>
     <div class="article-buttons">
       <div class="wrap">
-        <button class="btn btn-toolbar" @click="markFavourite">
+        <button class="btn btn-toolbar" @click="markFavourite" v-b-tooltip.hover :title="markFavouriteButton">
           <feather-icon name="star" :filled="article.favourite"></feather-icon>
         </button>
       </div>
       <div class="wrap">
-        <button class="btn btn-toolbar" @click="markRead">
+        <button class="btn btn-toolbar" @click="markRead" v-b-tooltip.hover :title="markReadButton">
           <feather-icon name="circle" :filled="article.read"></feather-icon>
         </button>
       </div>
       <div class="wrap">
-        <a :href="article.url" class="btn btn-toolbar js-external-link">
+        <a :href="article.url" class="btn btn-toolbar js-external-link" v-b-tooltip.hover title="Open in browser">
           <feather-icon name="external-link"></feather-icon>
         </a>
       </div>
@@ -40,6 +40,14 @@ export default {
   props: {
     article: {
       type: Object
+    }
+  },
+  computed: {
+    markFavouriteButton () {
+      return this.article.favourite ? 'Mark as unfavourite' : 'Mark as favourite'
+    },
+    markReadButton () {
+      return this.article.read ? 'Mark as unread' : 'Mark as read'
     }
   },
   methods: {

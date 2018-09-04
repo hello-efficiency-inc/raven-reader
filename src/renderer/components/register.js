@@ -8,6 +8,7 @@ import ArticleList from './ArticleList'
 import ArticleListItem from './ArticleListItem'
 import BouncingLoader from './BouncingLoader'
 import ImportModal from './ImportModal'
+import SettingsModal from './SettingsModal'
 
 export default {
   registerComponents () {
@@ -20,5 +21,6 @@ export default {
     Vue.component('article-detail', ArticleDetail)
     Vue.component('loader', BouncingLoader)
     Vue.component('import-modal', ImportModal)
+    Vue.component('settings-modal', SettingsModal)
   }
 }

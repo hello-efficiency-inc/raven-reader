@@ -40,6 +40,12 @@
               Import Subscriptions
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" v-b-modal.settings>
+              <feather-icon name="settings"></feather-icon>
+              Settings
+            </a>
+          </li>
         </ul>
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Subscriptions</span>
@@ -58,6 +64,7 @@
     <article-list :type="articleType" :feed="feed" @type-change="updateType"></article-list>
     <article-detail :id="$route.params.id" :article="articleData" :emptyState="empty" :loading="loading"></article-detail>
     <import-modal></import-modal>
+    <settings-modal></settings-modal>
   </div>
 </template>
 <script>
