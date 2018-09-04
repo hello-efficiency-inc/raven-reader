@@ -90,14 +90,13 @@ export default {
   },
   mounted () {
     const self = this
+    this.$store.dispatch('loadSettings')
     this.$store.dispatch('refreshFeeds')
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
 
-    setTimeout(() => { log.info('WORKS') }, 1000)
-
     // Feed Crawling
-    scheduler.scheduleJob('*/5 * * * *', () => {
+    scheduler.scheduleJob(self.$store.state.Setting.cronSettings, () => {
       const feeds = self.$store.state.Feed.feeds
       if (feeds.length === 0) {
         log.info('No feeds to process')

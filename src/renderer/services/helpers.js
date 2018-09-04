@@ -5,6 +5,7 @@ import opmlGenerator from 'opml-generator'
 import async from 'async'
 import faviconoclast from 'faviconoclast'
 import db from './db.js'
+import notifier from 'node-notifier'
 
 export default {
   exportOpml () {
@@ -36,7 +37,15 @@ export default {
         post.feed_id = task.feed.meta.id
         post.meta.favicon = task.favicon
         if (refresh) {
-          db.addArticles(post, docs => {})
+          db.addArticles(post, docs => {
+            if (typeof docs !== 'undefined') {
+              notifier.notify({
+                title: 'New articles added',
+                message: `New articles were added to ${task.feed.meta.title}`,
+                sound: true
+              })
+            }
+          })
         } else {
           store.dispatch('addArticle', post)
         }
