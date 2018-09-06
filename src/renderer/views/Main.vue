@@ -76,7 +76,9 @@ import stat from 'reading-time'
 import scheduler from 'node-schedule'
 import log from 'electron-log'
 import helper from '../services/helpers'
+import notifier from 'node-notifier'
 import fs from 'fs'
+import path from 'path'
 
 export default {
   data () {
@@ -90,13 +92,12 @@ export default {
   },
   mounted () {
     const self = this
-    this.$store.dispatch('loadSettings')
     this.$store.dispatch('refreshFeeds')
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
 
     // Feed Crawling
-    scheduler.scheduleJob(self.$store.state.Setting.cronSettings, () => {
+    const job = scheduler.scheduleJob(self.$store.state.Setting.cronSettings, () => {
       const feeds = self.$store.state.Feed.feeds
       if (feeds.length === 0) {
         log.info('No feeds to process')
@@ -104,6 +105,14 @@ export default {
         log.info(`Processing ${feeds.length} feeds`)
         helper.subscribe(feeds, null, true, false)
         self.$store.dispatch('loadArticles')
+      }
+    })
+    // On delete stop Crawler Job
+    this.$on('delete', (msg) => {
+      if (msg === 'yes') {
+        console.log(job)
+        log.info('Job is cancelled')
+        job.cancel()
       }
     })
   },
@@ -129,19 +138,12 @@ export default {
           console.log('XML Saved')
         })
       })
-      if (Notification.isSupported()) {
-        const notification = new Notification('RSS Reader', {
-          body: 'Successfully exported all subscriptions to downloads folder'
-        })
-        notification.onclick = () => {
-          console.log('Notification clicked')
-        }
-      } else {
-        this.$toast('Exported successfully to downloads folder', {
-          className: 'et-info',
-          horizontalPosition: 'center'
-        })
-      }
+      notifier.notify({
+        icon: path.join(__static, '/logo_icon.png'),
+        title: 'Feeds exported',
+        message: `All feeds are exported as opml in downloads folder.`,
+        sound: true
+      })
     },
     updateType (newVal) {
       this.articleType = newVal
@@ -160,6 +162,7 @@ export default {
       }
     },
     unsubscribeFeed (id) {
+      this.$emit('delete', 'yes')
       this.$store.dispatch('deleteFeed', id)
     },
     fetchData () {
@@ -206,5 +209,107 @@ export default {
   display: flex;
   height: 100%;
   align-items: flex-start;
+}
+
+.app-darkmode {
+  .sidebar {
+    background: #373737 !important;
+    border-right: 1px solid black;
+    box-shadow: none;
+
+    .subscribe-toolbar {
+      border-bottom-color: #000;
+    }
+
+    .nav-link {
+      color: #fff !important;
+    }
+
+    .sidebar-heading {
+      color: #979797 !important;
+    }
+
+    &::after {
+      background: none;
+    }
+  }
+
+  .articles-list {
+    border-right-color: #000;
+
+    .search-form {
+      border-bottom-color: #000;
+      .feathre {
+        color: #c8cacc;
+      }
+
+      .form-control {
+        background: #373737 !important;
+        color: #c8cacc !important;
+      }
+    }
+    .articles-inner .search-form,
+    .articles-inner .articles,
+    .articles-inner .list-group-item {
+      background: #373737 !important;
+      color: white;
+    }
+    .articles-inner .list-group-item {
+      background: #373737 !important;
+      border-bottom-color: #000;
+    }
+
+    &::after {
+      background: none;
+    }
+  }
+
+  .article-detail {
+    background: #373737 !important;
+  }
+
+  .article-toolbar {
+    background: #373737 !important;
+    border-bottom-color: #000;
+
+    .article-buttons,
+    .site-info {
+      background: #373737 !important;
+      span {
+        color: white;
+      }
+      .feather {
+        color: white;
+      }
+    }
+  }
+
+  .article-contentarea {
+    background: #373737 !important;
+    h2 {
+      color: white;
+      small {
+        color: #c8cacc;
+      }
+    }
+
+    address,
+    figure,
+    blockquote,
+    h3,
+    h4 {
+      color: white;
+    }
+    b {
+      color: white;
+    }
+    p {
+      color: #c8cacc;
+    }
+  }
+
+  .feather-filled {
+    fill: #fff;
+  }
 }
 </style>

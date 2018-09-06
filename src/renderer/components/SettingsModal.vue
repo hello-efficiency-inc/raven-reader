@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="settings" ref="settings" title="Settings" centered>
+  <b-modal id="settings" ref="settings" title="Settings" hide-footer centered>
     <b-form-group label="Set refresh interval for news feed">
       <b-form-select v-model="cronjob" :options="cron_options" size="sm" @change="saveCronjob"/>
     </b-form-group>
@@ -12,9 +12,6 @@
                         :options="options"
                         name="darkTheme" @change="saveAppearance"/>
   </b-form-group>
-    <div slot="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
-    </div>
   </b-modal>
 </template>
 <script>
@@ -46,12 +43,13 @@ export default {
     }
   },
   mounted () {
+    this.$store.dispatch('loadSettings')
     this.cronjob = this.$store.state.Setting.cronSettings
     this.darkMode = this.$store.state.Setting.darkMode
   },
   methods: {
-    saveCronjob () {
-      this.$store.dispatch('setCronJob', this.cronjob)
+    saveCronjob (cronValue) {
+      this.$store.dispatch('setCronJob', cronValue)
       this.$toast('Settings for cronjob successfully saved.', {
         className: 'et-info',
         horizontalPosition: 'center'

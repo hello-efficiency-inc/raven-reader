@@ -101,5 +101,6 @@ body {
 .list-group-item {
   border-left: 0;
   border-right: 0;
+  border-radius: 0 !important
 }
 </style>

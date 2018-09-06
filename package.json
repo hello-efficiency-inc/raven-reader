@@ -25,6 +25,9 @@
     "directories": {
       "output": "build"
     },
+    "asarUnpack": [
+      "./node_modules/node-notifier/vendor/**"
+    ],
     "files": [
       "dist/electron/**/*"
     ],

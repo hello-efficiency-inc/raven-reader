@@ -9,8 +9,8 @@ const store = new Store()
 
 const mutations = {
   LOAD_SETTINGS (state) {
-    state.cronSettings = store.get('settings.cronjob', '*/5 * * * *')
-    state.darkMode = store.get('settings.darkMode', 'off')
+    state.cronSettings = store.get('settings.cronjob')
+    state.darkMode = store.get('settings.darkMode')
   },
   SET_CRONJOB (state, data) {
     state.cronSettings = data
