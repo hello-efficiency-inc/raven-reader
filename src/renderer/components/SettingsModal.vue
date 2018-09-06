@@ -1,7 +1,7 @@
 <template>
   <b-modal id="settings" ref="settings" title="Settings" centered>
     <b-form-group label="Set refresh interval for news feed">
-      <b-form-select v-model="cronjob" :options="cron_options" size="sm" />
+      <b-form-select v-model="cronjob" :options="cron_options" size="sm" @change="saveCronjob"/>
     </b-form-group>
     <b-form-group label="Turn on dark mode">
     <b-form-radio-group id="btnradios2"
@@ -10,7 +10,7 @@
                         size="sm"
                         v-model="darkMode"
                         :options="options"
-                        name="darkTheme"/>
+                        name="darkTheme" @change="saveAppearance"/>
   </b-form-group>
     <div slot="modal-footer">
       <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
@@ -22,7 +22,7 @@ export default {
   data () {
     return {
       cronjob: null,
-      darkMode: false,
+      darkMode: 'off',
       cron_options: [
         { value: null, text: 'Please select an option' },
         { value: '* * * * *', text: 'Every minute' },
@@ -40,8 +40,8 @@ export default {
         { value: '*/60 * * * *', text: 'Every 60 minutes' }
       ],
       options: [
-        { text: 'On', value: true },
-        { text: 'Off', value: false }
+        { text: 'On', value: 'on' },
+        { text: 'Off', value: 'off' }
       ]
     }
   },
@@ -49,25 +49,23 @@ export default {
     this.cronjob = this.$store.state.Setting.cronSettings
     this.darkMode = this.$store.state.Setting.darkMode
   },
-  watch: {
-    cronjob (newCron) {
-      this.$store.dispatch('setCronJob', newCron)
+  methods: {
+    saveCronjob () {
+      this.$store.dispatch('setCronJob', this.cronjob)
       this.$toast('Settings for cronjob successfully saved.', {
         className: 'et-info',
         horizontalPosition: 'center'
       })
       this.hideModal()
     },
-    darkMode (newMode) {
-      this.$store.dispatch('setDarkMode', newMode)
+    saveAppearance (darkMode) {
+      this.$store.dispatch('setDarkMode', darkMode)
       this.$toast('Changed appearance settings to dark mode', {
         className: 'et-info',
         horizontalPosition: 'center'
       })
       this.hideModal()
-    }
-  },
-  methods: {
+    },
     hideModal () {
       this.$refs.settings.hide()
     }

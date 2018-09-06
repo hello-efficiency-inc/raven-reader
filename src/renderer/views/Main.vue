@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper">
+  <div class="app-wrapper" :class="{ 'app-darkmode': $store.state.Setting.darkMode === 'on' }">
     <nav class="bg-light sidebar">
       <subscribe-toolbar></subscribe-toolbar>
       <div class="sidebar-sticky">
