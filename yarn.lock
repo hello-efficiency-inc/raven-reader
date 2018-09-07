@@ -1764,12 +1764,12 @@ cacheable-request@^2.1.1:
     normalize-url "2.0.1"
     responselike "1.0.2"
 
-cacheable-request@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/cacheable-request/-/cacheable-request-4.0.1.tgz#c93bbb87d7c67c62738f2e336e4ff8e78d9533fa"
+cacheable-request@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/cacheable-request/-/cacheable-request-5.0.0.tgz#7ce347741c48d85c76bc41b78f6bf13e2907056d"
   dependencies:
     clone-response "^1.0.2"
-    get-stream "^3.0.0"
+    get-stream "^4.0.0"
     http-cache-semantics "^4.0.0"
     keyv "^3.0.0"
     lowercase-keys "^1.0.1"
@@ -3790,12 +3790,12 @@ got@^8.3.2:
     url-to-options "^1.0.1"
 
 got@^9.0.0:
-  version "9.2.0"
-  resolved "https://registry.yarnpkg.com/got/-/got-9.2.0.tgz#f6aa4e26c984a3175f1073c421e2e40640f8295c"
+  version "9.2.1"
+  resolved "https://registry.yarnpkg.com/got/-/got-9.2.1.tgz#dc2145dfa26ee8e33a9b22e0c54a630f1c2df0ae"
   dependencies:
     "@sindresorhus/is" "^0.11.0"
     "@szmarczak/http-timer" "^1.1.0"
-    cacheable-request "^4.0.1"
+    cacheable-request "^5.0.0"
     decompress-response "^3.3.0"
     duplexer3 "^0.1.4"
     get-stream "^4.0.0"
