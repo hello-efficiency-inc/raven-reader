@@ -15,7 +15,7 @@
 <img src="https://david-dm.org/mrgodhani/rss-reader/dev-status.svg"/></a>
 </p>
 
-![screenshot](/screenshot.png)
+![newscreenshot](/newscreenshot.png)
 ![darkscreenshot](/darkscreenshot.png)
 
 ## Download
