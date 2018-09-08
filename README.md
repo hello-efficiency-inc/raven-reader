@@ -29,6 +29,9 @@ Coming soon on Apple App Store.
 - [x] Subscribing to news feed
 - [x] Marking as read/unread
 - [x] Marking as favourite
+- [x] Dark mode
+- [x] Configurable cron job for refresh interval of feeds
+- [x] Minimize app to tray and run in background
 - [x] Open article link in external browser
 - [x] Responsive
 - [x] Exporting feed in OPML format
