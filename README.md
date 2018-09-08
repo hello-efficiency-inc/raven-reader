@@ -16,6 +16,7 @@
 </p>
 
 ![screenshot](/screenshot.png)
+![darkscreenshot](/darkscreenshot.png)
 
 ## Download
 
