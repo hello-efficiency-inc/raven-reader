@@ -88,33 +88,33 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@nodert-win10-au/windows.applicationmodel@^0.2.96":
-  version "0.2.96"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.applicationmodel/-/windows.applicationmodel-0.2.96.tgz#67a29c508abc997a59993d1e99901308e21299e9"
+"@nodert-win10-cu/windows.applicationmodel@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.applicationmodel/-/windows.applicationmodel-0.3.1.tgz#aaff26e586efe00a12b8a0a00069be13613fa73a"
   dependencies:
     nan latest
 
-"@nodert-win10-au/windows.data.xml.dom@^0.2.96":
-  version "0.2.96"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.data.xml.dom/-/windows.data.xml.dom-0.2.96.tgz#9f5645330c2aa197df5f07a508f48d587a8b2e66"
+"@nodert-win10-cu/windows.data.xml.dom@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.data.xml.dom/-/windows.data.xml.dom-0.3.1.tgz#529565509dac7bad2d5dfe26bf7c6e5abe040bed"
   dependencies:
     nan latest
 
-"@nodert-win10-au/windows.foundation@^0.2.96":
-  version "0.2.96"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.foundation/-/windows.foundation-0.2.96.tgz#68c55c74b0c9855156e194da0abb9318c10a3d87"
+"@nodert-win10-cu/windows.foundation@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.foundation/-/windows.foundation-0.3.1.tgz#b28fb15c6fb7fb67d5bb62639e13b6a74c37b8ed"
   dependencies:
     nan latest
 
-"@nodert-win10-au/windows.ui.notifications@^0.2.96":
-  version "0.2.96"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.ui.notifications/-/windows.ui.notifications-0.2.96.tgz#e53d35a787efdfb8657a44d1dc916bb3c5ea6347"
+"@nodert-win10-cu/windows.ui.notifications@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.ui.notifications/-/windows.ui.notifications-0.3.1.tgz#9cc9aa438e1527db36cdf4b5b73e982aff8cd232"
   dependencies:
     nan latest
 
-"@nodert-win10-au/windows.ui.startscreen@^0.2.96":
-  version "0.2.96"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-au/windows.ui.startscreen/-/windows.ui.startscreen-0.2.96.tgz#e25be59d80b8c9e0ed234f45a62ae3171c4cbd24"
+"@nodert-win10-cu/windows.ui.startscreen@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.ui.startscreen/-/windows.ui.startscreen-0.3.1.tgz#229b3c17cb3e3c4c1aa4e16000cbca65689ade13"
   dependencies:
     nan latest
 
@@ -2845,21 +2845,20 @@ electron-to-chromium@^1.3.47:
   version "1.3.62"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.62.tgz#2e8e2dc070c800ec8ce23ff9dfcceb585d6f9ed8"
 
-electron-windows-notifications@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/electron-windows-notifications/-/electron-windows-notifications-2.1.1.tgz#d538bf3d116af1a8aa9e1891570df9c6754e4b0e"
+electron-windows-notifications@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/electron-windows-notifications/-/electron-windows-notifications-3.0.0.tgz#d016fb0e5fc15bdef7d4019957e9259e4f85cc5f"
   dependencies:
+    "@nodert-win10-cu/windows.applicationmodel" "^0.3.1"
+    "@nodert-win10-cu/windows.data.xml.dom" "^0.3.1"
+    "@nodert-win10-cu/windows.foundation" "^0.3.1"
+    "@nodert-win10-cu/windows.ui.notifications" "^0.3.1"
+    "@nodert-win10-cu/windows.ui.startscreen" "^0.3.1"
     debug "^2.5.1"
     is-electron-renderer "^2.0.1"
     sanitize-xml-string "^1.1.0"
-    uuid "^3.2.1"
+    uuid "^3.3.2"
     xml-escape "^1.1.0"
-  optionalDependencies:
-    "@nodert-win10-au/windows.applicationmodel" "^0.2.96"
-    "@nodert-win10-au/windows.data.xml.dom" "^0.2.96"
-    "@nodert-win10-au/windows.foundation" "^0.2.96"
-    "@nodert-win10-au/windows.ui.notifications" "^0.2.96"
-    "@nodert-win10-au/windows.ui.startscreen" "^0.2.96"
 
 electron@^2.0.7:
   version "2.0.9"

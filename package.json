@@ -75,7 +75,7 @@
     "dayjs": "^1.6.2",
     "electron-log": "^2.2.15",
     "electron-store": "^2.0.0",
-    "electron-windows-notifications": "^2.1.1",
+    "electron-windows-notifications": "^3.0.0",
     "faviconoclast": "^0.0.3",
     "feather-icons": "^4.7.3",
     "feedparser": "^2.2.9",
