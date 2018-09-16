@@ -62,6 +62,7 @@ export default {
         if (res.feedUrls.length === 0) {
           this.showError()
         } else {
+          this.selected_feed = res.feedUrls[0]
           this.feeddata = res
         }
       }, (error) => {

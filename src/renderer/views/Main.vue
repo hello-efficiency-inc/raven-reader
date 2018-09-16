@@ -286,11 +286,16 @@ export default {
 
   .article-contentarea {
     background: #373737 !important;
+    h1,
     h2 {
       color: white;
       small {
         color: #c8cacc;
       }
+    }
+
+    ul {
+      color: white;
     }
 
     address,
