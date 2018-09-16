@@ -83,6 +83,12 @@ const mutations = {
       state.articles[index].read = false
     }
   },
+  MARK_ALL_READ (state) {
+    state.articles.forEach((item, index) => {
+      state.articles[index].read = true
+      db.markRead(item.id)
+    })
+  },
   DELETE_ARTICLES (state, id) {
     db.deleteArticles(id)
   },
@@ -128,6 +134,9 @@ const actions = {
         db.markUnread(data.id)
     }
     commit('MARK_ACTION', data)
+  },
+  markAllRead ({ commit }) {
+    commit('MARK_ALL_READ')
   },
   async deleteArticle ({ dispatch, commit }, id) {
     commit('DELETE_ARTICLES', id)

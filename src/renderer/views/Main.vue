@@ -41,6 +41,12 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="#" v-b-modal.markallread>
+              <feather-icon name="check-square"></feather-icon>
+              Mark all read
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.settings>
               <feather-icon name="settings"></feather-icon>
               Settings
@@ -65,6 +71,7 @@
     <article-detail :id="$route.params.id" :article="articleData" :emptyState="empty" :loading="loading"></article-detail>
     <import-modal></import-modal>
     <settings-modal></settings-modal>
+    <markallread-modal></markallread-modal>
   </div>
 </template>
 <script>

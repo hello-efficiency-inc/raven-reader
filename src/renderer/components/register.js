@@ -9,6 +9,7 @@ import ArticleListItem from './ArticleListItem'
 import BouncingLoader from './BouncingLoader'
 import ImportModal from './ImportModal'
 import SettingsModal from './SettingsModal'
+import MarkReadModal from './MarkReadModal'
 
 export default {
   registerComponents () {
@@ -22,5 +23,6 @@ export default {
     Vue.component('loader', BouncingLoader)
     Vue.component('import-modal', ImportModal)
     Vue.component('settings-modal', SettingsModal)
+    Vue.component('markallread-modal', MarkReadModal)
   }
 }
