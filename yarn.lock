@@ -3775,8 +3775,8 @@ got@^8.3.2:
     url-to-options "^1.0.1"
 
 got@^9.0.0:
-  version "9.2.1"
-  resolved "https://registry.yarnpkg.com/got/-/got-9.2.1.tgz#dc2145dfa26ee8e33a9b22e0c54a630f1c2df0ae"
+  version "9.2.2"
+  resolved "https://registry.yarnpkg.com/got/-/got-9.2.2.tgz#d6cb73f40d4cb512864c2f66f275f258ab43aa25"
   dependencies:
     "@sindresorhus/is" "^0.11.0"
     "@szmarczak/http-timer" "^1.1.0"
