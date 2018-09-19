@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="markallread" ref="markallread" size="sm" title="Mark all articles as read" centered @hidden="onHidden">
+  <b-modal id="markallread" ref="markallread" size="sm" title="Mark all articles as read" centered>
     <p> Are you sure you want to mark all articles as read?
     <div slot="modal-footer">
       <button type="button" class="btn btn-secondary" @click="markAllRead">Yes</button>

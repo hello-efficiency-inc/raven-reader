@@ -43,7 +43,7 @@
           <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.markallread>
               <feather-icon name="check-square"></feather-icon>
-              Mark all read
+              Mark all as read
             </a>
           </li>
           <li class="nav-item">

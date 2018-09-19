@@ -84,10 +84,10 @@ const mutations = {
     }
   },
   MARK_ALL_READ (state) {
-    state.articles.forEach((item, index) => {
-      state.articles[index].read = true
-      db.markRead(item.id)
-    })
+    for (let i = 0; i < state.articles.length; i++) {
+      state.articles[i].read = true
+      db.markRead(state.articles[i]._id)
+    }
   },
   DELETE_ARTICLES (state, id) {
     db.deleteArticles(id)
