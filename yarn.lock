@@ -2390,8 +2390,8 @@ date-now@^0.1.4:
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
 dayjs@^1.6.2:
-  version "1.7.6"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.7.6.tgz#bbd0f39ef0aca9615043a1fd159809f056291590"
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.7.7.tgz#8df20f78ac2476e3f5348ef49f8f22ebc3016370"
 
 de-indent@^1.0.2:
   version "1.0.2"
