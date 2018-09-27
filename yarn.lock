@@ -2842,8 +2842,8 @@ electron-windows-notifications@^3.0.0:
     xml-escape "^1.1.0"
 
 electron@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.0.tgz#d41e671b1057aee12021c63a5db242075d6dc685"
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.1.tgz#4e98c19da83180a0240069eaf6a4bed0edd92602"
   dependencies:
     "@types/node" "^8.0.24"
     electron-download "^4.1.0"
