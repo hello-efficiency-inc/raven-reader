@@ -37,9 +37,16 @@ Coming soon on Apple App Store.
 - [x] Responsive
 - [x] Exporting feed in OPML format
 - [x] Importing feeds
-- [ ] Offline reading
 - [x] Windows support
+
+## Roadmap
+- [ ] New brand name and icons
+- [ ] Offline reading
 - [ ] Linux support
+- [ ] Supporting authenticated feeds
+- [ ] Feedly synchronization
+
+Please feel free to suggest more ideas to improve this app.
 
 
 ## Developer Notes
