@@ -91,6 +91,8 @@ cp src/renderer/config.example.js config.js
 
 Please feel free to give us suggestions or report a bug by creating a [new issue](https://github.com/mrgodhani/rss-reader/issues) via Github or messaging on  Twitter: [@mrgodhani](https://twitter.com/mrgodhani).
 
+- Thank you Adi Ofir from [Break and Enter](https://www.breakenter.com) for the amazing logo and icons.
+
 For further support and keep this app maintained you could also buy me a coffee.
 
 <p><a href="https://www.buymeacoffee.com/vXlonHais" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a></p>
