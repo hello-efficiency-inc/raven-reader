@@ -8,7 +8,7 @@
     <strong>Simple Desktop RSS Reader made using VueJS</strong>
 </p>
 
-<p align="left">
+<p align="center">
 <a href="https://travis-ci.org/mrgodhani/rss-reader">
 <img src="https://travis-ci.org/mrgodhani/rss-reader.svg?branch=master">
 </a>
