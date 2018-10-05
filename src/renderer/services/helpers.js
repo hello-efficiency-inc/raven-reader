@@ -44,6 +44,8 @@ export default {
                 icon: path.join(__static, '/logo_icon.png'),
                 title: 'New articles added',
                 message: `New articles were added to ${task.feed.meta.title}`,
+                sticky: false,
+                wait: false,
                 sound: true
               })
             }

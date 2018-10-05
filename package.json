@@ -20,8 +20,8 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "RSS Reader",
-    "appId": "org.mrgodhani.rssreader",
+    "productName": "Raven Reader",
+    "appId": "org.mrgodhani.ravenreader",
     "directories": {
       "output": "build"
     },
@@ -117,7 +117,7 @@
     "css-loader": "^1.0.0",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^3.0.0",
+    "electron": "^3.0.2",
     "electron-builder": "^20.28.3",
     "electron-debug": "^2.0.0",
     "electron-devtools-installer": "^2.2.4",

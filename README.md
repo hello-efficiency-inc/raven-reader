@@ -1,6 +1,12 @@
-# RSS Reader
+<p align="center">
+    <a href="https://github.com/mrgodhani/rss-reader">
+        <img alt="raven reader logo" src="https://raw.githubusercontent.com/mgodhani/rss-reader/master/raven-logo.png" width="400">
+    </a>
+</p>
 
-> Simple Desktop RSS Reader made using VueJS
+<p align="center">
+    <strong>Simple Desktop RSS Reader made using VueJS</strong>
+</p>
 
 <p align="left">
 <a href="https://travis-ci.org/mrgodhani/rss-reader">
@@ -40,7 +46,7 @@ Coming soon on Apple App Store.
 - [x] Windows support
 
 ## Roadmap
-- [ ] New brand name and icons
+- [x] New brand name and icons
 - [ ] Offline reading
 - [ ] Linux support
 - [ ] Supporting authenticated feeds
