@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/mrgodhani/rss-reader">
-        <img alt="raven reader logo" src="https://raw.githubusercontent.com/mgodhani/rss-reader/master/raven-logo.png" width="400">
+        <img alt="raven reader logo" src="https://github.com/mrgodhani/rss-reader/blob/master/raven-logo.png?raw=true" width="400">
     </a>
 </p>
 
