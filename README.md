@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-<a href="https://travis-ci.org/mrgodhani/rss-reader">
+<a href="https://travis-ci.org/mrgodhani/raven-reader">
 <img src="https://travis-ci.org/mrgodhani/raven-reader.svg?branch=master">
 </a>
 <a href="https://codeclimate.com/github/mrgodhani/raven-reader/maintainability">
@@ -79,7 +79,7 @@ cp src/renderer/config.example.js config.js
 
 ```
 
-For more documention please follow link from [Electron Vue](https://simulatedgreg.gitbooks.io/electron-vue/content/)
+For more documentation please follow link from [Electron Vue](https://simulatedgreg.gitbooks.io/electron-vue/content/)
 
 ## Powered by
 
