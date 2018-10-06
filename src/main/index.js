@@ -7,7 +7,7 @@ import jetpack from 'fs-jetpack'
 import os from 'os'
 
 updateElectron({
-  repo: 'mrgodhani/rss-reader',
+  repo: 'mrgodhani/raven-reader',
   updateInterval: '1 hour',
   logger: electronLog
 })

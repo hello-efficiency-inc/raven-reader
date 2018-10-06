@@ -10,15 +10,16 @@
 
 <p align="center">
 <a href="https://travis-ci.org/mrgodhani/rss-reader">
-<img src="https://travis-ci.org/mrgodhani/rss-reader.svg?branch=master">
+<img src="https://travis-ci.org/mrgodhani/raven-reader.svg?branch=master">
 </a>
-<a href="https://codeclimate.com/github/mrgodhani/rss-reader/maintainability"><img src="https://api.codeclimate.com/v1/badges/8d9991777a7a3c4b4de5/maintainability" />
+<a href="https://codeclimate.com/github/mrgodhani/raven-reader/maintainability">
+<img src="https://api.codeclimate.com/v1/badges/b19f2a2aaaeae1f85910/maintainability" />
 </a>
-<a href="https://david-dm.org/mrgodhani/rss-reader" title="dependencies status">
-<img src="https://david-dm.org/mrgodhani/rss-reader/status.svg"/>
+<a href="https://david-dm.org/mrgodhani/raven-reader" title="dependencies status">
+<img src="https://david-dm.org/mrgodhani/raven-reader/status.svg"/>
 </a>
-<a href="https://david-dm.org/mrgodhani/rss-reader?type=dev" title="devDependencies status">
-<img src="https://david-dm.org/mrgodhani/rss-reader/dev-status.svg"/></a>
+<a href="https://david-dm.org/mrgodhani/raven-reader?type=dev" title="devDependencies status">
+<img src="https://david-dm.org/mrgodhani/raven-reader/dev-status.svg"/></a>
 </p>
 
 ![newscreenshot](/newscreenshot.png)
