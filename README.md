@@ -79,6 +79,8 @@ cp src/renderer/config.example.js config.js
 
 ```
 
+For more documention please follow link from [Electron Vue](https://simulatedgreg.gitbooks.io/electron-vue/content/)
+
 ## Powered by
 
 - [Electron Vue](https://github.com/SimulatedGREG/electron-vue)
