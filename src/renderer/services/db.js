@@ -53,6 +53,11 @@ export default {
       if (err) {}
     })
   },
+  markOffline (id) {
+    article.update({ _id: id }, { $set: { offline: true } }, (err, num) => {
+      if (err) {}
+    })
+  },
   markFavourite (id) {
     article.update({ _id: id }, { $set: { favourite: true } }, (err, num) => {
       if (err) {}

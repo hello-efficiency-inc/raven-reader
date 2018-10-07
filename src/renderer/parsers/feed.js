@@ -66,6 +66,7 @@ export function ParseFeedPost (feed) {
   feed.posts.map((item) => {
     item.favourite = false
     item.read = false
+    item.offline = false
     if (item.summary) {
       item.summary = he.unescape(item.summary)
     }

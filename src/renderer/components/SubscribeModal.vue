@@ -30,7 +30,7 @@
     </div>
     <div slot="modal-footer">
       <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
-      <button type="button" class="btn btn-primary" @click="subscribe">Subscribe</button>
+      <button type="button" class="btn btn-primary" @click="subscribe" :disabled="disableSubscribe">Subscribe</button>
     </div>
   </b-modal>
 </template>
@@ -50,25 +50,38 @@ export default {
       selected_feed: []
     }
   },
+  computed: {
+    disableSubscribe () {
+      return this.$store.state.Setting.offline
+    }
+  },
   methods: {
     fetchFeed () {
       this.loading = true
-      finder(normalizeUrl(this.feed_url)).then((res) => {
-        this.loading = false
-        res.feedUrls.map((item) => {
-          item.title = he.unescape(item.title)
-          return item
-        })
-        if (res.feedUrls.length === 0) {
+      if (!this.$store.state.Setting.offline) {
+        finder(normalizeUrl(this.feed_url)).then((res) => {
+          this.loading = false
+          res.feedUrls.map((item) => {
+            item.title = he.unescape(item.title)
+            return item
+          })
+          if (res.feedUrls.length === 0) {
+            this.showError()
+          } else {
+            this.selected_feed.push(res.feedUrls[0])
+            this.feeddata = res
+          }
+        }, (error) => {
+          if (error) {}
           this.showError()
-        } else {
-          this.selected_feed.push(res.feedUrls[0])
-          this.feeddata = res
-        }
-      }, (error) => {
-        if (error) {}
-        this.showError()
-      })
+        })
+      } else {
+        this.$toast('There is no internet connection', {
+          className: 'et-alert',
+          horizontalPosition: 'center'
+        })
+        this.loading = false
+      }
     },
     showError () {
       this.loading = false

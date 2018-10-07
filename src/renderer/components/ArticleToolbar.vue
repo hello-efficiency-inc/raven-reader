@@ -26,6 +26,11 @@
           <feather-icon name="external-link"></feather-icon>
         </a>
       </div>
+      <div class="wrap">
+        <button class="btn btn-toolbar" @click="saveArticle" v-b-tooltip.hover title="Save article">
+          <feather-icon name="wifi-off"></feather-icon>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -64,6 +69,9 @@ export default {
         })
       }
       this.article.favourite = !this.article.favourite
+    },
+    saveArticle () {
+      this.$parent.$emit('save-article')
     },
     markRead () {
       if (this.article.read) {
@@ -135,6 +143,10 @@ export default {
 
   &:hover {
     color: black;
+  }
+  &:focus {
+    outline: 0;
+    box-shadow: none;
   }
 }
 

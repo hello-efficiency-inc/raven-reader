@@ -32,14 +32,13 @@
   line-height: 41px;
   cursor: pointer;
   position: relative;
-  display: block;
   width: 100%;
   text-align: left !important;
   padding: 0 0 0 16px;
   background: transparent;
   color: #3399FF;
   font-weight: 700 !important;
-  display: flex;
+  display: flex !important;
   justify-content: space-between;
   align-items: center;
 

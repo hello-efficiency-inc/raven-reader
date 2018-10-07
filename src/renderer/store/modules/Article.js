@@ -20,6 +20,7 @@ const filters = {
   read: articles => articles.filter(article => article.read),
   favourites: articles => articles.filter(article => article.favourite),
   feed: (articles, feed) => articles.filter(article => article.feed_id === feed),
+  saved: articles => articles.filter(article => article.offline),
   all: articles => articles
 }
 
@@ -56,6 +57,9 @@ const mutations = {
     state.articles = articles.map((item) => {
       item.meta.title = _.truncate(item.meta.title, { length: 20 })
       item.pubdate = dayjs(item.pubdate).fromNow()
+      if (!('offline' in item)) {
+        item.offline = false
+      }
       return item
     })
   },
@@ -105,6 +109,10 @@ const mutations = {
   },
   SET_FEED_ID (state, feed) {
     state.feed = feed
+  },
+  SAVE_ARTICLE (state, data) {
+    const index = _.findIndex(state.articles, { '_id': data._id })
+    state.articles[index].offline = true
   }
 }
 
@@ -132,8 +140,13 @@ const actions = {
         break
       case 'UNREAD':
         db.markUnread(data.id)
+        break
     }
     commit('MARK_ACTION', data)
+  },
+  saveArticle ({ commit }, data) {
+    db.markOffline(data._id)
+    commit('SAVE_ARTICLE', data)
   },
   markAllRead ({ commit }) {
     commit('MARK_ALL_READ')

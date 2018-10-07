@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, Tray } from 'electron'
+import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
 import updateElectron from 'update-electron-app'
 import electronLog from 'electron-log'
 import jetpack from 'fs-jetpack'
@@ -161,6 +161,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+ipcMain.on('online-status-changed', (event, status) => {
+  event.sender.send('onlinestatus', status)
 })
 
 app.on('activate', () => {

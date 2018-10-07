@@ -25,6 +25,8 @@
   </div>
 </template>
 <script>
+import cacheService from '../services/cacheArticle'
+
 export default {
   props: {
     id: {
@@ -39,6 +41,13 @@ export default {
     loading: {
       type: Boolean
     }
+  },
+  mounted () {
+    const self = this
+    this.$on('save-article', async (msg) => {
+      await cacheService.cacheArticleData(self.article)
+      self.$store.dispatch('saveArticle', self.article)
+    })
   }
 }
 </script>

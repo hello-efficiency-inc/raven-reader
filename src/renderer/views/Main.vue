@@ -29,6 +29,12 @@
             </router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link" to="/saved" active-class="active">
+              <feather-icon name="wifi-off"></feather-icon>
+              Saved articles
+            </router-link>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#" @click="exportOpml">
               <feather-icon name="external-link"></feather-icon>
               Export Subscriptions
@@ -86,6 +92,7 @@ import helper from '../services/helpers'
 import notifier from 'node-notifier'
 import fs from 'fs'
 import path from 'path'
+import cacheService from '../services/cacheArticle'
 
 export default {
   data () {
@@ -102,6 +109,11 @@ export default {
     this.$store.dispatch('refreshFeeds')
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
+    this.$store.dispatch('checkOffline')
+
+    this.$electron.ipcRenderer.on('onlinestatus', (event, status) => {
+      self.$store.dispatch('setOffline', status)
+    })
 
     // Feed Crawling
     const job = scheduler.scheduleJob(self.$store.state.Setting.cronSettings, () => {
@@ -114,10 +126,13 @@ export default {
         self.$store.dispatch('loadArticles')
       }
     })
+
+    if (this.$store.state.Setting.offline) {
+      job.cancel()
+    }
     // On delete stop Crawler Job
     this.$on('delete', (msg) => {
       if (msg === 'yes') {
-        console.log(job)
         log.info('Job is cancelled')
         job.cancel()
       }
@@ -172,6 +187,22 @@ export default {
       this.$emit('delete', 'yes')
       this.$store.dispatch('deleteFeed', id)
     },
+    prepareArticleData (data, article) {
+      const self = this
+      self.empty = false
+      const $ = cheerio.load(data.content)
+      $('a').addClass('js-external-link')
+      data.content = $.html()
+      data.date_published = data.date_published ? dayjs(data.date_published).format('MMMM D, YYYY') : null
+      data.favicon = article.meta.favicon
+      data.sitetitle = article.meta.title
+      data._id = article._id
+      data.favourite = article.favourite
+      data.read = article.read
+      data.readtime = stat(data.content).text
+      self.articleData = data
+      self.loading = false
+    },
     fetchData () {
       const self = this
       if (this.$route.params.id) {
@@ -183,21 +214,16 @@ export default {
         self.loading = true
         db.fetchArticle(this.$route.params.id, async function (article) {
           const link = article.origlink !== null ? article.origlink : article.link
-          const data = await parseArticle(link)
-          if (data.statusCode === 200) {
-            self.empty = false
-            const $ = cheerio.load(data.body.content)
-            $('a').addClass('js-external-link')
-            data.body.content = $.html()
-            data.body.date_published = data.body.date_published ? dayjs(data.body.date_published).format('MMMM D, YYYY') : null
-            data.body.favicon = article.meta.favicon
-            data.body.sitetitle = article.meta.title
-            data.body._id = article._id
-            data.body.favourite = article.favourite
-            data.body.read = article.read
-            data.body.readtime = stat(data.body.content).text
-            self.articleData = data.body
-            self.loading = false
+          let data
+          if (self.$store.state.Setting.offline) {
+            data = await cacheService.getCachedArticleData(link)
+          } else {
+            data = await parseArticle(link)
+          }
+          if (self.$store.state.Setting.offline && data) {
+            self.prepareArticleData(data, article)
+          } else if (!self.$store.state.Setting.offline && data.statusCode === 200) {
+            self.prepareArticleData(data.body, article)
           } else {
             article.content = null
             article.url = link

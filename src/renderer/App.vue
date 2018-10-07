@@ -83,6 +83,10 @@ body {
   color: inherit;
 }
 
+.sidebar .nav-link:focus {
+  outline: 0;
+}
+
 .sidebar-heading {
   font-weight: 600;
   font-size: 0.85rem;
