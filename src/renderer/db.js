@@ -13,7 +13,9 @@ export default class {
     const dirName = process.env.NODE_ENV === 'development' ? '.rss-reader-dev' : '.rss-reader'
     const existsDir = jetpack.exists(this.useDataDir.path(dirName))
     if (!existsDir) {
-      fs.mkdir(this.useDataDir.path(`${dirName}`))
+      fs.mkdir(this.useDataDir.path(`${dirName}`), (err) => {
+        if (err) {}
+      })
     }
     const existsArticle = fs.existsSync(this.useDataDir.path(`${dirName}/${db.article}`))
     const existsFeed = fs.existsSync(this.useDataDir.path(`${dirName}/${db.feed}`))
