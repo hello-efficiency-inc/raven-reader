@@ -6,7 +6,7 @@
     </b-form-text>
     <div slot="modal-footer">
       <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
-      <button type="button" class="btn btn-primary" @click="importFeed">Import</button>
+      <button type="button" class="btn btn-primary" @click="importFeed" :disabled="disableImport">Import</button>
     </div>
   </b-modal>
 </template>
@@ -19,6 +19,11 @@ export default {
   data () {
     return {
       file: null
+    }
+  },
+  computed: {
+    disableImport () {
+      return this.$store.state.Setting.offline
     }
   },
   methods: {
