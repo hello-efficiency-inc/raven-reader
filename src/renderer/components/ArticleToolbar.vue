@@ -28,7 +28,7 @@
       </div>
       <div class="wrap">
         <button class="btn btn-toolbar" @click="saveArticle" v-b-tooltip.hover title="Save article">
-          <feather-icon name="wifi-off"></feather-icon>
+          <feather-icon name="wifi-off" :success="article.offline"></feather-icon>
         </button>
       </div>
     </div>
@@ -39,7 +39,9 @@ const markTypes = {
   favourite: 'FAVOURITE',
   unfavourite: 'UNFAVOURITE',
   read: 'READ',
-  unread: 'UNREAD'
+  unread: 'UNREAD',
+  cache: 'CACHE',
+  uncache: 'UNCACHE'
 }
 export default {
   props: {
@@ -71,7 +73,13 @@ export default {
       this.article.favourite = !this.article.favourite
     },
     saveArticle () {
-      this.$parent.$emit('save-article')
+      if (this.article.offline && !this.$store.state.Setting.offline) {
+        this.$parent.$emit('save-article', markTypes.uncache)
+        this.article.offline = false
+      } else {
+        this.$parent.$emit('save-article', markTypes.cache)
+        this.article.offline = true
+      }
     },
     markRead () {
       if (this.article.read) {

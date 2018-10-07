@@ -199,6 +199,7 @@ export default {
       data._id = article._id
       data.favourite = article.favourite
       data.read = article.read
+      data.offline = article.offline
       data.readtime = stat(data.content).text
       self.articleData = data
       self.loading = false
@@ -216,7 +217,8 @@ export default {
           const link = article.origlink !== null ? article.origlink : article.link
           let data
           if (self.$store.state.Setting.offline) {
-            data = await cacheService.getCachedArticleData(link)
+            data = await cacheService.getCachedArticleData(article._id, link)
+            console.log(data)
           } else {
             data = await parseArticle(link)
           }
@@ -225,6 +227,7 @@ export default {
           } else if (!self.$store.state.Setting.offline && data.statusCode === 200) {
             self.prepareArticleData(data.body, article)
           } else {
+            console.log('EMPTY')
             article.content = null
             article.url = link
             self.articleData = article
@@ -313,6 +316,14 @@ export default {
       }
       .feather {
         color: white;
+      }
+
+      .feather-filled {
+        fill: #fff;
+      }
+
+      .feather-success {
+        color: green;
       }
     }
   }

@@ -111,8 +111,8 @@ const mutations = {
     state.feed = feed
   },
   SAVE_ARTICLE (state, data) {
-    const index = _.findIndex(state.articles, { '_id': data._id })
-    state.articles[index].offline = true
+    const index = _.findIndex(state.articles, { '_id': data.article._id })
+    state.article[index].offline = data.type === 'CACHE'
   }
 }
 
@@ -145,7 +145,14 @@ const actions = {
     commit('MARK_ACTION', data)
   },
   saveArticle ({ commit }, data) {
-    db.markOffline(data._id)
+    switch (data.type) {
+      case 'CACHE':
+        db.markOffline(data.article._id)
+        break
+      case 'UNCACHE':
+        db.markOnline(data.article._id)
+        break
+    }
     commit('SAVE_ARTICLE', data)
   },
   markAllRead ({ commit }) {

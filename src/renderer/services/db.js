@@ -58,6 +58,11 @@ export default {
       if (err) {}
     })
   },
+  markOnline (id) {
+    article.update({ _id: id }, { $set: { offline: false } }, (err, num) => {
+      if (err) {}
+    })
+  },
   markFavourite (id) {
     article.update({ _id: id }, { $set: { favourite: true } }, (err, num) => {
       if (err) {}

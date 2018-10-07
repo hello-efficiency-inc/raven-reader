@@ -1,5 +1,5 @@
 <template>
-  <svg class="feather" v-bind:class="{ 'feather-filled': filled }">
+  <svg class="feather" :class="{ 'feather-filled': filled, 'feather-success': success }">
     <use :xlink:href="`static/feather-sprite.svg#${name}`"/>
   </svg>
 </template>
@@ -11,6 +11,10 @@ export default {
       required: true
     },
     filled: {
+      type: Boolean,
+      default: false
+    },
+    success: {
       type: Boolean,
       default: false
     }
@@ -27,6 +31,10 @@ export default {
   stroke-linejoin: round;
   fill: none;
   vertical-align: text-bottom;
+}
+
+.feather-success {
+  color: green;
 }
 
 .feather-filled {

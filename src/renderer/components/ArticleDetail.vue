@@ -45,8 +45,15 @@ export default {
   mounted () {
     const self = this
     this.$on('save-article', async (msg) => {
-      await cacheService.cacheArticleData(self.article)
-      self.$store.dispatch('saveArticle', self.article)
+      if (msg === 'CACHE') {
+        await cacheService.cacheArticleData(self.article)
+      } else {
+        await cacheService.uncache(`raven-${self.article._id}`)
+      }
+      self.$store.dispatch('saveArticle', {
+        type: msg,
+        article: self.article
+      })
     })
   }
 }
