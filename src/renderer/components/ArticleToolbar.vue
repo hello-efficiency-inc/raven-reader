@@ -35,6 +35,7 @@
   </div>
 </template>
 <script>
+import cacheService from '../services/cacheArticle'
 const markTypes = {
   favourite: 'FAVOURITE',
   unfavourite: 'UNFAVOURITE',
@@ -73,12 +74,23 @@ export default {
       this.article.favourite = !this.article.favourite
     },
     saveArticle () {
+      const self = this
       if (this.article.offline && !this.$store.state.Setting.offline) {
-        this.$parent.$emit('save-article', markTypes.uncache)
-        this.article.offline = false
+        cacheService.uncache(`raven-${this.article._id}`).then(() => {
+          self.article.offline = false
+          self.$store.dispatch('saveArticle', {
+            type: markTypes.uncache,
+            article: self.article
+          })
+        })
       } else {
-        this.$parent.$emit('save-article', markTypes.cache)
-        this.article.offline = true
+        cacheService.cacheArticleData(self.article).then(() => {
+          self.article.offline = true
+          self.$store.dispatch('saveArticle', {
+            type: markTypes.cache,
+            article: self.article
+          })
+        })
       }
     },
     markRead () {

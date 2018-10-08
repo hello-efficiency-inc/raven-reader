@@ -25,8 +25,6 @@
   </div>
 </template>
 <script>
-import cacheService from '../services/cacheArticle'
-
 export default {
   props: {
     id: {
@@ -41,20 +39,6 @@ export default {
     loading: {
       type: Boolean
     }
-  },
-  mounted () {
-    const self = this
-    this.$on('save-article', async (msg) => {
-      if (msg === 'CACHE') {
-        await cacheService.cacheArticleData(self.article)
-      } else {
-        await cacheService.uncache(`raven-${self.article._id}`)
-      }
-      self.$store.dispatch('saveArticle', {
-        type: msg,
-        article: self.article
-      })
-    })
   }
 }
 </script>

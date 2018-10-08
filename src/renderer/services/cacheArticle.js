@@ -69,7 +69,12 @@ export default {
     }))
   },
   async uncache (name) {
-    return caches.delete(name)
+    const cacheKeys = await caches.keys()
+    const check = _.indexOf(cacheKeys, name)
+    if (check >= 0) {
+      return caches.delete(name)
+    }
+    return false
   },
   async isCached (name) {
     return caches.has(name)

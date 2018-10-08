@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import _ from 'lodash'
 import Fuse from 'fuse.js'
+import cacheService from '../../services/cacheArticle'
 
 dayjs.extend(relativeTime)
 
@@ -94,6 +95,10 @@ const mutations = {
     }
   },
   DELETE_ARTICLES (state, id) {
+    const articles = _.filter(state.articles, { feed_id: id })
+    articles.forEach(async (article) => {
+      await cacheService.uncache(`raven-${article._id}`)
+    })
     db.deleteArticles(id)
   },
   REFRESH_FEEDS (state, feeds) {
@@ -112,7 +117,7 @@ const mutations = {
   },
   SAVE_ARTICLE (state, data) {
     const index = _.findIndex(state.articles, { '_id': data.article._id })
-    state.article[index].offline = data.type === 'CACHE'
+    state.articles[index].offline = data.type === 'CACHE'
   }
 }
 
