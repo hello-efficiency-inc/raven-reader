@@ -45,10 +45,10 @@ Coming soon on Apple App Store.
 - [x] Exporting feed in OPML format
 - [x] Importing feeds
 - [x] Windows support
+- [x] Offline reading
 
 ## Roadmap
 - [x] New brand name and icons
-- [ ] Offline reading
 - [ ] Linux support
 - [ ] Supporting authenticated feeds
 - [ ] Feedly synchronization
