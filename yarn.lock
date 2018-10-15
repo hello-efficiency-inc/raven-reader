@@ -4080,9 +4080,9 @@ fs-extra@^6.0.1:
     universalify "^0.1.0"
 
 fs-jetpack@^2.0.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/fs-jetpack/-/fs-jetpack-2.1.1.tgz#31c4eca61c17a112452cb92ba103b9e2026d5863"
-  integrity sha512-xPJZrUpTEJpdoW7IIheariipaHd7ncAbyskPJzjbTwKZtbjBaMeIwEc1DTHfQ5cy8QhgDW7JDWP4kEzadLDfLA==
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/fs-jetpack/-/fs-jetpack-2.2.0.tgz#4385b42b728a3400f00f4afe6ecabc72543cc72d"
+  integrity sha512-d/fqY4pRhtKPEDyMz3sfx4ZBeWY6fV9b0E07fvI/k2oHwOYfFzCGe6yYuIHea7568dqIb1oEzzsGpZFQwGq+7Q==
   dependencies:
     minimatch "^3.0.2"
 
