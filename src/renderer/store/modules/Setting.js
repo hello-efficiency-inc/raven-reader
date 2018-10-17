@@ -3,7 +3,12 @@ import Store from 'electron-store'
 const state = {
   cronSettings: '*/5 * * * *',
   darkMode: false,
-  offline: false
+  offline: false,
+  proxy: {
+    http: null,
+    https: null,
+    bypass: null
+  }
 }
 
 const store = new Store()
@@ -12,6 +17,7 @@ const mutations = {
   LOAD_SETTINGS (state) {
     state.cronSettings = store.get('settings.cronjob')
     state.darkMode = store.get('settings.darkMode')
+    state.proxy = store.get('settings.proxy')
   },
   CHECK_OFFLINE (state) {
     state.offline = !navigator.onLine
@@ -24,6 +30,9 @@ const mutations = {
   },
   SET_OFFLINE (state, data) {
     state.offline = data === 'offline'
+  },
+  SET_PROXY (state, data) {
+    state.proxy = data
   }
 }
 
@@ -44,6 +53,10 @@ const actions = {
   },
   checkOffline ({ commit }) {
     commit('CHECK_OFFLINE')
+  },
+  setProxy ({ commit }, data) {
+    store.set('settings.proxy', data)
+    commit('SET_PROXY')
   }
 }
 

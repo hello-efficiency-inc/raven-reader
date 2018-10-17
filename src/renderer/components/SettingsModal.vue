@@ -12,6 +12,21 @@
                         :options="options"
                         name="darkTheme" @change="saveAppearance"/>
   </b-form-group>
+  <h5>Proxy Settings</h5>
+  <b-form-group label="Web Server (HTTP):">
+    <b-form-input v-model="proxy.http"
+                  type="text"></b-form-input>
+  </b-form-group>
+  <b-form-group label="Secure Web Server (HTTPS):">
+    <b-form-input v-model="proxy.https"
+                  type="text"></b-form-input>
+  </b-form-group>
+  <b-form-group label="Bypass proxy settings for these hosts & domains:">
+    <b-form-textarea v-model="proxy.bypass"
+                     :rows="3"
+                     :max-rows="6"></b-form-textarea>
+  </b-form-group>
+  <b-button @click="applyProxy">Apply proxy & restart</b-button>
   </b-modal>
 </template>
 <script>
@@ -39,13 +54,19 @@ export default {
       options: [
         { text: 'On', value: 'on' },
         { text: 'Off', value: 'off' }
-      ]
+      ],
+      proxy: {
+        http: null,
+        https: null,
+        bypass: null
+      }
     }
   },
   mounted () {
     this.$store.dispatch('loadSettings')
     this.cronjob = this.$store.state.Setting.cronSettings
     this.darkMode = this.$store.state.Setting.darkMode
+    this.proxy = this.$store.state.Setting.proxy
   },
   methods: {
     saveCronjob (cronValue) {
@@ -66,6 +87,13 @@ export default {
     },
     hideModal () {
       this.$refs.settings.hide()
+    },
+    applyProxy () {
+      this.$store.dispatch('setProxy', this.proxy)
+      this.$electron.remote.app.relaunch({
+        args: process.argv.slice(1).concat(['--relaunch'])
+      })
+      this.$electron.remote.app.exit(0)
     }
   }
 }
