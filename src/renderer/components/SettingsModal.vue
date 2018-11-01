@@ -56,9 +56,9 @@ export default {
         { text: 'Off', value: 'off' }
       ],
       proxy: {
-        http: null,
-        https: null,
-        bypass: null
+        http: '',
+        https: '',
+        bypass: ''
       }
     }
   },
@@ -66,7 +66,9 @@ export default {
     this.$store.dispatch('loadSettings')
     this.cronjob = this.$store.state.Setting.cronSettings
     this.darkMode = this.$store.state.Setting.darkMode
-    this.proxy = this.$store.state.Setting.proxy
+    this.proxy.http = this.$store.state.Setting.proxy.http
+    this.proxy.https = this.$store.state.Setting.proxy.https
+    this.proxy.bypass = this.$store.state.Setting.proxy.bypass
   },
   methods: {
     saveCronjob (cronValue) {
@@ -90,9 +92,7 @@ export default {
     },
     applyProxy () {
       this.$store.dispatch('setProxy', this.proxy)
-      this.$electron.remote.app.relaunch({
-        args: process.argv.slice(1).concat(['--relaunch'])
-      })
+      this.$electron.remote.app.relaunch()
       this.$electron.remote.app.exit(0)
     }
   }

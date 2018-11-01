@@ -5,9 +5,9 @@ const state = {
   darkMode: false,
   offline: false,
   proxy: {
-    http: null,
-    https: null,
-    bypass: null
+    http: '',
+    https: '',
+    bypass: ''
   }
 }
 
