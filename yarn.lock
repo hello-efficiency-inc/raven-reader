@@ -2069,9 +2069,9 @@ center-align@^0.1.1:
     lazy-cache "^1.0.3"
 
 cfonts@^2.1.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.2.2.tgz#bffe809375f03b6f1bb9fa771de61061adb627ec"
-  integrity sha512-CEyPlCSI9cMnksYeD7Rg1xEWoOjvP4JfRc2AeOzoQCB1rk/3Yuvn4+VMIRFH3IrKw/AT93WX/JLK/Ppcyk+gKw==
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.2.3.tgz#33b28c229d4313ad468d243ed9cc06b7bdfe32ad"
+  integrity sha512-O0TiY5TbZnmIbZ3d1fp92T38r88u/dsf0BYu/ktaVvIBH6StE7y+m9jl96b7DGgYZU4SNa3eiaphAVx5G2rWZQ==
   dependencies:
     ansi-styles "^3.2.1"
     babel-runtime "^6.26.0"
@@ -4334,9 +4334,9 @@ got@^8.3.2:
     url-to-options "^1.0.1"
 
 got@^9.0.0:
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/got/-/got-9.3.0.tgz#9187472a6e7c642264d041b0e670fd8bb1eebb67"
-  integrity sha512-4WTeObCRe7hatjQmeCwmkviu+ibyfeF5v6De+FeZdfsLEIe/7d9rl3VOzrknXveeQV/Pq/+f+KbscBQsP8ZxUg==
+  version "9.3.1"
+  resolved "https://registry.yarnpkg.com/got/-/got-9.3.1.tgz#f0e6d531e6ece50375de4f18a640b716862f102c"
+  integrity sha512-lIVTDQipyF6uz7FpfHJ2Yd67tgb58C6eKAE46CYPqPj4BEkCT/HgdeRx8nF64BbVJWasEtlEJ3OBziuwl8tYrA==
   dependencies:
     "@sindresorhus/is" "^0.12.0"
     "@szmarczak/http-timer" "^1.1.0"
@@ -6280,9 +6280,9 @@ node-pre-gyp@^0.10.0:
     tar "^4"
 
 node-sass@^4.9.0:
-  version "4.9.4"
-  resolved "https://registry.yarnpkg.com/node-sass/-/node-sass-4.9.4.tgz#349bd7f1c89422ffe7e1e4b60f2055a69fbc5512"
-  integrity sha512-MXyurANsUoE4/6KmfMkwGcBzAnJQ5xJBGW7Ei6ea8KnUKuzHr/SguVBIi3uaUAHtZCPUYkvlJ3Ef5T5VAwVpaA==
+  version "4.10.0"
+  resolved "https://registry.yarnpkg.com/node-sass/-/node-sass-4.10.0.tgz#dcc2b364c0913630945ccbf7a2bbf1f926effca4"
+  integrity sha512-fDQJfXszw6vek63Fe/ldkYXmRYK/QS6NbvM3i5oEo9ntPDy4XX7BcKZyTKv+/kSSxRtXXc7l+MSwEmYc0CSy6Q==
   dependencies:
     async-foreach "^0.1.3"
     chalk "^1.1.1"
