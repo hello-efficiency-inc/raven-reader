@@ -20,6 +20,7 @@
 </a>
 <a href="https://david-dm.org/mrgodhani/raven-reader?type=dev" title="devDependencies status">
 <img src="https://david-dm.org/mrgodhani/raven-reader/dev-status.svg"/></a>
+<a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/rss-reader-v2-0/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/12-shield.svg"/></a>
 </p>
 
 ![newscreenshot](/newscreenshot.png)
