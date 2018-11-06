@@ -89,7 +89,7 @@
     "node-notifier": "^5.2.1",
     "node-opml-parser": "^1.0.0",
     "node-schedule": "^1.3.0",
-    "normalize-url": "^3.0.1",
+    "normalize-url": "^4.0.0",
     "opml-generator": "^1.1.1",
     "popper.js": "^1.14.4",
     "reading-time": "^1.1.2",
