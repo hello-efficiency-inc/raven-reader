@@ -25,7 +25,7 @@ let mainWindow
 let trayImage
 let tray
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
-const store = new Store()
+// const store = new Store()
 
 function createMenu () {
   // Create the Application's main menu
