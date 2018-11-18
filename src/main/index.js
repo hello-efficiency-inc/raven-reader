@@ -5,7 +5,7 @@ import updateElectron from 'update-electron-app'
 import electronLog from 'electron-log'
 import jetpack from 'fs-jetpack'
 import os from 'os'
-import Store from 'electron-store'
+// import Store from 'electron-store'
 
 updateElectron({
   repo: 'mrgodhani/raven-reader',
