@@ -117,26 +117,24 @@ function createWindow () {
     height: 768
   })
 
-  const proxy = store.get('settings.proxy') ? store.get('settings.proxy') : null
-  let proxyRules = 'direct://'
-  if (proxy) {
-    if (proxy.http !== null && proxy.https === null) {
-      proxyRules = `http=${proxy.http},${proxyRules}`
-    }
-    if (proxy.http !== null && proxy.https !== null) {
-      proxyRules = `http=${proxy.http};https=${proxy.https},${proxyRules}`
-    }
-  }
-  electronLog.info(`Applying proxy ${proxyRules}`)
-  mainWindow.webContents.session.setProxy({
-    proxyRules: proxyRules,
-    proxyBypassRules: proxy && proxy.bypass ? proxy.bypass : '<local>' }, () => {
-    mainWindow.loadURL(winURL)
-  })
+  mainWindow.loadURL(winURL)
 
-  mainWindow.webContents.session.resolveProxy('https://google.com', (proxy) => {
-    electronLog.info(`${proxy}`)
-  })
+  // const proxy = store.get('settings.proxy') ? store.get('settings.proxy') : null
+  // let proxyRules = 'direct://'
+  // if (proxy) {
+  //   if (proxy.http !== null && proxy.https === null) {
+  //     proxyRules = `http=${proxy.http},${proxyRules}`
+  //   }
+  //   if (proxy.http !== null && proxy.https !== null) {
+  //     proxyRules = `http=${proxy.http};https=${proxy.https},${proxyRules}`
+  //   }
+  // }
+  // electronLog.info(`Applying proxy ${proxyRules}`)
+  // mainWindow.webContents.session.setProxy({
+  //   proxyRules: proxyRules,
+  //   proxyBypassRules: proxy && proxy.bypass ? proxy.bypass : '<local>' }, () => {
+  //   mainWindow.loadURL(winURL)
+  // })
 
   mainWindow.on('closed', () => {
     mainWindow = null
