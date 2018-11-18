@@ -64,6 +64,10 @@ function createTray () {
     trayImage = require('path').join(__static, '/windowstrayicon.ico')
   }
 
+  if (os.platform() === 'linux') {
+    trayImage = require('path').join(__static, '/mactrayiconTemplate.png')
+  }
+
   tray = new Tray(trayImage)
 
   const contextMenu = Menu.buildFromTemplate([
@@ -157,17 +161,14 @@ function createWindow () {
   createTray()
 }
 
-const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+app.requestSingleInstanceLock()
+app.on('second-instance', (event, argv, cwd) => {
   electronLog.info(
     'Detected a newer instance. Closing this instance.',
     app.getVersion()
   )
   app.quit()
 })
-
-if (isSecondInstance) {
-  electronLog.info('This is the newer version running.', app.getVersion())
-}
 
 app.on('ready', () => {
   createWindow()
