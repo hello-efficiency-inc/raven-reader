@@ -39,6 +39,7 @@ import finder from 'rss-finder'
 import normalizeUrl from 'normalize-url'
 import he from 'he'
 import helper from '../services/helpers'
+// import { parseFeed } from '../parsers/feed'
 
 export default {
   name: 'addfeed-modal',
@@ -59,7 +60,7 @@ export default {
     fetchFeed () {
       this.loading = true
       if (!this.$store.state.Setting.offline) {
-        finder(normalizeUrl(this.feed_url)).then((res) => {
+        finder(normalizeUrl(this.feed_url, { stripWWW: false })).then((res) => {
           this.loading = false
           res.feedUrls.map((item) => {
             item.title = he.unescape(item.title)

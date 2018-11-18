@@ -328,6 +328,10 @@ export default {
     }
   }
 
+  .article-inner {
+    color: white;
+  }
+
   .article-contentarea {
     background: #373737 !important;
     h1,

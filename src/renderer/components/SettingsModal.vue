@@ -66,9 +66,11 @@ export default {
     this.$store.dispatch('loadSettings')
     this.cronjob = this.$store.state.Setting.cronSettings
     this.darkMode = this.$store.state.Setting.darkMode
-    this.proxy.http = this.$store.state.Setting.proxy.http
-    this.proxy.https = this.$store.state.Setting.proxy.https
-    this.proxy.bypass = this.$store.state.Setting.proxy.bypass
+    if (this.$store.state.Setting.proxy) {
+      this.proxy.http = this.$store.state.Setting.proxy.http
+      this.proxy.https = this.$store.state.Setting.proxy.https
+      this.proxy.bypass = this.$store.state.Setting.proxy.bypass
+    }
   },
   methods: {
     saveCronjob (cronValue) {

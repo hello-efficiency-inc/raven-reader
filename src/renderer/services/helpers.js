@@ -6,7 +6,7 @@ import async from 'async'
 import faviconoclast from 'faviconoclast'
 import db from './db.js'
 import notifier from 'node-notifier'
-import path from 'path'
+import _ from 'lodash'
 
 export default {
   exportOpml () {
@@ -41,9 +41,9 @@ export default {
           db.addArticles(post, docs => {
             if (typeof docs !== 'undefined') {
               notifier.notify({
-                icon: path.join(__static, '/logo_icon.png'),
-                title: 'New articles added',
-                message: `New articles were added to ${task.feed.meta.title}`,
+                icon: post.meta.favicon,
+                title: post.title,
+                message: _.truncate(post.description),
                 sticky: false,
                 wait: false,
                 sound: true
