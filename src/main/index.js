@@ -65,7 +65,7 @@ function createTray () {
   }
 
   if (os.platform() === 'linux') {
-    trayImage = require('path').join(__static, '/mactrayiconTemplate.png')
+    trayImage = require('path').join(__static, '/trayicon-linux.png')
   }
 
   tray = new Tray(trayImage)
