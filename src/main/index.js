@@ -5,7 +5,7 @@ import updateElectron from 'update-electron-app'
 import electronLog from 'electron-log'
 import jetpack from 'fs-jetpack'
 import os from 'os'
-// import Store from 'electron-store'
+import Store from 'electron-store'
 
 updateElectron({
   repo: 'mrgodhani/raven-reader',
@@ -25,7 +25,7 @@ let mainWindow
 let trayImage
 let tray
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
-// const store = new Store()
+const store = new Store()
 
 function createMenu () {
   // Create the Application's main menu
@@ -119,22 +119,22 @@ function createWindow () {
 
   mainWindow.loadURL(winURL)
 
-  // const proxy = store.get('settings.proxy') ? store.get('settings.proxy') : null
-  // let proxyRules = 'direct://'
-  // if (proxy) {
-  //   if (proxy.http !== null && proxy.https === null) {
-  //     proxyRules = `http=${proxy.http},${proxyRules}`
-  //   }
-  //   if (proxy.http !== null && proxy.https !== null) {
-  //     proxyRules = `http=${proxy.http};https=${proxy.https},${proxyRules}`
-  //   }
-  // }
-  // electronLog.info(`Applying proxy ${proxyRules}`)
-  // mainWindow.webContents.session.setProxy({
-  //   proxyRules: proxyRules,
-  //   proxyBypassRules: proxy && proxy.bypass ? proxy.bypass : '<local>' }, () => {
-  //   mainWindow.loadURL(winURL)
-  // })
+  const proxy = store.get('settings.proxy') ? store.get('settings.proxy') : null
+  let proxyRules = 'direct://'
+  if (proxy) {
+    if (proxy.http !== null && proxy.https === null) {
+      proxyRules = `http=${proxy.http},${proxyRules}`
+    }
+    if (proxy.http !== null && proxy.https !== null) {
+      proxyRules = `http=${proxy.http};https=${proxy.https},${proxyRules}`
+    }
+  }
+  electronLog.info(`Applying proxy ${proxyRules}`)
+  mainWindow.webContents.session.setProxy({
+    proxyRules: proxyRules,
+    proxyBypassRules: proxy && proxy.bypass ? proxy.bypass : '<local>' }, () => {
+    mainWindow.loadURL(winURL)
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
