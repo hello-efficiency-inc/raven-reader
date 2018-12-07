@@ -43,7 +43,7 @@ export default {
               notifier.notify({
                 icon: post.meta.favicon,
                 title: post.title,
-                message: _.truncate(post.description),
+                message: _.truncate(post.description.replace(/<(?:.|\n)*?>/gm, '')),
                 sticky: false,
                 wait: false,
                 sound: true

@@ -51,6 +51,7 @@ Coming soon on Apple App Store.
 
 ## Roadmap
 - [x] New brand name and icons
+- [ ] Sidebar count
 - [ ] Supporting authenticated feeds
 - [ ] Feedly synchronization
 
