@@ -8909,9 +8909,9 @@ vue-style-loader@^4.1.0:
     loader-utils "^1.0.2"
 
 vue-template-compiler@^2.4.2:
-  version "2.5.17"
-  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.5.17.tgz#52a4a078c327deb937482a509ae85c06f346c3cb"
-  integrity sha512-63uI4syCwtGR5IJvZM0LN5tVsahrelomHtCxvRkZPJ/Tf3ADm1U1wG6KWycK3qCfqR+ygM5vewUvmJ0REAYksg==
+  version "2.5.19"
+  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.5.19.tgz#c23fcbea22fe6c116814141d2e6680023d6456f2"
+  integrity sha512-SIoE8gvl0UjZ/wccwHhj0HUqL+kLkJNy/8v7TXElz6rqxqKOKLoAynVV4L78qHZOHhLoyRl5BOmUFQPPdcD5qw==
   dependencies:
     de-indent "^1.0.2"
     he "^1.1.0"
