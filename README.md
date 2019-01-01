@@ -51,6 +51,7 @@ Coming soon on Apple App Store.
 
 ## Roadmap
 - [x] New brand name and icons
+- [x] Inoreader Integration
 - [ ] Sidebar count
 - [ ] Text configuration
 - [ ] Supporting authenticated feeds
