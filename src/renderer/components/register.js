@@ -10,6 +10,7 @@ import BouncingLoader from './BouncingLoader'
 import ImportModal from './ImportModal'
 import SettingsModal from './SettingsModal'
 import MarkReadModal from './MarkReadModal'
+import SyncSettingsModal from './SyncSettingsModal'
 
 export default {
   registerComponents () {
@@ -24,5 +25,6 @@ export default {
     Vue.component('import-modal', ImportModal)
     Vue.component('settings-modal', SettingsModal)
     Vue.component('markallread-modal', MarkReadModal)
+    Vue.component('sync-settings', SyncSettingsModal)
   }
 }

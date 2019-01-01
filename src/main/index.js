@@ -109,7 +109,8 @@ function createWindow () {
   */
   mainWindow = new BrowserWindow({
     webPreferences: {
-      nodeIntegrationInWorker: true
+      nodeIntegrationInWorker: true,
+      webSecurity: false
     },
     minHeight: 768,
     minWidth: 1204,

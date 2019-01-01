@@ -58,12 +58,18 @@
               Settings
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" v-b-modal.integrations>
+              <feather-icon name="package"></feather-icon>
+              Integrations
+            </a>
+          </li>
         </ul>
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Subscriptions</span>
         </h6>
         <ul class="nav flex-column">
-          <li v-for="feed in feeds" class="nav-item d-flex justify-content-between align-items-center pr-2">
+          <li v-for="feed in feeds" class="nav-item d-flex justify-content-between align-items-center pr-2" v-bind:key="feed.id">
             <router-link v-if="feed" class="nav-link" :to="`/feed/${feed.id}`">
               <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1">
               {{ feed.title }}
@@ -78,6 +84,7 @@
     <import-modal></import-modal>
     <settings-modal></settings-modal>
     <markallread-modal></markallread-modal>
+    <sync-settings></sync-settings>
   </div>
 </template>
 <script>
@@ -252,6 +259,10 @@ export default {
     background: #373737 !important;
     border-right: 1px solid black;
     box-shadow: none;
+
+    .btn-subscribe {
+      color: white;
+    }
 
     .subscribe-toolbar {
       border-bottom-color: #000;

@@ -134,8 +134,13 @@ export default {
 }
 
 .site-info {
+  width: 350px;
   left: 0;
 
+  .btn-toolbar {
+    width: 100%;
+  }
+  
   .wrap {
     float: left;
   }
