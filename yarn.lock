@@ -7635,9 +7635,9 @@ rss-finder@^2.0.5:
     pinkie-promise "^2.0.1"
 
 rss-parser@^3.5.3:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/rss-parser/-/rss-parser-3.6.1.tgz#2d6f5ab934146adb2caa6e79eab64c29a2c8f8e1"
-  integrity sha512-S3YJaSAw1EeDPota1/AF3qdhZedZ9FmN/M3rcbI+eExexVL2MDKhWFnDqA+Wd7PG0+7R1jkWzaDhsl67Y5jTLA==
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/rss-parser/-/rss-parser-3.6.2.tgz#f4395e025881963a72964b8cedd6540daef62a4b"
+  integrity sha512-xXaMG7Zsj2+t16X+mysd419TpD2UQZifXwTo6Ks9GnUgF8GezPb3LVnh8BuCRm9V9Ty2gC0FRSvBJi8Ks2lfpg==
   dependencies:
     entities "^1.1.1"
     xml2js "^0.4.19"
