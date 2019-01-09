@@ -2090,13 +2090,13 @@ center-align@^0.1.1:
     lazy-cache "^1.0.3"
 
 cfonts@^2.1.2:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.3.0.tgz#32c3cd6871ea95203363b69b22540269f7466b4c"
-  integrity sha512-XHXLYemULY9HEanlWK65O3BY3OwDISIeGHlH6VsGSu+9WTMj9j2sLsph34Lsm4pnB2e4QzMgB551OMF/9noSIQ==
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.3.1.tgz#78e10e20d9af23a677e85c82ab071542d0e88a14"
+  integrity sha512-1W1L9oeKGd/w8kM74ifj45Gn838o2O0MfL1jmilZ2HKpk7aR8KTrNbdSLTybgOXnM3+vKxlftp77Z/lLO5l2Sw==
   dependencies:
     ansi-styles "^3.2.1"
     babel-runtime "^6.26.0"
-    chalk "^2.4.1"
+    chalk "^2.4.2"
     change-case "^3.0.2"
     window-size "^1.1.1"
 
@@ -2111,7 +2111,7 @@ chalk@1.1.3, chalk@^1.0.0, chalk@^1.1.1, chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.4.1:
+chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
