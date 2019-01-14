@@ -2090,9 +2090,9 @@ center-align@^0.1.1:
     lazy-cache "^1.0.3"
 
 cfonts@^2.1.2:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.3.1.tgz#78e10e20d9af23a677e85c82ab071542d0e88a14"
-  integrity sha512-1W1L9oeKGd/w8kM74ifj45Gn838o2O0MfL1jmilZ2HKpk7aR8KTrNbdSLTybgOXnM3+vKxlftp77Z/lLO5l2Sw==
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.4.0.tgz#43c94d57da004d1c976fbf8d6eb97273e7745081"
+  integrity sha512-3tzmXDW2xJFzMVewoQQXqc+bv1Fyao8yjzqFrR9WgxEWNW+M+ls+HRRi6YxM0Cimlwy4E14LBuvCOsAWrQK3dw==
   dependencies:
     ansi-styles "^3.2.1"
     babel-runtime "^6.26.0"
