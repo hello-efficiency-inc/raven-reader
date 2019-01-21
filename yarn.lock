@@ -4104,9 +4104,9 @@ fs-extra@^7.0.0:
     universalify "^0.1.0"
 
 fs-jetpack@^2.0.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/fs-jetpack/-/fs-jetpack-2.2.0.tgz#4385b42b728a3400f00f4afe6ecabc72543cc72d"
-  integrity sha512-d/fqY4pRhtKPEDyMz3sfx4ZBeWY6fV9b0E07fvI/k2oHwOYfFzCGe6yYuIHea7568dqIb1oEzzsGpZFQwGq+7Q==
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/fs-jetpack/-/fs-jetpack-2.2.1.tgz#633821ac9c4d3e57f07f9ca9fb56be8dd6c663ca"
+  integrity sha512-pbRcz1OqtcmP100mkTuPXuMCx6LvmsZYGt/F2dDNKMeSH+FX+mA1vgRSLUKSQWAJSD8mWWYC8US+1U4LHR1Fmw==
   dependencies:
     minimatch "^3.0.2"
 
