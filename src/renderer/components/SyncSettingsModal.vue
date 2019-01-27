@@ -43,24 +43,33 @@ export default {
     signInWithPopUp () {
       return new Promise((resolve, reject) => {
         const authWindow = new this.$electron.remote.BrowserWindow({
-          width: 500,
-          height: 600,
-          show: true
+          width: 1024,
+          height: 720,
+          show: true,
+          webPreferences: {
+            nodeIntegration: false,
+            devTools: false
+          }
         })
         const ses = authWindow.webContents.session
-        ses.clearStorageData()
+        ses.clearStorageData({
+          storages: ['localStorage', 'cookies']
+        })
         const authUrl = oauth.buildAuthUrl()
 
         function handleNavigation (url) {
-          const params = new URL(url).searchParams
+          const urlItem = new URL(url)
+          const params = urlItem.searchParams
+          const hostname = urlItem.hostname
+          console.log(params)
           if (params) {
             if (params.get('error')) {
               authWindow.removeAllListeners('closed')
               setImmediate(() => authWindow.close())
               resolve(false)
-            } else if (params.get('code')) {
+            } else if (hostname === '127.0.0.1' && params.get('code')) {
               authWindow.removeAllListeners('closed')
-              setImmediate(() => authWindow.close())
+              authWindow.close()
               resolve(params.get('code'))
             }
           }
