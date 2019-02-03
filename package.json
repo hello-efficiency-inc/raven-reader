@@ -74,7 +74,7 @@
     "check-os-tray-support": "^2.0.0",
     "cheerio": "^1.0.0-rc.2",
     "dayjs": "^1.6.2",
-    "electron-log": "^2.2.15",
+    "electron-log": "^3.0.0",
     "electron-store": "^2.0.0",
     "electron-windows-notifications": "^3.0.0",
     "faviconoclast": "^0.0.3",

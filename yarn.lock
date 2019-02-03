@@ -3194,10 +3194,10 @@ electron-localshortcut@^3.0.0:
     keyboardevent-from-electron-accelerator "^1.1.0"
     keyboardevents-areequal "^0.2.1"
 
-electron-log@^2.2.15:
-  version "2.2.17"
-  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-2.2.17.tgz#e71e2ebb949fc96ded7cdb99eeee7202e48981d2"
-  integrity sha512-v+Af5W5z99ehhaLOfE9eTSXUwjzh2wFlQjz51dvkZ6ZIrET6OB/zAZPvsuwT6tm3t5x+M1r+Ed3U3xtPZYAyuQ==
+electron-log@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-3.0.0.tgz#5f29a461e45785fbcaa9d3e9365c659e0728eb27"
+  integrity sha512-Y5IaeYF4kF1b4zyZJU7tfu0Aof9cLt3fk6aXdpPFig7ZQyeuLGwqyw0B3WKMDOx41fgkChmdQSjYPJhn9BO+3w==
 
 electron-osx-sign@0.4.11:
   version "0.4.11"
