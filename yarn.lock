@@ -2769,9 +2769,9 @@ date-now@^0.1.4:
   integrity sha1-6vQ5/U1ISK105cx9vvIAZyueNFs=
 
 dayjs@^1.6.2:
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.2.tgz#8668e50c1e048e1b1638ebe6c3552187a34ffa64"
-  integrity sha512-iHNxe5kIbxmPgzJFjks9TFMokOu3TQcUUSagb/Ff7GZNi7ulYF0qaAZ61trZEFOONgrp4jvKVpBJ86qy4UsSoA==
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.3.tgz#91a1ef672dc7dceb48794424fbe1571bfb8692c9"
+  integrity sha512-e6wSnTA9R2fghIk5zXoOg9+uTFcmbonbf3wLXRAJtDApTTpNFWjFPyWUAsHonPBw36BgS/e+FCNf4RxsOYdo3Q==
 
 de-indent@^1.0.2:
   version "1.0.2"
