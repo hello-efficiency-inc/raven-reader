@@ -3848,9 +3848,9 @@ fd-slicer@~1.0.1:
     pend "~1.2.0"
 
 feather-icons@^4.7.3:
-  version "4.16.0"
-  resolved "https://registry.yarnpkg.com/feather-icons/-/feather-icons-4.16.0.tgz#946283c64023d5d744770ebc9948838bd8684e55"
-  integrity sha512-UDY2ezHHjn9xaBqls1JSCPec+a3G4NL0ll5OfQGHG7SWqjjwdgNlCij/g2WFw8RHl0s9iaYV06qmUh03aRDJ8Q==
+  version "4.17.0"
+  resolved "https://registry.yarnpkg.com/feather-icons/-/feather-icons-4.17.0.tgz#45bd49d05134c6db1f8161c0fe648eb5fb7c4aea"
+  integrity sha512-eAQCGeI9Dn57JRuzb7SfWYSj/v/PLoa7cZ1nqY3m0V8i+Q3pqJu6sXiKBRFTufT7s+7o6ZZkDsffh7dsnStSOg==
   dependencies:
     classnames "^2.2.5"
     core-js "^2.5.3"
