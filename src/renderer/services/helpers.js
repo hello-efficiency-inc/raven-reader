@@ -25,6 +25,7 @@ export default {
         return item
       })
       this.subscribe(rssFeedUrls, null, false)
+      return true
     }
   },
   exportOpml () {
