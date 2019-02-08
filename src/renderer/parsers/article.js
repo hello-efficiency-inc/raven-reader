@@ -1,4 +1,3 @@
-// import axios from 'axios'
 import got from 'got'
 import { MERCURY_API_TOKEN } from '../config'
 

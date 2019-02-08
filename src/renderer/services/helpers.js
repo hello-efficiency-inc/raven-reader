@@ -3,7 +3,6 @@ import { parseFeed } from '../parsers/feed'
 import uuid from 'uuid-by-string'
 import opmlGenerator from 'opml-generator'
 import async from 'async'
-// import faviconoclast from 'faviconoclast'
 import db from './db.js'
 import notifier from 'node-notifier'
 import _ from 'lodash'
@@ -14,17 +13,19 @@ const electronStore = new ElectronStore()
 
 export default {
   async syncInoReader () {
-    const token = JSON.parse(electronStore.get('inoreader_token')).access_token
-    const subscriptionLists = await axios.get('https://www.inoreader.com/reader/api/0/subscription/list', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    const rssFeedUrls = subscriptionLists.data.subscriptions.map((item) => {
-      item.feedUrl = item.url
-      return item
-    })
-    this.subscribe(rssFeedUrls, null, false)
+    const token = electronStore.get('inoreader_token')
+    if (token) {
+      const subscriptionLists = await axios.get('https://www.inoreader.com/reader/api/0/subscription/list', {
+        headers: {
+          'Authorization': `Bearer ${JSON.parse(token).access_token}`
+        }
+      })
+      const rssFeedUrls = subscriptionLists.data.subscriptions.map((item) => {
+        item.feedUrl = item.url
+        return item
+      })
+      this.subscribe(rssFeedUrls, null, false)
+    }
   },
   exportOpml () {
     const header = {

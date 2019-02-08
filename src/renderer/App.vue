@@ -123,7 +123,8 @@ body {
 .sidebar {
   position: relative;
   flex-grow: 0;
-  width: 300px;
+  width: 260px;
+  font-size: 14px;
   height: 100%;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
 

@@ -19,6 +19,12 @@
           </div>
         </div>
       </div>
+      <div class="statusBar" ref="statusBar">
+        <button @click="fold" class="btn foldBtn">
+          <feather-icon :name="featherIcon"></feather-icon>
+        </button>
+        <span ref="statusMsg" class="statusMsg"></span>
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +34,8 @@ import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      search: null
+      search: null,
+      featherIcon: 'chevron-left'
     }
   },
   props: {
@@ -44,12 +51,26 @@ export default {
     search (val) {
       this.$store.dispatch('changeType', 'search')
       this.$store.dispatch('setSearch', val)
-    }
+    },
+    filteredArticles: 'itemsChange'
   },
   computed: {
     ...mapGetters([
       'filteredArticles'
     ])
+  },
+  methods: {
+    itemsChange () {
+      this.$refs.statusMsg.innerText = `${this.filteredArticles.length} items`
+    },
+    fold () {
+      this.$parent.$refs.sidebar.hidden = !this.$parent.$refs.sidebar.hidden
+      if (this.$parent.$refs.sidebar.hidden) {
+        this.featherIcon = 'chevron-right'
+      } else {
+        this.featherIcon = 'chevron-left'
+      }
+    }
   }
 }
 </script>
@@ -66,6 +87,7 @@ export default {
 .articles-list {
   position: relative;
   flex-grow: 0;
+  font-size: 14px;
   width: 350px;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   height: 100%;
@@ -134,5 +156,68 @@ export default {
       outline: 0;
     }
   }
+}
+
+.app-darkmode {
+  .search-input {
+    color: #fff;
+
+    .feather {
+      color: #fff;
+    }
+
+    .form-control::placeholder {
+      color: #fff;
+    }
+  }
+  .statusBar {
+    color: #fff;
+    background:#373737;
+    border-top-color: #000;
+
+    .feather {
+      color: #fff;
+    }
+  }
+}
+
+.statusBar {
+  height: 40px;
+  line-height: 30px;
+  width: 100%;
+  background: #fff;
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #dcdee0;
+  display: flex;
+  align-items: center;
+  z-index: 20;
+}
+
+.statusMsg {
+  line-height: 30px;
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+}
+
+.foldBtn {
+  left: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.foldBtn:hover {
+  color: #3399FF !important;
+}
+
+.foldBtn:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.foldBtn:active {
+  outline: none !important;
+  box-shadow: none !important;
 }
 </style>

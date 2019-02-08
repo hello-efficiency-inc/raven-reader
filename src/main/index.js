@@ -2,7 +2,6 @@
 
 import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
 import updateElectron from 'update-electron-app'
-// import electronLog from 'electron-log'
 import jetpack from 'fs-jetpack'
 import os from 'os'
 import Store from 'electron-store'
@@ -10,7 +9,6 @@ import Store from 'electron-store'
 updateElectron({
   repo: 'mrgodhani/raven-reader',
   updateInterval: '1 hour'
-  // logger: electronLog
 })
 
 /**
@@ -109,7 +107,6 @@ function createWindow () {
   */
   mainWindow = new BrowserWindow({
     webPreferences: {
-      nodeIntegrationInWorker: true,
       webSecurity: false
     },
     minHeight: 768,
@@ -130,7 +127,7 @@ function createWindow () {
       proxyRules = `http=${proxy.http};https=${proxy.https},${proxyRules}`
     }
   }
-  // electronLog.info(`Applying proxy ${proxyRules}`)
+
   mainWindow.webContents.session.setProxy({
     proxyRules: proxyRules,
     proxyBypassRules: proxy && proxy.bypass ? proxy.bypass : '<local>' }, () => {
@@ -139,7 +136,6 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
-    // electronLog.info('Closing app')
   })
 
   mainWindow.on('close', (event) => {
@@ -151,7 +147,6 @@ function createWindow () {
       if (process.platform === 'darwin') {
         app.dock.hide()
       }
-      // electronLog.info('Hiding dock icon and browser window')
       return false
     }
   })
@@ -162,10 +157,6 @@ function createWindow () {
 
 app.requestSingleInstanceLock()
 app.on('second-instance', (event, argv, cwd) => {
-  // electronLog.info(
-  //   'Detected a newer instance. Closing this instance.',
-  //   app.getVersion()
-  // )
   app.quit()
 })
 
@@ -174,7 +165,6 @@ app.on('ready', () => {
 })
 
 app.on('before-quit', () => {
-  // electronLog.info('Setting isQuiting to true')
   app.isQuiting = true
 })
 

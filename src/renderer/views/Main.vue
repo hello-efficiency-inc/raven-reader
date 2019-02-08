@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper" :class="{ 'app-darkmode': $store.state.Setting.darkMode === 'on' }">
-    <nav class="bg-light sidebar">
+    <nav class="bg-light sidebar" v-if="true" ref="sidebar">
       <subscribe-toolbar></subscribe-toolbar>
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
@@ -79,8 +79,8 @@
         </ul>
       </div>
     </nav>
-    <article-list :type="articleType" :feed="feed" @type-change="updateType"></article-list>
-    <article-detail :id="$route.params.id" :article="articleData" :emptyState="empty" :loading="loading"></article-detail>
+    <article-list :type="articleType" :feed="feed" @type-change="updateType" ref="articleList"></article-list>
+    <article-detail :id="$route.params.id" :article="articleData" :emptyState="empty" :loading="loading" ref="articleDetail"></article-detail>
     <import-modal></import-modal>
     <settings-modal></settings-modal>
     <markallread-modal></markallread-modal>
@@ -113,6 +113,7 @@ export default {
   },
   mounted () {
     const self = this
+    this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
     this.$store.dispatch('refreshFeeds')
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
@@ -124,13 +125,15 @@ export default {
     })
 
     // Sync Updates
-    scheduler.scheduleJob('* * * * *', () => {
-      helper.syncInoReader()
+    scheduler.scheduleJob('* * * * *', async function () {
+      self.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
+      await helper.syncInoReader()
       log.info('Syncing inoreader')
     })
     // Feed Crawling
     const job = scheduler.scheduleJob(self.$store.state.Setting.cronSettings, () => {
       const feeds = self.$store.state.Feed.feeds
+      self.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
       if (feeds.length === 0) {
         log.info('No feeds to process')
       } else {
@@ -141,7 +144,7 @@ export default {
     })
 
     if (this.$store.state.Setting.offline) {
-      job.cancelNext(true)
+      job.reschedule()
     }
     // On delete stop Crawler Job
     this.$on('delete', (msg) => {
