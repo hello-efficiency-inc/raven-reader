@@ -117,11 +117,17 @@ export default {
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
     this.$store.dispatch('checkOffline')
+    helper.syncInoReader()
 
     this.$electron.ipcRenderer.on('onlinestatus', (event, status) => {
       self.$store.dispatch('setOffline', status)
     })
 
+    // Sync Updates
+    scheduler.scheduleJob('* * * * *', () => {
+      helper.syncInoReader()
+      log.info('Syncing inoreader')
+    })
     // Feed Crawling
     const job = scheduler.scheduleJob(self.$store.state.Setting.cronSettings, () => {
       const feeds = self.$store.state.Feed.feeds
@@ -135,13 +141,13 @@ export default {
     })
 
     if (this.$store.state.Setting.offline) {
-      job.cancel()
+      job.cancelNext(true)
     }
     // On delete stop Crawler Job
     this.$on('delete', (msg) => {
       if (msg === 'yes') {
         log.info('Job is cancelled')
-        job.cancel()
+        job.reschedule()
       }
     })
   },
@@ -201,8 +207,8 @@ export default {
       $('a').addClass('js-external-link')
       data.content = $.html()
       data.date_published = data.date_published ? dayjs(data.date_published).format('MMMM D, YYYY') : null
-      data.favicon = article.meta.favicon
-      data.sitetitle = article.meta.title
+      data.favicon = article.favicon
+      data.sitetitle = article.feed_title
       data._id = article._id
       data.favourite = article.favourite
       data.read = article.read
@@ -221,13 +227,11 @@ export default {
         self.articleData = null
         self.loading = true
         db.fetchArticle(this.$route.params.id, async function (article) {
-          const link = article.origlink !== null ? article.origlink : article.link
           let data
           if (self.$store.state.Setting.offline) {
-            data = await cacheService.getCachedArticleData(article._id, link)
-            console.log(data)
+            data = await cacheService.getCachedArticleData(article._id, article.link)
           } else {
-            data = await parseArticle(link)
+            data = await parseArticle(article.link)
           }
           if (self.$store.state.Setting.offline && data) {
             self.prepareArticleData(data, article)
@@ -236,7 +240,7 @@ export default {
           } else {
             console.log('EMPTY')
             article.content = null
-            article.url = link
+            article.url = article.link
             self.articleData = article
             self.empty = true
             self.loading = false

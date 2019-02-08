@@ -25,8 +25,10 @@
 import oauth from '../services/oauth'
 import { URL } from 'url'
 import { setImmediate } from 'timers'
-import axios from 'axios'
 import helper from '../services/helpers'
+import Store from 'electron-store'
+
+const store = new Store()
 
 export default {
   data () {
@@ -35,7 +37,7 @@ export default {
     }
   },
   mounted () {
-    if (localStorage.getItem('inoreader_token')) {
+    if (store.get('inoreader_token')) {
       this.inoreader_connected = true
     }
   },
@@ -100,17 +102,7 @@ export default {
       this.inoreader_connected = false
     },
     async syncFeedsFromInoreader () {
-      const token = JSON.parse(localStorage.getItem('inoreader_token')).access_token
-      const subscriptionLists = await axios.get('https://www.inoreader.com/reader/api/0/subscription/list', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      const rssFeedUrls = subscriptionLists.data.subscriptions.map((item) => {
-        item.feedUrl = item.url
-        return item
-      })
-      helper.subscribe(rssFeedUrls, null, false)
+      await helper.syncInoReader()
     },
     async signIn () {
       let token
@@ -124,7 +116,7 @@ export default {
       }
 
       if (token) {
-        localStorage.setItem('inoreader_token', JSON.stringify(token))
+        store.set('inoreader_token', JSON.stringify(token))
         this.inoreader_connected = true
       }
     }

@@ -56,8 +56,8 @@ const getters = {
 const mutations = {
   LOAD_ARTICLES (state, articles) {
     state.articles = articles.map((item) => {
-      item.meta.title = _.truncate(item.meta.title, { length: 20 })
-      item.pubdate = dayjs(item.pubdate).fromNow()
+      item.feed_title = _.truncate(item.feed_title, { length: 20 })
+      item.pubDate = dayjs(item.pubDate).fromNow()
       if (!('offline' in item)) {
         item.offline = false
       }
@@ -66,8 +66,8 @@ const mutations = {
   },
   ADD_ARTICLES (state, articles) {
     if (articles) {
-      articles.meta.title = _.truncate(articles.meta.title, { length: 20 })
-      articles.pubdate = dayjs(articles.pubdate).fromNow()
+      articles.feed_title = _.truncate(articles.feed_title, { length: 20 })
+      articles.pubDate = dayjs(articles.pubDate).fromNow()
       state.articles.unshift(articles)
     }
   },
