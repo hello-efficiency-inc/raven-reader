@@ -2048,9 +2048,9 @@ center-align@^0.1.1:
     lazy-cache "^1.0.3"
 
 cfonts@^2.1.2:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.4.1.tgz#b1f4e784cb45ae45f69d89513a7142574f27c948"
-  integrity sha512-/K8D7ACD4LEjQcnIYb3KOUD8AeThBQ06BxzS1hrcKEWoHfuLhhXQvRbKo7k+/lOqob/yC/hcXmHGwRdXzPkg6Q==
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/cfonts/-/cfonts-2.4.2.tgz#fa94278e9163d4e31ffa4668d621cf2a197894a4"
+  integrity sha512-H9vvFz6tM5fdVMFL2PzIueBcljsG6OsP+QDp35jFEd33mh04yW/8IHmPmjji4duMA6HePF8VbOI1005Mr8C0Pw==
   dependencies:
     ansi-styles "^3.2.1"
     chalk "^2.4.2"
