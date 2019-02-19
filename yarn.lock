@@ -1709,9 +1709,9 @@ boolbase@~1.0.0:
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
 bootstrap-vue@^2.0.0-rc.11:
-  version "2.0.0-rc.12"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.0.0-rc.12.tgz#c795f490e3ac2fdace4285b9cb19f2b2ef2995b0"
-  integrity sha512-GJ3xel2ciIyh1AUZ2XC+90JRb7TZX/zAFuvb4cDrgwcS1gYg0YrE/Wyq1fSNy7TknCMDQWMdtgvq3C5eK9USpw==
+  version "2.0.0-rc.13"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.0.0-rc.13.tgz#b1ae0047e78d759039f3d1343bc34f7d8cdeab8a"
+  integrity sha512-XKCHeb3vzdbw3tD7jMOBOA0YuK+1PZo2s5+Vl0uglZKKPIN0V9DljnUv+10xJve6yr88WX0sFWInYObRGFiC/Q==
   dependencies:
     "@nuxt/opencollective" "^0.2.1"
     bootstrap "^4.3.1"
