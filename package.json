@@ -115,7 +115,7 @@
     "babili-webpack-plugin": "^0.1.2",
     "cfonts": "^2.1.2",
     "chalk": "^2.4.1",
-    "copy-webpack-plugin": "^4.0.1",
+    "copy-webpack-plugin": "^5.0.0",
     "cross-env": "^5.0.5",
     "css-loader": "^2.0.1",
     "del": "^3.0.0",
