@@ -1,7 +1,7 @@
 <template>
   <div class="article-detail">
     <div class="content-wrapper">
-      <article-toolbar :article="article"></article-toolbar>
+      <article-toolbar :article="article" ref="articleToolbar"></article-toolbar>
       <div class="article-contentarea  px-4" v-if="article !== null && article.content !== null && !emptyState">
         <h2>
           <strong>{{ article.title }}</strong><br/>

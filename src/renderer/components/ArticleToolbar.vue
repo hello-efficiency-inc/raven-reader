@@ -22,12 +22,12 @@
         </button>
       </div>
       <div class="wrap">
-        <a :href="article.url" class="btn btn-toolbar js-external-link" v-b-tooltip.hover title="Open in browser">
+        <a :href="article.url" class="btn btn-toolbar js-external-link" v-b-tooltip.hover title="Open in browser" ref="openlink">
           <feather-icon name="external-link"></feather-icon>
         </a>
       </div>
       <div class="wrap">
-        <button class="btn btn-toolbar" @click="saveArticle" v-b-tooltip.hover title="Save article">
+        <button class="btn btn-toolbar" @click="saveArticle" v-b-tooltip.hover title="Save article" ref="saveoffline">
           <feather-icon name="wifi-off" :success="article.offline"></feather-icon>
         </button>
       </div>
@@ -140,7 +140,7 @@ export default {
   .btn-toolbar {
     width: 100%;
   }
-  
+
   .wrap {
     float: left;
   }
