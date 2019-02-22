@@ -1,7 +1,7 @@
 <template>
   <div class="app-wrapper" :class="{ 'app-darkmode': $store.state.Setting.darkMode === 'on' }">
     <nav class="bg-light sidebar" v-if="true" ref="sidebar">
-      <subscribe-toolbar></subscribe-toolbar>
+      <subscribe-toolbar ref="subscribetoolbar"></subscribe-toolbar>
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
@@ -47,7 +47,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" v-b-modal.markallread>
+            <a class="nav-link" href="#" v-b-modal.markallread ref="markallread">
               <feather-icon name="check-square"></feather-icon>
               Mark all as read
             </a>
@@ -99,7 +99,9 @@ import helper from '../services/helpers'
 import notifier from 'node-notifier'
 import fs from 'fs'
 import path from 'path'
+import _ from 'lodash'
 import cacheService from '../services/cacheArticle'
+import * as Mousetrap from 'Mousetrap'
 
 export default {
   data () {
@@ -111,6 +113,73 @@ export default {
       loading: false
     }
   },
+  beforeMount () {
+  // shortcuts
+    Mousetrap.bind('m', evt => {
+    // mark one as read/unread
+      if (this.$route.params.id) {
+        this.$refs.articleDetail.$refs.articleToolbar.markRead()
+      }
+    })
+    Mousetrap.bind('s', evt => {
+    // star/unstar one
+      if (this.$route.params.id) {
+        this.$refs.articleDetail.$refs.articleToolbar.markFavourite()
+      }
+    })
+    Mousetrap.bind('v', evt => {
+    // View on Browser
+      if (this.$route.params.id) {
+        this.$refs.articleDetail.$refs.articleToolbar.$refs.openlink.click()
+      }
+    })
+    Mousetrap.bind('o', evt => {
+    // Save for offline
+      if (this.$route.params.id) {
+        this.$refs.articleDetail.$refs.articleToolbar.$refs.saveoffline.click()
+      }
+    })
+    Mousetrap.bind('a', evt => {
+      this.$refs.markallread.click()
+    })
+
+    Mousetrap.bind('k', evt => {
+      // prev article
+      if (this.$route.params.id) {
+        const index = _.findIndex(this.$store.getters.filteredArticles, { '_id': this.$route.params.id })
+        if (index > 0) {
+          const prevArticle = this.$store.getters.filteredArticles[index - 1]
+          this.$router.push({ name: 'article-page', params: { id: prevArticle._id } })
+        }
+      }
+    })
+
+    Mousetrap.bind(['ctrl+n', 'command+n'], evt => {
+      // Subscribe to new feed
+      this.$refs.subscribetoolbar.$refs.subscribefeed.click()
+    })
+
+    Mousetrap.bind('j', evt => {
+      // next article
+      if (this.$route.params.id) {
+        const index = _.findIndex(this.$store.getters.filteredArticles, { '_id': this.$route.params.id })
+        if (index !== (this.$store.getters.filteredArticles.length - 1)) {
+          const nextArticle = this.$store.getters.filteredArticles[index + 1]
+          this.$router.push({ name: 'article-page', params: { id: nextArticle._id } })
+        }
+      }
+    })
+  },
+  beforeDestroy () {
+    Mousetrap.unbind('m')
+    Mousetrap.unbind('s')
+    Mousetrap.unbind('v')
+    Mousetrap.unbind('j')
+    Mousetrap.unbind('k')
+    Mousetrap.unbind('o')
+    Mousetrap.unbind('a')
+    Mousetrap.unbind(['ctrl+n', 'command+n'])
+  },
   mounted () {
     const self = this
     this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
@@ -118,7 +187,9 @@ export default {
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
     this.$store.dispatch('checkOffline')
-    helper.syncInoReader()
+    if (self.$electronstore.get('inoreader_token')) {
+      helper.syncInoReader()
+    }
 
     this.$electron.ipcRenderer.on('onlinestatus', (event, status) => {
       self.$store.dispatch('setOffline', status)
@@ -127,8 +198,10 @@ export default {
     // Sync Updates
     scheduler.scheduleJob('* * * * *', async function () {
       self.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
-      await helper.syncInoReader()
-      log.info('Syncing inoreader')
+      if (self.$electronstore.get('inoreader_token')) {
+        await helper.syncInoReader()
+        log.info('Syncing inoreader')
+      }
     })
     // Feed Crawling
     const job = scheduler.scheduleJob(self.$store.state.Setting.cronSettings, () => {
