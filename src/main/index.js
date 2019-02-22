@@ -59,9 +59,45 @@ function createMenu () {
     }
   ]
 
+  if (process.platform === 'win32' || process.platform === 'linux') {
+    template.unshift({
+      label: 'Raven Reader',
+      submenu: [
+        { label: 'Shortcuts',
+          accelerator: 'CmdOrCtrl+S',
+          click: function () {
+            if (typeof shortcuts === 'undefined' || shortcuts === null || shortcuts.isDestroyed()) {
+              const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/shortcuts'
+                : `file://${__dirname}/index.html#shortcuts`
+              shortcuts = new BrowserWindow({
+                width: 400,
+                height: 550,
+                webPreferences: {
+                  webSecurity: false
+                },
+                useContentSize: false,
+                resizable: false
+              })
+              shortcuts.setTitle('Shortcuts')
+              shortcuts.loadURL(modalPath)
+            } else {
+              shortcuts.show()
+            }
+          }
+        },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    })
+  }
+
   if (process.platform === 'darwin') {
     template.unshift({
-      label: app.getName(),
+      label: 'Raven Reader',
       submenu: [
         { role: 'about' },
         { type: 'separator' },
@@ -75,7 +111,7 @@ function createMenu () {
                 : `file://${__dirname}/index.html#shortcuts`
               shortcuts = new BrowserWindow({
                 width: 400,
-                height: 520,
+                height: 550,
                 webPreferences: {
                   webSecurity: false
                 },
