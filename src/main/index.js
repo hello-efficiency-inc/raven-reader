@@ -20,6 +20,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+let shortcuts
 let trayImage
 let tray
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
@@ -27,30 +28,100 @@ const store = new Store()
 
 function createMenu () {
   // Create the Application's main menu
-  const template = [{
-    label: 'Application',
-    submenu: [
-      { label: 'About Application', selector: 'orderFrontStandardAboutPanel:' },
-      { type: 'separator' },
-      { label: 'Quit',
-        accelerator: 'Command+Q',
-        click: function () {
-          app.quit()
-        } }
-    ] }, {
-    label: 'Edit',
-    submenu: [
-      { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
-      { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
-      { type: 'separator' },
-      { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-      { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-      { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-      { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
-    ] }
+  // Create the Application's main menu
+  const template = [
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'pasteandmatchstyle' },
+        { role: 'delete' },
+        { role: 'selectall' }
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        { role: 'togglefullscreen' }
+      ]
+    },
+    {
+      role: 'window',
+      submenu: [
+        { role: 'minimize' },
+        { role: 'close' }
+      ]
+    }
   ]
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: app.getName(),
+      submenu: [
+        { role: 'about' },
+        { type: 'separator' },
+        { role: 'services' },
+        { type: 'separator' },
+        { label: 'Shortcuts',
+          accelerator: 'CmdOrCtrl+S',
+          click: function () {
+            if (typeof shortcuts === 'undefined' || shortcuts === null || shortcuts.isDestroyed()) {
+              const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/shortcuts'
+                : `file://${__dirname}/index.html#shortcuts`
+              shortcuts = new BrowserWindow({
+                width: 400,
+                height: 520,
+                webPreferences: {
+                  webSecurity: false
+                },
+                useContentSize: false,
+                resizable: false
+              })
+              shortcuts.setTitle('Shortcuts')
+              shortcuts.loadURL(modalPath)
+            } else {
+              shortcuts.show()
+            }
+          }
+        },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    })
+
+    // Edit menu
+    template[1].submenu.push(
+      { type: 'separator' },
+      {
+        label: 'Speech',
+        submenu: [
+          { role: 'startspeaking' },
+          { role: 'stopspeaking' }
+        ]
+      }
+    )
+
+    // Window menu
+    template[3].submenu = [
+      { role: 'close' },
+      { role: 'minimize' },
+      { role: 'zoom' },
+      { type: 'separator' },
+      { role: 'front' }
+    ]
+  }
+
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 }
 
 function createTray () {
@@ -109,6 +180,7 @@ function createWindow () {
     webPreferences: {
       webSecurity: false
     },
+    title: 'Raven Reader',
     minHeight: 768,
     minWidth: 1204,
     width: 1204,

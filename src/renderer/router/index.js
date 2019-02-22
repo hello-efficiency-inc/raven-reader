@@ -21,6 +21,11 @@ export default new Router({
       component: require('@/views/Main').default
     },
     {
+      path: '/shortcuts',
+      name: 'shortcuts',
+      component: require('@/views/Shortcuts').default
+    },
+    {
       path: '/:type',
       component: require('@/views/Main').default
     },
