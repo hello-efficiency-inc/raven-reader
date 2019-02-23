@@ -56,7 +56,8 @@ export default {
       task.feed.posts.forEach((post) => {
         post.feed_id = task.feed.meta.id
         post.favicon = task.favicon
-        post.guid = uuid(post.link)
+        post.link = post.link ? post.link : task.feed.meta.xmlurl
+        post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
         if (refresh) {
           db.addArticles(post, docs => {
             if (typeof docs !== 'undefined') {

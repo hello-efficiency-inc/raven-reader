@@ -201,4 +201,8 @@ body {
   border-right: 0;
   border-radius: 0 !important
 }
+
+.btn-primary {
+  color: #fff !important;
+}
 </style>

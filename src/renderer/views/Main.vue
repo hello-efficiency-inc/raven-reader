@@ -330,7 +330,11 @@ export default {
           if (self.$store.state.Setting.offline) {
             data = await cacheService.getCachedArticleData(article._id, article.link)
           } else {
-            data = await parseArticle(article.link)
+            try {
+              data = await parseArticle(article.link)
+            } catch (e) {
+              console.log(e)
+            }
           }
           if (self.$store.state.Setting.offline && data) {
             self.prepareArticleData(data, article)

@@ -28,7 +28,6 @@ const store = new Store()
 
 function createMenu () {
   // Create the Application's main menu
-  // Create the Application's main menu
   const template = [
     {
       label: 'Edit',
