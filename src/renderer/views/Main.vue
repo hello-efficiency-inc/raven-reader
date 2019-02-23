@@ -201,9 +201,9 @@ export default {
     })
 
     // Sync Updates
-    scheduler.scheduleJob('* * * * *', async function () {
-      self.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
-      if (self.$electronstore.get('inoreader_token')) {
+    scheduler.scheduleJob('*/5 * * * *', async function () {
+      if (typeof self.$electronstore.get('inoreader_token') !== 'undefined') {
+        this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
         await helper.syncInoReader()
         log.info('Syncing inoreader')
       }
@@ -211,10 +211,10 @@ export default {
     // Feed Crawling
     const job = scheduler.scheduleJob(self.$store.state.Setting.cronSettings, () => {
       const feeds = self.$store.state.Feed.feeds
-      self.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
       if (feeds.length === 0) {
         log.info('No feeds to process')
       } else {
+        this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
         log.info(`Processing ${feeds.length} feeds`)
         helper.subscribe(feeds, null, true, false)
         self.$store.dispatch('loadArticles')
