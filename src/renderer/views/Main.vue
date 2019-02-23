@@ -8,30 +8,35 @@
             <router-link class="nav-link" to="/all" active-class="active">
               <feather-icon name="list"></feather-icon>
               All Feeds <span class="sr-only">(current)</span>
+              <span class="items-counter" v-if="getArticlesCount('','') > 0">{{ getArticlesCount('','') }}</span>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/favourites" active-class="active">
               <feather-icon name="star"></feather-icon>
               Favourites
+              <span class="items-counter" v-if="getArticlesCount('favourites','') > 0">{{ getArticlesCount('favourites','') }}</span>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/unread" active-class="active">
               <feather-icon name="circle"></feather-icon>
               Unread Articles
+              <span class="items-counter" v-if="getArticlesCount('unread', '') > 0">{{ getArticlesCount('unread', '') }}</span>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/read" active-class="active">
               <feather-icon name="circle" filled></feather-icon>
               Recently Read
+              <span class="items-counter" v-if="getArticlesCount('read', '') > 0">{{ getArticlesCount('read', '') }}</span>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/saved" active-class="active">
               <feather-icon name="wifi-off"></feather-icon>
               Saved articles
+              <span class="items-counter" v-if="getArticlesCount('saved', '') > 0">{{ getArticlesCount('saved', '') }}</span>
             </router-link>
           </li>
           <li class="nav-item">
@@ -239,6 +244,24 @@ export default {
     }
   },
   methods: {
+    getArticlesCount (type, feedid) {
+      let articles = this.$store.state.Article.articles
+      if (feedid !== '') {
+        articles = articles.filter(article => article.feed_id === feedid)
+      }
+      if (type === 'read') {
+        return articles.filter(article => article.read).length
+      } else if (type === 'unread') {
+        return articles.filter(article => !article.read).length
+      } else if (type === 'favourites') {
+        return articles.filter(article => article.favourite).length
+      } else if (type === 'saved') {
+        return articles.filter(article => article.offline).length
+      } else {
+        // all
+        return articles.length
+      }
+    },
     exportOpml () {
       const xmlData = helper.exportOpml()
       const self = this
@@ -455,5 +478,12 @@ export default {
   .feather-filled {
     fill: #fff;
   }
+}
+
+.items-counter {
+  float:right;
+}
+.items-counter-feed {
+  padding-right: 10px;
 }
 </style>
