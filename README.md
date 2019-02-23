@@ -30,7 +30,9 @@
 
 To download, please visit [https://github.com/mrgodhani/rss-reader/releases](https://github.com/mrgodhani/rss-reader/releases)
 
-Coming soon on Apple App Store.
+<a href="https://snapcraft.io/raven-reader">
+  <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg" />
+</a>
 
 ## Features
 
