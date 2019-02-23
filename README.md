@@ -48,11 +48,12 @@ Coming soon on Apple App Store.
 - [x] Windows support
 - [x] Linux support
 - [x] Offline reading
+- [x] Keyboard Shortcuts
+- [x] Inoreader Integration
+- [x] Sidebar count
 
 ## Roadmap
 - [x] New brand name and icons
-- [x] Inoreader Integration
-- [ ] Sidebar count
 - [ ] Text configuration
 - [ ] Supporting authenticated feeds
 - [ ] Feedly synchronization
