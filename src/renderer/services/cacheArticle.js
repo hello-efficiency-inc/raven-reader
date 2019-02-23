@@ -1,13 +1,11 @@
-import { MERCURY_API_TOKEN } from '../config'
 import _ from 'lodash'
 
 export default {
   async getCachedArticleData (id, url) {
-    const articleRequest = new Request(`https://mercury.postlight.com/parser?url=${url}`, {
+    const articleRequest = new Request(url, {
       mode: 'no-cors',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': MERCURY_API_TOKEN
+        'Content-Type': 'application/json'
       }
     })
     const cacheName = `raven-${id}`
@@ -56,10 +54,9 @@ export default {
       caches.match(request).then(response => response || fetch(request)).then(response => cache.put(request, response))
     })
 
-    const articleRequest = new Request(`https://mercury.postlight.com/parser?url=${responseData.url}`, {
+    const articleRequest = new Request(responseData.url, {
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': MERCURY_API_TOKEN
+        'Content-Type': 'application/json'
       }
     })
     cache.put(articleRequest, new Response(JSON.stringify(responseData), {

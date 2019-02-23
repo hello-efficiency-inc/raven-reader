@@ -307,7 +307,7 @@ export default {
       data.content = $.html()
       data.date_published = data.date_published ? dayjs(data.date_published).format('MMMM D, YYYY') : null
       data.favicon = article.favicon
-      data.sitetitle = article.feed_title
+      data.sitetitle = _.truncate(article.feed_title, 20)
       data._id = article._id
       data.favourite = article.favourite
       data.read = article.read
@@ -334,8 +334,8 @@ export default {
           }
           if (self.$store.state.Setting.offline && data) {
             self.prepareArticleData(data, article)
-          } else if (!self.$store.state.Setting.offline && data.statusCode === 200) {
-            self.prepareArticleData(data.body, article)
+          } else if (!self.$store.state.Setting.offline && data) {
+            self.prepareArticleData(data, article)
           } else {
             console.log('EMPTY')
             article.content = null
