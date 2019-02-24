@@ -44,7 +44,9 @@ export default {
   addArticles (data, cb) {
     this.ensureIndex(article, 'guid')
     return article.insert(data, (err, docs) => {
-      if (err) {}
+      if (err) {
+        console.log(err)
+      }
       return cb(docs)
     })
   },

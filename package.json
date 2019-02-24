@@ -89,7 +89,6 @@
     "hoek": "^6.1.2",
     "jquery": "^3.3.1",
     "lodash": "^4.17.11",
-    "mousetrap": "^1.6.2",
     "nedb": "^1.8.0",
     "node-notifier": "^5.2.1",
     "node-opml-parser": "^1.0.0",
@@ -108,6 +107,7 @@
     "vue-easy-toast": "^1.0.5",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
+    "vue2-perfect-scrollbar": "^1.2.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

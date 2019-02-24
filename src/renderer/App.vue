@@ -127,20 +127,6 @@ body {
   font-size: 14px;
   height: 100%;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 99.5%;
-    height: 20px;
-    background: linear-gradient(
-    rgba(255, 255, 255, 0.5),
-    white
-    ); /* transparent keyword is broken in Safari */
-    pointer-events: none;
-  }
 }
 
 .sidebar-sticky {
@@ -204,5 +190,9 @@ body {
 
 .btn-primary {
   color: #fff !important;
+}
+
+.ps__rail-y {
+  z-index: 5;
 }
 </style>

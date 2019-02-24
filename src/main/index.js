@@ -20,9 +20,10 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-let shortcuts
 let trayImage
 let tray
+var articleSelected = false
+let menu
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 const store = new Store()
 
@@ -55,6 +56,83 @@ function createMenu () {
         { role: 'minimize' },
         { role: 'close' }
       ]
+    },
+    {
+      label: 'Subscriptions',
+      submenu: [
+        {
+          label: 'Add subscription',
+          accelerator: 'CmdOrCtrl+N',
+          click: function () {
+            mainWindow.webContents.send('Add subscription')
+          }
+        }
+      ]
+    },
+    {
+      label: 'Item',
+      submenu: [
+        {
+          label: 'Next item',
+          accelerator: 'CmdOrCtrl+J',
+          click: function () {
+            mainWindow.webContents.send('Next item')
+          }
+        },
+        {
+          label: 'Previous item',
+          accelerator: 'CmdOrCtrl+K',
+          click: function () {
+            mainWindow.webContents.send('Previous item')
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Toggle read',
+          id: 'toggle-read',
+          accelerator: 'CmdOrCtrl+T',
+          enabled: articleSelected,
+          click: function () {
+            mainWindow.webContents.send('Toggle read')
+          }
+        },
+        {
+          label: 'Toggle favourite',
+          id: 'toggle-favourite',
+          accelerator: 'CmdOrCtrl+S',
+          enabled: articleSelected,
+          click: function () {
+            mainWindow.webContents.send('Toggle favourite')
+          }
+        },
+        {
+          label: 'Mark all read',
+          id: 'mark-all-read',
+          accelerator: 'Alt+R',
+          click: function () {
+            mainWindow.webContents.send('Mark all read')
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Save offline',
+          id: 'save-offline',
+          accelerator: 'CmdOrCtrl+O',
+          enabled: articleSelected,
+          click: function () {
+            mainWindow.webContents.send('Save offline')
+          }
+        },
+        {
+          label: 'View in browser',
+          id: 'view-browser',
+          accelerator: 'CmdOrCtrl+B',
+          enabled: articleSelected,
+          click: function () {
+            mainWindow.webContents.send('View in browser')
+          }
+        }
+      ]
     }
   ]
 
@@ -62,29 +140,6 @@ function createMenu () {
     template.unshift({
       label: 'Raven Reader',
       submenu: [
-        { label: 'Shortcuts',
-          accelerator: 'CmdOrCtrl+S',
-          click: function () {
-            if (typeof shortcuts === 'undefined' || shortcuts === null || shortcuts.isDestroyed()) {
-              const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/shortcuts'
-                : `file://${__dirname}/index.html#shortcuts`
-              shortcuts = new BrowserWindow({
-                width: 400,
-                height: 550,
-                webPreferences: {
-                  webSecurity: false
-                },
-                useContentSize: false,
-                resizable: false
-              })
-              shortcuts.setTitle('Shortcuts')
-              shortcuts.loadURL(modalPath)
-            } else {
-              shortcuts.show()
-            }
-          }
-        },
-        { type: 'separator' },
         { role: 'hide' },
         { role: 'hideothers' },
         { role: 'unhide' },
@@ -102,28 +157,6 @@ function createMenu () {
         { type: 'separator' },
         { role: 'services' },
         { type: 'separator' },
-        { label: 'Shortcuts',
-          accelerator: 'CmdOrCtrl+S',
-          click: function () {
-            if (typeof shortcuts === 'undefined' || shortcuts === null || shortcuts.isDestroyed()) {
-              const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/shortcuts'
-                : `file://${__dirname}/index.html#shortcuts`
-              shortcuts = new BrowserWindow({
-                width: 400,
-                height: 550,
-                webPreferences: {
-                  webSecurity: false
-                },
-                useContentSize: false,
-                resizable: false
-              })
-              shortcuts.setTitle('Shortcuts')
-              shortcuts.loadURL(modalPath)
-            } else {
-              shortcuts.show()
-            }
-          }
-        },
         { type: 'separator' },
         { role: 'hide' },
         { role: 'hideothers' },
@@ -155,7 +188,7 @@ function createMenu () {
     ]
   }
 
-  const menu = Menu.buildFromTemplate(template)
+  menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
 }
 
@@ -279,6 +312,18 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+ipcMain.on('article-selected', (event, status) => {
+  const menuItemViewBrowser = menu.getMenuItemById('view-browser')
+  const menuItemToggleFavourite = menu.getMenuItemById('toggle-favourite')
+  const menuItemSaveOffline = menu.getMenuItemById('save-offline')
+  const menuItemToggleRead = menu.getMenuItemById('toggle-read')
+
+  menuItemViewBrowser.enabled = true
+  menuItemToggleFavourite.enabled = true
+  menuItemSaveOffline.enabled = true
+  menuItemToggleRead.enabled = true
 })
 
 ipcMain.on('online-status-changed', (event, status) => {

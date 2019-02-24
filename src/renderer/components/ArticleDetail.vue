@@ -2,13 +2,13 @@
   <div class="article-detail">
     <div class="content-wrapper">
       <article-toolbar :article="article" ref="articleToolbar"></article-toolbar>
-      <div class="article-contentarea  px-4" v-if="article !== null && article.content !== null && !emptyState">
+      <perfect-scrollbar class="article-contentarea  px-4" v-if="article !== null && article.content !== null && !emptyState">
         <h2>
           <strong>{{ article.title }}</strong><br/>
           <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
         </h2>
         <div class="article-detail" v-html="article.content"></div>
-      </div>
+      </perfect-scrollbar>
       <div class="article-contentarea  px-4" v-if="article !== null && article.content === null && emptyState">
         <div class="article-detail d-flex flex-column justify-content-center align-items-center
 ">
@@ -62,7 +62,6 @@ export default {
   background-color: #fff;
   display: block;
   position: absolute;
-  height: auto;
   bottom: 0;
   left: 0;
   right: 0;
@@ -71,7 +70,8 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   z-index: 2;
-  padding: 15px;
+  padding: 15px 15px 30px;
+  height: calc(100% - 45px);
 
   h2 {
     small {

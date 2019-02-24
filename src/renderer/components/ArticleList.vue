@@ -12,12 +12,12 @@
         </div>
       </form>
       <div class="articles">
-        <div class="list-group">
-          <article-item v-if="filteredArticles.length > 0" :article="article" v-for="article in filteredArticles" :key="article._id"></article-item>
-          <div class="no-articles" v-if="filteredArticles.length === 0">
-            No articles available
-          </div>
-        </div>
+          <perfect-scrollbar class="list-group">
+            <article-item v-if="filteredArticles.length > 0" :article="article" v-for="article in filteredArticles" :key="article._id"></article-item>
+            <div class="no-articles" v-if="filteredArticles.length === 0">
+              No articles available
+            </div>
+          </perfect-scrollbar>
       </div>
       <div class="statusBar" ref="statusBar">
         <button @click="fold" class="btn foldBtn">
@@ -112,6 +112,7 @@ export default {
   overflow-y: auto;
   background: #fff;
   overflow-x: hidden;
+  height: calc(100% - 80px);
 }
 
 .no-articles {
@@ -219,5 +220,9 @@ export default {
 .foldBtn:active {
   outline: none !important;
   box-shadow: none !important;
+}
+
+.list-group {
+  height: 100%;
 }
 </style>

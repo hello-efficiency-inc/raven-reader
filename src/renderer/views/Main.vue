@@ -2,7 +2,7 @@
   <div class="app-wrapper" :class="{ 'app-darkmode': $store.state.Setting.darkMode === 'on' }">
     <nav class="bg-light sidebar" v-if="true" ref="sidebar">
       <subscribe-toolbar ref="subscribetoolbar"></subscribe-toolbar>
-      <div class="sidebar-sticky">
+      <perfect-scrollbar class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
             <router-link class="nav-link" to="/all" active-class="active">
@@ -82,7 +82,7 @@
             <button @click="unsubscribeFeed(feed.id)" class="btn btn-link"><feather-icon name="x-circle"></feather-icon></button>
           </li>
         </ul>
-      </div>
+      </perfect-scrollbar>
     </nav>
     <article-list :type="articleType" :feed="feed" @type-change="updateType" ref="articleList"></article-list>
     <article-detail :id="$route.params.id" :article="articleData" :emptyState="empty" :loading="loading" ref="articleDetail"></article-detail>
@@ -106,7 +106,7 @@ import fs from 'fs'
 import path from 'path'
 import _ from 'lodash'
 import cacheService from '../services/cacheArticle'
-import * as Mousetrap from 'Mousetrap'
+// import * as Mousetrap from 'Mousetrap'
 
 export default {
   data () {
@@ -118,72 +118,11 @@ export default {
       loading: false
     }
   },
-  beforeMount () {
-  // shortcuts
-    Mousetrap.bind('m', evt => {
-    // mark one as read/unread
-      if (this.$route.params.id) {
-        this.$refs.articleDetail.$refs.articleToolbar.markRead()
-      }
-    })
-    Mousetrap.bind('s', evt => {
-    // star/unstar one
-      if (this.$route.params.id) {
-        this.$refs.articleDetail.$refs.articleToolbar.markFavourite()
-      }
-    })
-    Mousetrap.bind('v', evt => {
-    // View on Browser
-      if (this.$route.params.id) {
-        this.$refs.articleDetail.$refs.articleToolbar.$refs.openlink.click()
-      }
-    })
-    Mousetrap.bind('o', evt => {
-    // Save for offline
-      if (this.$route.params.id) {
-        this.$refs.articleDetail.$refs.articleToolbar.$refs.saveoffline.click()
-      }
-    })
-    Mousetrap.bind('a', evt => {
-      this.$refs.markallread.click()
-    })
-
-    Mousetrap.bind('k', evt => {
-      // prev article
-      if (this.$route.params.id) {
-        const index = _.findIndex(this.$store.getters.filteredArticles, { '_id': this.$route.params.id })
-        if (index > 0) {
-          const prevArticle = this.$store.getters.filteredArticles[index - 1]
-          this.$router.push({ name: 'article-page', params: { id: prevArticle._id } })
-        }
-      }
-    })
-
-    Mousetrap.bind(['ctrl+n', 'command+n'], evt => {
-      // Subscribe to new feed
-      this.$refs.subscribetoolbar.$refs.subscribefeed.click()
-    })
-
-    Mousetrap.bind('j', evt => {
-      // next article
-      if (this.$route.params.id) {
-        const index = _.findIndex(this.$store.getters.filteredArticles, { '_id': this.$route.params.id })
-        if (index !== (this.$store.getters.filteredArticles.length - 1)) {
-          const nextArticle = this.$store.getters.filteredArticles[index + 1]
-          this.$router.push({ name: 'article-page', params: { id: nextArticle._id } })
-        }
-      }
-    })
-  },
-  beforeDestroy () {
-    Mousetrap.unbind('m')
-    Mousetrap.unbind('s')
-    Mousetrap.unbind('v')
-    Mousetrap.unbind('j')
-    Mousetrap.unbind('k')
-    Mousetrap.unbind('o')
-    Mousetrap.unbind('a')
-    Mousetrap.unbind(['ctrl+n', 'command+n'])
+  beforeRouteUpdate (to, from, next) {
+    if (to.params.id) {
+      this.$electron.ipcRenderer.send('article-selected')
+    }
+    next()
   },
   mounted () {
     const self = this
@@ -195,6 +134,64 @@ export default {
     if (self.$electronstore.get('inoreader_token')) {
       helper.syncInoReader()
     }
+
+    this.$electron.ipcRenderer.on('Add subscription', (event, args) => {
+      self.$refs.subscribetoolbar.$refs.subscribefeed.click()
+    })
+
+    this.$electron.ipcRenderer.on('Next item', (event, args) => {
+      if (self.$route.params.id) {
+        const index = _.findIndex(self.$store.getters.filteredArticles, { '_id': self.$route.params.id })
+        if (index !== (self.$store.getters.filteredArticles.length - 1)) {
+          const nextArticle = self.$store.getters.filteredArticles[index + 1]
+          self.$router.push({ name: 'article-page', params: { id: nextArticle._id } })
+        }
+      } else {
+        self.$router.push({ name: 'article-page', params: { id: self.$store.getters.filteredArticles[0]._id } })
+      }
+    })
+
+    this.$electron.ipcRenderer.on('Previous item', (event, args) => {
+      if (self.$route.params.id) {
+        const index = _.findIndex(self.$store.getters.filteredArticles, { '_id': self.$route.params.id })
+        if (index > 0) {
+          const prevArticle = self.$store.getters.filteredArticles[index - 1]
+          self.$router.push({ name: 'article-page', params: { id: prevArticle._id } })
+        }
+      } else {
+        const articleLength = self.$store.getters.filteredArticles.length
+        console.log(articleLength)
+        self.$router.push({ name: 'article-page', params: { id: self.$store.getters.filteredArticles[articleLength - 1]._id } })
+      }
+    })
+
+    this.$electron.ipcRenderer.on('Save offline', (events, args) => {
+      if (self.$route.params.id) {
+        self.$refs.articleDetail.$refs.articleToolbar.$refs.saveoffline.click()
+      }
+    })
+
+    this.$electron.ipcRenderer.on('Toggle favourite', (events, args) => {
+      if (self.$route.params.id) {
+        self.$refs.articleDetail.$refs.articleToolbar.markFavourite()
+      }
+    })
+
+    this.$electron.ipcRenderer.on('Toggle read', (events, args) => {
+      if (self.$route.params.id) {
+        self.$refs.articleDetail.$refs.articleToolbar.markRead()
+      }
+    })
+
+    this.$electron.ipcRenderer.on('Mark all read', (events, args) => {
+      self.$refs.markallread.click()
+    })
+
+    this.$electron.ipcRenderer.on('View in browser', (events, args) => {
+      if (self.$route.params.id) {
+        self.$refs.articleDetail.$refs.articleToolbar.$refs.openlink.click()
+      }
+    })
 
     this.$electron.ipcRenderer.on('onlinestatus', (event, status) => {
       self.$store.dispatch('setOffline', status)
@@ -236,7 +233,8 @@ export default {
     // call again the method if the route changes
     '$route.params.feedid': 'feedChange',
     '$route.params.type': 'typeChange',
-    '$route.params.id': 'fetchData'
+    '$route.params.id': 'fetchData',
+    allUnread: 'unreadChange'
   },
   computed: {
     feeds () {
@@ -315,6 +313,18 @@ export default {
       data.readtime = stat(data.content).text
       self.articleData = data
       self.loading = false
+    },
+    unreadChange () {
+      // unread changed, sort feeds by unread count
+      if (!this.feeds) {
+        return
+      }
+      let feedsCopy = this.feeds.map((item) => {
+        item.unread = this.getArticlesCount('unread', item.id)
+        return item
+      })
+      feedsCopy = _.orderBy(feedsCopy, ['unread'], ['desc'])
+      this.$store.dispatch('orderFeeds', feedsCopy)
     },
     fetchData () {
       const self = this

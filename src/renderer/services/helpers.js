@@ -58,15 +58,16 @@ export default {
         post.favicon = task.favicon
         post.link = post.link ? post.link : task.feed.meta.xmlurl
         post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
+        const postItem = _.omit(post, ['creator', 'dc:creator'])
         if (refresh) {
-          db.addArticles(post, docs => {
+          db.addArticles(postItem, docs => {
             if (typeof docs !== 'undefined') {
               notifier.notify({
                 type: 'info',
-                icon: post.favicon,
-                title: post.title,
+                icon: postItem.favicon,
+                title: postItem.title,
                 timeout: 3,
-                message: _.truncate(post.content.replace(/<(?:.|\n)*?>/gm, '')),
+                message: _.truncate(postItem.content.replace(/<(?:.|\n)*?>/gm, '')),
                 sticky: true,
                 wait: false,
                 sound: false
@@ -74,7 +75,7 @@ export default {
             }
           })
         } else {
-          store.dispatch('addArticle', post)
+          store.dispatch('addArticle', postItem)
         }
       })
       cb()

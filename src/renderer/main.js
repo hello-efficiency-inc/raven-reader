@@ -3,6 +3,7 @@ import axios from 'axios'
 import Toast from 'vue-easy-toast'
 import BootstrapVue from 'bootstrap-vue'
 import Register from './components/register'
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
 
 import App from './App'
 import router from './router'
@@ -11,6 +12,7 @@ import SettingsStore from 'electron-store'
 
 import './helper/external_links.js'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
 // nodejs global proxy
 const settingsStore = new SettingsStore()
@@ -31,6 +33,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 Vue.use(BootstrapVue)
 Vue.use(Toast)
+Vue.use(PerfectScrollbar)
 
 Register.registerComponents()
 

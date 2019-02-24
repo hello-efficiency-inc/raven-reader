@@ -10,7 +10,7 @@ dayjs.extend(relativeTime)
 
 const state = {
   articles: [],
-  type: 'all',
+  type: 'unread',
   search: '',
   feed: ''
 }
