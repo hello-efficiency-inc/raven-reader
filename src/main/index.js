@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
+import { app, BrowserWindow, Menu, Tray, ipcMain, autoUpdater } from 'electron'
 import updateElectron from 'update-electron-app'
 import jetpack from 'fs-jetpack'
 import os from 'os'
@@ -136,10 +136,28 @@ function createMenu () {
     }
   ]
 
+  const version = app.getVersion()
+
   if (process.platform === 'win32' || process.platform === 'linux') {
     template.unshift({
       label: 'Raven Reader',
       submenu: [
+        {
+          label: `Version ${version}`,
+          enabled: false
+        },
+        {
+          label: 'Checking for Update',
+          enabled: false,
+          key: 'checkingForUpdate'
+        }, {
+          label: 'Check for Update',
+          visible: false,
+          key: 'checkForUpdate',
+          click: () => {
+            autoUpdater.checkForUpdates()
+          }
+        },
         { role: 'hide' },
         { role: 'hideothers' },
         { role: 'unhide' },
@@ -154,6 +172,22 @@ function createMenu () {
       label: 'Raven Reader',
       submenu: [
         { role: 'about' },
+        {
+          label: `Version ${version}`,
+          enabled: false
+        },
+        {
+          label: 'Checking for Update',
+          enabled: false,
+          key: 'checkingForUpdate'
+        }, {
+          label: 'Check for Update',
+          visible: false,
+          key: 'checkForUpdate',
+          click: () => {
+            autoUpdater.checkForUpdates()
+          }
+        },
         { type: 'separator' },
         { role: 'services' },
         { type: 'separator' },
