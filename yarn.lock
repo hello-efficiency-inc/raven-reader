@@ -2537,16 +2537,16 @@ concat-stream@1.6.2, concat-stream@^1.5.0:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
-conf@^2.0.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/conf/-/conf-2.2.0.tgz#ee282efafc1450b61e205372041ad7d866802d9a"
-  integrity sha512-93Kz74FOMo6aWRVpAZsonOdl2I57jKtHrNmxhumehFQw4X8Sk37SohNY11PG7Q8Okta+UnrVaI006WLeyp8/XA==
+conf@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/conf/-/conf-3.0.0.tgz#9b788f897e208684952058c38f01ddb1dff0c40b"
+  integrity sha512-z3XAlQY1pwHi+PFqWJ8lPqxSbHl0rlpgKpFSARGRw3Qj8zj0I1jNwLRjfDnUrjCtgea5HTf1YhdF5KKjDrUnTA==
   dependencies:
     dot-prop "^4.1.0"
     env-paths "^1.0.0"
-    make-dir "^1.0.0"
+    make-dir "^2.0.0"
     pkg-up "^2.0.0"
-    write-file-atomic "^2.3.0"
+    write-file-atomic "^2.4.2"
 
 config-chain@^1.1.11:
   version "1.1.12"
@@ -3381,12 +3381,12 @@ electron-publish@20.39.0:
     lazy-val "^1.0.4"
     mime "^2.4.0"
 
-electron-store@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/electron-store/-/electron-store-2.0.0.tgz#1035cca2a95409d1f54c7466606345852450d64a"
-  integrity sha512-1WCFYHsYvZBqDsoaS0Relnz0rd81ZkBAI0Fgx7Nq2UWU77rSNs1qxm4S6uH7TCZ0bV3LQpJFk7id/is/ZgoOPA==
+electron-store@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/electron-store/-/electron-store-3.0.0.tgz#6ccb1fce8cc34b58877a4b290f8d668a7591cfa1"
+  integrity sha512-2TqGvejLqbgbmR0AB0c07sRxoc0ief/2v+/JA8JHWlVvLTDPcJtmlwa2rwJlce1AP4PBoH8C5w2uTFVUjkVjaA==
   dependencies:
-    conf "^2.0.0"
+    conf "^3.0.0"
 
 electron-to-chromium@^1.3.47:
   version "1.3.113"
@@ -6118,6 +6118,14 @@ make-dir@^1.0.0:
   integrity sha512-2w31R7SJtieJJnQtGc7RVL2StM2vGYVfqUOvUDxH6bC6aJTxPxTF0GnIgCyu7tjockiUWAYQRbxa7vKn34s5sQ==
   dependencies:
     pify "^3.0.0"
+
+make-dir@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-2.1.0.tgz#5f0310e18b8be898cc07009295a30ae41e91e6f5"
+  integrity sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==
+  dependencies:
+    pify "^4.0.1"
+    semver "^5.6.0"
 
 mamacro@^0.0.3:
   version "0.0.3"
@@ -9720,7 +9728,7 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-write-file-atomic@^2.0.0, write-file-atomic@^2.3.0:
+write-file-atomic@^2.0.0, write-file-atomic@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-2.4.2.tgz#a7181706dfba17855d221140a9c06e15fcdd87b9"
   integrity sha512-s0b6vB3xIVRLWywa6X9TOMA7k9zio0TMOsl9ZnDkliA/cfJlpHXAscj0gbHVJiTdIuAYpIyqS5GW91fqm6gG5g==
