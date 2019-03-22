@@ -107,5 +107,7 @@ For further support and keep this app maintained you could also buy me a coffee.
 
 <p><a href="https://www.buymeacoffee.com/vXlonHais" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a></p>
 
+<object type="image/svg+xml" data="https://opencollective.com/ravenreader/tiers/backer.svg?avatarHeight=36&width=600"></object>
+
 ## License
 [MIT](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)
