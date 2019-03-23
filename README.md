@@ -21,6 +21,8 @@
 <a href="https://david-dm.org/mrgodhani/raven-reader?type=dev" title="devDependencies status">
 <img src="https://david-dm.org/mrgodhani/raven-reader/dev-status.svg"/></a>
 <a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/rss-reader-v2-0/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/12-shield.svg"/></a>
+ <img src="https://opencollective.com/ravenreader/tiers/backer/badge.svg?label=backer&color=brightgreen" />
+ <img src="https://opencollective.com/ravenreader/tiers/sponsor/badge.svg?label=sponsor&color=brightgreen" />
 </p>
 
 ![newscreenshot](/newscreenshot.png)
@@ -103,9 +105,9 @@ Please feel free to give us suggestions or report a bug by creating a [new issue
 
 - Thank you Adi Ofir from [Break and Enter](https://www.breakenter.com) for the amazing logo and icons.
 
-For further support and keep this app maintained you could also buy me a coffee.
+Support us by backing us or sponsoring to continue maintaining this app and activities.
 
-<p><a href="https://www.buymeacoffee.com/vXlonHais" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a></p>
+- [Become a backer or sponsor on OpenCollective.](https://opencollective.com/ravenreader)
 
 ## License
 [MIT](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)
