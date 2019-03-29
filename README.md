@@ -21,6 +21,7 @@
 <a href="https://david-dm.org/mrgodhani/raven-reader?type=dev" title="devDependencies status">
 <img src="https://david-dm.org/mrgodhani/raven-reader/dev-status.svg"/></a>
 <a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/rss-reader-v2-0/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/12-shield.svg"/></a>
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader.svg?type=shield"/></a>
  <img src="https://opencollective.com/ravenreader/tiers/backer/badge.svg?label=backer&color=brightgreen" />
  <img src="https://opencollective.com/ravenreader/tiers/sponsor/badge.svg?label=sponsor&color=brightgreen" />
 </p>
@@ -111,3 +112,6 @@ Support us by backing us or sponsoring to continue maintaining this app and acti
 
 ## License
 [MIT](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader?ref=badge_large)
