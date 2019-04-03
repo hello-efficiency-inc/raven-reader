@@ -9400,9 +9400,9 @@ utils-merge@1.0.1:
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
 uuid-by-string@^2.0.1:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/uuid-by-string/-/uuid-by-string-2.1.0.tgz#d37906db1c54817750bf67a5f75b4a55ef25f577"
-  integrity sha512-qnO9dkjffsu6gvEZQH+wYgUtoDkQz046bewZP7IgJL2ezf3S9wzspL6aMYy7JeTANbPYJiKS5MeCuiRbTcLRAg==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/uuid-by-string/-/uuid-by-string-2.1.1.tgz#de0fd96e8ceec01c312463186e66f906348a27d2"
+  integrity sha512-QVJnBwPHz68mgP0skewoee5Ct8heJp0Y2dnI6Xh6J1QXv/sunlpgN7/zV9Pz+kjQWEiQuRxbcPqaFhGYRlKzng==
   dependencies:
     js-md5 "^0.7.3"
     js-sha1 "^0.6.0"
