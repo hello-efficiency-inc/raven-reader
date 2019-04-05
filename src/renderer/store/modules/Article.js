@@ -38,7 +38,7 @@ const searchOption = {
 
 const getters = {
   filteredArticles: state => {
-    const orderedArticles = _.orderBy(state.articles, ['pubDate'], ['desc'])
+    const orderedArticles = _.orderBy(state.articles, ['pubDate'], ['asc'])
     if (state.type !== 'feed' && state.type !== 'search') {
       return filters[state.type](orderedArticles)
     }
@@ -57,7 +57,8 @@ const mutations = {
   LOAD_ARTICLES (state, articles) {
     state.articles = articles.map((item) => {
       item.feed_title = _.truncate(item.feed_title, { length: 20 })
-      item.pubDate = dayjs(item.pubDate).fromNow()
+      item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
+      item.pubDate = dayjs(item.pubDate).unix()
       if (!('offline' in item)) {
         item.offline = false
       }
@@ -67,7 +68,8 @@ const mutations = {
   ADD_ARTICLES (state, articles) {
     if (articles) {
       articles.feed_title = _.truncate(articles.feed_title, { length: 20 })
-      articles.pubDate = dayjs(articles.pubDate).fromNow()
+      articles.formatDate = dayjs(articles.pubDate).format('DD MMMM YYYY')
+      articles.pubDate = dayjs(articles.pubDate).unix()
       state.articles.unshift(articles)
     }
   },
