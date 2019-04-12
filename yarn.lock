@@ -7640,9 +7640,9 @@ readdirp@^2.2.1:
     readable-stream "^2.0.2"
 
 reading-time@^1.1.2:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/reading-time/-/reading-time-1.1.3.tgz#47de143074245be6f65e2b3c9b63b78d9ab8ec7a"
-  integrity sha512-SYy+cuoGy1MTLjIbgwTZ+DkDiDq/dE1OnqBQFYytXgNWRZROuqtBdu7HoJ+HbGMnoAinOHnHnqbEUYnpSho5aA==
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/reading-time/-/reading-time-1.2.0.tgz#ced71c06715762f805506328dcc1fd45d8249ac4"
+  integrity sha512-5b4XmKK4MEss63y0Lw0vn0Zn6G5kiHP88mUnD8UeEsyORj3sh1ghTH0/u6m1Ax9G2F4wUZrknlp6WlIsCvoXVA==
 
 recast@~0.11.12:
   version "0.11.23"
