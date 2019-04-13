@@ -3,30 +3,39 @@
     <b-form-group label="Set refresh interval for news feed">
       <b-form-select v-model="cronjob" :options="cron_options" size="sm" @change="saveCronjob"/>
     </b-form-group>
+    <b-form-group label="Oldest articles first">
+      <b-form-radio-group id="btnradios1"
+      buttons
+      button-variant="outline-primary"
+      size="sm"
+      v-model="oldestArticles"
+      :options="options"
+      name="sortPref" @input="saveSortPreference"/>
+    </b-form-group>
     <b-form-group label="Turn on dark mode">
-    <b-form-radio-group id="btnradios2"
-                        buttons
-                        button-variant="outline-primary"
-                        size="sm"
-                        v-model="darkMode"
-                        :options="options"
-                        name="darkTheme" @change="saveAppearance"/>
-  </b-form-group>
-  <h5>Proxy Settings</h5>
-  <b-form-group label="Web Server (HTTP):">
-    <b-form-input v-model="proxy.http"
-                  type="text"></b-form-input>
-  </b-form-group>
-  <b-form-group label="Secure Web Server (HTTPS):">
-    <b-form-input v-model="proxy.https"
-                  type="text"></b-form-input>
-  </b-form-group>
-  <b-form-group label="Bypass proxy settings for these hosts & domains:">
-    <b-form-textarea v-model="proxy.bypass"
-                     :rows="3"
-                     :max-rows="6"></b-form-textarea>
-  </b-form-group>
-  <b-button @click="applyProxy">Apply proxy & restart</b-button>
+      <b-form-radio-group id="btnradios2"
+      buttons
+      button-variant="outline-primary"
+      size="sm"
+      v-model="darkMode"
+      :options="options"
+      name="darkTheme" @change="saveAppearance"/>
+    </b-form-group>
+    <h5>Proxy Settings</h5>
+    <b-form-group label="Web Server (HTTP):">
+      <b-form-input v-model="proxy.http"
+      type="text"></b-form-input>
+    </b-form-group>
+    <b-form-group label="Secure Web Server (HTTPS):">
+      <b-form-input v-model="proxy.https"
+      type="text"></b-form-input>
+    </b-form-group>
+    <b-form-group label="Bypass proxy settings for these hosts & domains:">
+      <b-form-textarea v-model="proxy.bypass"
+      :rows="3"
+      :max-rows="6"></b-form-textarea>
+    </b-form-group>
+    <b-button @click="applyProxy">Apply proxy & restart</b-button>
   </b-modal>
 </template>
 <script>
@@ -35,6 +44,7 @@ export default {
     return {
       cronjob: null,
       darkMode: 'off',
+      oldestArticles: 'off',
       cron_options: [
         { value: null, text: 'Please select an option' },
         { value: '* * * * *', text: 'Every minute' },
@@ -66,6 +76,7 @@ export default {
     this.$store.dispatch('loadSettings')
     this.cronjob = this.$store.state.Setting.cronSettings
     this.darkMode = this.$store.state.Setting.darkMode
+    this.oldestArticles = this.$store.state.Setting.oldestArticles
     if (this.$store.state.Setting.proxy) {
       this.proxy.http = this.$store.state.Setting.proxy.http
       this.proxy.https = this.$store.state.Setting.proxy.https
@@ -76,6 +87,14 @@ export default {
     saveCronjob (cronValue) {
       this.$store.dispatch('setCronJob', cronValue)
       this.$toast('Settings for cronjob successfully saved.', {
+        className: 'et-info',
+        horizontalPosition: 'center'
+      })
+      this.hideModal()
+    },
+    saveSortPreference (sortPreference) {
+      this.$store.dispatch('setSortPreference', sortPreference)
+      this.$toast('Sorting preference changed', {
         className: 'et-info',
         horizontalPosition: 'center'
       })

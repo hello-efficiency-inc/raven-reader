@@ -5,6 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import _ from 'lodash'
 import Fuse from 'fuse.js'
 import cacheService from '../../services/cacheArticle'
+import Store from 'electron-store'
 
 dayjs.extend(relativeTime)
 
@@ -14,6 +15,8 @@ const state = {
   search: '',
   feed: ''
 }
+
+const store = new Store()
 
 const filters = {
   search: (articles, search) => articles.filter(article => article.title.match(search)),
@@ -38,7 +41,8 @@ const searchOption = {
 
 const getters = {
   filteredArticles: state => {
-    const orderedArticles = _.orderBy(state.articles, ['pubDate'], ['asc'])
+    const sortPref = store.get('settings.oldestArticles') === 'off' ? 'desc' : 'asc'
+    const orderedArticles = _.orderBy(state.articles, ['pubDate'], [sortPref])
     if (state.type !== 'feed' && state.type !== 'search') {
       return filters[state.type](orderedArticles)
     }

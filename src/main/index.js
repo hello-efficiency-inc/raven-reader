@@ -1,15 +1,16 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, Tray, ipcMain, autoUpdater } from 'electron'
-import updateElectron from 'update-electron-app'
+import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
+// import updateElectron from 'update-electron-app'
 import jetpack from 'fs-jetpack'
 import os from 'os'
 import Store from 'electron-store'
+import { checkForUpdates } from './updater.js'
 
-updateElectron({
-  repo: 'mrgodhani/raven-reader',
-  updateInterval: '1 hour'
-})
+// updateElectron({
+//   repo: 'mrgodhani/raven-reader',
+//   updateInterval: '1 hour'
+// })
 
 /**
 * Set `__static` path to static files in production
@@ -147,15 +148,9 @@ function createMenu () {
           enabled: false
         },
         {
-          label: 'Checking for Update',
-          enabled: false,
-          key: 'checkingForUpdate'
-        }, {
-          label: 'Check for Update',
-          visible: false,
-          key: 'checkForUpdate',
-          click: () => {
-            autoUpdater.checkForUpdates()
+          label: 'Check for update',
+          click: function (menuItem, browserWindow, event) {
+            checkForUpdates(menuItem, browserWindow, event)
           }
         },
         { role: 'hide' },
@@ -177,15 +172,9 @@ function createMenu () {
           enabled: false
         },
         {
-          label: 'Checking for Update',
-          enabled: false,
-          key: 'checkingForUpdate'
-        }, {
-          label: 'Check for Update',
-          visible: false,
-          key: 'checkForUpdate',
-          click: () => {
-            autoUpdater.checkForUpdates()
+          label: 'Check for update',
+          click: function (menuItem, browserWindow, event) {
+            checkForUpdates(menuItem, browserWindow, event)
           }
         },
         { type: 'separator' },
