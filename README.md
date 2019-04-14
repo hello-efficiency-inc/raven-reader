@@ -62,6 +62,8 @@ To download, please visit [https://github.com/mrgodhani/rss-reader/releases](htt
 - [ ] Text configuration
 - [ ] Supporting authenticated feeds
 - [ ] Feedly synchronization
+- [ ] Web app
+- [ ] Pocket Integration
 
 Please feel free to suggest more ideas to improve this app.
 
