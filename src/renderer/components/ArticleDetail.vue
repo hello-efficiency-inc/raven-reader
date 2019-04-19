@@ -7,7 +7,10 @@
           <strong>{{ article.title }}</strong><br/>
           <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
         </h2>
-        <div class="article-detail" v-html="article.content"></div>
+        <div class="article-detail" v-if="article.content" v-html="article.content"></div>
+        <div class="article-detail" v-if="!article.content">
+          {{ article.description }}
+        </div>
       </perfect-scrollbar>
       <div class="article-contentarea  px-4" v-if="article !== null && article.content === null && emptyState">
         <div class="article-detail d-flex flex-column justify-content-center align-items-center
@@ -81,6 +84,7 @@ export default {
 }
 
 .article-detail {
+  color: #fff;
   img {
     display: block;
     max-width: 100%;

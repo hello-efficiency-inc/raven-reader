@@ -185,7 +185,8 @@ body {
 .list-group-item {
   border-left: 0;
   border-right: 0;
-  border-radius: 0 !important
+  border-radius: 0 !important;
+  overflow-wrap: break-word;
 }
 
 .btn-primary {

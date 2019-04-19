@@ -302,7 +302,7 @@ export default {
       self.empty = false
       const $ = cheerio.load(data.content)
       $('a').addClass('js-external-link')
-      data.content = $.html()
+      data.content = $.text().trim() === '' ? article.description : $.html()
       data.date_published = data.date_published ? dayjs(data.date_published).format('MMMM D, YYYY') : null
       data.favicon = article.favicon
       data.sitetitle = _.truncate(article.feed_title, 20)
