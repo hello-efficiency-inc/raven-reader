@@ -61,6 +61,7 @@ const mutations = {
   LOAD_ARTICLES (state, articles) {
     state.articles = articles.map((item) => {
       item.feed_title = _.truncate(item.feed_title, { length: 20 })
+      item.title = _.truncate(item.title, { length: 50 })
       item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
       item.pubDate = dayjs(item.pubDate).unix()
       if (!('offline' in item)) {
@@ -71,10 +72,14 @@ const mutations = {
   },
   ADD_ARTICLES (state, articles) {
     if (articles) {
-      articles.feed_title = _.truncate(articles.feed_title, { length: 20 })
-      articles.formatDate = dayjs(articles.pubDate).format('DD MMMM YYYY')
-      articles.pubDate = dayjs(articles.pubDate).unix()
-      state.articles.unshift(articles)
+      state.articles.unshift(...articles.map((item) => {
+        item.feed_title = _.truncate(item.feed_title, {
+          length: 20
+        })
+        item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
+        item.pubDate = dayjs(item.pubDate).unix()
+        return item
+      }))
     }
   },
   MARK_ACTION (state, data) {

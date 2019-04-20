@@ -48,6 +48,7 @@ export default {
   },
   subscribe (feeds, faviconData = null, refresh = false, importData = false) {
     const q = async.queue((task, cb) => {
+      const posts = []
       if (!refresh) {
         task.feed.meta.favicon = task.favicon
         task.feed.meta.id = uuid(task.feed.meta.xmlurl)
@@ -59,25 +60,24 @@ export default {
         post.link = post.link ? post.link : task.feed.meta.xmlurl
         post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
         const postItem = _.omit(post, ['creator', 'dc:creator'])
-        if (refresh) {
-          db.addArticles(postItem, docs => {
-            if (typeof docs !== 'undefined') {
-              notifier.notify({
-                type: 'info',
-                icon: postItem.favicon,
-                title: postItem.title,
-                timeout: 3,
-                message: _.truncate(postItem.content.replace(/<(?:.|\n)*?>/gm, '')),
-                sticky: true,
-                wait: false,
-                sound: false
-              })
-            }
-          })
-        } else {
-          store.dispatch('addArticle', postItem)
-        }
+        posts.push(postItem)
       })
+      if (refresh) {
+        db.addArticles(posts, docs => {
+          if (typeof docs !== 'undefined') {
+            notifier.notify({
+              type: 'info',
+              title: `${docs.length} articles added`,
+              timeout: 3,
+              sticky: false,
+              wait: false,
+              sound: true
+            })
+          }
+        })
+      } else {
+        store.dispatch('addArticle', posts)
+      }
       cb()
     }, 2)
 
