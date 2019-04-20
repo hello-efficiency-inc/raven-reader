@@ -86,25 +86,28 @@ export default {
   methods: {
     saveCronjob (cronValue) {
       this.$store.dispatch('setCronJob', cronValue)
-      this.$toast('Settings for cronjob successfully saved.', {
-        className: 'et-info',
-        horizontalPosition: 'center'
+      this.$toasted.show('Settings for cronjob successfully saved.', {
+        theme: 'outline',
+        position: 'top-center',
+        duration: 3000
       })
       this.hideModal()
     },
     saveSortPreference (sortPreference) {
       this.$store.dispatch('setSortPreference', sortPreference)
-      this.$toast('Sorting preference changed', {
-        className: 'et-info',
-        horizontalPosition: 'center'
+      this.$toasted.show('Sorting preference changed.', {
+        theme: 'outline',
+        position: 'top-center',
+        duration: 3000
       })
       this.hideModal()
     },
     saveAppearance (darkMode) {
       this.$store.dispatch('setDarkMode', darkMode)
-      this.$toast('Changed appearance settings to dark mode', {
-        className: 'et-info',
-        horizontalPosition: 'center'
+      this.$toasted.show('Changed appearance settings to dark mode.', {
+        theme: 'outline',
+        position: 'top-center',
+        duration: 3000
       })
       this.hideModal()
     },

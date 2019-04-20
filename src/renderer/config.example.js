@@ -1,2 +1,5 @@
 export const INOREADER_CLIENT_ID = ''
 export const INOREADER_CLIENT_SECRET = ''
+export const POCKET_MAC_KEY = ''
+export const POCKET_WINDOWS_KEY = ''
+export const POCKET_LINUX_KEY = ''

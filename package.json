@@ -110,6 +110,8 @@
     "vue-easy-toast": "^1.0.5",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
+    "vue-social-sharing": "^2.4.3",
+    "vue-toasted": "^1.1.26",
     "vue2-perfect-scrollbar": "^1.2.0",
     "vuex": "^3.0.1"
   },

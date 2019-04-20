@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import axios from 'axios'
-import Toast from 'vue-easy-toast'
 import BootstrapVue from 'bootstrap-vue'
 import Register from './components/register'
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import SocialSharing from 'vue-social-sharing'
+import Toasted from 'vue-toasted'
 
 import App from './App'
 import router from './router'
@@ -32,8 +33,9 @@ if (proxy) {
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 Vue.use(BootstrapVue)
-Vue.use(Toast)
+Vue.use(Toasted)
 Vue.use(PerfectScrollbar)
+Vue.use(SocialSharing)
 
 Register.registerComponents()
 

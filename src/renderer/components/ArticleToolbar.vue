@@ -31,11 +31,52 @@
           <feather-icon name="wifi-off" :success="article.offline"></feather-icon>
         </button>
       </div>
+      <div class="wrap">
+        <b-dropdown variant="link" no-caret toogle-class="btn-toolbar">
+          <template slot="button-content" class="pt-1">
+            <feather-icon name="share-2"></feather-icon>
+          </template>
+          <b-dropdown-item href="#" v-if="pocket_connected" @click="saveToPocket(article.url)">
+                Pocket
+            </b-dropdown-item>
+          <b-dropdown-item href="#">
+              <social-sharing :url="article.url" inline-template>
+                <network network="email">
+                  Email
+                </network>
+              </social-sharing>
+            </b-dropdown-item>
+          <b-dropdown-item href="#">
+              <social-sharing :url="article.url" inline-template>
+                <network network="facebook">
+                  Facebook
+                </network>
+              </social-sharing>
+            </b-dropdown-item>
+            <b-dropdown-item href="#">
+              <social-sharing :url="article.url" inline-template>
+                <network network="twitter">
+                    Twitter
+                </network>
+              </social-sharing>
+            </b-dropdown-item>
+            <b-dropdown-item href="#">
+               <social-sharing :url="article.url" inline-template>
+                  <network network="linkedin">
+                    Linkedin
+                  </network>
+               </social-sharing>
+            </b-dropdown-item>
+        </b-dropdown>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import cacheService from '../services/cacheArticle'
+import Store from 'electron-store'
+import axios from 'axios'
+
 const markTypes = {
   favourite: 'FAVOURITE',
   unfavourite: 'UNFAVOURITE',
@@ -44,10 +85,23 @@ const markTypes = {
   cache: 'CACHE',
   uncache: 'UNCACHE'
 }
+
+const store = new Store()
+
 export default {
+  data () {
+    return {
+      pocket_connected: false
+    }
+  },
   props: {
     article: {
       type: Object
+    }
+  },
+  mounted () {
+    if (store.get('pocket_token')) {
+      this.pocket_connected = true
     }
   },
   computed: {
@@ -92,6 +146,20 @@ export default {
           })
         })
       }
+    },
+    saveToPocket (url) {
+      var credentials = JSON.parse(store.get('pocket_token'))
+      axios.post('https://getpocket.com/v3/add', {
+        url: url,
+        access_token: credentials.access_token,
+        consumer_key: credentials.consumer_key
+      }).then((data) => {
+        this.$toasted.show('Saved to pocket.', {
+          theme: 'outline',
+          position: 'top-center',
+          duration: 3000
+        })
+      })
     },
     markRead () {
       if (this.article.read) {
@@ -186,5 +254,9 @@ export default {
   align-items: center;
   pointer-events: none;
   z-index: 0;
+}
+
+.dropdown-item span {
+  color: #000 !important;
 }
 </style>
