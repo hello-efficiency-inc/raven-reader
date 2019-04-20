@@ -64,6 +64,7 @@ To download, please visit [https://github.com/mrgodhani/rss-reader/releases](htt
 - [ ] Feedly synchronization
 - [ ] Web app
 - [ ] Pocket Integration
+- [ ] Moving to web based. Reason: NeDB won't be scalable and handle large datasets.
 
 Please feel free to suggest more ideas to improve this app.
 
