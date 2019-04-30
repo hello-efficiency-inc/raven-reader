@@ -8759,9 +8759,9 @@ superagent@^1.8.3:
     reduce-component "1.0.1"
 
 superagent@^5.0.0:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/superagent/-/superagent-5.0.4.tgz#0a969f32df98a8b76cc29404aae3ede264b764ad"
-  integrity sha512-vklF/6i/C8i4QoFbze96PA9J3sBia6y4Pp/uZNRD4xntuKbuSPPcyyev5VfibjX7M2XEMer+I6MQLZXCcXBVZw==
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/superagent/-/superagent-5.0.5.tgz#53d0f578c4db0aab1a849b647af01b9750f8a2e7"
+  integrity sha512-5fnihpNqJfDJHxeIkqlXKFDOW5t4WUFV8Ba1erxdWT0RySqjgAW6Hska0xNYEpAfaoMzubn77GROm/XlkssOoQ==
   dependencies:
     component-emitter "^1.3.0"
     cookiejar "^2.1.2"
