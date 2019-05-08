@@ -5,38 +5,48 @@
       <perfect-scrollbar class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <router-link class="nav-link" to="/all" active-class="active">
-              <feather-icon name="list"></feather-icon>
-              All Feeds <span class="sr-only">(current)</span>
-              <span class="items-counter" v-if="getArticlesCount('','') > 0">{{ getArticlesCount('','') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/all" active-class="active">
+              <feed-mix feed-id="allFeeds" mark="allFeeds">
+                <feather-icon name="list"></feather-icon>
+                All Feeds <span class="sr-only">(current)</span>
+                <span class="items-counter" v-if="getArticlesCount('','') > 0">{{ getArticlesCount('','') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/favourites" active-class="active">
-              <feather-icon name="star"></feather-icon>
-              Favourites
-              <span class="items-counter" v-if="getArticlesCount('favourites','') > 0">{{ getArticlesCount('favourites','') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/favourites" active-class="active">
+              <feed-mix feed-id="favourites" mark="favourites">
+                <feather-icon name="star"></feather-icon>
+                Favourites
+                <span class="items-counter" v-if="getArticlesCount('favourites','') > 0">{{ getArticlesCount('favourites','') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/unread" active-class="active">
-              <feather-icon name="circle"></feather-icon>
-              Unread Articles
-              <span class="items-counter" v-if="getArticlesCount('unread', '') > 0">{{ getArticlesCount('unread', '') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/unread" active-class="active">
+              <feed-mix feed-id="unreadArticles" mark="unreadArticles">
+                <feather-icon name="circle"></feather-icon>
+                Unread Articles
+                <span class="items-counter" v-if="getArticlesCount('unread', '') > 0">{{ getArticlesCount('unread', '') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/read" active-class="active">
-              <feather-icon name="circle" filled></feather-icon>
-              Recently Read
-              <span class="items-counter" v-if="getArticlesCount('read', '') > 0">{{ getArticlesCount('read', '') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/read" active-class="active">
+              <feed-mix feed-id="recentlyRead" mark="recentlyRead">
+                <feather-icon name="circle" filled></feather-icon>
+                Recently Read
+                <span class="items-counter" v-if="getArticlesCount('read', '') > 0">{{ getArticlesCount('read', '') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/saved" active-class="active">
-              <feather-icon name="wifi-off"></feather-icon>
-              Saved articles
-              <span class="items-counter" v-if="getArticlesCount('saved', '') > 0">{{ getArticlesCount('saved', '') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/saved" active-class="active">
+              <feed-mix feed-id="savedArticles" mark="savedArticles">
+                <feather-icon name="wifi-off"></feather-icon>
+                Saved articles
+                <span class="items-counter" v-if="getArticlesCount('saved', '') > 0">{{ getArticlesCount('saved', '') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
@@ -74,10 +84,15 @@
           <span>Subscriptions</span>
         </h6>
         <ul class="nav flex-column">
-          <li v-for="feed in feeds" class="nav-item d-flex justify-content-between align-items-center pr-2" v-bind:key="feed.id">
+          <li v-for="feed in mapFeeds(feeds)" class="feed nav-item d-flex justify-content-between align-items-center pr-2" v-bind:key="feed.id"
+            mark="feed"
+            @click="setActiveFeedId(feed)"
+            v-bind:class="{ active: feed.isActive }"
+          >
             <router-link v-if="feed" class="nav-link" :to="`/feed/${feed.id}`">
               <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1">
-              {{ feed.title }}
+              <p>feed.id {{ feed.id }}</p>
+              <p>feed.isActive {{ feed.isActive }}</p>
             </router-link>
             <button @click="unsubscribeFeed(feed.id)" class="btn btn-link"><feather-icon name="x-circle"></feather-icon></button>
           </li>
@@ -239,9 +254,23 @@ export default {
   computed: {
     feeds () {
       return this.$store.state.Feed.feeds
+    },
+    activeFeedId () {
+      return this.$store.getters.activeFeedId
     }
   },
   methods: {
+    mapFeeds (feeds) {
+      return feeds.map(feed => ({ ...feed, isActive: this.isFeedActive(feed) }))
+    },
+    // TODO: Source this method out
+    isFeedActive (feed) {
+      return !!feed && feed.id !== undefined && feed.id === this.activeFeedId
+    },
+    // TODO: Source this method out
+    setActiveFeedId (feed) {
+      return this.$store.dispatch('setActiveFeedId', feed)
+    },
     getArticlesCount (type, feedid) {
       let articles = this.$store.state.Article.articles
       if (feedid !== '') {
@@ -365,6 +394,14 @@ export default {
 }
 </script>
 <style lang="scss">
+.feed {
+  &.active {
+    // TODO: Put this color/this class to e.g. an SCSS-constant
+    background-color: gray;
+    border-radius: 0.3rem;
+  }
+}
+
 .app-wrapper {
   display: flex;
   height: 100%;
@@ -387,6 +424,19 @@ export default {
 
     .nav-link {
       color: #fff !important;
+
+      &.feed-mix-link {
+        padding: initial;
+      }
+      & .feed-mix {
+        padding: 0.5rem 1rem;
+
+        &.active {
+          // TODO: Put this color/this class to e.g. an SCSS-constant
+          background-color: gray;
+          border-radius: 0.3rem;
+        }
+      }
     }
 
     .sidebar-heading {

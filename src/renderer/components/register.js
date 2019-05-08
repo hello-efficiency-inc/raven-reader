@@ -11,6 +11,7 @@ import ImportModal from './ImportModal'
 import SettingsModal from './SettingsModal'
 import MarkReadModal from './MarkReadModal'
 import SyncSettingsModal from './SyncSettingsModal'
+import FeedMix from './FeedMix'
 
 export default {
   registerComponents () {
@@ -26,5 +27,6 @@ export default {
     Vue.component('settings-modal', SettingsModal)
     Vue.component('markallread-modal', MarkReadModal)
     Vue.component('sync-settings', SyncSettingsModal)
+    Vue.component('feed-mix', FeedMix)
   }
 }

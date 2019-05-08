@@ -13,7 +13,7 @@
       </form>
       <div class="articles">
           <perfect-scrollbar class="list-group">
-            <article-item v-if="filteredArticles.length > 0" :article="article" v-for="article in filteredArticles" :key="article._id"></article-item>
+            <article-item v-if="filteredArticles.length > 0" :article="article" v-for="article in mapArticles(filteredArticles)" :key="article._id"></article-item>
             <div class="no-articles" v-if="filteredArticles.length === 0">
               No articles available
             </div>
@@ -57,9 +57,18 @@ export default {
   computed: {
     ...mapGetters([
       'filteredArticles'
-    ])
+    ]),
+    activeArticleId () {
+      return this.$store.getters.activeArticleId
+    }
   },
   methods: {
+    mapArticles (articles) {
+      return articles.map(article => ({ ...article, id: article._id, isActive: this.isArticleActive(article) }))
+    },
+    isArticleActive (article) {
+      return !!article && article.id !== undefined && article.id === this.activeArticleId
+    },
     itemsChange () {
       this.$refs.statusMsg.innerText = `${this.filteredArticles.length} items`
     },
