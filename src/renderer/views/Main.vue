@@ -91,8 +91,7 @@
           >
             <router-link v-if="feed" class="nav-link" :to="`/feed/${feed.id}`">
               <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1">
-              <p>feed.id {{ feed.id }}</p>
-              <p>feed.isActive {{ feed.isActive }}</p>
+                {{ feed.title }}
             </router-link>
             <button @click="unsubscribeFeed(feed.id)" class="btn btn-link"><feather-icon name="x-circle"></feather-icon></button>
           </li>
