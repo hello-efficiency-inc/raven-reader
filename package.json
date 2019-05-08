@@ -1,6 +1,6 @@
 {
   "name": "raven-reader",
-  "version": "0.4.5",
+  "version": "0.5.1",
   "author": "Meet Godhani <meetgodhani23@gmail.com>",
   "description": "Simple Desktop RSS Reader made using VueJS",
   "license": "MIT",
