@@ -84,7 +84,7 @@ export default {
 }
 
 .article-detail {
-  color: #fff;
+  color: #000;
   img {
     display: block;
     max-width: 100%;
