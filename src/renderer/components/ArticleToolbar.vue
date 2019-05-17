@@ -179,6 +179,21 @@ export default {
 }
 </script>
 <style lang="scss">
+
+// Default color mode
+:root {
+  & .article-toolbar {
+    --feather-success-color: green;
+  }
+}
+
+// Dark color mode
+.app-darkmode {  
+  & .article-toolbar {
+    --feather-success-color: green;
+  }
+}
+
 .article-toolbar {
   display: flex;
   position: absolute;
@@ -186,8 +201,29 @@ export default {
   left: 0;
   z-index: 3;
   width: 100%;
-  border-bottom: 1px solid #e3e3e3;
+  border-bottom: 1px solid var(--border-color);
   height: 41px;
+
+  background-color: var(--background-color);
+  
+  .article-buttons,
+  .site-info {
+    background: var(--background-color);
+    span {
+      color: var(--text-color);
+    }
+    .feather {
+      color: var(--text-color);
+    }
+
+    .feather-filled {
+      fill: var(--text-color);
+    }
+
+    .feather-success {
+      color: var(--feather-success-color);
+    }
+  }
 }
 
 .site-info,

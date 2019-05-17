@@ -93,23 +93,62 @@ export default {
   overflow:hidden;
 }
 
+// Default color mode
+:root {
+  & .articles-list {
+    --input-background-color: var(--background-color);
+    --input-color: #495057;
+  }
+}
+
+// Dark color mode
+.app-darkmode {
+  & .articles-list {
+    --input-background-color: var(--background-color);
+    --input-color: #c8cacc;    
+  }
+}
+
 .articles-list {
   position: relative;
   flex-grow: 0;
   font-size: 14px;
   width: 350px;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
   height: 100%;
-}
+  border-right: 1px solid var(--border-color);
 
-.articles-list:after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 25px;
-  background: linear-gradient(rgba(255, 255, 255, 0.001), white ); /* transparent keyword is broken in Safari */
-  pointer-events: none;
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 25px;
+    background: linear-gradient(rgba(255, 255, 255, 0.001), white ); /* transparent keyword is broken in Safari */
+    pointer-events: none;
+  }
+
+  .search-form {
+    border-bottom-color: var(--border-color);
+    
+    .form-control {
+      background: var(--input-background-color);
+      color: var(--input-color);
+    }
+  }
+  .articles-inner .search-form,
+  .articles-inner .articles,
+  .articles-inner .list-group-item {
+    background: var(--background-color);
+    color: var(--text-color);
+  }
+  .articles-inner .list-group-item {
+    background: var(--background-color);
+    border-bottom-color: var(--border-color);
+  }
+
+  &::after {
+    background: var(--after-background);
+  }
 }
 
 .articles {
@@ -140,6 +179,16 @@ export default {
   top: 0;
   bottom: 0;
 
+  color: var(--text-color);
+
+  .feather {
+    color: var(--text-color);
+  }
+
+  .form-control::placeholder {
+    color: var(--text-color);
+  }
+
   .input-group-text {
     background: none;
     border: 0;
@@ -168,40 +217,22 @@ export default {
   }
 }
 
-.app-darkmode {
-  .search-input {
-    color: #fff;
-
-    .feather {
-      color: #fff;
-    }
-
-    .form-control::placeholder {
-      color: #fff;
-    }
-  }
-  .statusBar {
-    color: #fff;
-    background:#373737;
-    border-top-color: #000;
-
-    .feather {
-      color: #fff;
-    }
-  }
-}
-
 .statusBar {
+  color: var(--text-color);
   height: 40px;
   line-height: 30px;
   width: 100%;
-  background: #fff;
+  background-color: var(--background-color);
   position: absolute;
   bottom: 0;
-  border-top: 1px solid #dcdee0;
+  border-top: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   z-index: 20;
+
+  & .feather {
+    color: var(--text-color);
+  }
 }
 
 .statusMsg {

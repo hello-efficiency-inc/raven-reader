@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper" :class="{ 'app-darkmode': $store.state.Setting.darkMode === 'on' }">
-    <nav class="bg-light sidebar" v-if="true" ref="sidebar">
+    <nav class="sidebar" v-if="true" ref="sidebar">
       <subscribe-toolbar ref="subscribetoolbar"></subscribe-toolbar>
       <perfect-scrollbar class="sidebar-sticky">
         <ul class="nav flex-column">
@@ -393,13 +393,6 @@ export default {
 }
 </script>
 <style lang="scss">
-.feed {
-  &.active {
-    // TODO: Put this color/this class to e.g. an SCSS-constant
-    background-color: gray;
-    border-radius: 0.3rem;
-  }
-}
 
 .app-wrapper {
   display: flex;
@@ -407,140 +400,88 @@ export default {
   align-items: flex-start;
 }
 
+// Default color mode
+:root {
+  --background-color: inherit;
+  --border-color: rgba(0, 0, 0, 0.1);  
+  --text-color: inherit;
+  --after-background: none;  
+  --active-item-background-color: #e8e8e8;
+
+  & .sidebar {
+    --background-color: #f8f9fa;
+    --btn-subscribe-color: #212529;
+    --nav-link-color: var(--text-color);
+    --heading-color: #6c757d;
+  }
+}
+
+// Dark color mode
 .app-darkmode {
-  .sidebar {
-    background: #373737 !important;
-    border-right: 1px solid black;
-    box-shadow: none;
+  --darkmode-background: #373737;
+  --background-color: var(--darkmode-background);
+  --border-color: black;
+  --text-color: white;
+  --active-item-background-color: #504e4e;
+  
+  & .sidebar {    
+    --background-color: var(--darkmode-background);
+    --btn-subscribe-color: var(--text-color);    
+    --nav-link-color: var(--text-color);
+    --heading-color: #979797;
+  }
+}
 
-    .btn-subscribe {
-      color: white;
-    }
+.sidebar {
+  background-color: var(--background-color);
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: var(--border-color);
+  box-shadow: none;
 
-    .subscribe-toolbar {
-      border-bottom-color: #000;
-    }
+  .btn-subscribe {
+    color: var(--btn-subscribe-color);
+  }
 
-    .nav-link {
-      color: #fff !important;
+  .subscribe-toolbar {
+    border-bottom-color: var(--border-color);
+  }
 
-      &.feed-mix-link {
-        padding: initial;
-      }
-      & .feed-mix {
-        padding: 0.5rem 1rem;
-
-        &.active {
-          // TODO: Put this color/this class to e.g. an SCSS-constant
-          background-color: gray;
-          border-radius: 0.3rem;
-        }
-      }
-    }
-
-    .sidebar-heading {
-      color: #979797 !important;
-    }
-
-    &::after {
-      background: none;
+  .feed {
+    &.active {
+      background-color: var(--active-item-background-color);
+      border-radius: 0.3rem;
     }
   }
 
-  .articles-list {
-    border-right-color: #000;
-
-    .search-form {
-      border-bottom-color: #000;
-      .feathre {
-        color: #c8cacc;
-      }
-
-      .form-control {
-        background: #373737 !important;
-        color: #c8cacc !important;
-      }
-    }
-    .articles-inner .search-form,
-    .articles-inner .articles,
-    .articles-inner .list-group-item {
-      background: #373737 !important;
-      color: white;
-    }
-    .articles-inner .list-group-item {
-      background: #373737 !important;
-      border-bottom-color: #000;
+  .nav-link {
+    &.feed-mix-link {
+      padding: initial;
     }
 
-    &::after {
-      background: none;
-    }
-  }
+    color: var(--nav-link-color) !important;
 
-  .article-detail {
-    background: #373737 !important;
-  }
-
-  .article-toolbar {
-    background: #373737 !important;
-    border-bottom-color: #000;
-
-    .article-buttons,
-    .site-info {
-      background: #373737 !important;
-      span {
-        color: white;
-      }
-      .feather {
-        color: white;
-      }
-
-      .feather-filled {
-        fill: #fff;
-      }
-
-      .feather-success {
-        color: green;
+    & .feed-mix {
+      padding: 0.5rem 1rem;
+      
+      &.active {
+        background-color: var(--active-item-background-color);
+        border-radius: 0.3rem;
       }
     }
   }
 
-  .article-inner {
-    color: white;
+  .sidebar-heading {
+    color: var(--heading-color);
   }
 
-  .article-contentarea {
-    background: #373737 !important;
-    h1,
-    h2 {
-      color: white;
-      small {
-        color: #c8cacc;
-      }
-    }
-
-    ul {
-      color: white;
-    }
-
-    address,
-    figure,
-    blockquote,
-    h3,
-    h4 {
-      color: white;
-    }
-    b {
-      color: white;
-    }
-    p {
-      color: #c8cacc;
-    }
+  &::after {
+    background: var(--after-background);
   }
+}
 
-  .feather-filled {
-    fill: #fff;
-  }
+.feather-filled {
+  fill: var(--text-color);
 }
 
 .items-counter {

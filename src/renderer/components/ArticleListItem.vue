@@ -37,9 +37,8 @@ export default {
 </script>
 <style lang="scss">
 .artcle-list-item {
-  &.active {
-    // TODO: Put this color/this class to e.g. an SCSS-constant
-    background-color: gray;
+  &.active {    
+    background-color: var(--active-item-background-color);
     border-radius: 0.3rem;
   }
 }

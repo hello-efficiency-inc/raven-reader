@@ -17,13 +17,7 @@
 }
 
 #logo-name {
-  fill: #000;
-}
-
-.app-darkmode {
-  #logo-name {
-    fill: #fff;
-  }
+  fill: var(--text-color);
 }
 
 .btn-subscribe {
