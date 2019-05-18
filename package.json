@@ -158,7 +158,7 @@
     "eslint-config-standard": "^12.0.0",
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.0.0",
-    "eslint-plugin-html": "^5.0.5",
+    "eslint-plugin-html": "^4.0.3",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-node": "^9.0.1",
     "eslint-plugin-promise": "^4.0.0",
