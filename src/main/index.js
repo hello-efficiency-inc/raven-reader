@@ -269,8 +269,6 @@ function createWindow () {
   */
   mainWindow = new BrowserWindow({
     webPreferences: {
-      nodeIntegration: true,
-      nodeIntegrationInWorker: true,
       webSecurity: false
     },
     title: 'Raven Reader',
