@@ -1,42 +1,52 @@
 <template>
   <div class="app-wrapper" :class="{ 'app-darkmode': $store.state.Setting.darkMode === 'on' }">
-    <nav class="bg-light sidebar" v-if="true" ref="sidebar">
+    <nav class="sidebar" v-if="true" ref="sidebar">
       <subscribe-toolbar ref="subscribetoolbar"></subscribe-toolbar>
       <perfect-scrollbar class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <router-link class="nav-link" to="/all" active-class="active">
-              <feather-icon name="list"></feather-icon>
-              All Feeds <span class="sr-only">(current)</span>
-              <span class="items-counter" v-if="getArticlesCount('','') > 0">{{ getArticlesCount('','') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/all" active-class="active">
+              <feed-mix feed-id="allFeeds" mark="allFeeds">
+                <feather-icon name="list"></feather-icon>
+                All Feeds <span class="sr-only">(current)</span>
+                <span class="items-counter" v-if="getArticlesCount('','') > 0">{{ getArticlesCount('','') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/favourites" active-class="active">
-              <feather-icon name="star"></feather-icon>
-              Favourites
-              <span class="items-counter" v-if="getArticlesCount('favourites','') > 0">{{ getArticlesCount('favourites','') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/favourites" active-class="active">
+              <feed-mix feed-id="favourites" mark="favourites">
+                <feather-icon name="star"></feather-icon>
+                Favourites
+                <span class="items-counter" v-if="getArticlesCount('favourites','') > 0">{{ getArticlesCount('favourites','') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/unread" active-class="active">
-              <feather-icon name="circle"></feather-icon>
-              Unread Articles
-              <span class="items-counter" v-if="getArticlesCount('unread', '') > 0">{{ getArticlesCount('unread', '') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/unread" active-class="active">
+              <feed-mix feed-id="unreadArticles" mark="unreadArticles">
+                <feather-icon name="circle"></feather-icon>
+                Unread Articles
+                <span class="items-counter" v-if="getArticlesCount('unread', '') > 0">{{ getArticlesCount('unread', '') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/read" active-class="active">
-              <feather-icon name="circle" filled></feather-icon>
-              Recently Read
-              <span class="items-counter" v-if="getArticlesCount('read', '') > 0">{{ getArticlesCount('read', '') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/read" active-class="active">
+              <feed-mix feed-id="recentlyRead" mark="recentlyRead">
+                <feather-icon name="circle" filled></feather-icon>
+                Recently Read
+                <span class="items-counter" v-if="getArticlesCount('read', '') > 0">{{ getArticlesCount('read', '') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/saved" active-class="active">
-              <feather-icon name="wifi-off"></feather-icon>
-              Saved articles
-              <span class="items-counter" v-if="getArticlesCount('saved', '') > 0">{{ getArticlesCount('saved', '') }}</span>
+            <router-link class="nav-link feed-mix-link" to="/saved" active-class="active">
+              <feed-mix feed-id="savedArticles" mark="savedArticles">
+                <feather-icon name="wifi-off"></feather-icon>
+                Saved articles
+                <span class="items-counter" v-if="getArticlesCount('saved', '') > 0">{{ getArticlesCount('saved', '') }}</span>
+              </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
@@ -74,10 +84,14 @@
           <span>Subscriptions</span>
         </h6>
         <ul class="nav flex-column">
-          <li v-for="feed in feeds" class="nav-item d-flex justify-content-between align-items-center pr-2" v-bind:key="feed.id">
+          <li v-for="feed in mapFeeds(feeds)" class="feed nav-item d-flex justify-content-between align-items-center pr-2" v-bind:key="feed.id"
+            mark="feed"
+            @click="setActiveFeedId(feed)"
+            v-bind:class="{ active: feed.isActive }"
+          >
             <router-link v-if="feed" class="nav-link" :to="`/feed/${feed.id}`">
               <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1">
-              {{ feed.title }}
+                {{ feed.title }}
             </router-link>
             <button @click="unsubscribeFeed(feed.id)" class="btn btn-link"><feather-icon name="x-circle"></feather-icon></button>
           </li>
@@ -239,9 +253,23 @@ export default {
   computed: {
     feeds () {
       return this.$store.state.Feed.feeds
+    },
+    activeFeedId () {
+      return this.$store.getters.activeFeedId
     }
   },
   methods: {
+    mapFeeds (feeds) {
+      return feeds.map(feed => ({ ...feed, isActive: this.isFeedActive(feed) }))
+    },
+    // TODO: Source this method out
+    isFeedActive (feed) {
+      return !!feed && feed.id !== undefined && feed.id === this.activeFeedId
+    },
+    // TODO: Source this method out
+    setActiveFeedId (feed) {
+      return this.$store.dispatch('setActiveFeedId', feed)
+    },
     getArticlesCount (type, feedid) {
       let articles = this.$store.state.Article.articles
       if (feedid !== '') {
@@ -365,133 +393,95 @@ export default {
 }
 </script>
 <style lang="scss">
+
 .app-wrapper {
   display: flex;
   height: 100%;
   align-items: flex-start;
 }
 
+// Default color mode
+:root {
+  --background-color: inherit;
+  --border-color: rgba(0, 0, 0, 0.1);  
+  --text-color: inherit;
+  --after-background: none;  
+  --active-item-background-color: #e8e8e8;
+
+  & .sidebar {
+    --background-color: #f8f9fa;
+    --btn-subscribe-color: #212529;
+    --nav-link-color: var(--text-color);
+    --heading-color: #6c757d;
+  }
+}
+
+// Dark color mode
 .app-darkmode {
-  .sidebar {
-    background: #373737 !important;
-    border-right: 1px solid black;
-    box-shadow: none;
+  --darkmode-background: #373737;
+  --background-color: var(--darkmode-background);
+  --border-color: black;
+  --text-color: white;
+  --active-item-background-color: #504e4e;
+  
+  & .sidebar {    
+    --background-color: var(--darkmode-background);
+    --btn-subscribe-color: var(--text-color);    
+    --nav-link-color: var(--text-color);
+    --heading-color: #979797;
+  }
+}
 
-    .btn-subscribe {
-      color: white;
-    }
+.sidebar {
+  background-color: var(--background-color);
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: var(--border-color);
+  box-shadow: none;
 
-    .subscribe-toolbar {
-      border-bottom-color: #000;
-    }
+  .btn-subscribe {
+    color: var(--btn-subscribe-color);
+  }
 
-    .nav-link {
-      color: #fff !important;
-    }
+  .subscribe-toolbar {
+    border-bottom-color: var(--border-color);
+  }
 
-    .sidebar-heading {
-      color: #979797 !important;
-    }
-
-    &::after {
-      background: none;
+  .feed {
+    &.active {
+      background-color: var(--active-item-background-color);
+      border-radius: 0.3rem;
     }
   }
 
-  .articles-list {
-    border-right-color: #000;
-
-    .search-form {
-      border-bottom-color: #000;
-      .feathre {
-        color: #c8cacc;
-      }
-
-      .form-control {
-        background: #373737 !important;
-        color: #c8cacc !important;
-      }
-    }
-    .articles-inner .search-form,
-    .articles-inner .articles,
-    .articles-inner .list-group-item {
-      background: #373737 !important;
-      color: white;
-    }
-    .articles-inner .list-group-item {
-      background: #373737 !important;
-      border-bottom-color: #000;
+  .nav-link {
+    &.feed-mix-link {
+      padding: initial;
     }
 
-    &::after {
-      background: none;
-    }
-  }
+    color: var(--nav-link-color) !important;
 
-  .article-detail {
-    background: #373737 !important;
-  }
-
-  .article-toolbar {
-    background: #373737 !important;
-    border-bottom-color: #000;
-
-    .article-buttons,
-    .site-info {
-      background: #373737 !important;
-      span {
-        color: white;
-      }
-      .feather {
-        color: white;
-      }
-
-      .feather-filled {
-        fill: #fff;
-      }
-
-      .feather-success {
-        color: green;
+    & .feed-mix {
+      padding: 0.5rem 1rem;
+      
+      &.active {
+        background-color: var(--active-item-background-color);
+        border-radius: 0.3rem;
       }
     }
   }
 
-  .article-inner {
-    color: white;
+  .sidebar-heading {
+    color: var(--heading-color);
   }
 
-  .article-contentarea {
-    background: #373737 !important;
-    h1,
-    h2 {
-      color: white;
-      small {
-        color: #c8cacc;
-      }
-    }
-
-    ul {
-      color: white;
-    }
-
-    address,
-    figure,
-    blockquote,
-    h3,
-    h4 {
-      color: white;
-    }
-    b {
-      color: white;
-    }
-    p {
-      color: #c8cacc;
-    }
+  &::after {
+    background: var(--after-background);
   }
+}
 
-  .feather-filled {
-    fill: #fff;
-  }
+.feather-filled {
+  fill: var(--text-color);
 }
 
 .items-counter {

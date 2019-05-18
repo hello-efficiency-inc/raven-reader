@@ -10,7 +10,7 @@
       size="sm"
       v-model="oldestArticles"
       :options="options"
-      name="sortPref" @change="saveSortPreference"/>
+      name="sortPref" @input="saveSortPreference"/>
     </b-form-group>
     <b-form-group label="Turn on dark mode">
       <b-form-radio-group id="btnradios2"

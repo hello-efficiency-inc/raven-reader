@@ -155,7 +155,7 @@ body {
 }
 
 .sidebar .nav-link.active {
-  color: #007bff;
+  color: initial;
 }
 
 .sidebar .nav-link:hover .feather,

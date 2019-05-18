@@ -46,11 +46,6 @@ export default {
 }
 </script>
 <style lang="scss">
-.article-detail {
-  position: relative;
-  flex-grow: 1;
-  height: 100%;
-}
 
 .content-wrapper {
   overflow: hidden;
@@ -61,8 +56,36 @@ export default {
   right: 0;
 }
 
+// Default color mode
+:root {
+  & .article-contentarea {
+    --h2-color: inherit;
+    --h2-small-color: inherit;
+    --text-color: inherit;
+    --paragraph-color: inherit;
+  }
+}
+
+// Dark color mode
+.app-darkmode {    
+  & .article-contentarea {
+    --text-color-gray: #c8cacc;
+    --h2-color: var(--text-color);
+    --h2-small-color: var(--text-color-gray);
+    --paragraph-color: var(--text-color-gray);
+  }
+}
+
+.article-detail {
+  position: relative;
+  flex-grow: 1;
+  height: 100%;
+
+  background: var(--background-color);
+}
+
 .article-contentarea {
-  background-color: #fff;
+
   display: block;
   position: absolute;
   bottom: 0;
@@ -76,15 +99,37 @@ export default {
   padding: 15px 15px 30px;
   height: calc(100% - 45px);
 
+  background-color: var(--background-color);
+  h1,
   h2 {
+    color: var(--text-color);
     small {
       font-size: 14px;
+      color: var(--h2-small-color);
     }
+  }
+
+  ul {
+    color: var(--text-color);
+  }
+
+  address,
+  figure,
+  blockquote,
+  h3,
+  h4 {
+    color: var(--text-color);
+  }
+  b {
+    color: var(--text-color);
+  }
+  p {
+    color: var(--paragraph-color);
   }
 }
 
 .article-detail {
-  color: #000;
+  color: #fff;
   img {
     display: block;
     max-width: 100%;

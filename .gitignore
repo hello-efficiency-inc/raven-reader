@@ -4,8 +4,11 @@ dist/web/*
 build/*
 !build/icons
 node_modules/
+node_modules
+coverage
 npm-debug.log
 npm-debug.log.*
 thumbs.db
 !.gitkeep
 src/renderer/config.js
+coverage
