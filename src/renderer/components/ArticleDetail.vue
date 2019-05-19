@@ -67,7 +67,7 @@ export default {
 }
 
 // Dark color mode
-.app-darkmode {    
+.app-darkmode {
   & .article-contentarea {
     --text-color-gray: #c8cacc;
     --h2-color: var(--text-color);
@@ -129,7 +129,6 @@ export default {
 }
 
 .article-detail {
-  color: #fff;
   img {
     display: block;
     max-width: 100%;
