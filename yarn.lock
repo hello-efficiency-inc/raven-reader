@@ -3852,9 +3852,9 @@ electron-windows-notifications@^3.0.0:
     xml-escape "^1.1.0"
 
 electron@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-5.0.1.tgz#6bd7bf4d25e9bfce4cccd629d587fba5281f95cc"
-  integrity sha512-8KksyhAPcpXVeO8ViVGxfZAuf8yEVBCtV0h/lMBD8VFbCQ9icej1K5csCFAGirbZbqOz5IdsBZX9Gpb9n4RCag==
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-5.0.2.tgz#0f6b38ae7e344b94f433d9171e50568f56962fc7"
+  integrity sha512-bUHKQhyuOen/q8iHTkrnzqB9CAwBDI+vHbeu21kpq2bqAD+t25yfrmUEcYHaPL4fZOAhk6nnRqskF6/Xd+aZxg==
   dependencies:
     "@types/node" "^10.12.18"
     electron-download "^4.1.0"
