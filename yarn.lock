@@ -1930,9 +1930,9 @@ boom@7.x.x:
     hoek "6.x.x"
 
 bootstrap-vue@^2.0.0-rc.11:
-  version "2.0.0-rc.20"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.0.0-rc.20.tgz#3d1fcc90f0ac0c260bf75ae287fe6b2bc3b7e950"
-  integrity sha512-R6/RUmJjt0d/G8JywRhNCjmIzmh1xJD1eHxrYJL0zcpcydkGsqbszHUA8BBULpgk5AnGRwd+Jf3ML434X7Bkdg==
+  version "2.0.0-rc.21"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.0.0-rc.21.tgz#447c3859b39390355e4b875c91d288036d7d5dd1"
+  integrity sha512-cGMKpk60xik+VhgQ8hUiRVaysOBv+4QhBLcegzsl31LNyFmIJPaAJyqrO/Nz3m8AkCEMkTECRNk2ZLm1RQE9dQ==
   dependencies:
     "@nuxt/opencollective" "^0.2.2"
     bootstrap "^4.3.1"
