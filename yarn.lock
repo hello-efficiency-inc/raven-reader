@@ -11347,9 +11347,9 @@ vue-router@^3.0.1:
   integrity sha512-Ox0ciFLswtSGRTHYhGvx2L44sVbTPNS+uD2kRISuo8B39Y79rOo0Kw0hzupTmiVtftQYCZl87mwldhh2L9Aquw==
 
 vue-social-sharing@^2.4.3:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/vue-social-sharing/-/vue-social-sharing-2.4.3.tgz#fb69e8bfa1ea60da33e1d10a1c997401c25673be"
-  integrity sha512-UNAizFn8Y5KcTVZFhuleaowqREyUFfBbvcTfoRdvrpRFNCWvSNtLZHWdloEneX4hSKU7tF5TkUuX3ZMiAqqXEg==
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/vue-social-sharing/-/vue-social-sharing-2.4.5.tgz#37e298b290771e8e7482a911b13544c1aa429dc3"
+  integrity sha512-6hZ1fcHdDPLzpvd44yt+3DOCfUiqAAiFQF+odhdpFQ5MU3HJ2eofD0UZqgwPLP08duYuNesx+ntldAZG4GV5Xw==
   dependencies:
     vue "^2.2.4"
 
