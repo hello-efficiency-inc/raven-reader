@@ -11027,9 +11027,9 @@ upath@^1.1.1:
   integrity sha512-kXpym8nmDmlCBr7nKdIx8P2jNBa+pBpIUFRnKJ4dr8htyYGJFokkr2ZvERRtUN+9SY+JqXouNgUPtv6JQva/2Q==
 
 update-electron-app@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/update-electron-app/-/update-electron-app-1.3.0.tgz#581e8f7cb8931de4884fd22e291bc558a5d91dd1"
-  integrity sha512-OXfcmeenpjMyzXmadZ6NqxnrpPpiLji0sLUpXkexfX97XM8Gnk4iLovk4TlK4N8dzlETWdm9klgMmo9HpRbK7Q==
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/update-electron-app/-/update-electron-app-1.4.2.tgz#4f75aba33ceb50db779e28747ecfa797d6634708"
+  integrity sha512-JW6QnDTBLwf2nukDe6PJCkBphEnYjoTdRmhtgX/TEHTiG1Kl0gZ6/FirXZiAJnXUW/qSeQqUO6evcnGE1VWWUQ==
   dependencies:
     electron-is-dev "^0.3.0"
     github-url-to-object "^4.0.4"
