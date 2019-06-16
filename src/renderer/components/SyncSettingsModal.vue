@@ -58,7 +58,7 @@ export default {
     }
   },
   methods: {
-    signInPocketWithPopUp () {
+    async signInPocketWithPopUp () {
       return new Promise((resolve, reject) => {
         var consumerKey
         var code
@@ -99,7 +99,7 @@ export default {
                 }).then((data) => {
                 data.data.consumer_key = consumerKey
                 store.set('pocket_token', JSON.stringify(data.data))
-                this.pocket_connected = true
+                resolve(data.data)
               })
               authWindow.removeAllListeners('closed')
               authWindow.close()
@@ -153,19 +153,9 @@ export default {
       })
     },
     async signInPocket () {
-      let token
-      const code = await this.signInPocketWithPopUp()
-      if (code) {
-        try {
-          token = await oauth.fetchToken(code)
-        } catch (e) {
-          console.error(e)
-        }
-      }
-
+      const token = await this.signInPocketWithPopUp()
       if (token) {
-        store.set('inoreader_token', JSON.stringify(token))
-        this.inoreader_connected = true
+        this.pocket_connected = true
       }
     },
     signInWithPopUp () {
