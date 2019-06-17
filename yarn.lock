@@ -6552,9 +6552,9 @@ karma-coverage@^1.1.2:
     source-map "^0.5.1"
 
 karma-electron@^6.0.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/karma-electron/-/karma-electron-6.2.0.tgz#174111fd62f1e4d42c025b3e8d4eb4dc5d4c6c89"
-  integrity sha512-XtVMOWfzBCxh/s5dotO00kpxW/Fzok0pB4ddSQPt7t9lh7dEvlhq5n+aOF3sXIiYzjPl4gfH0foJMNPx9VfhDQ==
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/karma-electron/-/karma-electron-6.2.1.tgz#648ded0e73bf6aef9f5010331dbfc5e6d265017e"
+  integrity sha512-oN6KDUC5GJIY2wnbPKrw+RlOHlUfVXBkAqP8UQ+uMgAtRN1aI7gpqGOTrirBpb+9JRa2/dWjykM7WMvX8ik/xg==
   dependencies:
     combine-source-map "~0.8.0"
     commander "~2.9.0"
