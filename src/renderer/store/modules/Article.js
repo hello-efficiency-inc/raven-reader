@@ -13,6 +13,7 @@ const state = {
   articles: [],
   type: 'unread',
   search: '',
+  fontSize: 100,
   feed: ''
 }
 
@@ -129,6 +130,16 @@ const mutations = {
   SAVE_ARTICLE (state, data) {
     const index = _.findIndex(state.articles, { '_id': data.article._id })
     state.articles[index].offline = data.type === 'CACHE'
+  },
+  INCREASE_FONT (state) {
+    if (state.fontSize <= 150) {
+      state.fontSize += 5
+    }
+  },
+  DRECREASE_FONT (state) {
+    if (state.fontSize !== 50) {
+      state.fontSize -= 5
+    }
   }
 }
 
@@ -191,6 +202,12 @@ const actions = {
   },
   setFeed ({ commit }, feed) {
     commit('SET_FEED_ID', feed)
+  },
+  decreaseFont ({ commit }) {
+    commit('DRECREASE_FONT')
+  },
+  increaseFont ({ commit }) {
+    commit('INCREASE_FONT')
   }
 }
 
