@@ -190,6 +190,7 @@ export default {
     },
     openSettings () {
       this.settingspanel = !this.settingspanel
+      this.$store.dispatch('turnOnFontSetting', this.settingspanel)
     },
     markRead () {
       if (this.article.read) {

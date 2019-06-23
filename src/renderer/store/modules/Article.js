@@ -13,6 +13,7 @@ const state = {
   articles: [],
   type: 'unread',
   search: '',
+  fontSettingOn: false,
   fontSize: 100,
   feed: ''
 }
@@ -140,6 +141,9 @@ const mutations = {
     if (state.fontSize !== 50) {
       state.fontSize -= 5
     }
+  },
+  FONT_SETTINGS_ON (state, data) {
+    state.fontSettingOn = data
   }
 }
 
@@ -208,6 +212,9 @@ const actions = {
   },
   increaseFont ({ commit }) {
     commit('INCREASE_FONT')
+  },
+  turnOnFontSetting ({ commit }, data) {
+    commit('FONT_SETTINGS_ON', data)
   }
 }
 

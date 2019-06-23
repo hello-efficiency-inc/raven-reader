@@ -2,7 +2,7 @@
   <div class="article-detail">
     <div class="content-wrapper">
       <article-toolbar :article="article" ref="articleToolbar"></article-toolbar>
-      <perfect-scrollbar class="article-contentarea  px-4" v-if="article !== null && article.content !== null && !emptyState" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
+      <perfect-scrollbar class="article-contentarea  px-4" v-bind:class="{ 'offset-content': fontSettingsOn }" v-if="article !== null && article.content !== null && !emptyState" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
         <h2>
           <strong>{{ article.title }}</strong><br/>
           <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
@@ -46,6 +46,9 @@ export default {
   computed: {
     currentFontSize () {
       return this.$store.state.Article.fontSize
+    },
+    fontSettingsOn () {
+      return this.$store.state.Article.fontSettingOn
     }
   }
 }
@@ -169,5 +172,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.offset-content {
+  padding-top: 60px;
 }
 </style>
