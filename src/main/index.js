@@ -6,6 +6,9 @@ import jetpack from 'fs-jetpack'
 import os from 'os'
 import Store from 'electron-store'
 import { checkForUpdates } from './updater.js'
+import {
+  enforceMacOSAppLocation
+} from 'electron-util'
 
 // updateElectron({
 //   repo: 'mrgodhani/raven-reader',
@@ -326,6 +329,7 @@ app.on('second-instance', (event, argv, cwd) => {
 })
 
 app.on('ready', () => {
+  enforceMacOSAppLocation()
   createWindow()
 })
 

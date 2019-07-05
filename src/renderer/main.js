@@ -5,6 +5,9 @@ import Register from './components/register'
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import SocialSharing from 'vue-social-sharing'
 import Toasted from 'vue-toasted'
+import {
+  createGlobalProxyAgent
+} from 'global-agent'
 
 import App from './App'
 import router from './router'
@@ -25,8 +28,10 @@ if (proxy) {
   if (proxy.https) {
     process.env.https_proxy = proxy.https
   }
-  var globalTunnel = require('global-tunnel-ng')
-  globalTunnel.initialize()
+  createGlobalProxyAgent({
+    environmentVariableNamespace: '',
+    forceGlobalAgent: true
+  })
 }
 
 // ignore ssl error
