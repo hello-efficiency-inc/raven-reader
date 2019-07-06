@@ -329,8 +329,8 @@ app.on('second-instance', (event, argv, cwd) => {
 })
 
 app.on('ready', () => {
-  enforceMacOSAppLocation()
   createWindow()
+  enforceMacOSAppLocation()
 })
 
 app.on('before-quit', () => {
