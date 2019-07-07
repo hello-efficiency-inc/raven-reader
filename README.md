@@ -59,12 +59,12 @@ To download, please visit [https://github.com/mrgodhani/rss-reader/releases](htt
 
 ## Roadmap
 - [x] New brand name and icons
-- [ ] Text configuration
+- [x] Text configuration
 - [ ] Supporting authenticated feeds
 - [ ] Feedly synchronization
 - [ ] Web app
-- [ ] Pocket Integration
-- [ ] Moving to web based. Reason: NeDB won't be scalable and handle large datasets.
+- [x] Pocket Integration
+- [ ] Moving to web based. Reason: NeDB won't be scalable and handle large datasets? Or look for different local db.
 
 Please feel free to suggest more ideas to improve this app.
 

@@ -1,24 +1,31 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  Tray,
+  ipcMain
+} from 'electron'
 // import updateElectron from 'update-electron-app'
 import jetpack from 'fs-jetpack'
 import os from 'os'
 import Store from 'electron-store'
-import { checkForUpdates } from './updater.js'
+import {
+  checkForUpdates
+} from './updater.js'
 import {
   enforceMacOSAppLocation
 } from 'electron-util'
 
-// updateElectron({
-//   repo: 'mrgodhani/raven-reader',
-//   updateInterval: '1 hour'
-// })
+const contextMenu = require('electron-context-menu')
+
+contextMenu()
 
 /**
-* Set `__static` path to static files in production
-* https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
-*/
+ * Set `__static` path to static files in production
+ * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
+ */
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
@@ -33,111 +40,131 @@ const store = new Store()
 
 function createMenu () {
   // Create the Application's main menu
-  const template = [
-    {
-      label: 'Edit',
-      submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        { role: 'pasteandmatchstyle' },
-        { role: 'delete' },
-        { role: 'selectall' }
-      ]
+  const template = [{
+    label: 'Edit',
+    submenu: [{
+      role: 'undo'
     },
     {
-      label: 'View',
-      submenu: [
-        { role: 'togglefullscreen' }
-      ]
+      role: 'redo'
     },
     {
-      role: 'window',
-      submenu: [
-        { role: 'minimize' },
-        { role: 'close' }
-      ]
+      type: 'separator'
     },
     {
-      label: 'Subscriptions',
-      submenu: [
-        {
-          label: 'Add subscription',
-          accelerator: 'CmdOrCtrl+N',
-          click: function () {
-            mainWindow.webContents.send('Add subscription')
-          }
-        }
-      ]
+      role: 'cut'
     },
     {
-      label: 'Item',
-      submenu: [
-        {
-          label: 'Next item',
-          accelerator: 'CmdOrCtrl+J',
-          click: function () {
-            mainWindow.webContents.send('Next item')
-          }
-        },
-        {
-          label: 'Previous item',
-          accelerator: 'CmdOrCtrl+K',
-          click: function () {
-            mainWindow.webContents.send('Previous item')
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Toggle read',
-          id: 'toggle-read',
-          accelerator: 'CmdOrCtrl+T',
-          enabled: articleSelected,
-          click: function () {
-            mainWindow.webContents.send('Toggle read')
-          }
-        },
-        {
-          label: 'Toggle favourite',
-          id: 'toggle-favourite',
-          accelerator: 'CmdOrCtrl+S',
-          enabled: articleSelected,
-          click: function () {
-            mainWindow.webContents.send('Toggle favourite')
-          }
-        },
-        {
-          label: 'Mark all read',
-          id: 'mark-all-read',
-          accelerator: 'Alt+R',
-          click: function () {
-            mainWindow.webContents.send('Mark all read')
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Save offline',
-          id: 'save-offline',
-          accelerator: 'CmdOrCtrl+O',
-          enabled: articleSelected,
-          click: function () {
-            mainWindow.webContents.send('Save offline')
-          }
-        },
-        {
-          label: 'View in browser',
-          id: 'view-browser',
-          accelerator: 'CmdOrCtrl+B',
-          enabled: articleSelected,
-          click: function () {
-            mainWindow.webContents.send('View in browser')
-          }
-        }
-      ]
+      role: 'copy'
+    },
+    {
+      role: 'paste'
+    },
+    {
+      role: 'pasteandmatchstyle'
+    },
+    {
+      role: 'delete'
+    },
+    {
+      role: 'selectall'
     }
+    ]
+  },
+  {
+    label: 'View',
+    submenu: [{
+      role: 'togglefullscreen'
+    }]
+  },
+  {
+    role: 'window',
+    submenu: [{
+      role: 'minimize'
+    },
+    {
+      role: 'close'
+    }
+    ]
+  },
+  {
+    label: 'Subscriptions',
+    submenu: [{
+      label: 'Add subscription',
+      accelerator: 'CmdOrCtrl+N',
+      click: function () {
+        mainWindow.webContents.send('Add subscription')
+      }
+    }]
+  },
+  {
+    label: 'Item',
+    submenu: [{
+      label: 'Next item',
+      accelerator: 'CmdOrCtrl+J',
+      click: function () {
+        mainWindow.webContents.send('Next item')
+      }
+    },
+    {
+      label: 'Previous item',
+      accelerator: 'CmdOrCtrl+K',
+      click: function () {
+        mainWindow.webContents.send('Previous item')
+      }
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Toggle read',
+      id: 'toggle-read',
+      accelerator: 'CmdOrCtrl+T',
+      enabled: articleSelected,
+      click: function () {
+        mainWindow.webContents.send('Toggle read')
+      }
+    },
+    {
+      label: 'Toggle favourite',
+      id: 'toggle-favourite',
+      accelerator: 'CmdOrCtrl+S',
+      enabled: articleSelected,
+      click: function () {
+        mainWindow.webContents.send('Toggle favourite')
+      }
+    },
+    {
+      label: 'Mark all read',
+      id: 'mark-all-read',
+      accelerator: 'Alt+R',
+      click: function () {
+        mainWindow.webContents.send('Mark all read')
+      }
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Save offline',
+      id: 'save-offline',
+      accelerator: 'CmdOrCtrl+O',
+      enabled: articleSelected,
+      click: function () {
+        mainWindow.webContents.send('Save offline')
+      }
+    },
+    {
+      label: 'View in browser',
+      id: 'view-browser',
+      accelerator: 'CmdOrCtrl+B',
+      enabled: articleSelected,
+      click: function () {
+        mainWindow.webContents.send('View in browser')
+      }
+    }
+    ]
+  }
   ]
 
   const version = app.getVersion()
@@ -145,22 +172,31 @@ function createMenu () {
   if (process.platform === 'win32' || process.platform === 'linux') {
     template.unshift({
       label: 'Raven Reader',
-      submenu: [
-        {
-          label: `Version ${version}`,
-          enabled: false
-        },
-        {
-          label: 'Check for update',
-          click: function (menuItem, browserWindow, event) {
-            checkForUpdates(menuItem, browserWindow, event)
-          }
-        },
-        { role: 'hide' },
-        { role: 'hideothers' },
-        { role: 'unhide' },
-        { type: 'separator' },
-        { role: 'quit' }
+      submenu: [{
+        label: `Version ${version}`,
+        enabled: false
+      },
+      {
+        label: 'Check for update',
+        click: function (menuItem, browserWindow, event) {
+          checkForUpdates(menuItem, browserWindow, event)
+        }
+      },
+      {
+        role: 'hide'
+      },
+      {
+        role: 'hideothers'
+      },
+      {
+        role: 'unhide'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'quit'
+      }
       ]
     })
   }
@@ -168,49 +204,79 @@ function createMenu () {
   if (process.platform === 'darwin') {
     template.unshift({
       label: 'Raven Reader',
-      submenu: [
-        { role: 'about' },
-        {
-          label: `Version ${version}`,
-          enabled: false
-        },
-        {
-          label: 'Check for update',
-          click: function (menuItem, browserWindow, event) {
-            checkForUpdates(menuItem, browserWindow, event)
-          }
-        },
-        { type: 'separator' },
-        { role: 'services' },
-        { type: 'separator' },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideothers' },
-        { role: 'unhide' },
-        { type: 'separator' },
-        { role: 'quit' }
+      submenu: [{
+        role: 'about'
+      },
+      {
+        label: `Version ${version}`,
+        enabled: false
+      },
+      {
+        label: 'Check for update',
+        click: function (menuItem, browserWindow, event) {
+          checkForUpdates(menuItem, browserWindow, event)
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'services'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'hide'
+      },
+      {
+        role: 'hideothers'
+      },
+      {
+        role: 'unhide'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'quit'
+      }
       ]
     })
 
     // Edit menu
-    template[1].submenu.push(
-      { type: 'separator' },
+    template[1].submenu.push({
+      type: 'separator'
+    }, {
+      label: 'Speech',
+      submenu: [{
+        role: 'startspeaking'
+      },
       {
-        label: 'Speech',
-        submenu: [
-          { role: 'startspeaking' },
-          { role: 'stopspeaking' }
-        ]
+        role: 'stopspeaking'
       }
-    )
+      ]
+    })
 
     // Window menu
-    template[3].submenu = [
-      { role: 'close' },
-      { role: 'minimize' },
-      { role: 'zoom' },
-      { type: 'separator' },
-      { role: 'front' }
+    template[3].submenu = [{
+      role: 'close'
+    },
+    {
+      role: 'minimize'
+    },
+    {
+      role: 'zoom'
+    },
+    {
+      type: 'separator'
+    },
+    {
+      role: 'front'
+    }
     ]
   }
 
@@ -233,15 +299,13 @@ function createTray () {
 
   tray = new Tray(trayImage)
 
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Quit',
-      click: () => {
-        app.isQuiting = true
-        app.quit()
-      }
+  const contextMenu = Menu.buildFromTemplate([{
+    label: 'Quit',
+    click: () => {
+      app.isQuiting = true
+      app.quit()
     }
-  ])
+  }])
 
   tray.on('right-click', () => {
     tray.popUpContextMenu(contextMenu)
@@ -268,8 +332,8 @@ function createWindow () {
     jetpack.move(oldDirectory.path(`articles.db`), newDirectory.path('.rss-reader/articles.db'))
   }
   /**
-  * Initial window options
-  */
+   * Initial window options
+   */
   mainWindow = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
@@ -298,7 +362,8 @@ function createWindow () {
 
   mainWindow.webContents.session.setProxy({
     proxyRules: proxyRules,
-    proxyBypassRules: proxy && proxy.bypass ? proxy.bypass : '<local>' }, () => {
+    proxyBypassRules: proxy && proxy.bypass ? proxy.bypass : '<local>'
+  }, () => {
     mainWindow.loadURL(winURL)
   })
 
