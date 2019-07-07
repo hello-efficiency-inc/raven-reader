@@ -1,36 +1,57 @@
 <template>
-  <b-modal id="addfeed" ref="addFeedModal" hide-header :hide-footer="feeddata === null" size="lg" @shown="focusMyElement" centered @hidden="onHidden">
-    <form v-on:submit.prevent="fetchFeed">
-      <b-input-group size="md">
-        <b-input-group-text slot="prepend">
-          <strong>Add <feather-icon name="plus"></feather-icon></strong>
-        </b-input-group-text>
-        <b-input-group-text slot="append">
-          <loader v-if="loading"></loader>
-          <div class="favicon-img" v-if="feeddata !== null && !loading">
-            <img :src="feeddata.site.favicon" height="20">
-          </div>
-        </b-input-group-text>
-        <b-form-input class="no-border" placeholder="Enter website or feed url" ref="focusThis" v-model="feed_url"></b-form-input>
-      </b-input-group>
-    </form>
-    <div v-if="feeddata !== null" class="subscription-content col pt-3">
-      <template v-for="(feed, index) in feeddata.feedUrls">
+  <b-modal
+    id="addfeed"
+    ref="addFeedModal"
+    hide-header
+    :hide-footer="feeddata === null"
+    size="lg"
+    @shown="focusMyElement"
+    centered
+    @hidden="onHidden"
+  >
+    <div :class="{ 'app-darkmode': $store.state.Setting.darkMode === 'on' }">
+      <form v-on:submit.prevent="fetchFeed">
         <b-input-group size="md">
-          <b-input-group-text slot="append">
-            <b-form-checkbox v-model="selected_feed" :value="feed">
-            </b-form-checkbox>
+          <b-input-group-text slot="prepend">
+            <strong>
+              Add
+              <feather-icon name="plus"></feather-icon>
+            </strong>
           </b-input-group-text>
-          <b-form-input v-model="feed.title"></b-form-input>
+          <b-input-group-text slot="append">
+            <loader v-if="loading"></loader>
+            <div class="favicon-img" v-if="feeddata !== null && !loading">
+              <img :src="feeddata.site.favicon" height="20" />
+            </div>
+          </b-input-group-text>
+          <b-form-input
+            class="no-border"
+            placeholder="Enter website or feed url"
+            ref="focusThis"
+            v-model="feed_url"
+          ></b-form-input>
         </b-input-group>
-        <b-form-text id="inputLiveHelp" class="mb-3">
-          {{ feed.url }}
-        </b-form-text>
-      </template>
+      </form>
+      <div v-if="feeddata !== null" class="subscription-content col pt-3">
+        <template v-for="(feed, index) in feeddata.feedUrls">
+          <b-input-group size="md">
+            <b-input-group-text slot="append">
+              <b-form-checkbox v-model="selected_feed" :value="feed"></b-form-checkbox>
+            </b-input-group-text>
+            <b-form-input v-model="feed.title"></b-form-input>
+          </b-input-group>
+          <b-form-text id="inputLiveHelp" class="mb-3">{{ feed.url }}</b-form-text>
+        </template>
+      </div>
     </div>
     <div slot="modal-footer">
       <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
-      <button type="button" class="btn btn-primary" @click="subscribe" :disabled="disableSubscribe">Subscribe</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="subscribe"
+        :disabled="disableSubscribe"
+      >Subscribe</button>
     </div>
   </b-modal>
 </template>
@@ -60,22 +81,26 @@ export default {
     fetchFeed () {
       this.loading = true
       if (!this.$store.state.Setting.offline) {
-        finder(normalizeUrl(this.feed_url, { stripWWW: false })).then((res) => {
-          this.loading = false
-          res.feedUrls.map((item) => {
-            item.title = he.unescape(item.title)
-            return item
-          })
-          if (res.feedUrls.length === 0) {
+        finder(normalizeUrl(this.feed_url, { stripWWW: false })).then(
+          res => {
+            this.loading = false
+            res.feedUrls.map(item => {
+              item.title = he.unescape(item.title)
+              return item
+            })
+            if (res.feedUrls.length === 0) {
+              this.showError()
+            } else {
+              this.selected_feed.push(res.feedUrls[0])
+              this.feeddata = res
+            }
+          },
+          error => {
+            if (error) {
+            }
             this.showError()
-          } else {
-            this.selected_feed.push(res.feedUrls[0])
-            this.feeddata = res
           }
-        }, (error) => {
-          if (error) {}
-          this.showError()
-        })
+        )
       } else {
         this.$toast('There is no internet connection', {
           className: 'et-alert',

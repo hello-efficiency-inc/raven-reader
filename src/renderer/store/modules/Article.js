@@ -144,6 +144,14 @@ const mutations = {
   },
   FONT_SETTINGS_ON (state, data) {
     state.fontSettingOn = data
+  },
+  UPDATE_FEED_TITLE (state, data) {
+    const index = _.findIndex(state.articles, {
+      '_id': data.article_id
+    })
+    if (index >= 0) {
+      state.articles[index].feed_title = data.title
+    }
   }
 }
 
@@ -215,6 +223,11 @@ const actions = {
   },
   turnOnFontSetting ({ commit }, data) {
     commit('FONT_SETTINGS_ON', data)
+  },
+  async updateArticleFeedTitle ({ dispatch, commit }, data) {
+    db.updateArticleFeedTitle(data.id, data.title)
+    commit('UPDATE_FEED_TITLE', data)
+    await dispatch('loadArticles')
   }
 }
 

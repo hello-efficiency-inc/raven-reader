@@ -36,6 +36,19 @@ export default {
       return cb(docs)
     })
   },
+  updateFeedTitle (id, title) {
+    feed.update({
+      id: id
+    }, {
+      $set: {
+        title: title
+      }
+    }, (err, num) => {
+      if (err) {
+        console.log(err)
+      }
+    })
+  },
   deleteFeed (id) {
     feed.remove({ id: id }, {}, (err, numRemoved) => {
       if (err) {}
@@ -48,6 +61,21 @@ export default {
         console.log(err)
       }
       return cb(docs)
+    })
+  },
+  updateArticleFeedTitle (id, title) {
+    article.update({
+      feed_id: id
+    }, {
+      $set: {
+        feed_title: title
+      }
+    }, {
+      multi: true
+    }, (err, num) => {
+      if (err) {
+        console.log(err)
+      }
     })
   },
   deleteArticles (id) {

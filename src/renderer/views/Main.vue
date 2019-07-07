@@ -7,99 +7,118 @@
           <li class="nav-item">
             <router-link class="nav-link feed-mix-link" to="/all" active-class="active">
               <feed-mix feed-id="allFeeds" mark="allFeeds">
-                <feather-icon name="list"></feather-icon>
-                All Feeds <span class="sr-only">(current)</span>
-                <span class="items-counter" v-if="getArticlesCount('','') > 0">{{ getArticlesCount('','') }}</span>
+                <feather-icon name="list"></feather-icon>All Feeds
+                <span class="sr-only">(current)</span>
+                <span
+                  class="items-counter"
+                  v-if="getArticlesCount('','') > 0"
+                >{{ getArticlesCount('','') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link feed-mix-link" to="/favourites" active-class="active">
               <feed-mix feed-id="favourites" mark="favourites">
-                <feather-icon name="star"></feather-icon>
-                Favourites
-                <span class="items-counter" v-if="getArticlesCount('favourites','') > 0">{{ getArticlesCount('favourites','') }}</span>
+                <feather-icon name="star"></feather-icon>Favourites
+                <span
+                  class="items-counter"
+                  v-if="getArticlesCount('favourites','') > 0"
+                >{{ getArticlesCount('favourites','') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link feed-mix-link" to="/unread" active-class="active">
               <feed-mix feed-id="unreadArticles" mark="unreadArticles">
-                <feather-icon name="circle"></feather-icon>
-                Unread Articles
-                <span class="items-counter" v-if="getArticlesCount('unread', '') > 0">{{ getArticlesCount('unread', '') }}</span>
+                <feather-icon name="circle"></feather-icon>Unread Articles
+                <span
+                  class="items-counter"
+                  v-if="getArticlesCount('unread', '') > 0"
+                >{{ getArticlesCount('unread', '') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link feed-mix-link" to="/read" active-class="active">
               <feed-mix feed-id="recentlyRead" mark="recentlyRead">
-                <feather-icon name="circle" filled></feather-icon>
-                Recently Read
-                <span class="items-counter" v-if="getArticlesCount('read', '') > 0">{{ getArticlesCount('read', '') }}</span>
+                <feather-icon name="circle" filled></feather-icon>Recently Read
+                <span
+                  class="items-counter"
+                  v-if="getArticlesCount('read', '') > 0"
+                >{{ getArticlesCount('read', '') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link feed-mix-link" to="/saved" active-class="active">
               <feed-mix feed-id="savedArticles" mark="savedArticles">
-                <feather-icon name="wifi-off"></feather-icon>
-                Saved articles
-                <span class="items-counter" v-if="getArticlesCount('saved', '') > 0">{{ getArticlesCount('saved', '') }}</span>
+                <feather-icon name="wifi-off"></feather-icon>Saved articles
+                <span
+                  class="items-counter"
+                  v-if="getArticlesCount('saved', '') > 0"
+                >{{ getArticlesCount('saved', '') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" @click="exportOpml">
-              <feather-icon name="external-link"></feather-icon>
-              Export Subscriptions
+              <feather-icon name="external-link"></feather-icon>Export Subscriptions
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.importfeed>
-              <feather-icon name="upload"></feather-icon>
-              Import Subscriptions
+              <feather-icon name="upload"></feather-icon>Import Subscriptions
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.markallread ref="markallread">
-              <feather-icon name="check-square"></feather-icon>
-              Mark all as read
+              <feather-icon name="check-square"></feather-icon>Mark all as read
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.settings>
-              <feather-icon name="settings"></feather-icon>
-              Settings
+              <feather-icon name="settings"></feather-icon>Settings
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.integrations>
-              <feather-icon name="package"></feather-icon>
-              Integrations
+              <feather-icon name="package"></feather-icon>Integrations
             </a>
           </li>
         </ul>
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <h6
+          class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+        >
           <span>Subscriptions</span>
         </h6>
         <ul class="nav flex-column">
-          <li v-for="feed in mapFeeds(feeds)" class="feed nav-item d-flex justify-content-between align-items-center pr-2" v-bind:key="feed.id"
+          <li
+            v-for="feed in mapFeeds(feeds)"
+            class="feed nav-item d-flex justify-content-between align-items-center pr-2"
+            v-bind:key="feed.id"
             mark="feed"
             @click="setActiveFeedId(feed)"
             v-bind:class="{ active: feed.isActive }"
           >
             <router-link v-if="feed" class="nav-link" :to="`/feed/${feed.id}`">
-              <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1">
-                {{ feed.title }}
+              <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1" />
+              {{ feed.title }}
             </router-link>
-            <button @click="unsubscribeFeed(feed.id)" class="btn btn-link"><feather-icon name="x-circle"></feather-icon></button>
+            <button @click="unsubscribeFeed(feed.id)" class="btn btn-link">
+              <feather-icon name="x-circle"></feather-icon>
+            </button>
           </li>
         </ul>
       </perfect-scrollbar>
     </nav>
     <article-list :type="articleType" :feed="feed" @type-change="updateType" ref="articleList"></article-list>
-    <article-detail :id="$route.params.id" :article="articleData" :emptyState="empty" :loading="loading" ref="articleDetail"></article-detail>
+    <article-detail
+      :id="$route.params.id"
+      :article="articleData"
+      :emptyState="empty"
+      :loading="loading"
+      ref="articleDetail"
+    ></article-detail>
     <import-modal></import-modal>
     <settings-modal></settings-modal>
     <markallread-modal></markallread-modal>
@@ -155,27 +174,45 @@ export default {
 
     this.$electron.ipcRenderer.on('Next item', (event, args) => {
       if (self.$route.params.id) {
-        const index = _.findIndex(self.$store.getters.filteredArticles, { '_id': self.$route.params.id })
-        if (index !== (self.$store.getters.filteredArticles.length - 1)) {
+        const index = _.findIndex(self.$store.getters.filteredArticles, {
+          _id: self.$route.params.id
+        })
+        if (index !== self.$store.getters.filteredArticles.length - 1) {
           const nextArticle = self.$store.getters.filteredArticles[index + 1]
-          self.$router.push({ name: 'article-page', params: { id: nextArticle._id } })
+          self.$router.push({
+            name: 'article-page',
+            params: { id: nextArticle._id }
+          })
         }
       } else {
-        self.$router.push({ name: 'article-page', params: { id: self.$store.getters.filteredArticles[0]._id } })
+        self.$router.push({
+          name: 'article-page',
+          params: { id: self.$store.getters.filteredArticles[0]._id }
+        })
       }
     })
 
     this.$electron.ipcRenderer.on('Previous item', (event, args) => {
       if (self.$route.params.id) {
-        const index = _.findIndex(self.$store.getters.filteredArticles, { '_id': self.$route.params.id })
+        const index = _.findIndex(self.$store.getters.filteredArticles, {
+          _id: self.$route.params.id
+        })
         if (index > 0) {
           const prevArticle = self.$store.getters.filteredArticles[index - 1]
-          self.$router.push({ name: 'article-page', params: { id: prevArticle._id } })
+          self.$router.push({
+            name: 'article-page',
+            params: { id: prevArticle._id }
+          })
         }
       } else {
         const articleLength = self.$store.getters.filteredArticles.length
         console.log(articleLength)
-        self.$router.push({ name: 'article-page', params: { id: self.$store.getters.filteredArticles[articleLength - 1]._id } })
+        self.$router.push({
+          name: 'article-page',
+          params: {
+            id: self.$store.getters.filteredArticles[articleLength - 1]._id
+          }
+        })
       }
     })
 
@@ -220,23 +257,26 @@ export default {
       }
     })
     // Feed Crawling
-    const job = scheduler.scheduleJob(self.$store.state.Setting.cronSettings, () => {
-      const feeds = self.$store.state.Feed.feeds
-      if (feeds.length === 0) {
-        log.info('No feeds to process')
-      } else {
-        this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
-        log.info(`Processing ${feeds.length} feeds`)
-        helper.subscribe(feeds, null, true, false)
-        self.$store.dispatch('loadArticles')
+    const job = scheduler.scheduleJob(
+      self.$store.state.Setting.cronSettings,
+      () => {
+        const feeds = self.$store.state.Feed.feeds
+        if (feeds.length === 0) {
+          log.info('No feeds to process')
+        } else {
+          this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
+          log.info(`Processing ${feeds.length} feeds`)
+          helper.subscribe(feeds, null, true, false)
+          self.$store.dispatch('loadArticles')
+        }
       }
-    })
+    )
 
     if (this.$store.state.Setting.offline) {
       job.reschedule()
     }
     // On delete stop Crawler Job
-    this.$on('delete', (msg) => {
+    this.$on('delete', msg => {
       if (msg === 'yes') {
         log.info('Job is cancelled')
         job.reschedule()
@@ -260,7 +300,10 @@ export default {
   },
   methods: {
     mapFeeds (feeds) {
-      return feeds.map(feed => ({ ...feed, isActive: this.isFeedActive(feed) }))
+      return feeds.map(feed => ({
+        ...feed,
+        isActive: this.isFeedActive(feed)
+      }))
     },
     // TODO: Source this method out
     isFeedActive (feed) {
@@ -291,13 +334,23 @@ export default {
     exportOpml () {
       const xmlData = helper.exportOpml()
       const self = this
-      fs.unlink(`${self.$electron.remote.app.getPath('downloads')}/subscriptions.xml`, (err) => {
-        if (err && err.code !== 'ENOENT') throw err
-        fs.writeFile(`${self.$electron.remote.app.getPath('downloads')}/subscriptions.xml`, xmlData, { flag: 'w', encoding: 'utf8' }, (err) => {
-          if (err) throw err
-          console.log('XML Saved')
-        })
-      })
+      fs.unlink(
+        `${self.$electron.remote.app.getPath('downloads')}/subscriptions.xml`,
+        err => {
+          if (err && err.code !== 'ENOENT') throw err
+          fs.writeFile(
+            `${self.$electron.remote.app.getPath(
+              'downloads'
+            )}/subscriptions.xml`,
+            xmlData,
+            { flag: 'w', encoding: 'utf8' },
+            err => {
+              if (err) throw err
+              console.log('XML Saved')
+            }
+          )
+        }
+      )
       notifier.notify({
         icon: path.join(__static, '/logo_icon.png'),
         title: 'Feeds exported',
@@ -331,9 +384,12 @@ export default {
       const $ = cheerio.load(data.content)
       $('a').addClass('js-external-link')
       data.content = $.text().trim() === '' ? article.description : $.html()
-      data.date_published = data.date_published ? dayjs(data.date_published).format('MMMM D, YYYY') : null
+      data.date_published = data.date_published
+        ? dayjs(data.date_published).format('MMMM D, YYYY')
+        : null
       data.favicon = article.favicon
       data.sitetitle = _.truncate(article.feed_title, 20)
+      data.feed_id = article.feed_id
       data._id = article._id
       data.favourite = article.favourite
       data.read = article.read
@@ -347,7 +403,7 @@ export default {
       if (!this.feeds) {
         return
       }
-      let feedsCopy = this.feeds.map((item) => {
+      let feedsCopy = this.feeds.map(item => {
         item.unread = this.getArticlesCount('unread', item.id)
         return item
       })
@@ -366,7 +422,10 @@ export default {
         db.fetchArticle(this.$route.params.id, async function (article) {
           let data
           if (self.$store.state.Setting.offline) {
-            data = await cacheService.getCachedArticleData(article._id, article.link)
+            data = await cacheService.getCachedArticleData(
+              article._id,
+              article.link
+            )
           } else {
             try {
               data = await parseArticle(article.link)
@@ -393,7 +452,6 @@ export default {
 }
 </script>
 <style lang="scss">
-
 .app-wrapper {
   display: flex;
   height: 100%;
@@ -403,9 +461,9 @@ export default {
 // Default color mode
 :root {
   --background-color: inherit;
-  --border-color: rgba(0, 0, 0, 0.1);  
+  --border-color: rgba(0, 0, 0, 0.1);
   --text-color: inherit;
-  --after-background: none;  
+  --after-background: none;
   --active-item-background-color: #e8e8e8;
 
   & .sidebar {
@@ -423,10 +481,10 @@ export default {
   --border-color: black;
   --text-color: white;
   --active-item-background-color: #504e4e;
-  
-  & .sidebar {    
+
+  & .sidebar {
     --background-color: var(--darkmode-background);
-    --btn-subscribe-color: var(--text-color);    
+    --btn-subscribe-color: var(--text-color);
     --nav-link-color: var(--text-color);
     --heading-color: #979797;
   }
@@ -463,7 +521,7 @@ export default {
 
     & .feed-mix {
       padding: 0.5rem 1rem;
-      
+
       &.active {
         background-color: var(--active-item-background-color);
         border-radius: 0.3rem;
@@ -485,7 +543,7 @@ export default {
 }
 
 .items-counter {
-  float:right;
+  float: right;
 }
 .items-counter-feed {
   padding-right: 10px;
