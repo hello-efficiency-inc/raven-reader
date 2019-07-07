@@ -3,6 +3,9 @@
     <b-form-group label="Set refresh interval for news feed">
       <b-form-select v-model="cronjob" :options="cron_options" size="sm" @change="saveCronjob"/>
     </b-form-group>
+    <b-form-group label="Choose appearance">
+      <b-form-select v-model="theme_option" :options="themeOptions" size="sm" @change="saveAppearance" />
+    </b-form-group>
     <b-form-group label="Oldest articles first">
       <b-form-radio-group id="btnradios1"
       buttons
@@ -11,15 +14,6 @@
       v-model="oldestArticles"
       :options="options"
       name="sortPref" @input="saveSortPreference"/>
-    </b-form-group>
-    <b-form-group label="Turn on dark mode">
-      <b-form-radio-group id="btnradios2"
-      buttons
-      button-variant="outline-primary"
-      size="sm"
-      v-model="darkMode"
-      :options="options"
-      name="darkTheme" @change="saveAppearance"/>
     </b-form-group>
     <h5>Proxy Settings</h5>
     <b-form-group label="Web Server (HTTP):">
@@ -43,6 +37,7 @@ export default {
   data () {
     return {
       cronjob: null,
+      theme_option: null,
       darkMode: 'off',
       oldestArticles: 'off',
       cron_options: [
@@ -65,6 +60,11 @@ export default {
         { text: 'On', value: 'on' },
         { text: 'Off', value: 'off' }
       ],
+      themeOptions: [
+        { value: null, text: 'Default' },
+        { text: 'Dark', value: 'dark' },
+        { text: 'Sunset', value: 'sunset' }
+      ],
       proxy: {
         http: '',
         https: '',
@@ -75,7 +75,8 @@ export default {
   mounted () {
     this.$store.dispatch('loadSettings')
     this.cronjob = this.$store.state.Setting.cronSettings
-    this.darkMode = this.$store.state.Setting.darkMode
+    this.theme_option = this.$store.state.Setting.themeOption
+    this.setTheme(this.$store.state.Setting.themeOption)
     this.oldestArticles = this.$store.state.Setting.oldestArticles
     if (this.$store.state.Setting.proxy) {
       this.proxy.http = this.$store.state.Setting.proxy.http
@@ -84,6 +85,29 @@ export default {
     }
   },
   methods: {
+    setTheme (themeValue) {
+      switch (themeValue) {
+        case 'dark':
+          this.toggleBodyClass(false, 'app-sunsetmode')
+          this.toggleBodyClass(true, 'app-darkmode')
+          break
+        case 'sunset':
+          this.toggleBodyClass(false, 'app-darkmode')
+          this.toggleBodyClass(true, 'app-sunsetmode')
+          break
+        case null:
+          this.toggleBodyClass(false, 'app-darkmode')
+          this.toggleBodyClass(false, 'app-sunsetmode')
+      }
+    },
+    toggleBodyClass (addClass, className) {
+      const el = document.body
+      if (addClass) {
+        el.classList.add(className)
+      } else {
+        el.classList.remove(className)
+      }
+    },
     saveCronjob (cronValue) {
       this.$store.dispatch('setCronJob', cronValue)
       this.$toasted.show('Settings for cronjob successfully saved.', {
@@ -102,9 +126,10 @@ export default {
       })
       this.hideModal()
     },
-    saveAppearance (darkMode) {
-      this.$store.dispatch('setDarkMode', darkMode)
-      this.$toasted.show('Changed appearance settings to dark mode.', {
+    saveAppearance (theme) {
+      this.$store.dispatch('setThemeOption', theme)
+      this.setTheme(theme)
+      this.$toasted.show('Changed appearance settings.', {
         theme: 'outline',
         position: 'top-center',
         duration: 3000

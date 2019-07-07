@@ -9,7 +9,6 @@
     centered
     @hidden="onHidden"
   >
-    <div :class="{ 'app-darkmode': $store.state.Setting.darkMode === 'on' }">
       <form v-on:submit.prevent="fetchFeed">
         <b-input-group size="md">
           <b-input-group-text slot="prepend">
@@ -43,7 +42,6 @@
           <b-form-text id="inputLiveHelp" class="mb-3">{{ feed.url }}</b-form-text>
         </template>
       </div>
-    </div>
     <div slot="modal-footer">
       <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
       <button
@@ -143,6 +141,56 @@ export default {
 }
 </script>
 <style lang="scss">
+.app-sunsetmode {
+  #addfeed {
+    form {
+      background: var(--background-color);
+      color: var(--text-color);
+    }
+
+    .no-border {
+      background: var(--background-color);
+      color: var(--text-color);
+      &:focus {
+        color: #000;
+      }
+    }
+
+    .input-group-text {
+      color: #000;
+    }
+
+    .subscription-content {
+      background: var(--background-color);
+      border-color: var(--border-color);
+    }
+  }
+}
+.app-darkmode {
+  #addfeed {
+    form {
+      background: var(--background-color);
+      color: var(--text-color);
+    }
+
+    .no-border {
+      background: var(--background-color);
+      color: var(--text-color);
+      &:focus {
+        color: #fff;
+      }
+    }
+
+    .input-group-text {
+      color: #fff;
+    }
+
+    .subscription-content {
+      background: var(--background-color);
+      border-color: var(--border-color);
+    }
+  }
+}
 #addfeed {
   form {
     background: #f4f6f8;

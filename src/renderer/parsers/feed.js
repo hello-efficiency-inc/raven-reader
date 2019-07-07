@@ -76,6 +76,8 @@ export function ParseFeedPost (feed) {
     item.offline = false
     item.favicon = null
     item.feed_title = feed.meta.title
+    item.feed_url = feed.meta.xmlurl
+    item.feed_link = feed.meta.link
     if (item.content) {
       item.content = he.unescape(item.content)
     }

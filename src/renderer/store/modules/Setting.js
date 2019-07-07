@@ -2,7 +2,7 @@ import Store from 'electron-store'
 
 const state = {
   cronSettings: '*/5 * * * *',
-  darkMode: false,
+  themeOption: null,
   oldestArticles: false,
   offline: false,
   proxy: {
@@ -17,7 +17,7 @@ const store = new Store()
 const mutations = {
   LOAD_SETTINGS (state) {
     state.cronSettings = store.get('settings.cronjob')
-    state.darkMode = store.get('settings.darkMode')
+    state.themeOption = store.get('settings.theme_option')
     state.oldestArticles = store.get('settings.oldestArticles')
     state.proxy = store.get('settings.proxy')
   },
@@ -27,7 +27,7 @@ const mutations = {
   SET_CRONJOB (state, data) {
     state.cronSettings = data
   },
-  SET_DARKMODE (state, data) {
+  SET_THEME_OPTION (state, data) {
     state.darkMode = data
   },
   SET_SORT_PREFERENCE (state, data) {
@@ -52,9 +52,9 @@ const actions = {
   setOffline ({ commit }, data) {
     commit('SET_OFFLINE', data)
   },
-  setDarkMode ({ commit }, data) {
-    store.set('settings.darkMode', data)
-    commit('SET_DARKMODE', data)
+  setThemeOption ({ commit }, data) {
+    store.set('settings.theme_option', data)
+    commit('SET_THEME_OPTION', data)
   },
   async setSortPreference ({ dispatch, commit }, data) {
     store.set('settings.oldestArticles', data)

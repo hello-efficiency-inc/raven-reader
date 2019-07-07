@@ -102,10 +102,25 @@ export default {
 }
 
 // Dark color mode
+.app-sunsetmode {
+  &.articles-list {
+    --input-background-color: var(--background-color);
+    --input-color: #c8cacc;    
+  }
+}
 .app-darkmode {
   & .articles-list {
     --input-background-color: var(--background-color);
     --input-color: #c8cacc;    
+  }
+
+  .search-input {
+    input[type="text"] {
+      &:focus {
+        background: var(--background-color);
+        color: white;
+      }
+    }
   }
 }
 

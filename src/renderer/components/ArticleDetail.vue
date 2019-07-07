@@ -75,6 +75,14 @@ export default {
 }
 
 // Dark color mode
+.app-sunsetmode {
+  & .article-contentarea {
+    --text-color-gray: #000;
+    --h2-color: var(--text-color);
+    --h2-small-color: var(--text-color-gray);
+    --paragraph-color: var(--text-color-gray);
+  }
+}
 .app-darkmode {
   & .article-contentarea {
     --text-color-gray: #c8cacc;
@@ -92,7 +100,7 @@ export default {
   background: var(--background-color);
 }
 
-.article-contentarea {
+.article-contentarea  {
 
   display: block;
   position: absolute;
@@ -129,9 +137,13 @@ export default {
   h4 {
     color: var(--text-color);
   }
+
   b {
     color: var(--text-color);
   }
+
+  div,
+  div > p,
   p {
     color: var(--paragraph-color);
   }

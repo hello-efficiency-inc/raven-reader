@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper" :class="{ 'app-darkmode': $store.state.Setting.darkMode === 'on' }">
+  <div class="app-wrapper">
     <nav class="sidebar" v-if="true" ref="sidebar">
       <subscribe-toolbar ref="subscribetoolbar"></subscribe-toolbar>
       <perfect-scrollbar class="sidebar-sticky">
@@ -172,6 +172,11 @@ export default {
       self.$refs.subscribetoolbar.$refs.subscribefeed.click()
     })
 
+    this.$electron.ipcRenderer.on('Dark mode', (event, args) => {
+      console.log(args)
+      this.$store.dispatch('setDarkMode', args.darkmode ? 'on' : 'off')
+    })
+
     this.$electron.ipcRenderer.on('Next item', (event, args) => {
       if (self.$route.params.id) {
         const index = _.findIndex(self.$store.getters.filteredArticles, {
@@ -299,6 +304,29 @@ export default {
     }
   },
   methods: {
+    setTheme (themeValue) {
+      switch (themeValue) {
+        case 'dark':
+          this.toggleBodyClass(false, 'app-sunsetmode')
+          this.toggleBodyClass(true, 'app-darkmode')
+          break
+        case 'sunset':
+          this.toggleBodyClass(false, 'app-darkmode')
+          this.toggleBodyClass(true, 'app-sunsetmode')
+          break
+        case null:
+          this.toggleBodyClass(false, 'app-darkmode')
+          this.toggleBodyClass(false, 'app-sunsetmode')
+      }
+    },
+    toggleBodyClass (addClass, className) {
+      const el = document.body
+      if (addClass) {
+        el.classList.add(className)
+      } else {
+        el.classList.remove(className)
+      }
+    },
     mapFeeds (feeds) {
       return feeds.map(feed => ({
         ...feed,
@@ -390,6 +418,8 @@ export default {
       data.favicon = article.favicon
       data.sitetitle = _.truncate(article.feed_title, 20)
       data.feed_id = article.feed_id
+      data.feed_url = article.feed_url
+      data.feed_link = article.feed_link
       data._id = article._id
       data.favourite = article.favourite
       data.read = article.read
@@ -476,17 +506,76 @@ export default {
 
 // Dark color mode
 .app-darkmode {
-  --darkmode-background: #373737;
-  --background-color: var(--darkmode-background);
+  --darkmode-background: 55, 55, 55;
+  --background-color: rgba(var(--darkmode-background), 1);
   --border-color: black;
   --text-color: white;
+  --input-color: 89, 91, 93;
   --active-item-background-color: #504e4e;
 
   & .sidebar {
-    --background-color: var(--darkmode-background);
+    --background-color: rgba(var(--darkmode-background), 1);
     --btn-subscribe-color: var(--text-color);
     --nav-link-color: var(--text-color);
     --heading-color: #979797;
+  }
+}
+
+.app-sunsetmode {
+  --sunset-background: 	227, 225, 217;
+  --background-color: rgba(var(--sunset-background), 1);
+  --border-color: 	#CCCBC3;
+  --text-color: rgb(46, 45, 44);
+  --input-color: 	204, 203, 195;
+
+  & .sidebar {
+    --background-color: rgba(var(--sunset-background), 1);
+    --btn-subscribe-color: var(--text-color);
+    --nav-link-color: var(--text-color);
+    --heading-color: #979797;
+  }
+}
+
+.app-sunsetmode,
+.app-darkmode {
+  textarea, 
+  input[type="text"],
+  input[type="password"],
+  input[type="datetime"], 
+  input[type="datetime-local"], 
+  input[type="date"], 
+  input[type="month"], 
+  input[type="time"], 
+  input[type="week"], 
+  input[type="number"], 
+  input[type="email"], 
+  input[type="url"], 
+  input[type="search"], 
+  input[type="file"],
+  .custom-file-label,
+  input[type="tel"], 
+  input[type="color"] {
+    background: rgba(var(--input-color), 0.8);
+    color: var(--text-color);
+    border: 0;
+
+    &:focus {
+      background: #fff;
+      color: #000;
+    }
+  }
+
+  .modal-content {
+    background: var(--background-color);
+    color: var(--text-color);
+  }
+
+  .modal-header,
+  .modal-footer {
+    border-color: var(--border-color);
+    .close {
+      color: var(--text-color);
+    }
   }
 }
 

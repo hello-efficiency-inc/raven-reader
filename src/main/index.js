@@ -5,7 +5,8 @@ import {
   BrowserWindow,
   Menu,
   Tray,
-  ipcMain
+  ipcMain,
+  systemPreferences
 } from 'electron'
 // import updateElectron from 'update-electron-app'
 import jetpack from 'fs-jetpack'
@@ -407,6 +408,16 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+if (process.platform === 'darwin') {
+  systemPreferences.subscribeNotification(
+    'AppleInterfaceThemeChangedNotification', () => {
+      mainWindow.webContents.send('Dark mode', {
+        darkmode: systemPreferences.isDarkMode()
+      })
+    }
+  )
+}
 
 ipcMain.on('article-selected', (event, status) => {
   const menuItemViewBrowser = menu.getMenuItemById('view-browser')

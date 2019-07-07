@@ -220,6 +220,7 @@ export default {
 }
 
 // Dark color mode
+.app-sunsetmode,
 .app-darkmode {  
   & .article-toolbar {
     --feather-success-color: green;
@@ -344,17 +345,33 @@ export default {
   display: flex;
 }
 
+.app-sunsetmode {
+  .article-setting {
+    background-color: var(--background-color);
+    border-color: var(--border-color);
+  }
+
+  .settings-wrap {
+    border-color: var(--border-color);
+  }
+
+  .icon-smaller-text {
+    fill: #000;
+  }
+}
+
 .app-darkmode {
   .article-setting {
-    background-color: #1A1A1A;
+    background-color: var(--background-color);
+    border-color: var(--border-color);
+  }
+
+  .settings-wrap {
+    border-color: var(--border-color);
   }
 
   .icon-smaller-text {
     fill: #fff;
-}
-
-  .setting-wrap {
-    border-right: 1ox solid #333333;
   }
 }
 

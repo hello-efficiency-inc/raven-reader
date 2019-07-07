@@ -4060,7 +4060,7 @@ electron-windows-notifications@^3.0.0:
     uuid "^3.3.2"
     xml-escape "^1.1.0"
 
-electron@^5.0.1:
+electron@^5.0.6:
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/electron/-/electron-5.0.6.tgz#e3ca4a58b5716fceef3fb64e1fd2222dd9c51de0"
   integrity sha512-0L53lv26eDhaaNxL6DqXGQrQOEAYbrQg40stRSb2pzrY06kwPbABzXEiaCvEsBuKUQ+9OQBbVyyvXRbLJlun/A==

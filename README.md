@@ -28,6 +28,7 @@
 
 ![newscreenshot](/newscreenshot.png)
 ![darkscreenshot](/darkscreenshot.png)
+![sunsetscreenshot](/sunsetscreenshot.png)
 
 ## Download
 
