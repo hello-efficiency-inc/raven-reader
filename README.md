@@ -65,6 +65,7 @@ To download, please visit [https://github.com/mrgodhani/rss-reader/releases](htt
 - [ ] Web app
 - [x] Pocket Integration
 - [ ] Moving to web based. Reason: NeDB won't be scalable and handle large datasets? Or look for different local db.
+- [ ] For ongoing support. Soon this would be a paid app with reasonable pricing per month.
 
 Please feel free to suggest more ideas to improve this app.
 
@@ -108,10 +109,6 @@ For more documentation please follow link from [Electron Vue](https://simulatedg
 Please feel free to give us suggestions or report a bug by creating a [new issue](https://github.com/mrgodhani/rss-reader/issues) via Github or messaging on  Twitter: [@mrgodhani](https://twitter.com/mrgodhani).
 
 - Thank you Adi Ofir from [Break and Enter](https://www.breakenter.com) for the amazing logo and icons.
-
-Support us by backing us or sponsoring to continue maintaining this app and activities.
-
-- [Become a backer or sponsor on OpenCollective.](https://opencollective.com/ravenreader)
 
 ## License
 [MIT](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)
