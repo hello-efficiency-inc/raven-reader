@@ -522,38 +522,67 @@ export default {
 }
 
 .app-sunsetmode {
-  --sunset-background: 	227, 225, 217;
+  --sunset-background: 227, 225, 217;
   --background-color: rgba(var(--sunset-background), 1);
-  --border-color: 	#CCCBC3;
+  --border-color: #cccbc3;
   --text-color: rgb(46, 45, 44);
-  --input-color: 	204, 203, 195;
+  --input-color: 204, 203, 195;
+  --active-item-background-color: #5b5a57;
 
   & .sidebar {
     --background-color: rgba(var(--sunset-background), 1);
     --btn-subscribe-color: var(--text-color);
     --nav-link-color: var(--text-color);
     --heading-color: #979797;
+
+    .feed {
+      &.active {
+        background-color: var(--active-item-background-color);
+        color: #fff;
+        border-radius: 0;
+      }
+    }
+
+    .nav {
+      .active {
+        a {
+          color: #fff !important;
+        }
+      }
+    }
+
+    .nav-link {
+      & .feed-mix {
+        padding: 0.5rem 1rem;
+
+        &.active {
+          background-color: var(--active-item-background-color);
+          border-radius: 0;
+          color: #fff;
+        }
+      }
+    }
   }
 }
 
 .app-sunsetmode,
 .app-darkmode {
-  textarea, 
+  textarea,
   input[type="text"],
   input[type="password"],
-  input[type="datetime"], 
-  input[type="datetime-local"], 
-  input[type="date"], 
-  input[type="month"], 
-  input[type="time"], 
-  input[type="week"], 
-  input[type="number"], 
-  input[type="email"], 
-  input[type="url"], 
-  input[type="search"], 
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="month"],
+  input[type="time"],
+  input[type="week"],
+  input[type="number"],
+  input[type="email"],
+  input[type="url"],
+  input[type="search"],
   input[type="file"],
   .custom-file-label,
-  input[type="tel"], 
+  input[type="tel"],
   input[type="color"] {
     background: rgba(var(--input-color), 0.8);
     color: var(--text-color);
@@ -597,7 +626,7 @@ export default {
   .feed {
     &.active {
       background-color: var(--active-item-background-color);
-      border-radius: 0.3rem;
+      border-radius: 0;
     }
   }
 

@@ -107,6 +107,14 @@ export default {
     --input-background-color: var(--background-color);
     --input-color: #c8cacc;    
   }
+  .search-input {
+    input[type="text"] {
+      &:focus {
+        background: var(--background-color);
+        color: #000;
+      }
+    }
+  }
 }
 .app-darkmode {
   & .articles-list {
