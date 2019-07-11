@@ -21,7 +21,9 @@ import {
 
 const contextMenu = require('electron-context-menu')
 
-contextMenu()
+contextMenu({
+  showInspectElement: true
+})
 
 /**
  * Set `__static` path to static files in production
@@ -349,6 +351,8 @@ function createWindow () {
   })
 
   mainWindow.loadURL(winURL)
+
+  mainWindow.webContents.openDevTools()
 
   const proxy = store.get('settings.proxy') ? store.get('settings.proxy') : null
   let proxyRules = 'direct://'
