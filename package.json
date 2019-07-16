@@ -1,6 +1,6 @@
 {
   "name": "raven-reader",
-  "version": "0.5.3",
+  "version": "0.5.5",
   "standard": {
     "globals": [
       "describe",

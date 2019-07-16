@@ -79,6 +79,9 @@
     </div>
   </div>
   <div class="article-setting" v-bind:class="{ hidden: !settingspanel }">
+      <div class="settings-wrap dropdown-setting">
+        <b-form-select v-model="fontstyle" :options="options" @change="changeFontStyle"></b-form-select>
+      </div>
       <div class="settings-wrap">
         <button class="btn btn-link" @click="decreaseFontSize">
           <svg class="icon-smaller-text" xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path d="M17.973 29.845v-.321c.446-.051.781-.219 1.004-.504.223-.286.606-1.067 1.148-2.345l3.617-8.52h.346l4.326 9.842c.288.651.519 1.056.69 1.21s.463.26.869.316v.321h-4.415v-.321c.507-.046.835-.101.981-.166.146-.064.221-.223.221-.476a2.08 2.08 0 0 0-.086-.447 4.885 4.885 0 0 0-.236-.675l-.695-1.67h-4.575a85.484 85.484 0 0 0-.808 2.079c-.087.25-.131.448-.131.595 0 .293.119.495.356.607.146.067.423.118.829.152v.321h-3.441zm7.476-4.458l-1.989-4.782-1.999 4.782h3.988z"></path></svg>
@@ -112,7 +115,15 @@ export default {
   data () {
     return {
       pocket_connected: false,
-      settingspanel: false
+      settingspanel: false,
+      fontstyle: null,
+      options: [
+        { value: null, text: 'System font' },
+        { value: 'Open Sans', text: 'Open Sans' },
+        { value: 'Muli', text: 'Muli' },
+        { value: 'Playfair Display', text: 'Playfair Display' },
+        { value: 'Roboto Slab', text: 'Roboto Slab' }
+      ]
     }
   },
   props: {
@@ -134,6 +145,10 @@ export default {
     }
   },
   methods: {
+    changeFontStyle (fontStyle) {
+      console.log(fontStyle)
+      this.$store.dispatch('changeFontStyle', fontStyle)
+    },
     decreaseFontSize () {
       this.$store.dispatch('decreaseFont')
     },
@@ -346,6 +361,12 @@ export default {
 }
 
 .app-sunsetmode {
+  .dropdown-setting {
+    select {
+      background: var(--background-color);
+      border: 0;
+    }
+  }
   .article-setting {
     background-color: var(--background-color);
     border-color: var(--border-color);
@@ -361,6 +382,19 @@ export default {
 }
 
 .app-darkmode {
+  .dropdown-setting {
+    select {
+      background: rgba(var(--darkmode-background), 0.8);
+      border: 0;
+      color: #fff;
+    }
+  }
+
+  .settings-wrap {
+    &:after {
+      border-color: #fff transparent transparent transparent;
+    }
+  }
   .article-setting {
     background-color: var(--background-color);
     border-color: var(--border-color);
@@ -388,6 +422,39 @@ export default {
   font-weight: 700;
   font-size: 18px;
   border-right: 1px solid #e9e9eb;
+
+  select {
+    border: 0;
+    background: var(--background-color);
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: none;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  &:after {
+      width: 0px;
+      height: 0px;
+      border-style: solid;
+      border-width: 5px 4px 0 4px;
+      border-color: #0D1623 transparent transparent transparent;
+      content: "";
+      position: absolute;
+      left: 130px;
+      top: 23px;
+      pointer-events: none;
+    }
+}
+
+.dropdown-setting {
+  width: auto;
+
+  select {
+    appearance: none;
+  }
 }
 
 .icon-smaller-text {

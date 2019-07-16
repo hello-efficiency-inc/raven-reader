@@ -352,8 +352,6 @@ function createWindow () {
 
   mainWindow.loadURL(winURL)
 
-  mainWindow.webContents.openDevTools()
-
   const proxy = store.get('settings.proxy') ? store.get('settings.proxy') : null
   let proxyRules = 'direct://'
   if (proxy) {

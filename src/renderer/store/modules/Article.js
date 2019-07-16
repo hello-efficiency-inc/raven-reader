@@ -15,6 +15,7 @@ const state = {
   search: '',
   fontSettingOn: false,
   fontSize: 100,
+  fontStyle: null,
   feed: ''
 }
 
@@ -152,6 +153,9 @@ const mutations = {
     if (index >= 0) {
       state.articles[index].feed_title = data.title
     }
+  },
+  CHANGE_FONT_STYLE (state, data) {
+    state.fontStyle = data
   }
 }
 
@@ -220,6 +224,9 @@ const actions = {
   },
   increaseFont ({ commit }) {
     commit('INCREASE_FONT')
+  },
+  changeFontStyle ({ commit }, font) {
+    commit('CHANGE_FONT_STYLE', font)
   },
   turnOnFontSetting ({ commit }, data) {
     commit('FONT_SETTINGS_ON', data)

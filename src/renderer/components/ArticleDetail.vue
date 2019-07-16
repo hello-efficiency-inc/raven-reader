@@ -1,5 +1,5 @@
 <template>
-  <div class="article-detail">
+  <div class="article-detail" v-bind:style="{ fontFamily: currentFontStyle }">
     <div class="content-wrapper">
       <article-toolbar :article="article" ref="articleToolbar"></article-toolbar>
       <perfect-scrollbar class="article-contentarea  px-4" v-bind:class="{ 'offset-content': fontSettingsOn }" v-if="article !== null && article.content !== null && !emptyState" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
@@ -44,6 +44,9 @@ export default {
     }
   },
   computed: {
+    currentFontStyle () {
+      return this.$store.state.Article.fontStyle
+    },
     currentFontSize () {
       return this.$store.state.Article.fontSize
     },
