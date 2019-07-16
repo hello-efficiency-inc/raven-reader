@@ -57,6 +57,8 @@ To download, please visit [https://github.com/mrgodhani/rss-reader/releases](htt
 - [x] Keyboard Shortcuts
 - [x] Inoreader Integration
 - [x] Sidebar count
+- [x] Text size configuration
+- [x] Text font style configuration (Currently has Playfair Display, Muli, Open Sans and Roboto Slab)
 
 ## Roadmap
 - [x] New brand name and icons
