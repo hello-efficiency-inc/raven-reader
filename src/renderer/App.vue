@@ -10,8 +10,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import 'node_modules/bootstrap/scss/bootstrap';
-
 /* open-sans-300 - latin_cyrillic-ext */
 @font-face {
   font-family: 'Open Sans';

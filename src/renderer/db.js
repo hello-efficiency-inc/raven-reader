@@ -19,11 +19,13 @@ export default class {
     }
     const existsArticle = fs.existsSync(this.useDataDir.path(`${dirName}/${db.article}`))
     const existsFeed = fs.existsSync(this.useDataDir.path(`${dirName}/${db.feed}`))
+    const existsCategory = fs.existsSync(this.useDataDir.path(`${dirName}/${db.category}`))
     let database = {}
 
-    if (!existsArticle && !existsFeed) {
+    if (!existsArticle && !existsFeed && !existsCategory) {
       this.useDataDir.write(this.useDataDir.path(`${dirName}/${db.article}`), '')
       this.useDataDir.write(this.useDataDir.path(`${dirName}/${db.feed}`), '')
+      this.useDataDir.write(this.useDataDir.path(`${dirName}/${db.category}`), '')
     }
 
     database.article = new DataStore({
@@ -33,6 +35,11 @@ export default class {
 
     database.feed = new DataStore({
       filename: this.useDataDir.path(`${dirName}/${db.feed}`),
+      autoload: true
+    })
+
+    database.category = new DataStore({
+      filename: this.useDataDir.path(`${dirName}/${db.category}`),
       autoload: true
     })
 
@@ -46,7 +53,8 @@ export default class {
 
     this.db = this.createOrReadDatabase({
       article: 'articles.db',
-      feed: 'feeds.db'
+      feed: 'feeds.db',
+      category: 'categories.db'
     })
 
     return this.db

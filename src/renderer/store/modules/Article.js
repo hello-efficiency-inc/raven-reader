@@ -27,6 +27,7 @@ const filters = {
   read: articles => articles.filter(article => article.read),
   favourites: articles => articles.filter(article => article.favourite),
   feed: (articles, feed) => articles.filter(article => article.feed_id === feed),
+  category: (articles, category) => articles.filter(article => article.category === category),
   saved: articles => articles.filter(article => article.offline),
   all: articles => articles
 }

@@ -60,16 +60,26 @@
               </feed-mix>
             </router-link>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" @click="exportOpml">
-              <feather-icon name="external-link"></feather-icon>Export Subscriptions
+          <li class="feed nav-item d-flex justify-content-between align-items-center pr-2">
+            <a class="nav-link" href="#" v-b-toggle="`collapse-importexport`">
+              <feather-icon name="external-link"></feather-icon>Import and Export
             </a>
+            <button class="btn btn-link" v-b-toggle="`collapse-importexport`">
+              <feather-icon name="chevron-down"></feather-icon>
+            </button>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" v-b-modal.importfeed>
-              <feather-icon name="upload"></feather-icon>Import Subscriptions
-            </a>
-          </li>
+          <b-collapse  id="collapse-importexport">
+            <li class="nav-item">
+              <a class="nav-link" href="#" v-b-modal.importfeed>
+                <feather-icon name="upload"></feather-icon>Import Subscriptions
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" @click="exportOpml">
+                <feather-icon name="external-link"></feather-icon>Export Subscriptions
+              </a>
+            </li>
+          </b-collapse>
           <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.markallread ref="markallread">
               <feather-icon name="check-square"></feather-icon>Mark all as read
@@ -92,22 +102,52 @@
           <span>Subscriptions</span>
         </h6>
         <ul class="nav flex-column">
+          <template
+          v-for="feed in mapFeeds(feeds, categoryItems)"
+          >
           <li
-            v-for="feed in mapFeeds(feeds)"
             class="feed nav-item d-flex justify-content-between align-items-center pr-2"
             v-bind:key="feed.id"
             mark="feed"
             @click="setActiveFeedId(feed)"
+            v-if="!feed.type && feed.category === null"
             v-bind:class="{ active: feed.isActive }"
           >
-            <router-link v-if="feed" class="nav-link" :to="`/feed/${feed.id}`">
+            <router-link v-if="!feed.type && feed.category === null" class="nav-link" :to="`/feed/${feed.id}`">
               <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1" />
               {{ feed.title }}
             </router-link>
-            <button @click="unsubscribeFeed(feed.id)" class="btn btn-link">
+            <button v-if="!feed.type && feed.category === null" @click="unsubscribeFeed(feed.id)" class="btn btn-link">
               <feather-icon name="x-circle"></feather-icon>
             </button>
           </li>
+          <li
+            class="feed nav-item d-flex justify-content-between align-items-center pr-2"
+            v-bind:key="feed._id"
+            v-if="feed.type && categoryFeeds(feeds, feed.title).length > 0"
+          >
+            <a href="#" class="nav-link" v-b-toggle="`collapse-${feed.title}`">{{ feed.title }}</a>
+            <button v-if="feed.type" class="btn btn-link" v-b-toggle="`collapse-${feed.title}`">
+              <feather-icon name="chevron-down"></feather-icon>
+            </button>
+          </li>
+          <b-collapse  v-if="feed.type" v-bind:key="feed.type" :id="`collapse-${feed.title}`">
+            <li 
+            class="feed nav-item d-flex justify-content-between align-items-center pr-2" 
+            v-for="categoryfeed in categoryFeeds(feeds, feed.title)" 
+            @click="setActiveFeedId(categoryfeed)"
+            v-bind:key="categoryfeed.id"
+            v-bind:class="{ active: categoryfeed.isActive }"
+            mark="feed"
+            >
+              <a :href="`/#/feed/${categoryfeed.id}`" class="nav-link"><img v-if="categoryfeed.favicon" :src="categoryfeed.favicon" height="16" width="16" class="mr-1" />
+              {{ categoryfeed.title }}</a>
+              <button @click="unsubscribeFeed(categoryfeed.id, categoryfeed.category)" class="btn btn-link">
+                <feather-icon name="x-circle"></feather-icon>
+              </button>
+            </li>
+           </b-collapse>
+          </template>
         </ul>
       </perfect-scrollbar>
     </nav>
@@ -161,6 +201,7 @@ export default {
     const self = this
     this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
     this.$store.dispatch('refreshFeeds')
+    this.$store.dispatch('loadCategories')
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
     this.$store.dispatch('checkOffline')
@@ -173,7 +214,6 @@ export default {
     })
 
     this.$electron.ipcRenderer.on('Dark mode', (event, args) => {
-      console.log(args)
       this.$store.dispatch('setDarkMode', args.darkmode ? 'on' : 'off')
     })
 
@@ -211,7 +251,6 @@ export default {
         }
       } else {
         const articleLength = self.$store.getters.filteredArticles.length
-        console.log(articleLength)
         self.$router.push({
           name: 'article-page',
           params: {
@@ -296,6 +335,9 @@ export default {
     allUnread: 'unreadChange'
   },
   computed: {
+    categoryItems () {
+      return this.$store.state.Category.categories
+    },
     feeds () {
       return this.$store.state.Feed.feeds
     },
@@ -304,6 +346,15 @@ export default {
     }
   },
   methods: {
+    categoryFeeds (feeds, category) {
+      var items = _.filter(feeds, { 'category': category })
+      var sorted = items.sort((a, b) => {
+        if (a.title.toLowerCase() < b.title.toLowerCase()) { return -1 }
+        if (a.title.toLowerCase() > b.title.toLowerCase()) { return 1 }
+        return 0
+      })
+      return sorted
+    },
     setTheme (themeValue) {
       switch (themeValue) {
         case 'dark':
@@ -327,11 +378,17 @@ export default {
         el.classList.remove(className)
       }
     },
-    mapFeeds (feeds) {
-      return feeds.map(feed => ({
+    mapFeeds (feeds, category) {
+      var items = feeds.map(feed => ({
         ...feed,
         isActive: this.isFeedActive(feed)
-      }))
+      })).concat(category)
+      var sorted = items.sort((a, b) => {
+        if (a.title.toLowerCase() < b.title.toLowerCase()) { return -1 }
+        if (a.title.toLowerCase() > b.title.toLowerCase()) { return 1 }
+        return 0
+      })
+      return sorted
     },
     // TODO: Source this method out
     isFeedActive (feed) {
@@ -402,9 +459,15 @@ export default {
         this.$store.dispatch('changeType', 'feed')
       }
     },
-    unsubscribeFeed (id) {
-      this.$emit('delete', 'yes')
-      this.$store.dispatch('deleteFeed', id)
+    async unsubscribeFeed (id, category = null) {
+      await this.$emit('delete', 'yes')
+      await this.$store.dispatch('deleteFeed', id)
+      if (category !== null) {
+        var items = _.filter(this.feeds, { 'category': category })
+        if (items.length === 0) {
+          await this.$store.dispatch('deleteCategory', category)
+        }
+      }
     },
     prepareArticleData (data, article) {
       const self = this

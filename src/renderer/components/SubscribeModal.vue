@@ -41,6 +41,13 @@
           </b-input-group>
           <b-form-text id="inputLiveHelp" class="mb-3">{{ feed.url }}</b-form-text>
         </template>
+          <b-form-select v-model="selectedCat" :options="categoryItems" class="mb-3">
+            <template slot="first">
+              <option :value="null" disabled>Please select category</option>
+            </template>
+          </b-form-select>
+          <p><button class="btn btn-link pl-0" type="button" @click="addCategory">Add new category</button></p>
+          <p v-if="showAddCat"><b-form-input v-model="newcategory" placeholder="Enter new category"></b-form-input></p>
       </div>
     <div slot="modal-footer">
       <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
@@ -67,15 +74,26 @@ export default {
       feed_url: '',
       loading: false,
       feeddata: null,
+      newcategory: null,
+      showAddCat: false,
+      selectedCat: null,
       selected_feed: []
     }
   },
   computed: {
+    categoryItems () {
+      return this.$store.state.Category.categories.map((item) => {
+        return { value: item.title, text: item.title }
+      })
+    },
     disableSubscribe () {
       return this.$store.state.Setting.offline
     }
   },
   methods: {
+    addCategory () {
+      this.showAddCat = !this.showAddCat
+    },
     fetchFeed () {
       this.loading = true
       if (!this.$store.state.Setting.offline) {
@@ -124,6 +142,9 @@ export default {
       this.url = ''
       this.selected_feed = []
       this.loading = false
+      this.newcategory = null
+      this.showAddCat = false
+      this.selectedCat = null
     },
     hideModal () {
       this.resetForm()
@@ -131,7 +152,12 @@ export default {
     },
     subscribe () {
       const favicon = this.feeddata.site.favicon
-      helper.subscribe(this.selected_feed, favicon, false)
+      if (this.newcategory) {
+        this.$store.dispatch('addCategory', { title: this.newcategory, type: 'category' })
+      } else {
+        this.newcategory = this.selectedCat
+      }
+      helper.subscribe(this.selected_feed, this.newcategory, favicon, false)
       this.hideModal()
     },
     onHidden () {

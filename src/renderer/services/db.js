@@ -4,6 +4,7 @@ const db = new DB()
 const connect = db.init()
 const article = connect.article
 const feed = connect.feed
+const category = connect.category
 
 export default {
   ensureIndex (db, field) {
@@ -27,6 +28,24 @@ export default {
     return article.findOne({ _id: id }, (err, doc) => {
       if (err) {}
       return cb(doc)
+    })
+  },
+  fetchCategories (cb) {
+    return category.find({}, (err, docs) => {
+      if (err) {}
+      return cb(docs)
+    })
+  },
+  deleteCategory (title) {
+    category.remove({ title: title }, {}, (err, numRemoved) => {
+      if (err) {}
+    })
+  },
+  addCategory (data, cb) {
+    this.ensureIndex(category, 'title')
+    return category.insert(data, (err, docs) => {
+      if (err) {}
+      return cb(docs)
     })
   },
   addFeed (data, cb) {

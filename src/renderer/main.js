@@ -15,6 +15,7 @@ import store from './store'
 import SettingsStore from 'electron-store'
 
 import './helper/external_links.js'
+import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 

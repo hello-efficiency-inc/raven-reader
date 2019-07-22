@@ -46,7 +46,7 @@ export default {
 
     return opmlGenerator(header, outlines)
   },
-  subscribe (feeds, faviconData = null, refresh = false, importData = false) {
+  subscribe (feeds, category = null, faviconData = null, refresh = false, importData = false) {
     const q = async.queue((task, cb) => {
       const posts = []
       if (!refresh) {
@@ -57,6 +57,7 @@ export default {
       task.feed.posts.forEach((post) => {
         post.feed_id = task.feed.meta.id
         post.favicon = task.favicon
+        post.category = task.category
         post.link = post.link ? post.link : task.feed.meta.xmlurl
         post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
         const postItem = _.omit(post, ['creator', 'dc:creator'])
@@ -107,6 +108,8 @@ export default {
       } else {
         faviconUrl = `https://www.google.com/s2/favicons?domain=${feeditem.meta.link}`
       }
+
+      feeditem.meta.category = category
       if (refresh) {
         feeditem.meta.id = feed.id
       }
