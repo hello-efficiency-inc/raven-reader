@@ -70,12 +70,12 @@
           </li>
           <b-collapse  id="collapse-importexport">
             <li class="nav-item">
-              <a class="nav-link" href="#" v-b-modal.importfeed>
+              <a class="nav-link ml-2" href="#" v-b-modal.importfeed>
                 <feather-icon name="upload"></feather-icon>Import Subscriptions
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#" @click="exportOpml">
+              <a class="nav-link ml-2" href="#" @click="exportOpml">
                 <feather-icon name="external-link"></feather-icon>Export Subscriptions
               </a>
             </li>
@@ -112,45 +112,57 @@
             @click="setActiveFeedId(feed)"
             v-if="!feed.type && feed.category === null"
             v-bind:class="{ active: feed.isActive }"
+            @contextmenu.prevent="$refs.feedMenu.open($event, {feed: feed})"
           >
             <router-link v-if="!feed.type && feed.category === null" class="nav-link" :to="`/feed/${feed.id}`">
               <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1" />
               {{ feed.title }}
             </router-link>
-            <button v-if="!feed.type && feed.category === null" @click="unsubscribeFeed(feed.id)" class="btn btn-link">
-              <feather-icon name="x-circle"></feather-icon>
-            </button>
+            <div v-if="!feed.type && feed.category === null && getArticlesCount('', feed.id) > 0" class="nav-link feed-counter">
+              <span class="item-counter">{{ getArticlesCount('', feed.id) }}</span>
+            </div>
           </li>
           <li
             class="feed nav-item d-flex justify-content-between align-items-center pr-2"
-            v-bind:key="feed._id"
+            v-bind:key="feed.id"
+            mark="category"
+            @click="categoryHandler(feed)"
+            v-bind:class="{ active: feed.isActive }"
             v-if="feed.type && categoryFeeds(feeds, feed.title).length > 0"
+            v-b-toggle="`collapse-${feed.title}`"
           >
-            <router-link :to="`/category/${feed.title}`" class="nav-link">{{ feed.title }}</router-link>
-            <button v-if="feed.type" class="btn btn-link" v-b-toggle="`collapse-${feed.title}`">
+            <a href="#" class="nav-link" replace>{{ feed.title }} ({{ getArticlesCount('category', feed.title) }})</a>
+            <button v-if="feed.type" class="btn btn-link">
               <feather-icon name="chevron-down"></feather-icon>
             </button>
           </li>
           <b-collapse  v-if="feed.type" v-bind:key="`collapse-${feed.title}`" :id="`collapse-${feed.title}`">
-            <li 
-            class="feed nav-item d-flex justify-content-between align-items-center pr-2" 
-            v-for="categoryfeed in categoryFeeds(feeds, feed.title)" 
-            @click="setActiveFeedId(categoryfeed)"
-            v-bind:key="categoryfeed._id"
-            v-bind:class="{ active: categoryfeed.isActive }"
-            mark="feed"
-            >
-              <router-link :to="`/feed/${categoryfeed.id}`" class="nav-link">
-                <img v-if="categoryfeed.favicon" :src="categoryfeed.favicon" height="16" width="16" class="mr-1" />
-                {{ categoryfeed.title }}
-              </router-link>
-              <button @click="unsubscribeFeed(categoryfeed.id, categoryfeed.category)" class="btn btn-link">
-                <feather-icon name="x-circle"></feather-icon>
-              </button>
-            </li>
+            <template v-for="categoryfeed in categoryFeeds(feeds, feed.title)">
+              <li 
+                class="feed nav-item d-flex justify-content-between align-items-center pr-2" 
+                v-bind:key="categoryfeed.id"
+                mark="feed"
+                @click="setActiveFeedId(categoryfeed)"
+                v-bind:class="{ active: categoryfeed.isActive }"
+                @contextmenu.prevent="$refs.feedMenu.open($event, {feed: categoryfeed})"
+                >
+                  <router-link :to="`/feed/${categoryfeed.id}`" class="nav-link ml-1">
+                    <img v-if="categoryfeed.favicon" :src="categoryfeed.favicon" height="16" width="16" class="mr-1" />
+                    {{ categoryfeed.title }}
+                  </router-link>
+                  <div v-if="getArticlesCount('', categoryfeed.id) > 0" class="nav-link feed-counter">
+                    <span class="item-counter">{{ getArticlesCount('', categoryfeed.id) }}</span>
+                  </div>
+                </li>
+            </template>
            </b-collapse>
           </template>
         </ul>
+        <context-menu id="context-menu" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" ref="feedMenu">
+          <li class="ctx-item" @click="copyFeedLink(feedMenuData.xmlurl)">Copy feed link</li>
+          <li class="ctx-item" v-b-modal.editFeed @click="openEditModal(feedMenuData)">Edit feed</li>
+          <li class="ctx-item" @click="unsubscribeFeed(feedMenuData.id)">Unsubscribe</li>
+        </context-menu>
       </perfect-scrollbar>
     </nav>
     <article-list :type="articleType" :feed="feed" @type-change="updateType" ref="articleList"></article-list>
@@ -165,6 +177,7 @@
     <settings-modal></settings-modal>
     <markallread-modal></markallread-modal>
     <sync-settings></sync-settings>
+    <edit-feed :feed="activeFeed"></edit-feed>
   </div>
 </template>
 <script>
@@ -181,7 +194,7 @@ import fs from 'fs'
 import path from 'path'
 import _ from 'lodash'
 import cacheService from '../services/cacheArticle'
-// import * as Mousetrap from 'Mousetrap'
+import contextMenu from 'vue-context-menu'
 
 export default {
   data () {
@@ -190,9 +203,12 @@ export default {
       articleType: 'all',
       empty: null,
       feed: null,
-      loading: false
+      feedMenuData: null,
+      loading: false,
+      activeFeed: null
     }
   },
+  components: { contextMenu },
   beforeRouteUpdate (to, from, next) {
     if (to.params.id) {
       this.$electron.ipcRenderer.send('article-selected')
@@ -330,9 +346,7 @@ export default {
     })
   },
   watch: {
-    // call again the method if the route changes
     $route (to, from) {
-      console.log(to)
       switch (to.name) {
         case 'feed-page':
           this.feedChange()
@@ -340,10 +354,14 @@ export default {
         case 'category-page':
           this.categoryChange()
           break
+        case 'type-page':
+          this.typeChange()
+          break
+        case 'article-page':
+          this.fetchData()
+          break
       }
     },
-    '$route.params.type': 'typeChange',
-    '$route.params.id': 'fetchData',
     allUnread: 'unreadChange'
   },
   computed: {
@@ -358,8 +376,17 @@ export default {
     }
   },
   methods: {
+    onCtxOpen (locals) {
+      this.feedMenuData = locals.feed
+    },
+    resetCtxLocals () {
+      this.feedMenuData = null
+    },
     categoryFeeds (feeds, category) {
-      var items = _.filter(feeds, { 'category': category })
+      var items = _.filter(feeds, { 'category': category }).map(feed => ({
+        ...feed,
+        isActive: this.isFeedActive(feed)
+      }))
       var sorted = items.sort((a, b) => {
         if (a.title.toLowerCase() < b.title.toLowerCase()) { return -1 }
         if (a.title.toLowerCase() > b.title.toLowerCase()) { return 1 }
@@ -391,10 +418,11 @@ export default {
       }
     },
     mapFeeds (feeds, category) {
-      var items = feeds.map(feed => ({
+      var mixed = feeds.concat(category)
+      var items = mixed.map(feed => ({
         ...feed,
         isActive: this.isFeedActive(feed)
-      })).concat(category)
+      }))
       var sorted = items.sort((a, b) => {
         if (a.title.toLowerCase() < b.title.toLowerCase()) { return -1 }
         if (a.title.toLowerCase() > b.title.toLowerCase()) { return 1 }
@@ -412,7 +440,7 @@ export default {
     },
     getArticlesCount (type, feedid) {
       let articles = this.$store.state.Article.articles
-      if (feedid !== '') {
+      if (type === '' && feedid !== '') {
         articles = articles.filter(article => article.feed_id === feedid)
       }
       if (type === 'read') {
@@ -423,6 +451,8 @@ export default {
         return articles.filter(article => article.favourite).length
       } else if (type === 'saved') {
         return articles.filter(article => article.offline).length
+      } else if (type === 'category') {
+        return articles.filter(article => article.category === feedid).length
       } else {
         // all
         return articles.length
@@ -468,6 +498,7 @@ export default {
       this.articleType = 'category'
       this.$store.dispatch('setCategory', this.$route.params.category)
       this.$store.dispatch('setFeed', null)
+      this.$store.dispatch('changeType', 'feed')
     },
     feedChange () {
       if (this.$route.params.feedid) {
@@ -499,6 +530,7 @@ export default {
       data.favicon = article.favicon
       data.sitetitle = _.truncate(article.feed_title, 20)
       data.feed_id = article.feed_id
+      data.category = article.category
       data.feed_url = article.feed_url
       data.feed_link = article.feed_link
       data._id = article._id
@@ -558,6 +590,19 @@ export default {
           }
         })
       }
+    },
+    copyFeedLink (xml) {
+      this.$electron.clipboard.writeText(xml)
+    },
+    categoryHandler (feed) {
+      this.setActiveFeedId(feed)
+      this.$router.push({
+        name: 'category-page',
+        params: { category: feed.title }
+      })
+    },
+    openEditModal (feed) {
+      this.activeFeed = feed
     }
   }
 }
@@ -621,6 +666,10 @@ export default {
         background-color: var(--active-item-background-color);
         color: #fff;
         border-radius: 0;
+
+        .nav-link {
+          color: #fff !important;
+        }
       }
     }
 
@@ -633,6 +682,7 @@ export default {
     }
 
     .nav-link {
+
       & .feed-mix {
         padding: 0.5rem 1rem;
 
@@ -728,6 +778,10 @@ export default {
     }
   }
 
+  .feed-counter {
+    color: var(--text-color);
+  }
+
   .sidebar-heading {
     color: var(--heading-color);
   }
@@ -746,5 +800,25 @@ export default {
 }
 .items-counter-feed {
   padding-right: 10px;
+}
+
+.ctx-menu-container {
+  box-shadow: none !important;
+
+  ul {
+    background-color: var(--background-color) !important;
+    border-color: #000;
+    box-shadow: none;
+
+    li {
+      color: var(--text-color) !important;
+      cursor: pointer;
+      padding-bottom: 5px;
+
+      &:hover {
+        background: var(--active-item-background-color);
+      }
+    }
+  }
 }
 </style>

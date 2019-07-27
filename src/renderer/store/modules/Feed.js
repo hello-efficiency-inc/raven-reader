@@ -29,6 +29,7 @@ const mutations = {
   UPDATE_FEED_TITLE (state, data) {
     const index = _.findIndex(state.feeds, { 'id': data.id })
     state.feeds[index].title = data.title
+    state.feeds[index].category = data.category
   }
 }
 
@@ -51,7 +52,7 @@ const actions = {
     commit('ORDER_FEEDS', feeds)
   },
   updateFeedTitle ({ commit }, data) {
-    db.updateFeedTitle(data.id, data.title)
+    db.updateFeedTitle(data.id, data.title, data.category)
     commit('UPDATE_FEED_TITLE', data)
   }
 }

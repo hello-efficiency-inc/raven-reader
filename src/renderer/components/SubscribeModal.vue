@@ -43,7 +43,7 @@
         </template>
           <b-form-select v-model="selectedCat" :options="categoryItems" class="mb-3">
             <template slot="first">
-              <option :value="null" disabled>Please select category</option>
+              <option :value="null">Please select category</option>
             </template>
           </b-form-select>
           <p><button class="btn btn-link pl-0" type="button" @click="addCategory">Add new category</button></p>
@@ -65,6 +65,7 @@ import finder from 'rss-finder'
 import normalizeUrl from 'normalize-url'
 import he from 'he'
 import helper from '../services/helpers'
+import uuid from 'uuid-by-string'
 // import { parseFeed } from '../parsers/feed'
 
 export default {
@@ -153,7 +154,7 @@ export default {
     subscribe () {
       const favicon = this.feeddata.site.favicon
       if (this.newcategory) {
-        this.$store.dispatch('addCategory', { title: this.newcategory, type: 'category' })
+        this.$store.dispatch('addCategory', { id: uuid(this.newcategory), title: this.newcategory, type: 'category' })
       } else {
         this.newcategory = this.selectedCat
       }

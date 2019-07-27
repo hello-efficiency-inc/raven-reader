@@ -12,6 +12,7 @@ import SettingsModal from './SettingsModal'
 import MarkReadModal from './MarkReadModal'
 import SyncSettingsModal from './SyncSettingsModal'
 import EditSubscriptionModal from './EditSubscription'
+import EditFeedModal from './EditFeed'
 import FeedMix from './FeedMix'
 
 export default {
@@ -30,5 +31,6 @@ export default {
     Vue.component('sync-settings', SyncSettingsModal)
     Vue.component('edit-subscription', EditSubscriptionModal)
     Vue.component('feed-mix', FeedMix)
+    Vue.component('edit-feed', EditFeedModal)
   }
 }

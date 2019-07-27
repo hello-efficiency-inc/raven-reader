@@ -2,7 +2,8 @@ const state = {
   activeFeedId: null,
   activeArticleId: null,
   isFeedIdValid: null,
-  isArticleIdValid: null
+  isArticleIdValid: null,
+  activeFeed: null
 }
 
 const getId = item => !!item && item.id !== undefined && !!(item.id) ? item.id : null
@@ -24,6 +25,9 @@ const mutations = {
   SET_ACTIVE_ARTICLE_ID (state, id) {
     state.activeArticleId = id
     state.isArticleIdValid = !!(id)
+  },
+  SET_ACTIVE_FEED (state, feed) {
+    state.activeFeed = feed
   }
 }
 
@@ -33,6 +37,9 @@ const actions = {
   },
   setActiveArticleId ({ commit }, article) {
     commit('SET_ACTIVE_ARTICLE_ID', getId(article))
+  },
+  setActiveFeed ({ commit }, feed) {
+    commit('SET_ACTIVE_FEED', feed)
   }
 }
 

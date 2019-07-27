@@ -1,8 +1,8 @@
 <template>
   <b-modal
-    id="editSubscription"
-    ref="editSubscription"
-    title="Edit Subscription"
+    id="editFeed"
+    ref="editFeed"
+    title="Edit Feed"
     @hidden="onHidden"
     centered
   >
@@ -10,10 +10,13 @@
       id="subscription-group"
       label="Title"
     >
-      <b-form-input type="text" v-model="article.sitetitle"></b-form-input>
+      <b-form-input type="text" v-model="feed.title"></b-form-input>
     </b-form-group>
-    <b-form-group label="Category">
-    <b-form-select v-model="article.category" :options="categoryItems" class="mb-3">
+    <b-form-group
+      id="subscription-group"
+      label="Category"
+    >
+    <b-form-select v-model="feed.category" :options="categoryItems" class="mb-3">
             <template slot="first">
               <option :value="null">Please select category</option>
             </template>
@@ -32,14 +35,8 @@ import uuid from 'uuid-by-string'
 
 export default {
   props: {
-    article: {
+    feed: {
       type: Object
-    }
-  },
-  data () {
-    return {
-      newcategory: null,
-      showAddCat: false
     }
   },
   computed: {
@@ -49,28 +46,34 @@ export default {
       })
     }
   },
+  data () {
+    return {
+      newcategory: null,
+      showAddCat: false
+    }
+  },
   methods: {
     addCategory () {
       this.showAddCat = !this.showAddCat
     },
     hideModal () {
-      this.$refs.editSubscription.hide()
+      this.$refs.editFeed.hide()
     },
     updateSubscriptionTitle () {
       if (this.newcategory) {
         this.$store.dispatch('addCategory', { id: uuid(this.newcategory), title: this.newcategory, type: 'category' })
       } else {
-        this.newcategory = this.article.category
+        this.newcategory = this.feed.category
       }
       this.$store.dispatch('updateFeedTitle', {
-        title: this.article.sitetitle,
+        title: this.feed.title,
         category: this.newcategory,
-        id: this.article.feed_id
+        id: this.feed.id
       })
       this.$store.dispatch('updateArticleFeedTitle', {
         category: this.newcategory,
-        title: this.article.sitetitle,
-        id: this.article.feed_id
+        title: this.feed.title,
+        id: this.feed.id
       })
       this.$toasted.show('Subscription title updated.', {
         theme: 'outline',

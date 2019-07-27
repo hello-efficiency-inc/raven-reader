@@ -132,7 +132,6 @@ const mutations = {
     state.search = search
   },
   SET_CATEGORY_TYPE (state, category) {
-    console.log(category)
     state.category = category
   },
   SET_FEED_ID (state, feed) {
@@ -244,7 +243,7 @@ const actions = {
     commit('FONT_SETTINGS_ON', data)
   },
   async updateArticleFeedTitle ({ dispatch, commit }, data) {
-    db.updateArticleFeedTitle(data.id, data.title)
+    db.updateArticleFeedTitle(data.id, data.title, data.category)
     commit('UPDATE_FEED_TITLE', data)
     await dispatch('loadArticles')
   }

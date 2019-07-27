@@ -32,6 +32,7 @@ export default new Router({
     },
     {
       path: '/:type',
+      name: 'type-page',
       component: require('@/views/Main').default
     },
     {

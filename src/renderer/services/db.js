@@ -55,12 +55,13 @@ export default {
       return cb(docs)
     })
   },
-  updateFeedTitle (id, title) {
+  updateFeedTitle (id, title, category) {
     feed.update({
       id: id
     }, {
       $set: {
-        title: title
+        title: title,
+        category: category
       }
     }, (err, num) => {
       if (err) {
@@ -82,12 +83,13 @@ export default {
       return cb(docs)
     })
   },
-  updateArticleFeedTitle (id, title) {
+  updateArticleFeedTitle (id, title, category) {
     article.update({
       feed_id: id
     }, {
       $set: {
-        feed_title: title
+        feed_title: title,
+        category: category
       }
     }, {
       multi: true
