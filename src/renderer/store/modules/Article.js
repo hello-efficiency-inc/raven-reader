@@ -16,6 +16,7 @@ const state = {
   fontSettingOn: false,
   fontSize: 100,
   fontStyle: null,
+  category: null,
   feed: ''
 }
 
@@ -56,6 +57,9 @@ const getters = {
         return fuse.search(state.search)
       }
       return filters['all'](orderedArticles)
+    }
+    if (state.category) {
+      return filters['category'](orderedArticles, state.category)
     }
     return filters[state.type](orderedArticles, state.feed)
   }
@@ -126,6 +130,10 @@ const mutations = {
   },
   SET_SEARCH_TERM (state, search) {
     state.search = search
+  },
+  SET_CATEGORY_TYPE (state, category) {
+    console.log(category)
+    state.category = category
   },
   SET_FEED_ID (state, feed) {
     state.feed = feed
@@ -216,6 +224,9 @@ const actions = {
   },
   setSearch ({ commit }, search) {
     commit('SET_SEARCH_TERM', search)
+  },
+  setCategory ({ commit }, title) {
+    commit('SET_CATEGORY_TYPE', title)
   },
   setFeed ({ commit }, feed) {
     commit('SET_FEED_ID', feed)

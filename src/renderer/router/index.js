@@ -16,6 +16,11 @@ export default new Router({
       component: require('@/views/Main').default
     },
     {
+      path: '/category/:category',
+      name: 'category-page',
+      component: require('@/views/Main').default
+    },
+    {
       path: '/feed/:feedid',
       name: 'feed-page',
       component: require('@/views/Main').default

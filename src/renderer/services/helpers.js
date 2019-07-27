@@ -57,7 +57,7 @@ export default {
       task.feed.posts.forEach((post) => {
         post.feed_id = task.feed.meta.id
         post.favicon = task.favicon
-        post.category = task.category
+        post.category = category
         post.link = post.link ? post.link : task.feed.meta.xmlurl
         post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
         const postItem = _.omit(post, ['creator', 'dc:creator'])

@@ -126,22 +126,24 @@
             v-bind:key="feed._id"
             v-if="feed.type && categoryFeeds(feeds, feed.title).length > 0"
           >
-            <a href="#" class="nav-link" v-b-toggle="`collapse-${feed.title}`">{{ feed.title }}</a>
+            <router-link :to="`/category/${feed.title}`" class="nav-link">{{ feed.title }}</router-link>
             <button v-if="feed.type" class="btn btn-link" v-b-toggle="`collapse-${feed.title}`">
               <feather-icon name="chevron-down"></feather-icon>
             </button>
           </li>
-          <b-collapse  v-if="feed.type" v-bind:key="feed.type" :id="`collapse-${feed.title}`">
+          <b-collapse  v-if="feed.type" v-bind:key="`collapse-${feed.title}`" :id="`collapse-${feed.title}`">
             <li 
             class="feed nav-item d-flex justify-content-between align-items-center pr-2" 
             v-for="categoryfeed in categoryFeeds(feeds, feed.title)" 
             @click="setActiveFeedId(categoryfeed)"
-            v-bind:key="categoryfeed.id"
+            v-bind:key="categoryfeed._id"
             v-bind:class="{ active: categoryfeed.isActive }"
             mark="feed"
             >
-              <a :href="`/#/feed/${categoryfeed.id}`" class="nav-link"><img v-if="categoryfeed.favicon" :src="categoryfeed.favicon" height="16" width="16" class="mr-1" />
-              {{ categoryfeed.title }}</a>
+              <router-link :to="`/feed/${categoryfeed.id}`" class="nav-link">
+                <img v-if="categoryfeed.favicon" :src="categoryfeed.favicon" height="16" width="16" class="mr-1" />
+                {{ categoryfeed.title }}
+              </router-link>
               <button @click="unsubscribeFeed(categoryfeed.id, categoryfeed.category)" class="btn btn-link">
                 <feather-icon name="x-circle"></feather-icon>
               </button>
@@ -329,7 +331,17 @@ export default {
   },
   watch: {
     // call again the method if the route changes
-    '$route.params.feedid': 'feedChange',
+    $route (to, from) {
+      console.log(to)
+      switch (to.name) {
+        case 'feed-page':
+          this.feedChange()
+          break
+        case 'category-page':
+          this.categoryChange()
+          break
+      }
+    },
     '$route.params.type': 'typeChange',
     '$route.params.id': 'fetchData',
     allUnread: 'unreadChange'
@@ -452,10 +464,16 @@ export default {
         this.$store.dispatch('changeType', this.$route.params.type)
       }
     },
+    categoryChange () {
+      this.articleType = 'category'
+      this.$store.dispatch('setCategory', this.$route.params.category)
+      this.$store.dispatch('setFeed', null)
+    },
     feedChange () {
       if (this.$route.params.feedid) {
         this.articleType = 'feed'
         this.$store.dispatch('setFeed', this.$route.params.feedid)
+        this.$store.dispatch('setCategory', null)
         this.$store.dispatch('changeType', 'feed')
       }
     },
