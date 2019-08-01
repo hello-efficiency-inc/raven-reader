@@ -8,7 +8,6 @@ import {
   ipcMain,
   systemPreferences
 } from 'electron'
-// import updateElectron from 'update-electron-app'
 import jetpack from 'fs-jetpack'
 import os from 'os'
 import Store from 'electron-store'
@@ -167,6 +166,16 @@ function createMenu () {
       }
     }
     ]
+  },
+  {
+    label: 'Sharing',
+    submenu: [{
+      label: 'Next item',
+      accelerator: 'CmdOrCtrl+J',
+      click: function () {
+        mainWindow.webContents.send('Next item')
+      }
+    }]
   }
   ]
 

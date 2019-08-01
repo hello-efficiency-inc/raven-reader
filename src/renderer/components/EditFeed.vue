@@ -6,24 +6,26 @@
     @hidden="onHidden"
     centered
   >
-    <b-form-group
-      id="subscription-group"
-      label="Title"
-    >
-      <b-form-input type="text" v-model="feed.title"></b-form-input>
-    </b-form-group>
-    <b-form-group
-      id="subscription-group"
-      label="Category"
-    >
-    <b-form-select v-model="feed.category" :options="categoryItems" class="mb-3">
-            <template slot="first">
-              <option :value="null">Please select category</option>
-            </template>
-          </b-form-select>
-          <p><button class="btn btn-link pl-0" type="button" @click="addCategory">Add new category</button></p>
-          <p v-if="showAddCat"><b-form-input v-model="newcategory" placeholder="Enter new category"></b-form-input></p>
-    </b-form-group>
+    <div v-if="feed">
+      <b-form-group
+        id="subscription-group"
+        label="Title"
+      >
+        <b-form-input type="text" v-model="feed.title"></b-form-input>
+      </b-form-group>
+      <b-form-group
+        id="subscription-group"
+        label="Category"
+      >
+      <b-form-select v-model="feed.category" :options="categoryItems" class="mb-3">
+              <template slot="first">
+                <option :value="null">Please select category</option>
+              </template>
+            </b-form-select>
+            <p><button class="btn btn-link pl-0" type="button" @click="addCategory">Add new category</button></p>
+            <p v-if="showAddCat"><b-form-input v-model="newcategory" placeholder="Enter new category"></b-form-input></p>
+      </b-form-group>
+    </div>
     <div slot="modal-footer">
       <button type="button" class="btn btn-secondary" @click="hideModal">Cancel</button>
       <button type="button" class="btn btn-primary" @click="updateSubscriptionTitle">Update</button>
@@ -36,7 +38,11 @@ import uuid from 'uuid-by-string'
 export default {
   props: {
     feed: {
-      type: Object
+      type: Object,
+      default: {
+        title: '',
+        category: null
+      }
     }
   },
   computed: {

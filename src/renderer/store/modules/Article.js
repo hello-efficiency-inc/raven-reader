@@ -113,6 +113,14 @@ const mutations = {
       db.markRead(state.articles[i]._id)
     }
   },
+  MARK_FEED_READ (state, id) {
+    const feedArticles = _.filter(state.articles, { feed_id: id })
+    for (let i = 0; i < feedArticles.length; i++) {
+      const index = _.findIndex(state.articles, { _id: feedArticles[i]._id })
+      state.articles[index].read = true
+      db.markRead(state.articles[index]._id)
+    }
+  },
   DELETE_ARTICLES (state, id) {
     const articles = _.filter(state.articles, { feed_id: id })
     articles.forEach(async (article) => {
@@ -246,6 +254,11 @@ const actions = {
     db.updateArticleFeedTitle(data.id, data.title, data.category)
     commit('UPDATE_FEED_TITLE', data)
     await dispatch('loadArticles')
+  },
+  markFeedRead ({
+    commit
+  }, id) {
+    commit('MARK_FEED_READ', id)
   }
 }
 

@@ -64,7 +64,7 @@
             <a class="nav-link" href="#" v-b-toggle="`collapse-importexport`">
               <feather-icon name="external-link"></feather-icon>Import and Export
             </a>
-            <button class="btn btn-link" v-b-toggle="`collapse-importexport`">
+            <button class="btn btn-link export-link" v-b-toggle="`collapse-importexport`">
               <feather-icon name="chevron-down"></feather-icon>
             </button>
           </li>
@@ -123,18 +123,21 @@
             </div>
           </li>
           <li
-            class="feed nav-item d-flex justify-content-between align-items-center pr-2"
+            class="feed nav-item d-flex align-items-center pr-2"
             v-bind:key="feed.id"
             mark="category"
             @click="categoryHandler(feed)"
             v-bind:class="{ active: feed.isActive }"
+            @contextmenu.prevent="$refs.categoryMenu.open($event, {category: feed})"
             v-if="feed.type && categoryFeeds(feeds, feed.title).length > 0"
-            v-b-toggle="`collapse-${feed.title}`"
           >
-            <a href="#" class="nav-link" replace>{{ feed.title }} ({{ getArticlesCount('category', feed.title) }})</a>
-            <button v-if="feed.type" class="btn btn-link">
-              <feather-icon name="chevron-down"></feather-icon>
+            <button v-if="feed.type" class="btn btn-link category-link pr-0" v-b-toggle="`collapse-${feed.title}`">
+              <feather-icon name="chevron-right"></feather-icon>
             </button>
+            <a href="#" class="nav-link pl-1" replace>{{ feed.title }}</a>
+            <div v-if="getArticlesCount('category', feed.title) > 0" class="nav-link feed-counter">
+                <span class="item-counter">{{ getArticlesCount('category', feed.title) }}</span>
+            </div>
           </li>
           <b-collapse  v-if="feed.type" v-bind:key="`collapse-${feed.title}`" :id="`collapse-${feed.title}`">
             <template v-for="categoryfeed in categoryFeeds(feeds, feed.title)">
@@ -158,8 +161,12 @@
            </b-collapse>
           </template>
         </ul>
+        <context-menu id="category-menu" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" ref="categoryMenu">
+          <li class="ctx-item" @click="markCategoryRead(category.title)">Mark as read</li>
+        </context-menu>
         <context-menu id="context-menu" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" ref="feedMenu">
           <li class="ctx-item" @click="copyFeedLink(feedMenuData.xmlurl)">Copy feed link</li>
+          <li class="ctx-item" @click="markFeedRead(feedMenuData.id)">Mark as read</li>
           <li class="ctx-item" v-b-modal.editFeed @click="openEditModal(feedMenuData)">Edit feed</li>
           <li class="ctx-item" @click="unsubscribeFeed(feedMenuData.id)">Unsubscribe</li>
         </context-menu>
@@ -591,6 +598,9 @@ export default {
         })
       }
     },
+    markFeedRead (id) {
+      this.$store.dispatch('markFeedRead', id)
+    },
     copyFeedLink (xml) {
       this.$electron.clipboard.writeText(xml)
     },
@@ -639,6 +649,13 @@ export default {
   --input-color: 89, 91, 93;
   --active-item-background-color: #504e4e;
 
+  .export-link,
+  .category-link {
+    svg {
+        color: #fff;
+      }
+  }
+
   & .sidebar {
     --background-color: rgba(var(--darkmode-background), 1);
     --btn-subscribe-color: var(--text-color);
@@ -655,6 +672,13 @@ export default {
   --input-color: 204, 203, 195;
   --active-item-background-color: #5b5a57;
 
+  .category-link {
+    svg {
+        color: #000;
+      }
+    }
+  
+
   & .sidebar {
     --background-color: rgba(var(--sunset-background), 1);
     --btn-subscribe-color: var(--text-color);
@@ -666,6 +690,12 @@ export default {
         background-color: var(--active-item-background-color);
         color: #fff;
         border-radius: 0;
+
+          .category-link {
+            svg {
+                color: #fff;
+              }
+            }
 
         .nav-link {
           color: #fff !important;
@@ -762,6 +792,8 @@ export default {
   }
 
   .nav-link {
+    flex: 1 1 auto;
+
     &.feed-mix-link {
       padding: initial;
     }
@@ -779,6 +811,7 @@ export default {
   }
 
   .feed-counter {
+    flex: 0 1 auto;
     color: var(--text-color);
   }
 
@@ -819,6 +852,21 @@ export default {
         background: var(--active-item-background-color);
       }
     }
+  }
+}
+
+.category-link.collapsed {
+  svg {
+    transform: rotate(0deg);
+  }
+}
+
+.category-link {
+
+  svg {
+    transform: rotate(90deg);
+    color: #000;
+    transition: transform 0.15s linear;
   }
 }
 </style>

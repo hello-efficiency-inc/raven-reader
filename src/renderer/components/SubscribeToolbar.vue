@@ -30,7 +30,7 @@
   text-align: left !important;
   padding: 0 0 0 16px;
   background: transparent;
-  color: #3399FF;
+  color: #3399FF !important;
   font-weight: 700 !important;
   display: flex !important;
   justify-content: space-between;
@@ -39,6 +39,10 @@
   #logo-image {
     width: 100px;
     height: auto;
+  }
+
+  &:hover {
+    color: #3399FF !important;
   }
 
   &:focus {
