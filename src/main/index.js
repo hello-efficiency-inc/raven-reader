@@ -212,15 +212,6 @@ function createMenu () {
       }
       ]
     })
-
-    // Window menu
-    template[3].submenu = [{
-      role: 'close'
-    },
-    {
-      role: 'maximize'
-    }
-    ]
   }
 
   if (process.platform === 'darwin') {
