@@ -397,11 +397,11 @@ function createWindow () {
   createMenu()
   createTray()
 
-  globalShortcut.register('Alt', () => {
-    if (process.platform !== 'darwin') {
+  if (process.platform !== 'darwin') {
+    globalShortcut.register('Alt+W', () => {
       mainWindow.removeMenu()
-    }
-  })
+    })
+  }
 }
 
 app.requestSingleInstanceLock()
