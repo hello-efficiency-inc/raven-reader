@@ -398,7 +398,7 @@ function createWindow () {
   createTray()
 
   if (process.platform !== 'darwin') {
-    globalShortcut.register('OptionOrAlt', () => {
+    globalShortcut.register('OptionOrAlt+M', () => {
       console.log('hide menu')
       let visible = mainWindow.isMenuBarVisible()
       if (visible) {
