@@ -399,9 +399,7 @@ function createWindow () {
 
   if (process.platform !== 'darwin') {
     globalShortcut.register('Alt+M', () => {
-      console.log('hide menu')
       let visible = mainWindow.isMenuBarVisible()
-      console.log(visible)
       if (visible) {
         mainWindow.setMenuBarVisibility(false)
       } else {

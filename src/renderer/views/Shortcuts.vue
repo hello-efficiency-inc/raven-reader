@@ -63,6 +63,14 @@
     </div>
     <div class="row mt-3">
       <div class="col-6">
+        Hide menu bar (Only in Windows and Mac)
+      </div>
+      <div class="col-6">
+        <pre>Alt + M</pre>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-6">
         Add subscription
       </div>
       <div class="col-6">
