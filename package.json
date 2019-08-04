@@ -22,7 +22,7 @@
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
-    "release": "build --mac --win --linux -p always",
+    "release": "electron-builder build --mac --win --linux -p always",
     "dev": "node .electron-vue/dev-runner.js",
     "e2e": "npm run pack && mocha test/e2e",
     "e2e:no-compile": "mocha test/e2e",
