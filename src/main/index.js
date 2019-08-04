@@ -396,6 +396,12 @@ function createWindow () {
 
   createMenu()
   createTray()
+
+  globalShortcut.register('Alt', () => {
+    if (process.platform !== 'darwin') {
+      mainWindow.removeMenu()
+    }
+  })
 }
 
 app.requestSingleInstanceLock()
@@ -406,11 +412,6 @@ app.on('second-instance', (event, argv, cwd) => {
 app.on('ready', () => {
   createWindow()
   enforceMacOSAppLocation()
-  globalShortcut.register('Alt', () => {
-    if (process.platform !== 'darwin') {
-      mainWindow.removeMenu()
-    }
-  })
 })
 
 app.on('before-quit', () => {
