@@ -48,6 +48,19 @@ export default {
       return cb(docs)
     })
   },
+  updateCategory (category, title, cb) {
+    return category.update({
+      title: category
+    }, {
+      $set: {
+        title: title
+      }
+    }, (err, num) => {
+      if (err) {
+        console.log(err)
+      }
+    })
+  },
   addFeed (data, cb) {
     this.ensureIndex(feed, 'xmlurl')
     return feed.insert(data, (err, docs) => {
@@ -99,6 +112,15 @@ export default {
       }
     })
   },
+  deleteArticlesCategory (category) {
+    article.remove({
+      category: category
+    }, {
+      multi: true
+    }, (err, numRemoved) => {
+      if (err) {}
+    })
+  },
   deleteArticles (id) {
     article.remove({ feed_id: id }, { multi: true }, (err, numRemoved) => {
       if (err) {}
@@ -121,6 +143,11 @@ export default {
   },
   markUnfavourite (id) {
     article.update({ _id: id }, { $set: { favourite: false } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  markCategory (id) {
+    article.update({ category: id }, { $set: { read: true } }, (err, name) => {
       if (err) {}
     })
   },

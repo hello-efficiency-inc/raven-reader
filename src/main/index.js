@@ -21,7 +21,7 @@ import {
 const contextMenu = require('electron-context-menu')
 
 contextMenu({
-  showInspectElement: true
+  showInspectElement: false
 })
 
 /**
@@ -82,6 +82,9 @@ function createMenu () {
   {
     role: 'window',
     submenu: [
+      {
+        label: 'Maximize'
+      },
       {
         role: 'minimize'
       },

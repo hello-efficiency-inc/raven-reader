@@ -1,15 +1,17 @@
 <template>
-  <div class="article-detail" v-bind:style="{ fontFamily: currentFontStyle }">
+  <div class="article-detail">
+    <article-toolbar :article="article" ref="articleToolbar"></article-toolbar>
     <div class="content-wrapper">
-      <article-toolbar :article="article" ref="articleToolbar"></article-toolbar>
-      <perfect-scrollbar class="article-contentarea  px-4" v-bind:class="{ 'offset-content': fontSettingsOn }" v-if="article !== null && article.content !== null && !emptyState" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
-        <h2>
-          <strong>{{ article.title }}</strong><br/>
-          <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
-        </h2>
-        <div class="article-detail" v-if="article.content" v-html="article.content"></div>
-        <div class="article-detail" v-if="!article.content">
-          {{ article.description }}
+      <perfect-scrollbar class="article-contentarea  px-4" v-bind:style="{ fontFamily: currentFontStyle }">
+        <div class="article-wrap" v-bind:class="{ 'offset-content': fontSettingsOn }" v-if="article !== null && article.content !== null && !emptyState" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
+          <h2>
+            <strong>{{ article.title }}</strong><br/>
+            <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
+          </h2>
+          <div class="article-detail" v-if="article.content" v-html="article.content"></div>
+          <div class="article-detail" v-if="!article.content">
+            {{ article.description }}
+          </div>
         </div>
       </perfect-scrollbar>
       <div class="article-contentarea  px-4" v-if="article !== null && article.content === null && emptyState">
@@ -191,5 +193,17 @@ export default {
 
 .offset-content {
   padding-top: 60px;
+}
+
+.article-wrap {
+  max-width: 700px;
+  margin: 0 auto;
+
+  img {
+    display: block;
+    max-width: 100%;
+    margin-bottom: 15px;
+    width: 100%;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="position-relative">
   <div class="article-toolbar" v-if="article !== null && article.content !== null">
     <div class="site-info">
       <div class="wrap">
@@ -78,7 +78,7 @@
       </div>
     </div>
   </div>
-  <div class="article-setting" v-bind:class="{ hidden: !settingspanel }">
+  <div class="article-setting" v-bind:class="{ hidden: !settingspanel || !this.$store.state.Article.fontSettingOn }">
       <div class="settings-wrap dropdown-setting">
         <b-form-select v-model="fontstyle" :options="options" @change="changeFontStyle"></b-form-select>
       </div>
@@ -145,8 +145,11 @@ export default {
     }
   },
   methods: {
+    hideTextConfig () {
+      this.settingspanel = !this.settingspanel
+      this.$store.dispatch('turnOnFontSetting', this.settingspanel)
+    },
     changeFontStyle (fontStyle) {
-      console.log(fontStyle)
       this.$store.dispatch('changeFontStyle', fontStyle)
     },
     decreaseFontSize () {
@@ -243,11 +246,12 @@ export default {
 }
 
 .article-toolbar {
-  display: flex;
+  display: block;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 3;
+  max-width: 100%;
   width: 100%;
   border-bottom: 1px solid var(--border-color);
   height: 41px;

@@ -121,6 +121,13 @@ const mutations = {
       db.markRead(state.articles[index]._id)
     }
   },
+  DELETE_ARTICLES_CATEGORY (state, category) {
+    const articles = _.filter(state.articles, { title: category })
+    articles.forEach(async (article) => {
+      await cacheService.uncache(`raven-${article._id}`)
+    })
+    db.deleteArticlesCategory(category)
+  },
   DELETE_ARTICLES (state, id) {
     const articles = _.filter(state.articles, { feed_id: id })
     articles.forEach(async (article) => {
@@ -155,7 +162,7 @@ const mutations = {
     }
   },
   DRECREASE_FONT (state) {
-    if (state.fontSize !== 50) {
+    if (state.fontSize !== 100) {
       state.fontSize -= 5
     }
   },
@@ -172,6 +179,18 @@ const mutations = {
   },
   CHANGE_FONT_STYLE (state, data) {
     state.fontStyle = data
+  },
+  MARK_CATEGORY_READ (state, data) {
+    const feedArticles = _.filter(state.articles, {
+      category: data
+    })
+    for (let i = 0; i < feedArticles.length; i++) {
+      const index = _.findIndex(state.articles, {
+        _id: feedArticles[i]._id
+      })
+      state.articles[index].read = true
+      db.markRead(state.articles[index]._id)
+    }
   }
 }
 
@@ -217,6 +236,10 @@ const actions = {
   markAllRead ({ commit }) {
     commit('MARK_ALL_READ')
   },
+  async deleteArticleCategory ({ dispatch, commit }, category) {
+    commit('DELETE_ARTICLES_CATEGORY', category)
+    await dispatch('loadArticles')
+  },
   async deleteArticle ({ dispatch, commit }, id) {
     commit('DELETE_ARTICLES', id)
     await dispatch('loadArticles')
@@ -254,6 +277,11 @@ const actions = {
     db.updateArticleFeedTitle(data.id, data.title, data.category)
     commit('UPDATE_FEED_TITLE', data)
     await dispatch('loadArticles')
+  },
+  markCategoryRead ({
+    commit
+  }, id) {
+    commit('MARK_CATEGORY_READ', id)
   },
   markFeedRead ({
     commit

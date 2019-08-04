@@ -98,7 +98,7 @@ export default {
     fetchFeed () {
       this.loading = true
       if (!this.$store.state.Setting.offline) {
-        finder(normalizeUrl(this.feed_url, { stripWWW: false })).then(
+        finder(normalizeUrl(this.feed_url, { stripWWW: false }), { feedParserOptions: { feedurl: this.feed_url } }).then(
           res => {
             this.loading = false
             res.feedUrls.map(item => {

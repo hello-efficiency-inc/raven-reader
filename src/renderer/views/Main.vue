@@ -112,7 +112,7 @@
             @click="setActiveFeedId(feed)"
             v-if="!feed.type && feed.category === null"
             v-bind:class="{ active: feed.isActive }"
-            @contextmenu.prevent="$refs.feedMenu.open($event, {feed: feed})"
+            @contextmenu.prevent="openFeedMenu($event, {feed: feed})"
           >
             <router-link v-if="!feed.type && feed.category === null" class="nav-link" :to="`/feed/${feed.id}`">
               <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1" />
@@ -128,8 +128,8 @@
             mark="category"
             @click="categoryHandler(feed)"
             v-bind:class="{ active: feed.isActive }"
-            @contextmenu.prevent="$refs.categoryMenu.open($event, {category: feed})"
-            v-if="feed.type && categoryFeeds(feeds, feed.title).length > 0"
+            @contextmenu.prevent="openCategoryMenu($event, { category: feed})"
+            v-if="feed.type"
           >
             <button v-if="feed.type" class="btn btn-link category-link pr-0" v-b-toggle="`collapse-${feed.title}`">
               <feather-icon name="chevron-right"></feather-icon>
@@ -147,7 +147,7 @@
                 mark="feed"
                 @click="setActiveFeedId(categoryfeed)"
                 v-bind:class="{ active: categoryfeed.isActive }"
-                @contextmenu.prevent="$refs.feedMenu.open($event, {feed: categoryfeed})"
+                @contextmenu.prevent="openFeedMenu($event, {feed: categoryfeed})"
                 >
                   <router-link :to="`/feed/${categoryfeed.id}`" class="nav-link ml-1">
                     <img v-if="categoryfeed.favicon" :src="categoryfeed.favicon" height="16" width="16" class="mr-1" />
@@ -161,15 +161,6 @@
            </b-collapse>
           </template>
         </ul>
-        <context-menu id="category-menu" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" ref="categoryMenu">
-          <li class="ctx-item" @click="markCategoryRead(category.title)">Mark as read</li>
-        </context-menu>
-        <context-menu id="context-menu" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" ref="feedMenu">
-          <li class="ctx-item" @click="copyFeedLink(feedMenuData.xmlurl)">Copy feed link</li>
-          <li class="ctx-item" @click="markFeedRead(feedMenuData.id)">Mark as read</li>
-          <li class="ctx-item" v-b-modal.editFeed @click="openEditModal(feedMenuData)">Edit feed</li>
-          <li class="ctx-item" @click="unsubscribeFeed(feedMenuData.id)">Unsubscribe</li>
-        </context-menu>
       </perfect-scrollbar>
     </nav>
     <article-list :type="articleType" :feed="feed" @type-change="updateType" ref="articleList"></article-list>
@@ -201,7 +192,8 @@ import fs from 'fs'
 import path from 'path'
 import _ from 'lodash'
 import cacheService from '../services/cacheArticle'
-import contextMenu from 'vue-context-menu'
+const { remote } = require('electron')
+const { Menu, MenuItem } = require('electron').remote
 
 export default {
   data () {
@@ -215,10 +207,10 @@ export default {
       activeFeed: null
     }
   },
-  components: { contextMenu },
   beforeRouteUpdate (to, from, next) {
     if (to.params.id) {
       this.$electron.ipcRenderer.send('article-selected')
+      this.$store.dispatch('turnOnFontSetting', false)
     }
     next()
   },
@@ -530,6 +522,8 @@ export default {
       self.empty = false
       const $ = cheerio.load(data.content)
       $('a').addClass('js-external-link')
+      $('img').addClass('img-fluid')
+      $('iframe').parent().addClass('embed-responsive embed-responsive-16by9')
       data.content = $.text().trim() === '' ? article.description : $.html()
       data.date_published = data.date_published
         ? dayjs(data.date_published).format('MMMM D, YYYY')
@@ -544,7 +538,7 @@ export default {
       data.favourite = article.favourite
       data.read = article.read
       data.offline = article.offline
-      data.readtime = stat(data.content).text
+      data.readtime = data.content ? stat(data.content).text : 0
       self.articleData = data
       self.loading = false
     },
@@ -598,6 +592,9 @@ export default {
         })
       }
     },
+    markCategoryRead (id) {
+      this.$store.dispatch('markCategoryRead', id)
+    },
     markFeedRead (id) {
       this.$store.dispatch('markFeedRead', id)
     },
@@ -613,6 +610,82 @@ export default {
     },
     openEditModal (feed) {
       this.activeFeed = feed
+    },
+    openCategoryMenu (e, feed) {
+      const self = this
+      const menu = new Menu()
+
+      menu.append(new MenuItem({
+        label: `Mark ${feed.category.title} as read`,
+        click () {
+          self.markCategoryRead(feed.category.title)
+        }
+      }))
+      menu.append(new MenuItem({
+        label: 'Rename folder',
+        click () {
+          self.copyFeedLink(feed.feed.xmlurl)
+        }
+      }))
+
+      menu.append(new MenuItem({
+        type: 'separator'
+      }))
+
+      menu.append(new MenuItem({
+        label: 'Delete',
+        click () {
+          const feedIndex = _.findIndex(self.$store.state.Feed.feeds, { 'category': feed.category.title })
+          self.$store.dispatch('deleteCategory', feed.category.title)
+          self.$store.dispatch('deleteFeed', self.$store.state.Feed.feeds[feedIndex].id)
+          self.$store.dispatch('deleteArticleCategory', feed.category.title)
+        }
+      }))
+
+      menu.popup({ window: remote.getCurrentWindow() })
+      menu.once('menu-will-close', () => {
+        menu.destroy()
+      })
+    },
+    openFeedMenu (e, feed) {
+      const self = this
+      const menu = new Menu()
+      menu.append(new MenuItem({
+        label: 'Copy feed link',
+        click () {
+          self.copyFeedLink(feed.feed.xmlurl)
+        }
+      }))
+
+      menu.append(new MenuItem({
+        label: 'Mark as read',
+        click () {
+          self.markFeedRead(feed.feed.id)
+        }
+      }))
+
+      menu.append(new MenuItem({
+        label: 'Edit feed',
+        click () {
+          self.openEditModal(feed.feed)
+          self.$bvModal.show('editFeed')
+        }
+      }))
+
+      menu.append(new MenuItem({
+        type: 'separator'
+      }))
+
+      menu.append(new MenuItem({
+        label: 'Unsubscribe',
+        click () {
+          self.unsubscribeFeed(feed.feed.id)
+        }
+      }))
+      menu.popup({ window: remote.getCurrentWindow() })
+      menu.once('menu-will-close', () => {
+        menu.destroy()
+      })
     }
   }
 }
@@ -716,6 +789,7 @@ export default {
       & .feed-mix {
         padding: 0.5rem 1rem;
 
+        &:hover,
         &.active {
           background-color: var(--active-item-background-color);
           border-radius: 0;
@@ -792,6 +866,7 @@ export default {
   }
 
   .nav-link {
+    -webkit-user-select: none;
     flex: 1 1 auto;
 
     &.feed-mix-link {

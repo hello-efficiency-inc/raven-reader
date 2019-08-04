@@ -1,6 +1,6 @@
 {
   "name": "raven-reader",
-  "version": "0.5.5",
+  "version": "0.6.1",
   "standard": {
     "globals": [
       "describe",
@@ -13,7 +13,7 @@
       "expect"
     ]
   },
-  "author": "Meet Godhani <meetgodhani23@gmail.com>",
+  "author": "Hello Efficiency Inc <welcome@helloefficiency.com>",
   "description": "Simple Desktop RSS Reader made using VueJS",
   "license": "MIT",
   "main": "./dist/electron/main.js",
@@ -37,7 +37,7 @@
   },
   "build": {
     "productName": "Raven Reader",
-    "appId": "org.mrgodhani.ravenreader",
+    "appId": "org.helloefficiency.ravenreader",
     "directories": {
       "output": "build"
     },
@@ -118,21 +118,19 @@
     "popper.js": "^1.14.4",
     "reading-time": "^1.1.2",
     "request": "^2.88.0",
-    "rss-finder": "^2.0.5",
+    "rss-finder": "^2.1.2",
     "rss-parser": "^3.6.2",
     "superagent": "^5.0.0",
     "update-electron-app": "^1.3.0",
     "uuid": "^3.2.1",
     "uuid-by-string": "^2.0.1",
-    "vue": "^2.5.16",
-    "vue-context-menu": "^2.0.6",
+    "v-click-outside": "^2.1.3",
     "vue-easy-toast": "^1.0.5",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.7",
     "vue-social-sharing": "^2.4.3",
     "vue-toasted": "^1.1.26",
-    "vue2-perfect-scrollbar": "^1.2.0",
-    "vuex": "^3.0.1"
+    "vue2-perfect-scrollbar": "^1.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -153,7 +151,7 @@
     "css-loader": "^3.0.0",
     "del": "^5.0.0",
     "devtron": "^1.4.0",
-    "electron": "^6.0.0",
+    "electron": "^5.0.0",
     "electron-builder": "^21.1.5",
     "electron-debug": "^3.0.0",
     "electron-devtools-installer": "^2.2.4",
@@ -186,10 +184,12 @@
     "spectron": "^7.0.0",
     "style-loader": "^0.23.0",
     "url-loader": "^2.0.0",
+    "vue": "^2.5.16",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^15.4.1",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.4.2",
+    "vuex": "^3.0.1",
     "webpack": "^4.10.2",
     "webpack-cli": "^3.3.1",
     "webpack-dev-server": "^3.1.7",

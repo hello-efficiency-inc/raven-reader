@@ -341,4 +341,9 @@ select {
   -webkit-appearance: none;
   border-radius: 0;
 }
+
+::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
 </style>
