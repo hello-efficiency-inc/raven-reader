@@ -270,10 +270,6 @@ function createMenu () {
       role: 'close'
     },
     {
-      label: 'Maximize',
-      click: function () {}
-    },
-    {
       role: 'minimize'
     },
     {

@@ -57,7 +57,7 @@ export default {
       task.feed.posts.forEach((post) => {
         post.feed_id = task.feed.meta.id
         post.favicon = task.favicon
-        post.category = category
+        post.category = !refresh ? category : task.feed.meta.category
         post.link = post.link ? post.link : task.feed.meta.xmlurl
         post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
         const postItem = _.omit(post, ['creator', 'dc:creator'])
@@ -109,7 +109,9 @@ export default {
         faviconUrl = `https://www.google.com/s2/favicons?domain=${feeditem.meta.link}`
       }
 
-      feeditem.meta.category = category
+      if (!refresh) {
+        feeditem.meta.category = category
+      }
       if (refresh) {
         feeditem.meta.id = feed.id
       }

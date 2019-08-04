@@ -327,7 +327,7 @@ export default {
         } else {
           this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
           log.info(`Processing ${feeds.length} feeds`)
-          helper.subscribe(feeds, null, true, false)
+          helper.subscribe(feeds, null, null, true, false)
           self.$store.dispatch('loadArticles')
         }
       }

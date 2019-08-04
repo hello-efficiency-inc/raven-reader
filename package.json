@@ -96,7 +96,6 @@
     "electron-updater": "^4.0.6",
     "electron-util": "^0.12.1",
     "electron-windows-notifications": "^3.0.0",
-    "faviconoclast": "^0.0.3",
     "feather-icons": "^4.7.3",
     "feedparser": "^2.2.9",
     "fs-jetpack": "^2.0.0",

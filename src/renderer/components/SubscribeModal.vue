@@ -119,9 +119,10 @@ export default {
           }
         )
       } else {
-        this.$toast('There is no internet connection', {
-          className: 'et-alert',
-          horizontalPosition: 'center'
+        this.$toasted.show('There is no internet connection', {
+          theme: 'outline',
+          position: 'top-center',
+          duration: 2000
         })
         this.loading = false
       }
@@ -129,9 +130,10 @@ export default {
     showError () {
       this.loading = false
       this.feeddata = null
-      this.$toast('No feed found', {
-        className: 'et-alert',
-        horizontalPosition: 'center'
+      this.$toasted.show('No feed found', {
+        theme: 'outline',
+        position: 'top-center',
+        duration: 2000
       })
     },
     focusMyElement (e) {
