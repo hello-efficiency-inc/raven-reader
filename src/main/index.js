@@ -83,7 +83,12 @@ function createMenu () {
     role: 'window',
     submenu: [
       {
-        label: 'Maximize'
+        label: 'Maximize',
+        click: function () {
+          console.log(mainWindow)
+          mainWindow.maximize()
+          console.log(mainWindow.isMinimized())
+        }
       },
       {
         role: 'minimize'
@@ -282,6 +287,10 @@ function createMenu () {
       role: 'close'
     },
     {
+      label: 'Maximize',
+      click: function () {}
+    },
+    {
       role: 'minimize'
     },
     {
@@ -356,6 +365,7 @@ function createWindow () {
       nodeIntegrationInWorker: true,
       webSecurity: false
     },
+    maximizable: true,
     title: 'Raven Reader',
     minHeight: 768,
     minWidth: 1204,

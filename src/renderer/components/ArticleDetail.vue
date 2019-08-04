@@ -114,8 +114,7 @@ export default {
   right: 0;
   top: 41px;
   margin: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   z-index: 2;
   padding: 15px 15px 30px;
   height: calc(100% - 45px);
