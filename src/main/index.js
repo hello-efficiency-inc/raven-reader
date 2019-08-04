@@ -398,12 +398,9 @@ function createWindow () {
   createTray()
 
   if (process.platform !== 'darwin') {
-    globalShortcut.register('CmdOrCtrl+B', () => {
+    globalShortcut.register('Alt', () => {
       console.log('hide menu')
-      console.log(mainWindow)
-      mainWindow.setMenu(null)
       mainWindow.setMenuBarVisibility(false)
-      mainWindow.removeMenu()
     })
   }
 }
