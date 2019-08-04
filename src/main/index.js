@@ -6,6 +6,7 @@ import {
   Menu,
   Tray,
   ipcMain,
+  globalShortcut,
   systemPreferences
 } from 'electron'
 import jetpack from 'fs-jetpack'
@@ -405,6 +406,11 @@ app.on('second-instance', (event, argv, cwd) => {
 app.on('ready', () => {
   createWindow()
   enforceMacOSAppLocation()
+  globalShortcut.register('ALT', () => {
+    if (process.platform !== 'darwin') {
+      mainWindow.removeMenu()
+    }
+  })
 })
 
 app.on('before-quit', () => {
