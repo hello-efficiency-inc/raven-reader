@@ -400,6 +400,7 @@ function createWindow () {
   if (process.platform !== 'darwin') {
     globalShortcut.register('CmdOrCtrl+B', () => {
       console.log('hide menu')
+      mainWindow.setMenu(null)
       mainWindow.removeMenu()
     })
   }
