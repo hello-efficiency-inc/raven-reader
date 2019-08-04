@@ -180,6 +180,18 @@ const mutations = {
   CHANGE_FONT_STYLE (state, data) {
     state.fontStyle = data
   },
+  UPDATE_ARTICLE_CATEGORY (state, data) {
+    const articles = _.filter(state.articles, {
+      category: data.old.title
+    })
+    for (let i = 0; i < articles.length; i++) {
+      const index = _.findIndex(state.articles, {
+        _id: articles[i]._id
+      })
+      db.updateArticleCategory(state.articles[index]._id, data.new.title)
+      state.articles[index].category = data.new.title
+    }
+  },
   MARK_CATEGORY_READ (state, data) {
     const feedArticles = _.filter(state.articles, {
       category: data
@@ -272,6 +284,9 @@ const actions = {
   },
   turnOnFontSetting ({ commit }, data) {
     commit('FONT_SETTINGS_ON', data)
+  },
+  updateArticleCategory ({ commit }, data) {
+    commit('UPDATE_ARTICLE_CATEGORY', data)
   },
   async updateArticleFeedTitle ({ dispatch, commit }, data) {
     db.updateArticleFeedTitle(data.id, data.title, data.category)

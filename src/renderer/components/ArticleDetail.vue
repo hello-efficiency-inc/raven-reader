@@ -1,9 +1,9 @@
 <template>
   <div class="article-detail">
-    <article-toolbar :article="article" ref="articleToolbar"></article-toolbar>
+    <article-toolbar :article="article" ref="articleToolbar" @openOriginalArticle="openWebArticle"></article-toolbar>
     <div class="content-wrapper">
-      <perfect-scrollbar class="article-contentarea  px-4" v-bind:style="{ fontFamily: currentFontStyle }">
-        <div class="article-wrap" v-bind:class="{ 'offset-content': fontSettingsOn }" v-if="article !== null && article.content !== null && !emptyState" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
+      <perfect-scrollbar v-if="!originalArticle" class="article-contentarea" :class="{ 'px-4': !originalArticle, 'px-0 py-0': originalArticle }" v-bind:style="{ fontFamily: currentFontStyle }">
+        <div class="article-wrap" v-bind:class="{ 'offset-content': fontSettingsOn }" v-if="article !== null && article.content !== null && !emptyState && !originalArticle" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
           <h2>
             <strong>{{ article.title }}</strong><br/>
             <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
@@ -14,7 +14,12 @@
           </div>
         </div>
       </perfect-scrollbar>
-      <div class="article-contentarea  px-4" v-if="article !== null && article.content === null && emptyState">
+      <div v-if="originalArticle && !emptyState" class="article-contentarea" :class="{ 'px-4': !originalArticle, 'px-0 py-0': originalArticle }" v-bind:style="{ fontFamily: currentFontStyle }">
+        <div class="web-wrap" v-if="article !== null && article.content !== null && !emptyState && originalArticle" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
+          <webview id="foo" :src="articleUrl" style="height: 100vh" nodeintegration></webview>
+        </div>
+      </div>
+      <div class="article-contentarea  px-4" v-if="article !== null && article.content === null && emptyState && !originalArticle">
         <div class="article-detail d-flex flex-column justify-content-center align-items-center
 ">
           <h3 class="mb-4">Whoops! not able to load content.</h3>
@@ -45,6 +50,20 @@ export default {
       type: Boolean
     }
   },
+  data () {
+    return {
+      originalArticle: false,
+      articleUrl: null
+    }
+  },
+  watch: {
+    '$route.fullPath': {
+      immediate: true, // Immediate option to call watch handler on first mount
+      handler () {
+        this.resetData()
+      }
+    }
+  },
   computed: {
     currentFontStyle () {
       return this.$store.state.Article.fontStyle
@@ -54,6 +73,16 @@ export default {
     },
     fontSettingsOn () {
       return this.$store.state.Article.fontSettingOn
+    }
+  },
+  methods: {
+    resetData () {
+      this.originalArticle = false
+      this.articleUrl = null
+    },
+    openWebArticle (original, data) {
+      this.originalArticle = original
+      this.articleUrl = data
     }
   }
 }
@@ -192,6 +221,10 @@ export default {
 
 .offset-content {
   padding-top: 60px;
+}
+
+.web-wrap {
+  max-width: 100%;
 }
 
 .article-wrap {

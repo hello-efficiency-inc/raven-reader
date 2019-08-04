@@ -23,10 +23,10 @@ const mutations = {
     db.deleteCategory(state.categories[index].title)
     state.categories.splice(index, 1)
   },
-  RENAME_CATEGORY (state, category, title) {
-    const index = _.findIndex(state.categories, { title: category })
-    state.categories[index].title = title
-    db.updateCategory(category, title)
+  RENAME_CATEGORY (state, category) {
+    const index = _.findIndex(state.categories, { _id: category._id })
+    state.categories[index].title = category.title
+    db.updateCategory(category._id, category.title)
   }
 }
 

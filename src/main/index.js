@@ -83,14 +83,6 @@ function createMenu () {
     role: 'window',
     submenu: [
       {
-        label: 'Maximize',
-        click: function () {
-          console.log(mainWindow)
-          mainWindow.maximize()
-          console.log(mainWindow.isMinimized())
-        }
-      },
-      {
         role: 'minimize'
       },
       {
@@ -175,16 +167,6 @@ function createMenu () {
       }
     }
     ]
-  },
-  {
-    label: 'Sharing',
-    submenu: [{
-      label: 'Next item',
-      accelerator: 'CmdOrCtrl+J',
-      click: function () {
-        mainWindow.webContents.send('Next item')
-      }
-    }]
   }
   ]
 
@@ -361,6 +343,7 @@ function createWindow () {
    */
   mainWindow = new BrowserWindow({
     webPreferences: {
+      webviewTag: true,
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       webSecurity: false

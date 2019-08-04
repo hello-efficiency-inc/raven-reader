@@ -29,9 +29,9 @@
         </button>
       </div>
       <div class="wrap">
-        <a :href="article.url" class="btn btn-toolbar js-external-link" v-b-tooltip.hover title="Open in browser" ref="openlink">
-          <feather-icon name="external-link"></feather-icon>
-        </a>
+        <button @click="openOriginal(article.url)" class="btn btn-toolbar js-external-link" v-b-tooltip.hover title="View original" ref="openlink">
+          <feather-icon name="globe" :success="original"></feather-icon>
+        </button>
       </div>
       <div class="wrap">
         <button class="btn btn-toolbar" @click="saveArticle" v-b-tooltip.hover title="Save article" ref="saveoffline">
@@ -117,6 +117,7 @@ export default {
       pocket_connected: false,
       settingspanel: false,
       fontstyle: null,
+      original: false,
       options: [
         { value: null, text: 'System font' },
         { value: 'Open Sans', text: 'Open Sans' },
@@ -144,7 +145,24 @@ export default {
       return this.article.read ? 'Mark as unread' : 'Mark as read'
     }
   },
+  watch: {
+    '$route.fullPath': {
+      immediate: true, // Immediate option to call watch handler on first mount
+      handler () {
+        this.resetData()
+      }
+    }
+  },
   methods: {
+    resetData () {
+      this.original = false
+      this.settingspanel = false
+      this.$store.dispatch('turnOnFontSetting', false)
+    },
+    openOriginal (url) {
+      this.original = !this.original
+      this.$emit('openOriginalArticle', this.original, url)
+    },
     hideTextConfig () {
       this.settingspanel = !this.settingspanel
       this.$store.dispatch('turnOnFontSetting', this.settingspanel)

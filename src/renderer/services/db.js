@@ -48,9 +48,9 @@ export default {
       return cb(docs)
     })
   },
-  updateCategory (category, title, cb) {
+  updateCategory (id, title, cb) {
     return category.update({
-      title: category
+      _id: id
     }, {
       $set: {
         title: title
@@ -82,6 +82,21 @@ export default {
       }
     })
   },
+  updateFeedCategory (id, category) {
+    feed.update({
+      id: id
+    }, {
+      $set: {
+        category: category
+      }
+    }, {
+      multi: true
+    }, (err, num) => {
+      if (err) {
+        console.log(err)
+      }
+    })
+  },
   deleteFeed (id) {
     feed.remove({ id: id }, {}, (err, numRemoved) => {
       if (err) {}
@@ -102,6 +117,21 @@ export default {
     }, {
       $set: {
         feed_title: title,
+        category: category
+      }
+    }, {
+      multi: true
+    }, (err, num) => {
+      if (err) {
+        console.log(err)
+      }
+    })
+  },
+  updateArticleCategory (id, category) {
+    article.update({
+      _id: id
+    }, {
+      $set: {
         category: category
       }
     }, {

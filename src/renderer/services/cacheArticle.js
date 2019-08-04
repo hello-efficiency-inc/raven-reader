@@ -2,6 +2,7 @@ import _ from 'lodash'
 
 export default {
   async getCachedArticleData (id, url) {
+    console.log(url)
     const articleRequest = new Request(url, {
       mode: 'no-cors',
       headers: {
@@ -54,7 +55,7 @@ export default {
       caches.match(request).then(response => response || fetch(request)).then(response => cache.put(request, response))
     })
 
-    const articleRequest = new Request(responseData.url, {
+    const articleRequest = new Request(responseData.link, {
       headers: {
         'Content-Type': 'application/json'
       }

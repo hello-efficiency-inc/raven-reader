@@ -176,6 +176,7 @@
     <markallread-modal></markallread-modal>
     <sync-settings></sync-settings>
     <edit-feed :feed="activeFeed"></edit-feed>
+    <edit-category :feed="activeFeed"></edit-category>
   </div>
 </template>
 <script>
@@ -210,7 +211,6 @@ export default {
   beforeRouteUpdate (to, from, next) {
     if (to.params.id) {
       this.$electron.ipcRenderer.send('article-selected')
-      this.$store.dispatch('turnOnFontSetting', false)
     }
     next()
   },
@@ -510,12 +510,6 @@ export default {
     async unsubscribeFeed (id, category = null) {
       await this.$emit('delete', 'yes')
       await this.$store.dispatch('deleteFeed', id)
-      if (category !== null) {
-        var items = _.filter(this.feeds, { 'category': category })
-        if (items.length === 0) {
-          await this.$store.dispatch('deleteCategory', category)
-        }
-      }
     },
     prepareArticleData (data, article) {
       const self = this
@@ -535,6 +529,7 @@ export default {
       data.feed_url = article.feed_url
       data.feed_link = article.feed_link
       data._id = article._id
+      data.link = article.link
       data.favourite = article.favourite
       data.read = article.read
       data.offline = article.offline
@@ -608,6 +603,9 @@ export default {
         params: { category: feed.title }
       })
     },
+    openCategoryEditModal (category) {
+      this.activeFeed = category
+    },
     openEditModal (feed) {
       this.activeFeed = feed
     },
@@ -624,7 +622,8 @@ export default {
       menu.append(new MenuItem({
         label: 'Rename folder',
         click () {
-          self.copyFeedLink(feed.feed.xmlurl)
+          self.openCategoryEditModal(feed.category)
+          self.$bvModal.show('editCategory')
         }
       }))
 

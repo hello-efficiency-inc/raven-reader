@@ -346,4 +346,10 @@ select {
     width: 0px;  /* Remove scrollbar space */
     background: transparent;  /* Optional: just make scrollbar invisible */
 }
+
+.btn,
+.form-control,
+.modal-content {
+  border-radius: 0 !important;
+}
 </style>

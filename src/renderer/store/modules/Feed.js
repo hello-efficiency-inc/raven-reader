@@ -30,6 +30,16 @@ const mutations = {
     const index = _.findIndex(state.feeds, { 'id': data.id })
     state.feeds[index].title = data.title
     state.feeds[index].category = data.category
+  },
+  UPDATE_FEED_CATEGORY (state, data) {
+    const feeds = _.filter(state.feeds, { 'category': data.old.title })
+    for (let i = 0; i < feeds.length; i++) {
+      const index = _.findIndex(state.feeds, {
+        _id: feeds[i]._id
+      })
+      db.updateFeedCategory(state.feeds[index].id, data.new.title)
+      state.feeds[index].category = data.new.title
+    }
   }
 }
 
@@ -50,6 +60,9 @@ const actions = {
   },
   orderFeeds ({ commit }, feeds) {
     commit('ORDER_FEEDS', feeds)
+  },
+  updateFeedCategory ({ commit }, data) {
+    commit('UPDATE_FEED_CATEGORY', data)
   },
   updateFeedTitle ({ commit }, data) {
     db.updateFeedTitle(data.id, data.title, data.category)
