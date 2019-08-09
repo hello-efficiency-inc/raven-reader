@@ -60,7 +60,7 @@ To download, please visit [https://github.com/mrgodhani/rss-reader/releases](htt
 - [x] Supports categorizing of the feeds. 
 
 ## Roadmap
-- [] Feedbin, Feedly and Inoreader full sync would be available in PRO
+- [ ] Feedbin, Feedly and Inoreader full sync would be available in PRO
 - [x] New brand name and icons
 - [x] Text configuration
 - [ ] Supporting authenticated feeds
