@@ -79,21 +79,22 @@ Please feel free to suggest more ideas to improve this app.
 #### Build Setup
 
 ``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:9080
-npm run dev
-
-# build electron application for production
-npm run build
-
-
-# lint all JS/Vue component files in `src/`
-npm run lint
 
 # copy config.example.js in renderer to config.js by executing cp config.example.js config.js and set Mercury parser token
 cp src/renderer/config.example.js src/renderer/config.js
+
+# install dependencies
+yarn install
+
+# serve with hot reload at localhost:9080
+yarn dev
+
+# build electron application for production
+yarn build
+
+
+# lint all JS/Vue component files in `src/`
+yarn run lint
 
 ```
 
