@@ -1,3 +1,5 @@
+import 'v8-compile-cache'
+
 import Vue from 'vue'
 import axios from 'axios'
 import BootstrapVue from 'bootstrap-vue'
