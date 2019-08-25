@@ -9,6 +9,18 @@
             </span>
           </div>
           <input type="text" class="form-control" placeholder="Search" aria-label="Search" v-model="search">
+          <div class="toolsbar">
+            <div class="tool">
+              <button class="btn btn-toolbar" type="button" @click="sync" v-b-tooltip.hover title="Sync">
+                <feather-icon name="refresh-cw" :class="{ 'fa-spin': syncState }"></feather-icon>
+              </button>
+            </div>
+            <div class="tool">
+              <button class="btn btn-toolbar" type="button" v-b-tooltip.hover title="Mark all as read" v-b-modal.markallread ref="markallread">
+                <feather-icon name="check-circle"></feather-icon>
+              </button>
+            </div>
+          </div>
         </div>
       </form>
       <div class="articles">
@@ -30,12 +42,15 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import log from 'electron-log'
+import helper from '../services/helpers'
 
 export default {
   data () {
     return {
       search: null,
-      featherIcon: 'chevron-left'
+      featherIcon: 'chevron-left',
+      syncState: false
     }
   },
   props: {
@@ -71,6 +86,22 @@ export default {
     },
     itemsChange () {
       this.$refs.statusMsg.innerText = `${this.filteredArticles.length} items`
+    },
+    sync () {
+      const self = this
+      this.syncState = true
+      const feeds = this.$store.state.Feed.feeds
+      if (feeds.length === 0) {
+        log.info('No feeds to process')
+      } else {
+        // this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
+        log.info(`Processing ${feeds.length} feeds`)
+        helper.subscribe(feeds, null, null, true, false)
+        this.$store.dispatch('loadArticles')
+      }
+      setTimeout(() => {
+        self.syncState = false
+      }, feeds.length * 1500)
     },
     fold () {
       this.$parent.$refs.sidebar.hidden = !this.$parent.$refs.sidebar.hidden
@@ -287,5 +318,64 @@ export default {
 
 .list-group {
   height: 100%;
+}
+.fa-spin {
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
+}
+.fa-pulse {
+  -webkit-animation: fa-spin 1s infinite steps(8);
+  animation: fa-spin 1s infinite steps(8);
+}
+@-webkit-keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+.toolsbar {
+  position: relative;
+  right: 0;
+  top: 0;
+  margin: 0;
+  height: 41px;
+  display: flex;
+  z-index: 10;
+  align-items: center;
+  
+  .btn {
+      color: rgb(65, 65, 65);
+      margin-right: 2px;
+      padding: 0 !important;
+      width: 28px;
+      box-shadow: none;
+      outline: none;
+      height: 28px;
+      z-index: 10;
+      .fill {
+        fill: rgb(65, 65, 65);
+      }
+  }
+  .btn:hover {
+    color: #007bff;
+    .fill {
+      fill: #007bff;
+    }
+  }
 }
 </style>

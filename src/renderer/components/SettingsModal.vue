@@ -42,7 +42,6 @@ export default {
       oldestArticles: 'off',
       cron_options: [
         { value: null, text: 'Please select an option' },
-        { value: '* * * * *', text: 'Every minute' },
         { value: '*/5 * * * *', text: 'Every 5 minutes' },
         { value: '*/10 * * * *', text: 'Every 10 minutes' },
         { value: '*/15 * * * *', text: 'Every 15 minutes' },

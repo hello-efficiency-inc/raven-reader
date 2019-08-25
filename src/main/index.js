@@ -187,6 +187,14 @@ function createMenu () {
         }
       },
       {
+        label: 'Settings',
+        id: 'settings',
+        type: 'normal',
+        click: function () {
+          mainWindow.webContents.send('Settings')
+        }
+      },
+      {
         role: 'hide'
       },
       {
@@ -219,6 +227,17 @@ function createMenu () {
         label: 'Check for update',
         click: function (menuItem, browserWindow, event) {
           checkForUpdates(menuItem, browserWindow, event)
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Settings',
+        id: 'settings',
+        type: 'normal',
+        click: function () {
+          mainWindow.webContents.send('Settings')
         }
       },
       {

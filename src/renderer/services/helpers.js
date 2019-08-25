@@ -103,11 +103,8 @@ export default {
       }
 
       const feeditem = await parseFeed(url, faviconUrl)
-      if (faviconData) {
-        faviconUrl = faviconData
-      } else {
-        faviconUrl = `https://www.google.com/s2/favicons?domain=${feeditem.meta.link}`
-      }
+      faviconUrl = `https://www.google.com/s2/favicons?domain=${feeditem.meta.link}`
+      console.log(faviconUrl)
 
       if (!refresh) {
         feeditem.meta.category = category
