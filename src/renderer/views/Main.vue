@@ -81,16 +81,6 @@
             </li>
           </b-collapse>
           <li class="nav-item">
-            <a class="nav-link" href="#" v-b-modal.markallread ref="markallread">
-              <feather-icon name="check-square"></feather-icon>Mark all as read
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" v-b-modal.settings>
-              <feather-icon name="settings"></feather-icon>Settings
-            </a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.integrations>
               <feather-icon name="package"></feather-icon>Integrations
             </a>
@@ -293,6 +283,10 @@ export default {
       if (self.$route.params.id) {
         self.$refs.articleDetail.$refs.articleToolbar.markRead()
       }
+    })
+
+    this.$electron.ipcRenderer.on('Settings', (events, args) => {
+      self.$bvModal.show('settings')
     })
 
     this.$electron.ipcRenderer.on('Mark all read', (events, args) => {
