@@ -197,6 +197,8 @@ export default {
   }
   .articles-inner .list-group-item {
     background: var(--background-color);
+    border-left: 0;
+    border-right: 0;
     border-bottom-color: var(--border-color);
   }
 

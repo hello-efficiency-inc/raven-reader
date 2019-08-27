@@ -60,26 +60,6 @@
               </feed-mix>
             </router-link>
           </li>
-          <li class="feed nav-item d-flex justify-content-between align-items-center pr-2">
-            <a class="nav-link" href="#" v-b-toggle="`collapse-importexport`">
-              <feather-icon name="external-link"></feather-icon>Import and Export
-            </a>
-            <button class="btn btn-link export-link" v-b-toggle="`collapse-importexport`">
-              <feather-icon name="chevron-down"></feather-icon>
-            </button>
-          </li>
-          <b-collapse  id="collapse-importexport">
-            <li class="nav-item">
-              <a class="nav-link ml-2" href="#" v-b-modal.importfeed>
-                <feather-icon name="upload"></feather-icon>Import Subscriptions
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link ml-2" href="#" @click="exportOpml">
-                <feather-icon name="external-link"></feather-icon>Export Subscriptions
-              </a>
-            </li>
-          </b-collapse>
           <li class="nav-item">
             <a class="nav-link" href="#" v-b-modal.integrations>
               <feather-icon name="package"></feather-icon>Integrations
@@ -287,6 +267,14 @@ export default {
 
     this.$electron.ipcRenderer.on('Settings', (events, args) => {
       self.$bvModal.show('settings')
+    })
+
+    this.$electron.ipcRenderer.on('Import subscriptions', (events, args) => {
+      self.$bvModal.show('importfeed')
+    })
+
+    this.$electron.ipcRenderer.on('Export subscriptions', (events, args) => {
+      self.exportOpml()
     })
 
     this.$electron.ipcRenderer.on('Mark all read', (events, args) => {

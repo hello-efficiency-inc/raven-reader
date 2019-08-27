@@ -168,6 +168,25 @@ function createMenu () {
       }
     }
     ]
+  },
+  {
+    label: 'Import and Export',
+    submenu: [
+      {
+        label: 'Import subscriptions',
+        click: function () {
+          mainWindow.webContents.send('Import subscriptions')
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Export subscriptions',
+        click: function () {
+          mainWindow.webContents.send('Export subscriptions')
+        }
+      }]
   }
   ]
 
