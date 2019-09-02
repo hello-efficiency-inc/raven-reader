@@ -36,20 +36,23 @@ export default {
     importFeed () {
       fs.readFile(this.file.path, 'utf8', (err, data) => {
         if (err) {
-          this.$toast('Oops! something went wrong', {
-            className: 'et-alert',
-            horizontalPosition: 'center'
+          this.$toasted.show('Oops! something went wrong', {
+            theme: 'outline',
+            position: 'top-center',
+            duration: 3000
           })
         }
 
         opmlParser(data, (err, data) => {
           if (err) {
-            this.$toast('Oops! something went wrong', {
-              className: 'et-alert',
-              horizontalPosition: 'center'
+            this.$toasted.show('Oops! something went wrong', {
+              theme: 'outline',
+              position: 'top-center',
+              duration: 3000
             })
+          } else {
+            helper.subscribe(data, null, null, false, true)
           }
-          helper.subscribe(data, null, false, true)
         })
       })
 
