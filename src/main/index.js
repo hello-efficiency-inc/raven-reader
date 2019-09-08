@@ -16,7 +16,8 @@ import {
   checkForUpdates
 } from './updater.js'
 import {
-  enforceMacOSAppLocation
+  enforceMacOSAppLocation,
+  darkMode
 } from 'electron-util'
 
 const contextMenu = require('electron-context-menu')
@@ -38,7 +39,6 @@ let trayImage
 let tray
 var articleSelected = false
 let menu
-const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 const store = new Store()
 
 function createMenu () {
@@ -368,6 +368,7 @@ function createWindow () {
   const newDirectory = jetpack.cwd(app.getPath('home'))
   const existsArticle = jetpack.exists(oldDirectory.path(`articles.db`))
   const existsFeed = jetpack.exists(oldDirectory.path(`feeds.db`))
+  const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 
   if (existsArticle && existsFeed) {
     jetpack.move(oldDirectory.path(`feeds.db`), newDirectory.path('.rss-reader/feeds.db'))
@@ -391,7 +392,13 @@ function createWindow () {
     height: 768
   })
 
-  mainWindow.loadURL(winURL)
+  if (mainWindow) {
+    mainWindow.loadURL(winURL)
+  }
+
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
 
   const proxy = store.get('settings.proxy') ? store.get('settings.proxy') : null
   let proxyRules = 'direct://'
@@ -408,7 +415,9 @@ function createWindow () {
     proxyRules: proxyRules,
     proxyBypassRules: proxy && proxy.bypass ? proxy.bypass : '<local>'
   }, () => {
-    mainWindow.loadURL(winURL)
+    if (mainWindow) {
+      mainWindow.loadURL(winURL)
+    }
   })
 
   mainWindow.on('closed', () => {
@@ -450,6 +459,9 @@ app.on('second-instance', (event, argv, cwd) => {
 
 app.on('ready', () => {
   createWindow()
+})
+
+app.whenReady().then(() => {
   enforceMacOSAppLocation()
 })
 
@@ -463,15 +475,21 @@ app.on('window-all-closed', () => {
   }
 })
 
-if (process.platform === 'darwin') {
-  systemPreferences.subscribeNotification(
-    'AppleInterfaceThemeChangedNotification', () => {
-      mainWindow.webContents.send('Dark mode', {
-        darkmode: systemPreferences.isDarkMode()
-      })
-    }
-  )
+if (darkMode.isEnabled) {
+  if (mainWindow) {
+    mainWindow.webContents.send('Dark mode', {
+      darkmode: systemPreferences.isDarkMode()
+    })
+  }
 }
+
+darkMode.onChange(() => {
+  if (mainWindow) {
+    mainWindow.webContents.send('Dark mode', {
+      darkmode: darkMode.isEnabled
+    })
+  }
+})
 
 ipcMain.on('article-selected', (event, status) => {
   const menuItemViewBrowser = menu.getMenuItemById('view-browser')

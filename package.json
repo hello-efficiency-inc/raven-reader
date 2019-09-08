@@ -1,6 +1,7 @@
 {
   "name": "raven-reader",
-  "version": "0.6.2",
+  "productName": "Raven Reader",
+  "version": "0.6.3",
   "standard": {
     "globals": [
       "describe",
