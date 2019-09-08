@@ -364,7 +364,7 @@ export default {
       this.feedMenuData = null
     },
     categoryFeeds (feeds, category) {
-      var items = _.filter(feeds, { 'category': category }).map(feed => ({
+      var items = _.filter(feeds, { category: category }).map(feed => ({
         ...feed,
         isActive: this.isFeedActive(feed)
       }))
@@ -462,7 +462,7 @@ export default {
       notifier.notify({
         icon: path.join(__static, '/logo_icon.png'),
         title: 'Feeds exported',
-        message: `All feeds are exported as opml in downloads folder.`,
+        message: 'All feeds are exported as opml in downloads folder.',
         sound: true
       })
     },
@@ -616,7 +616,7 @@ export default {
       menu.append(new MenuItem({
         label: 'Delete',
         click () {
-          const feedIndex = _.findIndex(self.$store.state.Feed.feeds, { 'category': feed.category.title })
+          const feedIndex = _.findIndex(self.$store.state.Feed.feeds, { category: feed.category.title })
           self.$store.dispatch('deleteCategory', feed.category.title)
           self.$store.dispatch('deleteFeed', self.$store.state.Feed.feeds[feedIndex].id)
           self.$store.dispatch('deleteArticleCategory', feed.category.title)

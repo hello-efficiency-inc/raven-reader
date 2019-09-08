@@ -17,7 +17,7 @@ export default {
     if (token) {
       const subscriptionLists = await axios.get('https://www.inoreader.com/reader/api/0/subscription/list', {
         headers: {
-          'Authorization': `Bearer ${JSON.parse(token).access_token}`
+          Authorization: `Bearer ${JSON.parse(token).access_token}`
         }
       })
       const rssFeedUrls = subscriptionLists.data.subscriptions.map((item) => {
@@ -30,8 +30,8 @@ export default {
   },
   exportOpml () {
     const header = {
-      'title': 'RSS Reader',
-      'dateCreated': new Date(2014, 2, 9)
+      title: 'RSS Reader',
+      dateCreated: new Date(2014, 2, 9)
     }
     const outlines = []
     store.state.Feed.feeds.forEach((feed) => {
@@ -87,8 +87,8 @@ export default {
     }
 
     feeds.forEach(async function (feed) {
-      let faviconUrl
       let url
+      var faviconUrl
 
       if (!importData) {
         url = feed.url
@@ -104,7 +104,6 @@ export default {
 
       const feeditem = await parseFeed(url, faviconUrl)
       faviconUrl = `https://www.google.com/s2/favicons?domain=${feeditem.meta.link}`
-      console.log(faviconUrl)
 
       if (!refresh) {
         feeditem.meta.category = category

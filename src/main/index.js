@@ -366,13 +366,13 @@ function createWindow () {
    */
   const oldDirectory = jetpack.cwd(app.getPath('userData'))
   const newDirectory = jetpack.cwd(app.getPath('home'))
-  const existsArticle = jetpack.exists(oldDirectory.path(`articles.db`))
-  const existsFeed = jetpack.exists(oldDirectory.path(`feeds.db`))
-  const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
+  const existsArticle = jetpack.exists(oldDirectory.path('articles.db'))
+  const existsFeed = jetpack.exists(oldDirectory.path('feeds.db'))
+  const winURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080' : `file://${__dirname}/index.html`
 
   if (existsArticle && existsFeed) {
-    jetpack.move(oldDirectory.path(`feeds.db`), newDirectory.path('.rss-reader/feeds.db'))
-    jetpack.move(oldDirectory.path(`articles.db`), newDirectory.path('.rss-reader/articles.db'))
+    jetpack.move(oldDirectory.path('feeds.db'), newDirectory.path('.rss-reader/feeds.db'))
+    jetpack.move(oldDirectory.path('articles.db'), newDirectory.path('.rss-reader/articles.db'))
   }
   /**
    * Initial window options
@@ -442,7 +442,7 @@ function createWindow () {
 
   if (process.platform !== 'darwin') {
     globalShortcut.register('Alt+M', () => {
-      let visible = mainWindow.isMenuBarVisible()
+      const visible = mainWindow.isMenuBarVisible()
       if (visible) {
         mainWindow.setMenuBarVisibility(false)
       } else {

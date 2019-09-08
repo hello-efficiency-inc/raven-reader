@@ -20,7 +20,7 @@ export default class {
     const existsArticle = fs.existsSync(this.useDataDir.path(`${dirName}/${db.article}`))
     const existsFeed = fs.existsSync(this.useDataDir.path(`${dirName}/${db.feed}`))
     const existsCategory = fs.existsSync(this.useDataDir.path(`${dirName}/${db.category}`))
-    let database = {}
+    const database = {}
 
     if (!existsArticle && !existsFeed && !existsCategory) {
       this.useDataDir.write(this.useDataDir.path(`${dirName}/${db.article}`), '')

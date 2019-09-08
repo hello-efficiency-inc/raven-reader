@@ -56,10 +56,10 @@ const getters = {
       if (state.search !== '') {
         return fuse.search(state.search)
       }
-      return filters['all'](orderedArticles)
+      return filters.all(orderedArticles)
     }
     if (state.category) {
-      return filters['category'](orderedArticles, state.category)
+      return filters.category(orderedArticles, state.category)
     }
     return filters[state.type](orderedArticles, state.feed)
   }
@@ -91,7 +91,7 @@ const mutations = {
     }
   },
   MARK_ACTION (state, data) {
-    const index = _.findIndex(state.articles, { '_id': data.id })
+    const index = _.findIndex(state.articles, { _id: data.id })
     if (data.type === 'FAVOURITE') {
       state.articles[index].favourite = true
     }
@@ -153,7 +153,7 @@ const mutations = {
     state.feed = feed
   },
   SAVE_ARTICLE (state, data) {
-    const index = _.findIndex(state.articles, { '_id': data.article._id })
+    const index = _.findIndex(state.articles, { _id: data.article._id })
     state.articles[index].offline = data.type === 'CACHE'
   },
   INCREASE_FONT (state) {
@@ -171,7 +171,7 @@ const mutations = {
   },
   UPDATE_FEED_TITLE (state, data) {
     const index = _.findIndex(state.articles, {
-      '_id': data.article_id
+      _id: data.article_id
     })
     if (index >= 0) {
       state.articles[index].feed_title = data.title

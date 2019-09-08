@@ -19,7 +19,7 @@ const mutations = {
     }
   },
   DELETE_CATEGORY (state, data) {
-    const index = _.findIndex(state.categories, { 'title': data })
+    const index = _.findIndex(state.categories, { title: data })
     db.deleteCategory(state.categories[index].title)
     state.categories.splice(index, 1)
   },

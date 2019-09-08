@@ -19,7 +19,7 @@ const mutations = {
     }
   },
   DELETE_FEED (state, id) {
-    const index = _.findIndex(state.feeds, { 'id': id })
+    const index = _.findIndex(state.feeds, { id: id })
     db.deleteFeed(id)
     state.feeds.splice(index, 1)
   },
@@ -27,12 +27,12 @@ const mutations = {
     state.feeds = feeds
   },
   UPDATE_FEED_TITLE (state, data) {
-    const index = _.findIndex(state.feeds, { 'id': data.id })
+    const index = _.findIndex(state.feeds, { id: data.id })
     state.feeds[index].title = data.title
     state.feeds[index].category = data.category
   },
   UPDATE_FEED_CATEGORY (state, data) {
-    const feeds = _.filter(state.feeds, { 'category': data.old.title })
+    const feeds = _.filter(state.feeds, { category: data.old.title })
     for (let i = 0; i < feeds.length; i++) {
       const index = _.findIndex(state.feeds, {
         _id: feeds[i]._id
