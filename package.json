@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "standard": {
     "globals": [
       "describe",
@@ -122,7 +122,8 @@
     "vue-easy-toast": "^1.0.5",
     "vue-social-sharing": "^2.4.3",
     "vue-toasted": "^1.1.26",
-    "vue2-perfect-scrollbar": "^1.2.0"
+    "vue2-perfect-scrollbar": "^1.2.0",
+    "xml2js": "^0.4.22"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

@@ -66,7 +66,7 @@ import normalizeUrl from 'normalize-url'
 import he from 'he'
 import helper from '../services/helpers'
 import uuid from 'uuid-by-string'
-// import { parseFeed } from '../parsers/feed'
+import axios from 'axios'
 
 export default {
   name: 'addfeed-modal',
@@ -95,19 +95,29 @@ export default {
     addCategory () {
       this.showAddCat = !this.showAddCat
     },
-    fetchFeed () {
+    async isContentXML (link) {
+      const content = await axios.get(link)
+      return content.headers['content-type'] === 'application/xml'
+    },
+    async fetchFeed () {
+      const self = this
       this.loading = true
       if (!this.$store.state.Setting.offline) {
-        finder(normalizeUrl(this.feed_url, { stripWWW: false }), { feedParserOptions: { feedurl: this.feed_url } }).then(
+        const isXML = await this.isContentXML(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }))
+        finder(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }), { feedParserOptions: { feedurl: this.feed_url } }).then(
           res => {
             this.loading = false
             res.feedUrls.map(item => {
               item.title = he.unescape(item.title)
+              if (isXML) {
+                item.url = self.feed_url
+              }
               return item
             })
             if (res.feedUrls.length === 0) {
               this.showError()
             } else {
+              this.selected_feed = []
               this.selected_feed.push(res.feedUrls[0])
               this.feeddata = res
             }
@@ -160,6 +170,7 @@ export default {
       } else {
         this.newcategory = this.selectedCat
       }
+      console.log(this.selected_feed)
       helper.subscribe(this.selected_feed, this.newcategory, favicon, false)
       this.hideModal()
     },
