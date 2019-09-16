@@ -1,6 +1,6 @@
 <template>
 <b-modal id="integrations" ref="integrations" size="md" title="Integrations" hide-footer centered>
-  <div class="row">
+  <!-- <div class="row">
     <div class="col">
       <p class="text-left">Inoreader</p>
     </div>
@@ -18,7 +18,7 @@
         Sync Feeds
       </button>
     </div>
-  </div>
+  </div> -->
   <div class="row">
     <div class="col">
       <p class="text-left">Pocket</p>
