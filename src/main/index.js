@@ -349,9 +349,13 @@ function createTray () {
     }
   }])
 
-  tray.on('right-click', () => {
-    tray.popUpContextMenu(contextMenu)
-  })
+  if (os.platform() !== 'linux') {
+    tray.on('right-click', () => {
+      tray.popUpContextMenu(contextMenu)
+    })
+  } else {
+    tray.setContextMenu(contextMenu)
+  }
   tray.on('click', () => {
     mainWindow.show()
     if (process.platform === 'darwin' && !app.dock.isVisible()) {
