@@ -12,3 +12,4 @@ thumbs.db
 !.gitkeep
 src/renderer/config.js
 coverage
+windows_codesign.pfx
