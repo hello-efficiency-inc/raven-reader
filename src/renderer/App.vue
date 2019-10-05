@@ -5,7 +5,12 @@
 </template>
 <script>
 export default {
-  name: 'rss-reader'
+  name: 'rss-reader',
+  mounted () {
+    if (!this.$electronstore.get('license')) {
+      this.$router.push('/license')
+    }
+  }
 }
 </script>
 

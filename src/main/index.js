@@ -13,7 +13,8 @@ import jetpack from 'fs-jetpack'
 import os from 'os'
 import Store from 'electron-store'
 import {
-  checkForUpdates
+  checkForUpdates,
+  autoUpdateApp
 } from './updater.js'
 import {
   enforceMacOSAppLocation,
@@ -467,6 +468,9 @@ app.on('ready', () => {
 
 app.whenReady().then(() => {
   enforceMacOSAppLocation()
+  if (process.env.NODE_ENV === 'production') {
+    autoUpdateApp()
+  }
 })
 
 app.on('before-quit', () => {

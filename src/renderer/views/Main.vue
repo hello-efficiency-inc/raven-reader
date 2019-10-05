@@ -197,7 +197,9 @@ export default {
     }
 
     this.$electron.ipcRenderer.on('Add subscription', (event, args) => {
-      self.$refs.subscribetoolbar.$refs.subscribefeed.click()
+      if (self.$refs.subscribetoolbar) {
+        self.$refs.subscribetoolbar.$refs.subscribefeed.click()
+      }
     })
 
     this.$electron.ipcRenderer.on('Dark mode', (event, args) => {
