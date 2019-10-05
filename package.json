@@ -86,7 +86,7 @@
       ],
       "icon": "build/icons/icon.ico",
       "certificateFile": "windows_codesign.pfx",
-      "certificatePassword": "hello!@#$%^",
+      "certificatePassword": "hello!@#$%^"
     },
     "linux": {
       "publish": [

@@ -251,19 +251,25 @@ export default {
 
     this.$electron.ipcRenderer.on('Save offline', (events, args) => {
       if (self.$route.params.id) {
-        self.$refs.articleDetail.$refs.articleToolbar.$refs.saveoffline.click()
+        if (self.$refs.articleDetail) {
+          self.$refs.articleDetail.$refs.articleToolbar.$refs.saveoffline.click()
+        }
       }
     })
 
     this.$electron.ipcRenderer.on('Toggle favourite', (events, args) => {
       if (self.$route.params.id) {
-        self.$refs.articleDetail.$refs.articleToolbar.markFavourite()
+        if (self.$refs.articleDetail) {
+          self.$refs.articleDetail.$refs.articleToolbar.markFavourite()
+        }
       }
     })
 
     this.$electron.ipcRenderer.on('Toggle read', (events, args) => {
       if (self.$route.params.id) {
-        self.$refs.articleDetail.$refs.articleToolbar.markRead()
+        if (self.$refs.articleDetail) {
+          self.$refs.articleDetail.$refs.articleToolbar.markRead()
+        }
       }
     })
 
@@ -285,7 +291,9 @@ export default {
 
     this.$electron.ipcRenderer.on('View in browser', (events, args) => {
       if (self.$route.params.id) {
-        self.$refs.articleDetail.$refs.articleToolbar.$refs.openlink.click()
+        if (self.$refs.articleDetail) {
+          self.$refs.articleDetail.$refs.articleToolbar.$refs.openlink.click()
+        }
       }
     })
 
