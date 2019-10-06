@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "0.6.6",
+  "version": "0.7.0",
   "standard": {
     "globals": [
       "describe",
@@ -66,19 +66,36 @@
     "mac": {
       "darkModeSupport": true,
       "publish": [
-        "github"
+        {
+          "provider": "spaces",
+          "name": "ridereceiptspro",
+          "region": "sfo2",
+          "path": "/ridereceiptspro"
+        }
       ],
       "icon": "build/icons/icon.icns"
     },
     "win": {
       "publish": [
-        "github"
+        {
+          "provider": "spaces",
+          "name": "ridereceiptspro",
+          "region": "sfo2",
+          "path": "/ridereceiptspro"
+        }
       ],
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.ico",
+      "certificateFile": "windows_codesign.pfx",
+      "certificatePassword": "hello!@#$%^"
     },
     "linux": {
       "publish": [
-        "github"
+        {
+          "provider": "spaces",
+          "name": "ridereceiptspro",
+          "region": "sfo2",
+          "path": "/ridereceiptspro"
+        }
       ],
       "category": "News",
       "icon": "build/icons"
@@ -107,6 +124,7 @@
     "hoek": "^6.1.2",
     "lodash": "^4.17.11",
     "nedb": "^1.8.0",
+    "node-machine-id": "^1.1.12",
     "node-notifier": "^5.2.1",
     "node-opml-parser": "^1.0.0",
     "node-schedule": "^1.3.0",
