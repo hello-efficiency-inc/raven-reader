@@ -66,12 +66,12 @@
     "mac": {
       "darkModeSupport": true,
       "publish": [
-       {
-         "provider": "spaces",
-         "name": "ridereceiptspro",
-         "region": "sfo2",
-         "path": "/ridereceiptspro"
-       }
+        {
+          "provider": "spaces",
+          "name": "ridereceiptspro",
+          "region": "sfo2",
+          "path": "/ridereceiptspro"
+        }
       ],
       "icon": "build/icons/icon.icns"
     },
