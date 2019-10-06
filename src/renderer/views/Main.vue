@@ -1,5 +1,54 @@
 <template>
   <div class="app-wrapper">
+    <nav class="accounts">
+      <ul class="accounts__list">
+          <li class="account__item">
+              <button class="account__button account__button--active">
+              DA
+              </button>
+          </li>
+          <li class="account__item">
+              <button class="account__button">
+              DA
+              </button>
+          </li>
+          <li class="account__item">
+              <button class="account__button">
+              DA
+              </button>
+          </li>
+          <li class="account__item">
+              <button class="account__button">
+              DA
+              </button>
+          </li>
+          <li class="account__item">
+              <button class="account__button">
+              DA
+              </button>
+          </li>
+          <li class="account__item">
+              <button class="account__button">
+              DA
+              </button>
+          </li>
+          <li class="account__item">
+              <button class="account__button">
+              DA
+              </button>
+          </li>
+          <li class="account__item">
+              <button class="account__button">
+              DA
+              </button>
+          </li>
+          <li class="account__item">
+              <button class="account__button">
+              DA
+              </button>
+          </li>
+      </ul>
+    </nav>
     <nav class="sidebar" v-if="true" ref="sidebar">
       <subscribe-toolbar ref="subscribetoolbar"></subscribe-toolbar>
       <perfect-scrollbar class="sidebar-sticky">
@@ -934,5 +983,63 @@ export default {
     color: #000;
     transition: transform 0.15s linear;
   }
+}
+
+.accounts {
+  width: 75px;
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  background: var(--background-color, #e3e3e3);
+}
+
+.accounts__list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    list-style: none;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-left: 0;
+}
+
+.account__item {
+  counter-increment: account-counter;
+  font-size: 0.8rem;
+  color: #fff;
+  text-align: center;
+}
+
+.account__button {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1.4rem 0 0.5rem;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+    border-radius: 5px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.account__button--active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.account__button:hover {
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.account__item:after {
+    content: "⌘" counter(account-counter);
+    color: #fff;
+    text-align: center;
 }
 </style>
