@@ -52,9 +52,6 @@ export default {
   methods: {
     async checkLicenseKey () {
       const licenseKey = this.$electronstore.get('license_key')
-      console.log(licenseKey)
-      // const machine = machineIdSync({ original: true })
-      // const machineId = crypto.createHash('sha512').update(machine).digest('hext')
       if (licenseKey === TEST_LICENSE_KEY) {
         this.$electronstore.set('license_key', this.licenseKey)
         this.$router.push('/')
@@ -86,7 +83,6 @@ export default {
         product_type: 'Raven Reader',
         platform: os.platform()
       })
-      console.log(activateMachine)
       if (activateMachine.data.data.success) {
         this.$electronstore.set('license_key', key)
         this.licenseError = false
@@ -96,7 +92,13 @@ export default {
     async submitLicenseKey () {
       const machine = machineIdSync({ original: true })
       const machineId = crypto.createHash('sha512').update(machine).digest('hex')
-      const checkLicenseKey = await axios.get(`${API_DOMAIN}/license/verify?license_key=${this.licenseKey}`)
+      if (this.licenseKey !== TEST_LICENSE_KEY) {
+        var checkLicenseKey = await axios.get(`${API_DOMAIN}/license/verify?license_key=${this.licenseKey}`)
+      } else {
+        this.$electronstore.set('license_key', this.licenseKey)
+        this.licenseError = true
+        this.$router.push('/')
+      }
       if (checkLicenseKey.data.data.success) {
         var subscribedAt = dayjs(checkLicenseKey.data.data.purchase.created_at)
         var expiresAt = dayjs(checkLicenseKey.data.data.purchase.created_at).add(1, 'year')
@@ -129,6 +131,7 @@ export default {
 .app-darkmode {
   .main-splash {
     background: rgb(55, 55, 55);
+    color: #fff;
   }
   .lds-ripple div {
     border-color: #fff;
