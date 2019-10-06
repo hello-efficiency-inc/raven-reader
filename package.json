@@ -136,6 +136,7 @@
     "rss-parser": "^3.6.2",
     "uuid": "^3.2.1",
     "uuid-by-string": "^2.0.1",
+    "v-click-outside": "^2.1.4",
     "v8-compile-cache": "^2.1.0",
     "vue-easy-toast": "^1.0.5",
     "vue-social-sharing": "^2.4.3",
