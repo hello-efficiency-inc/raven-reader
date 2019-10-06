@@ -70,7 +70,7 @@
           "provider": "spaces",
           "name": "ridereceiptspro",
           "region": "sfo2",
-          "path": "/ridereceiptspro"
+          "path": "/ravenreader"
         }
       ],
       "icon": "build/icons/icon.icns"
@@ -81,7 +81,7 @@
           "provider": "spaces",
           "name": "ridereceiptspro",
           "region": "sfo2",
-          "path": "/ridereceiptspro"
+          "path": "/ravenreader"
         }
       ],
       "icon": "build/icons/icon.ico",
@@ -94,7 +94,7 @@
           "provider": "spaces",
           "name": "ridereceiptspro",
           "region": "sfo2",
-          "path": "/ridereceiptspro"
+          "path": "/ravenreader"
         }
       ],
       "category": "News",
