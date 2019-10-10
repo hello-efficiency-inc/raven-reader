@@ -262,9 +262,9 @@
   integrity sha512-Otxmr2rrZLKRYIybtdG/sgeO+tHY20GxeDjcGmUnmmlCWyEnv2a2x1ZXBo3BTec4OiTXMQCiazB8NMBf0iRlFw==
 
 "@types/node@^10.12.18":
-  version "10.14.20"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.20.tgz#c4378d9d6a62faa5c9aafffc3d726b5a1e7367c6"
-  integrity sha512-An+MXSV8CGXz/BO9C1KKsoJ/8WDrvlNUaRMsm2h+IHZuSyQkM8U5bJJkb8ItLKA73VePG/nUK+t+EuW2IWuhsQ==
+  version "10.14.21"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.21.tgz#4a9db7ef1d1671c0015e632c5fa3d46c86c58c1e"
+  integrity sha512-nuFlRdBiqbF+PJIEVxm2jLFcQWN7q7iWEJGsBV4n7v1dbI9qXB8im2pMMKMCUZe092sQb5SQft2DHfuQGK5hqQ==
 
 "@types/q@^1.5.1":
   version "1.5.2"
@@ -4131,9 +4131,9 @@ electron-updater@^4.0.6:
     semver "^6.2.0"
 
 electron-util@^0.12.1:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.12.1.tgz#4a10492d416509a1f588c92d2e50e17798fb4c56"
-  integrity sha512-tRumSqHzNs37X9r2dS42cCxTw8Kw1kARyIcOrKNlYf73n+cooDpBM7+WvA1UNpx1KFPuaBxDpxCmt0SFsJq3BQ==
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.12.2.tgz#ab03458459a3354fc2ea0e22ede714f291c0896d"
+  integrity sha512-AG96dy4o7jgsTmiHwps/CGRzQDbeZYDqxxBprbEwcK0Ao15njIAsZQfcMEPid6D6Mdix+T/Pjs5hxoYPkjKscg==
   dependencies:
     electron-is-dev "^1.1.0"
     new-github-issue-url "^0.2.1"
@@ -4155,9 +4155,9 @@ electron-windows-notifications@^3.0.0:
     xml-escape "^1.1.0"
 
 electron@^6.0.2:
-  version "6.0.11"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-6.0.11.tgz#64effa71397045779a1ddbf51312a41ccf26f491"
-  integrity sha512-mi1oHmeFIQrg+CDQ6lbugZAloOxuWPm/ecEKYe1230PGlDoWND7SYStiWQ2eI4YXAEOL/NvuY88ogemu1qhdBg==
+  version "6.0.12"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-6.0.12.tgz#85bf0061e32f660256cfde95488f1cb75253bc94"
+  integrity sha512-70ODZa1RP6K0gE9IV9YLCXPSyhLjXksCuYSSPb3MljbfwfHo5uE6X0CGxzm+54YuPdE2e7EPnWZxOOsJYrS5iQ==
   dependencies:
     "@types/node" "^10.12.18"
     electron-download "^4.1.0"
@@ -5307,9 +5307,9 @@ glob@^7.0.0, glob@^7.0.3, glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, gl
     path-is-absolute "^1.0.0"
 
 global-agent@^2.0.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/global-agent/-/global-agent-2.1.1.tgz#fa4e236f33a3ed6e0a1b9da4ae3298bbf49f6e99"
-  integrity sha512-MjLP2o331SpSxBMBFSWxs5PaWDhjXxysHepQ/hmBCjhjw74cbO9R/IBCbaSJ4GLPKm01dRcgXBtRr7p7XZEnfg==
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/global-agent/-/global-agent-2.1.2.tgz#da746716b0953673a1b71c294b2bfdfca298191f"
+  integrity sha512-cLv8MW4Pydwx2BH4I0eA5nc9g8k/x6/k66u/rRH7FqMTyyZMO+o3bRbbX6Yb4mrUa9QnLnJJLzSiS0+2oGbqUw==
   dependencies:
     boolean "^1.0.0"
     core-js "^3.2.1"
@@ -5668,7 +5668,12 @@ homedir-polyfill@^1.0.1:
   dependencies:
     parse-passwd "^1.0.0"
 
-hosted-git-info@^2.1.4, hosted-git-info@^2.7.1:
+hosted-git-info@^2.1.4:
+  version "2.8.5"
+  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.5.tgz#759cfcf2c4d156ade59b0b2dfabddc42a6b9c70c"
+  integrity sha512-kssjab8CvdXfcXMXVcvsXum4Hwdq9XGtRD3TteMEvEbq0LXyiNQr6AprqKqfeaDXze7SxWvRxdpwE6ku7ikLkg==
+
+hosted-git-info@^2.7.1:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.4.tgz#44119abaf4bc64692a16ace34700fed9c03e2546"
   integrity sha512-pzXIvANXEFrc5oFFXRMkbLPQ2rXRoDERwDLyrcUxGhaZhgP54BBSl9Oheh7Vv0T090cszWBxPjkQQ5Sq1PbBRQ==
@@ -11452,11 +11457,6 @@ void-elements@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
   integrity sha1-wGavtYK7HLQSjWDqkjkulNXp2+w=
-
-vue-click-outside@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/vue-click-outside/-/vue-click-outside-1.0.7.tgz#cdd2b1605e3c4944784e1794eae4a12a0f700bd6"
-  integrity sha1-zdKxYF48SUR4TheU6uShKg9wC9Y=
 
 vue-easy-toast@^1.0.5:
   version "1.0.5"
