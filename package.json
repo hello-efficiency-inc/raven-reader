@@ -160,7 +160,7 @@
     "chai-spies": "^1.0.0",
     "chalk": "^2.4.1",
     "copy-webpack-plugin": "^5.0.0",
-    "cross-env": "^5.0.5",
+    "cross-env": "^6.0.3",
     "css-loader": "^3.0.0",
     "del": "^5.0.0",
     "devtron": "^1.4.0",
