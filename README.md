@@ -29,8 +29,8 @@
 ![sunsetscreenshot](/sunsetscreenshot.png)
 
 ## Download
-
-To download, please visit [https://github.com/mrgodhani/rss-reader/releases](https://github.com/mrgodhani/rss-reader/releases)
+To download, please visit https://ravenreader.app and purchase license key ($9.99/year).
+*Moving forward all new release build would be an paid application. Previous releases will stay as it is and free. But no updates would be available.*
 
 <a href="https://snapcraft.io/raven-reader">
   <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg" />
