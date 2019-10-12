@@ -108,14 +108,5 @@ For more documentation please follow link from [Electron Vue](https://simulatedg
 - [Mercury Parser](https://mercury.postlight.com/web-parser/)
 
 
-## Support / Contribution
-
-Please feel free to give us suggestions or report a bug by creating a [new issue](https://github.com/mrgodhani/rss-reader/issues) via Github or messaging on  Twitter: [@mrgodhani](https://twitter.com/mrgodhani).
-
-- Thank you Adi Ofir from [Break and Enter](https://www.breakenter.com) for the amazing logo and icons.
-
 ## License
-[MIT](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)
-
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader?ref=badge_large)
+[LGPLv3](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)
