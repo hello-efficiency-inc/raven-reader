@@ -397,6 +397,8 @@ function createWindow () {
     height: 768
   })
 
+  // mainWindow.webContents.openDevTools()
+
   if (mainWindow) {
     mainWindow.loadURL(winURL)
   }
