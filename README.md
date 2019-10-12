@@ -24,13 +24,13 @@
 <a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader.svg?type=shield"/></a>
 </p>
 
+## Download
+To download, please visit https://ravenreader.app and purchase license key ($9.99/year).
+**Moving forward all new release build would be an paid application. Previous releases will stay as it is and free. But no updates would be available.** If there are any questions please contact us at [welcome@helloefficiency.com](welcome@helloefficiency.com)
+
 ![newscreenshot](/newscreenshot.png)
 ![darkscreenshot](/darkscreenshot.png)
 ![sunsetscreenshot](/sunsetscreenshot.png)
-
-## Download
-To download, please visit https://ravenreader.app and purchase license key ($9.99/year).
-*Moving forward all new release build would be an paid application. Previous releases will stay as it is and free. But no updates would be available.*
 
 <a href="https://snapcraft.io/raven-reader">
   <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg" />
