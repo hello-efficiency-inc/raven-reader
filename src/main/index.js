@@ -20,6 +20,9 @@ import {
   enforceMacOSAppLocation,
   darkMode
 } from 'electron-util'
+import {
+  touchBar
+} from './touchbar.js'
 
 const contextMenu = require('electron-context-menu')
 
@@ -210,6 +213,7 @@ function createMenu () {
         label: 'Settings',
         id: 'settings',
         type: 'normal',
+        accelerator: 'CmdOrCtrl+,',
         click: function () {
           mainWindow.webContents.send('Settings')
         }
@@ -255,6 +259,7 @@ function createMenu () {
       {
         label: 'Settings',
         id: 'settings',
+        accelerator: 'CmdOrCtrl+,',
         type: 'normal',
         click: function () {
           mainWindow.webContents.send('Settings')
@@ -396,6 +401,9 @@ function createWindow () {
     width: 1204,
     height: 768
   })
+
+  // mainWindow.webContents.openDevTools()
+  mainWindow.setTouchBar(touchBar)
 
   if (mainWindow) {
     mainWindow.loadURL(winURL)

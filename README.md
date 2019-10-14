@@ -5,10 +5,11 @@
 </p>
 
 <p align="center">
-    <strong>Simple Desktop RSS Reader made using VueJS</strong>
+    <strong>All your articles in one place. Beautiful.</strong>
 </p>
 
 <p align="center">
+<img src="https://img.shields.io/github/package-json/v/hello-efficiency-inc/raven-reader">    
 <a href="https://travis-ci.org/mrgodhani/raven-reader">
 <img src="https://travis-ci.org/mrgodhani/raven-reader.svg?branch=master">
 </a>
@@ -24,13 +25,13 @@
 <a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader.svg?type=shield"/></a>
 </p>
 
+## Download
+To download, please visit https://ravenreader.app and purchase license key ($9.99/year).
+**Moving forward all new release build would be an paid application. Previous releases will stay as it is and free. But no updates would be available.** If there are any questions please contact us at [welcome@helloefficiency.com](welcome@helloefficiency.com)
+
 ![newscreenshot](/newscreenshot.png)
 ![darkscreenshot](/darkscreenshot.png)
 ![sunsetscreenshot](/sunsetscreenshot.png)
-
-## Download
-
-To download, please visit [https://github.com/mrgodhani/rss-reader/releases](https://github.com/mrgodhani/rss-reader/releases)
 
 <a href="https://snapcraft.io/raven-reader">
   <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg" />
@@ -58,6 +59,7 @@ To download, please visit [https://github.com/mrgodhani/rss-reader/releases](htt
 - [x] Text size configuration
 - [x] Text font style configuration (Currently has Playfair Display, Muli, Open Sans and Roboto Slab)
 - [x] Supports categorizing of the feeds. 
+- [x] macOS touchbar shortcuts
 
 ## Roadmap
 - [ ] Feedbin, Feedly and Inoreader full sync would be available in PRO
@@ -108,14 +110,5 @@ For more documentation please follow link from [Electron Vue](https://simulatedg
 - [Mercury Parser](https://mercury.postlight.com/web-parser/)
 
 
-## Support / Contribution
-
-Please feel free to give us suggestions or report a bug by creating a [new issue](https://github.com/mrgodhani/rss-reader/issues) via Github or messaging on  Twitter: [@mrgodhani](https://twitter.com/mrgodhani).
-
-- Thank you Adi Ofir from [Break and Enter](https://www.breakenter.com) for the amazing logo and icons.
-
 ## License
-[MIT](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)
-
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader?ref=badge_large)
+[LGPLv3](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)

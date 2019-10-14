@@ -280,6 +280,7 @@ export default {
         const index = _.findIndex(self.$store.getters.filteredArticles, {
           _id: self.$route.params.id
         })
+        console.log(index)
         if (index > 0) {
           const prevArticle = self.$store.getters.filteredArticles[index - 1]
           self.$router.push({

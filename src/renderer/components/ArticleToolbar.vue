@@ -14,7 +14,7 @@
     </div>
     <div class="article-buttons">
       <div class="wrap">
-        <button class="btn btn-toolbar" @click="openSettings" v-b-tooltip.hover title="Format Options">
+        <button v-click-outside="vcoConfig" class="btn btn-toolbar" @click="openSettings" v-b-tooltip.hover title="Format Options">
           <feather-icon name="settings"></feather-icon>
         </button>
       </div>
@@ -78,18 +78,18 @@
       </div>
     </div>
   </div>
-  <div class="article-setting" v-bind:class="{ hidden: !settingspanel || !this.$store.state.Article.fontSettingOn }">
+  <div tabindex="0" class="article-setting" v-bind:class="{ hidden: !settingspanel || !this.$store.state.Article.fontSettingOn }">
       <div class="settings-wrap dropdown-setting">
-        <b-form-select v-model="fontstyle" :options="options" @change="changeFontStyle"></b-form-select>
+        <b-form-select class="article-settings-btn" v-model="fontstyle" :options="options" @change="changeFontStyle"></b-form-select>
       </div>
       <div class="settings-wrap">
-        <button class="btn btn-link" @click="decreaseFontSize">
-          <svg class="icon-smaller-text" xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path d="M17.973 29.845v-.321c.446-.051.781-.219 1.004-.504.223-.286.606-1.067 1.148-2.345l3.617-8.52h.346l4.326 9.842c.288.651.519 1.056.69 1.21s.463.26.869.316v.321h-4.415v-.321c.507-.046.835-.101.981-.166.146-.064.221-.223.221-.476a2.08 2.08 0 0 0-.086-.447 4.885 4.885 0 0 0-.236-.675l-.695-1.67h-4.575a85.484 85.484 0 0 0-.808 2.079c-.087.25-.131.448-.131.595 0 .293.119.495.356.607.146.067.423.118.829.152v.321h-3.441zm7.476-4.458l-1.989-4.782-1.999 4.782h3.988z"></path></svg>
+        <button class="article-settings-btn btn btn-link" @click="decreaseFontSize">
+          <svg class="article-settings-btn icon-smaller-text" xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path d="M17.973 29.845v-.321c.446-.051.781-.219 1.004-.504.223-.286.606-1.067 1.148-2.345l3.617-8.52h.346l4.326 9.842c.288.651.519 1.056.69 1.21s.463.26.869.316v.321h-4.415v-.321c.507-.046.835-.101.981-.166.146-.064.221-.223.221-.476a2.08 2.08 0 0 0-.086-.447 4.885 4.885 0 0 0-.236-.675l-.695-1.67h-4.575a85.484 85.484 0 0 0-.808 2.079c-.087.25-.131.448-.131.595 0 .293.119.495.356.607.146.067.423.118.829.152v.321h-3.441zm7.476-4.458l-1.989-4.782-1.999 4.782h3.988z"></path></svg>
         </button>
       </div>
       <div class="settings-wrap">
-        <button class="btn btn-link" @click="increaseFontSize">
-          <svg class="icon-smaller-text" xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path d="M11.654 36v-.661c.916-.104 1.604-.448 2.062-1.034s1.244-2.191 2.356-4.812L23.499 12h.709l8.881 20.207c.592 1.338 1.063 2.166 1.419 2.482.354.317.948.534 1.783.649V36h-9.064v-.661c1.042-.093 1.713-.205 2.016-.339.301-.132.451-.458.451-.978 0-.173-.058-.479-.174-.919a9.874 9.874 0 0 0-.487-1.385l-1.427-3.429h-9.393c-.926 2.332-1.479 3.755-1.659 4.269s-.27.922-.27 1.222c0 .601.244 1.017.73 1.247.301.139.868.242 1.702.312V36h-7.062zm15.35-9.154L22.92 17.03l-4.104 9.816h8.188z"></path></svg>
+        <button class="article-settings-btn btn btn-link" @click="increaseFontSize">
+          <svg class="article-settings-btn icon-smaller-text" xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path d="M11.654 36v-.661c.916-.104 1.604-.448 2.062-1.034s1.244-2.191 2.356-4.812L23.499 12h.709l8.881 20.207c.592 1.338 1.063 2.166 1.419 2.482.354.317.948.534 1.783.649V36h-9.064v-.661c1.042-.093 1.713-.205 2.016-.339.301-.132.451-.458.451-.978 0-.173-.058-.479-.174-.919a9.874 9.874 0 0 0-.487-1.385l-1.427-3.429h-9.393c-.926 2.332-1.479 3.755-1.659 4.269s-.27.922-.27 1.222c0 .601.244 1.017.73 1.247.301.139.868.242 1.702.312V36h-7.062zm15.35-9.154L22.92 17.03l-4.104 9.816h8.188z"></path></svg>
         </button>
       </div>
   </div>
@@ -99,6 +99,7 @@
 import cacheService from '../services/cacheArticle'
 import Store from 'electron-store'
 import axios from 'axios'
+import vClickOutside from 'v-click-outside'
 
 const markTypes = {
   favourite: 'FAVOURITE',
@@ -124,7 +125,12 @@ export default {
         { value: 'Muli', text: 'Muli' },
         { value: 'Playfair Display', text: 'Playfair Display' },
         { value: 'Roboto Slab', text: 'Roboto Slab' }
-      ]
+      ],
+      vcoConfig: {
+        handler: this.handleSetting,
+        middleware: this.middleware,
+        events: ['click']
+      }
     }
   },
   props: {
@@ -152,6 +158,9 @@ export default {
         this.resetData()
       }
     }
+  },
+  directives: {
+    clickOutside: vClickOutside.directive
   },
   methods: {
     resetData () {
@@ -242,6 +251,18 @@ export default {
         })
       }
       this.article.read = !this.article.read
+    },
+    handleSetting (event, el) {
+      if (this.settingspanel) {
+        this.settingspanel = false
+        this.$store.dispatch('turnOnFontSetting', this.settingspanel)
+      }
+    },
+    middleware (event, el) {
+      if (event.target.className === 'article-settings-btn custom-select' || (event.target.className.baseVal && event.target.className.baseVal.includes('article-settings-btn'))) {
+        return false
+      }
+      return true
     }
   }
 }

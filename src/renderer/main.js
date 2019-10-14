@@ -10,6 +10,7 @@ import Toasted from 'vue-toasted'
 import {
   createGlobalProxyAgent
 } from 'global-agent'
+import vClickOutside from 'v-click-outside'
 
 import App from './App'
 import router from './router'
@@ -44,6 +45,7 @@ Vue.use(BootstrapVue)
 Vue.use(Toasted)
 Vue.use(PerfectScrollbar)
 Vue.use(SocialSharing)
+Vue.use(vClickOutside)
 
 Register.registerComponents()
 
