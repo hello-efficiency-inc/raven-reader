@@ -136,41 +136,6 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@nodert-win10-cu/windows.applicationmodel@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.applicationmodel/-/windows.applicationmodel-0.4.0.tgz#908a2c0aaf11c6202ad41f147c90c3c9e2034ef2"
-  integrity sha512-IViAWkO6CdgaojOpAqHhZGazEjMFmpPZDqHjweMwslc/CKs97+cxjMk1J1am1wtn/P9/XPhj88TCKxvUwlECxw==
-  dependencies:
-    nan latest
-
-"@nodert-win10-cu/windows.data.xml.dom@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.data.xml.dom/-/windows.data.xml.dom-0.4.0.tgz#f66168ba3da4be24d8ec76061ea93585edf36156"
-  integrity sha512-N5xz6Hd4BdXCL/AsWcD0GUNOCOxn5OW36GkFRdewi/HBzeNm6NHcox9+/1ctI5VoM8o8RTaFZlVcqeQQYNxMEA==
-  dependencies:
-    nan latest
-
-"@nodert-win10-cu/windows.foundation@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.foundation/-/windows.foundation-0.4.0.tgz#0fa4ff1f588c9ca9d8becba8f5e0aa331274f73a"
-  integrity sha512-fLkwHxvLyHG5ZPzwGVKYYlHC/jl5qBxG6+77hJNFyJ7E6yZMsx5ADodelopJX8eXQhZnTTooOXunttVfJkNEKQ==
-  dependencies:
-    nan latest
-
-"@nodert-win10-cu/windows.ui.notifications@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.ui.notifications/-/windows.ui.notifications-0.4.0.tgz#b179487c72337790835a9ee7c1100d083c0fd830"
-  integrity sha512-ghDvZf1KreBAg8SWDV0lFIJghhCIGO4Hp25oh7njxl66wTkn0+qicyff5aSKPytSmy+/CUcZEwV+e400x0nYww==
-  dependencies:
-    nan latest
-
-"@nodert-win10-cu/windows.ui.startscreen@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@nodert-win10-cu/windows.ui.startscreen/-/windows.ui.startscreen-0.4.0.tgz#21e439db0840289aa33978de95346e09164e9e81"
-  integrity sha512-h/38cb4wQdnriZKpcdJDcnvvvEGmZ03TlSMrr3PJRqM1kusOw6SsKH0qQIjxmqZYROs7yOXgPriUkHcKN6I9ag==
-  dependencies:
-    nan latest
-
 "@nuxt/opencollective@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@nuxt/opencollective/-/opencollective-0.3.0.tgz#11d8944dcf2d526e31660bb69570be03f8fb72b7"
@@ -484,9 +449,9 @@ acorn-globals@^4.1.0:
     acorn-walk "^6.0.1"
 
 acorn-jsx@^5.0.0:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.0.2.tgz#84b68ea44b373c4f8686023a551f61a21b7c4a4f"
-  integrity sha512-tiNTrP1MP0QrChmD2DdupCr6HWSFeKVw5d/dHTu4Y7rkAkRhU/Dt7dphAfIUyxtHpl/eBVip5uTNSpQJHylpAw==
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.1.0.tgz#294adb71b57398b0680015f0a38c563ee1db5384"
+  integrity sha512-tMUqwBWfLFbJbizRmEcWSLw6HnFzfdJs2sOJEOwwtVPMoH/0Ay+E703oZz78VSXZiiDcZrQ5XKjPIUQixhmgVw==
 
 acorn-walk@^6.0.1:
   version "6.2.0"
@@ -2538,11 +2503,6 @@ check-error@^1.0.2:
   resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
   integrity sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=
 
-check-os-tray-support@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/check-os-tray-support/-/check-os-tray-support-2.0.0.tgz#e52db1799c38e2e71becfae13e55186b7a3b96e4"
-  integrity sha512-cfN/b0BbftnsC+rLtc+yLefI7DDSdNt4olSOet+0+xwGftv54jCDTVC1WEWGE3xYy5HxMD2ydOIJPl1+YpB1gg==
-
 cheerio@^0.22.0:
   version "0.22.0"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-0.22.0.tgz#a9baa860a3f9b595a6b81b1a86873121ed3a269e"
@@ -3125,14 +3085,14 @@ copy-webpack-plugin@^5.0.0:
     webpack-log "^2.0.0"
 
 core-js@^2.4.0, core-js@^2.5.0, core-js@^2.6.5:
-  version "2.6.9"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.9.tgz#6b4b214620c834152e179323727fc19741b084f2"
-  integrity sha512-HOpZf6eXmnl7la+cUdMnLvUxKNqLUzJvgIziQ0DiF3JwSImNphIqdGqzj6hIKyX04MmV0poclQ7+wjWvxQyR2A==
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.10.tgz#8a5b8391f8cc7013da703411ce5b585706300d7f"
+  integrity sha512-I39t74+4t+zau64EN1fE5v2W31Adtc/REhzWN+gWRRXg6WH5qAsZm62DHpQ1+Yhe4047T55jvzz7MUqF/dBBlA==
 
 core-js@^3.1.3, core-js@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.2.1.tgz#cd41f38534da6cc59f7db050fe67307de9868b09"
-  integrity sha512-Qa5XSVefSVPRxy2XfUC13WbvqkxhkwB3ve+pgCQveNgYzbM/UxZeu1dcOX/xr4UmfUd+muuvsaxilQzCyUurMw==
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.3.1.tgz#636a3dc323c3f9ba618e74c5900366e19f48e959"
+  integrity sha512-1PGI49Lz5qYo3EBz0kymSfJgTvn2G/c03lBTJ7PO0R1liQ7Yd6E570odu5p4CxG/WB0yUwCmAWummo79yOQUcQ==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -4134,9 +4094,9 @@ electron-store@^5.0.0:
     type-fest "^0.7.1"
 
 electron-to-chromium@^1.3.247, electron-to-chromium@^1.3.47:
-  version "1.3.281"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.281.tgz#2dbeb9f0bdffddb1662f9ca00d26c49d31dc0f7e"
-  integrity sha512-oxXKngPjTWRmXFy4vV9FeAkPl7wU4xMejfOY+HXjGrj4T0z9l96loWWVDLJEtbT/aPKOWKrSz6xoYxd+YJ/gJA==
+  version "1.3.282"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.282.tgz#16118ae9c79a32ea93a17591d5b16e28d10fc08d"
+  integrity sha512-irSaDeCGgfMu1OA30bhqIBr+dx+pDJjRbwCpob7YWqVZbzXblybNzPGklVnWqv4EXxbkEAzQYqiNCqNTgu00lQ==
 
 electron-updater@^4.0.6:
   version "4.1.2"
@@ -4159,22 +4119,6 @@ electron-util@^0.12.1:
   dependencies:
     electron-is-dev "^1.1.0"
     new-github-issue-url "^0.2.1"
-
-electron-windows-notifications@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/electron-windows-notifications/-/electron-windows-notifications-3.0.2.tgz#ce08a290ab02892423b517c826bfb95f40fef7ca"
-  integrity sha512-ZDQrvbNSjVhiiAPm6ZWOcl96QHJ9BS4qwJyF2iYGaHdZIaRO3SyPSI10xjucleuOiQNhSC2WPJEFiYgsLjJ+wQ==
-  dependencies:
-    "@nodert-win10-cu/windows.applicationmodel" "^0.4.0"
-    "@nodert-win10-cu/windows.data.xml.dom" "^0.4.0"
-    "@nodert-win10-cu/windows.foundation" "^0.4.0"
-    "@nodert-win10-cu/windows.ui.notifications" "^0.4.0"
-    "@nodert-win10-cu/windows.ui.startscreen" "^0.4.0"
-    debug "^4.1.1"
-    is-electron-renderer "^2.0.1"
-    sanitize-xml-string "^1.1.0"
-    uuid "^3.3.2"
-    xml-escape "^1.1.0"
 
 electron@^6.0.2:
   version "6.0.12"
@@ -6260,11 +6204,6 @@ is-directory@^0.3.1:
   resolved "https://registry.yarnpkg.com/is-directory/-/is-directory-0.3.1.tgz#61339b6f2475fc772fd9c9d83f5c8575dc154ae1"
   integrity sha1-YTObbyR1/Hcv2cnYP1yFddwVSuE=
 
-is-electron-renderer@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/is-electron-renderer/-/is-electron-renderer-2.0.1.tgz#a469d056f975697c58c98c6023eb0aa79af895a2"
-  integrity sha1-pGnQVvl1aXxYyYxgI+sKp5r4laI=
-
 is-extendable@^0.1.0, is-extendable@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/is-extendable/-/is-extendable-0.1.1.tgz#62b110e289a471418e3ec36a617d472e301dfc89"
@@ -7838,7 +7777,7 @@ mute-stream@0.0.7:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-nan@^2.12.1, nan@^2.13.2, nan@latest:
+nan@^2.12.1, nan@^2.13.2:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
@@ -9966,11 +9905,6 @@ sanitize-filename@^1.6.2:
   dependencies:
     truncate-utf8-bytes "^1.0.0"
 
-sanitize-xml-string@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/sanitize-xml-string/-/sanitize-xml-string-1.1.0.tgz#dd86686069ce102b4954912d9c7982037b928768"
-  integrity sha512-RzX25K64YtZm9FvdZr/Ac7Eeq0va1YX0xmpOkjWoREhgKXXldrJRVJhBel83nS8omIcaKcNTdLY8XzOIK920HA==
-
 sass-graph@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/sass-graph/-/sass-graph-2.2.4.tgz#13fbd63cd1caf0908b9fd93476ad43a51d1e0b49"
@@ -11446,7 +11380,7 @@ uuid-by-string@^2.0.1:
     js-md5 "^0.7.3"
     js-sha1 "^0.6.0"
 
-uuid@^3.0.1, uuid@^3.2.1, uuid@^3.3.2:
+uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
   integrity sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ==
@@ -11507,11 +11441,6 @@ void-elements@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
   integrity sha1-wGavtYK7HLQSjWDqkjkulNXp2+w=
-
-vue-easy-toast@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/vue-easy-toast/-/vue-easy-toast-1.0.5.tgz#c2b5064b7b0e0b69500c9f38b0c63ff1a151e0b7"
-  integrity sha512-Tx7TNn19wAbaqvreJMrYrlTwMtHMyaEoG/ISfmFQ4ABWdyB4qphU+eialiOSpGbRFg5w61cBGBkVy3lyJroOPw==
 
 vue-electron@^1.0.6:
   version "1.0.6"
@@ -12007,17 +11936,12 @@ xml-char-classes@^1.0.0:
   resolved "https://registry.yarnpkg.com/xml-char-classes/-/xml-char-classes-1.0.0.tgz#64657848a20ffc5df583a42ad8a277b4512bbc4d"
   integrity sha1-ZGV4SKIP/F31g6Qq2KJ3tFErvE0=
 
-xml-escape@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/xml-escape/-/xml-escape-1.1.0.tgz#3904c143fa8eb3a0030ec646d2902a2f1b706c44"
-  integrity sha1-OQTBQ/qOs6ADDsZG0pAqLxtwbEQ=
-
 xml-name-validator@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-3.0.0.tgz#6ae73e06de4d8c6e47f9fb181f78d648ad457c6a"
   integrity sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==
 
-xml2js@^0.4.19, xml2js@^0.4.22:
+xml2js@^0.4.19:
   version "0.4.22"
   resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.22.tgz#4fa2d846ec803237de86f30aa9b5f70b6600de02"
   integrity sha512-MWTbxAQqclRSTnehWWe5nMKzI3VmJ8ltiJEco8akcC6j3miOhjjfzKum5sId+CWhfxdOs/1xauYr8/ZDBtQiRw==
