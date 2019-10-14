@@ -9,6 +9,7 @@
 </p>
 
 <p align="center">
+<img src="https://img.shields.io/github/package-json/v/hello-efficiency-inc/raven-reader">    
 <a href="https://travis-ci.org/mrgodhani/raven-reader">
 <img src="https://travis-ci.org/mrgodhani/raven-reader.svg?branch=master">
 </a>
