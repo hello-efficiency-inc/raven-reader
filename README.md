@@ -59,6 +59,7 @@ To download, please visit https://ravenreader.app and purchase license key ($9.9
 - [x] Text size configuration
 - [x] Text font style configuration (Currently has Playfair Display, Muli, Open Sans and Roboto Slab)
 - [x] Supports categorizing of the feeds. 
+- [x] macOS touchbar shortcuts
 
 ## Roadmap
 - [ ] Feedbin, Feedly and Inoreader full sync would be available in PRO
