@@ -253,7 +253,10 @@ export default {
       this.article.read = !this.article.read
     },
     handleSetting (event, el) {
-      this.openSettings()
+      if (this.settingspanel) {
+        this.settingspanel = false
+        this.$store.dispatch('turnOnFontSetting', this.settingspanel)
+      }
     },
     middleware (event, el) {
       if (event.target.className === 'article-settings-btn custom-select' || (event.target.className.baseVal && event.target.className.baseVal.includes('article-settings-btn'))) {
