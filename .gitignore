@@ -13,3 +13,4 @@ thumbs.db
 src/renderer/config.js
 coverage
 windows_codesign.pfx
+.env
