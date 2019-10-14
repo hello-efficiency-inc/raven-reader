@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    <strong>Simple Desktop RSS Reader made using VueJS</strong>
+    <strong>All your articles in one place. Beautiful.</strong>
 </p>
 
 <p align="center">
