@@ -1,9 +1,11 @@
 import db from '../../services/db'
 import _ from 'lodash'
+import Store from 'electron-store'
 
 const state = {
   feeds: []
 }
+const store = new Store()
 
 const mutations = {
   LOAD_FEEDS (state, feed) {
@@ -45,7 +47,12 @@ const mutations = {
 
 const actions = {
   loadFeeds ({ commit }) {
-    db.fetchFeeds(docs => {
+    const activeSpace = store.get('active_workspace', null)
+    let type = null
+    if (activeSpace && activeSpace.type === 'feedbin') {
+      type = 'feedbin'
+    }
+    db.fetchFeeds(type, docs => {
       commit('LOAD_FEEDS', docs)
     })
   },

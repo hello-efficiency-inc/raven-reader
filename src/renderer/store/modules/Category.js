@@ -1,9 +1,11 @@
 import db from '../../services/db'
 import _ from 'lodash'
+import Store from 'electron-store'
 
 const state = {
   categories: []
 }
+const store = new Store()
 
 const mutations = {
   LOAD_CATEGORY (state, data) {
@@ -32,7 +34,12 @@ const mutations = {
 
 const actions = {
   loadCategories ({ commit }) {
-    db.fetchCategories(docs => {
+    const activeSpace = store.get('active_workspace', null)
+    let type = null
+    if (activeSpace && activeSpace.type === 'feedbin') {
+      type = 'feedbin'
+    }
+    db.fetchCategories(type, docs => {
       commit('LOAD_CATEGORY', docs)
     })
   },

@@ -219,6 +219,13 @@ function createMenu () {
         }
       },
       {
+        label: 'Add account',
+        id: 'addaccount',
+        click: function () {
+          mainWindow.webContents.send('Add account')
+        }
+      },
+      {
         role: 'hide'
       },
       {
@@ -263,6 +270,23 @@ function createMenu () {
         type: 'normal',
         click: function () {
           mainWindow.webContents.send('Settings')
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Manage accounts',
+        id: 'manageaccounts',
+        click: function () {
+          mainWindow.webContents.send('Manage accounts')
+        }
+      },
+      {
+        label: 'Add account',
+        id: 'addaccount',
+        click: function () {
+          mainWindow.webContents.send('Add account')
         }
       },
       {
@@ -483,6 +507,8 @@ app.whenReady().then(() => {
 
 app.on('before-quit', () => {
   app.isQuiting = true
+  globalShortcut.unregisterAll()
+  tray.destroy()
 })
 
 app.on('window-all-closed', () => {

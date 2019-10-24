@@ -208,7 +208,12 @@ const mutations = {
 
 const actions = {
   loadArticles ({ commit }) {
-    db.fetchArticles(docs => {
+    const activeSpace = store.get('active_workspace', null)
+    let type = null
+    if (activeSpace && activeSpace.type === 'feedbin') {
+      type = 'feedbin'
+    }
+    db.fetchArticles(type, docs => {
       commit('LOAD_ARTICLES', docs)
     })
   },

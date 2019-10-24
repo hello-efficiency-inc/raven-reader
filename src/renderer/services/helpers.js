@@ -52,6 +52,7 @@ export default {
       if (!refresh) {
         task.feed.meta.favicon = task.favicon
         task.feed.meta.id = uuid(task.feed.meta.xmlurl)
+        task.feed.meta.workspace = null
         store.dispatch('addFeed', task.feed.meta)
       }
       task.feed.posts.forEach((post) => {
@@ -60,6 +61,7 @@ export default {
         post.category = !refresh ? category : task.feed.meta.category
         post.link = post.link ? post.link : task.feed.meta.xmlurl
         post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
+        post.workspace = null
         const postItem = _.omit(post, ['creator', 'dc:creator'])
         posts.push(postItem)
       })

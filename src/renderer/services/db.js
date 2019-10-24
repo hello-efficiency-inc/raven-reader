@@ -5,6 +5,7 @@ const connect = db.init()
 const article = connect.article
 const feed = connect.feed
 const category = connect.category
+const accounts = connect.accounts
 
 export default {
   ensureIndex (db, field) {
@@ -12,16 +13,56 @@ export default {
       if (err) {}
     })
   },
-  fetchFeeds (cb) {
-    return feed.find({}, (err, docs) => {
+  fetchAccounts (cb) {
+    return accounts.find({}, (err, docs) => {
       if (err) {}
       return cb(docs)
     })
   },
-  fetchArticles (cb) {
-    return article.find({}).sort({ pubDate: -1 }).exec((err, docs) => {
+  addAccounts (data, cb) {
+    return accounts.insert(data, (err, docs) => {
       if (err) {}
-      cb(docs)
+      return cb(docs)
+    })
+  },
+  fetchFeed (data, cb) {
+    feed.find({
+      feed_id: data
+    }, (err, docs) => {
+      if (err) {}
+      return cb(docs)
+    })
+  },
+  fetchFeeds (type = null, cb) {
+    let query
+    if (type === 'feedbin') {
+      query = {
+        workspace: 'feedbin'
+      }
+    } else {
+      query = {
+        workspace: null
+      }
+    }
+    return feed.find(query, (err, docs) => {
+      if (err) {}
+      if (cb) {
+        cb(docs)
+      }
+    })
+  },
+  fetchArticles (type = null, cb) {
+    let query
+    if (type === 'feedbin') {
+      query = { workspace: 'feedbin' }
+    } else {
+      query = { workspace: null }
+    }
+    return article.find(query).sort({ pubDate: -1 }).exec((err, docs) => {
+      if (err) {}
+      if (cb) {
+        cb(docs)
+      }
     })
   },
   fetchArticle (id, cb) {
@@ -30,10 +71,20 @@ export default {
       return cb(doc)
     })
   },
-  fetchCategories (cb) {
-    return category.find({}, (err, docs) => {
+  fetchCategories (type = null, cb) {
+    let query
+    if (type === 'feedbin') {
+      query = {
+        workspace: 'feedbin'
+      }
+    } else {
+      query = {}
+    }
+    return category.find(query, (err, docs) => {
       if (err) {}
-      return cb(docs)
+      if (cb) {
+        return cb(docs)
+      }
     })
   },
   deleteCategory (title) {
@@ -188,6 +239,36 @@ export default {
   },
   markUnread (id) {
     article.update({ _id: id }, { $set: { read: false } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  updateArticlesRead (items) {
+    article.update({
+      id: {
+        $nin: items
+      }
+    }, {
+      $set: {
+        read: true
+      }
+    }, {
+      multi: true
+    }, (err, docs) => {
+      if (err) {}
+    })
+  },
+  updateArticlesUnread (items) {
+    article.update({
+      id: {
+        $in: items
+      }
+    }, {
+      $set: {
+        read: false
+      }
+    }, {
+      multi: true
+    }, (err, docs) => {
       if (err) {}
     })
   }

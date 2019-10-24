@@ -52,6 +52,7 @@ export default {
   methods: {
     async checkLicenseKey () {
       const licenseKey = this.$electronstore.get('license_key')
+      console.log(licenseKey)
       if (licenseKey === TEST_LICENSE_KEY) {
         this.$electronstore.set('license_key', this.licenseKey)
         this.$router.push('/')
@@ -98,6 +99,7 @@ export default {
         this.$electronstore.set('license_key', this.licenseKey)
         this.licenseError = true
         this.$router.push('/')
+        return
       }
       if (checkLicenseKey.data.data.success) {
         var subscribedAt = dayjs(checkLicenseKey.data.data.purchase.created_at)

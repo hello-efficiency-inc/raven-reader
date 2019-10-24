@@ -11,9 +11,11 @@ import ImportModal from './ImportModal'
 import SettingsModal from './SettingsModal'
 import MarkReadModal from './MarkReadModal'
 import SyncSettingsModal from './SyncSettingsModal'
+import AddAccountModal from './AddAccountModal'
 import EditSubscriptionModal from './EditSubscription'
 import EditFeedModal from './EditFeed'
 import EditCategoryModal from './EditCategory'
+import FeedbinModal from './FeedbinModal'
 import FeedMix from './FeedMix'
 
 export default {
@@ -34,5 +36,7 @@ export default {
     Vue.component('feed-mix', FeedMix)
     Vue.component('edit-feed', EditFeedModal)
     Vue.component('edit-category', EditCategoryModal)
+    Vue.component('add-account', AddAccountModal)
+    Vue.component('feedbin-modal', FeedbinModal)
   }
 }

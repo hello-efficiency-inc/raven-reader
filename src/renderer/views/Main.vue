@@ -1,50 +1,22 @@
 <template>
   <div class="app-wrapper">
-    <nav class="accounts">
+    <nav class="accounts" v-if="accounts.length > 0">
       <ul class="accounts__list">
-          <li class="account__item">
-              <button class="account__button account__button--active">
-              DA
+         <li class="account__item">
+              <button class="account__button" :class="{ 'account__button--active': activeWorkspace === null}" @click="setWorkspace()">
+                <feather-icon name="rss"></feather-icon>
               </button>
           </li>
-          <li class="account__item">
-              <button class="account__button">
-              DA
+          <li class="account__item" v-for="account in accounts" :key="account._id">
+              <button class="account__button" :class="{ 'account__button--active': activeWorkspace && activeWorkspace._id === account._id }" @click="setWorkspace(account)">
+                <template v-if="account.type === 'feedbin'">
+                  <svg  class="feedbin-icon mt-2" style="color: #fff" xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 119.309 100.953" preserveAspectRatio="xMidYMin meet"><g><path d="M57.738.396c-27.5-3.7-50.2 19.2-50.2 41.4l102.6 1c.1-22.1-25.1-38.7-52.4-42.4zM114.138 85.696H6.038s-2.8 13.2 1.5 13.6c19.4 1.9 83.9 2.5 103 0 5.4-.7 3.5-13.6 3.6-13.6zM116.038 54.396c-2.4-2.3-15.2 0-15.2 0s-11.3 16.3-16.1 16.3c-4.7 0-20.8-16.3-20.8-16.3s-44.7-2.5-60.3 0c-4.8.8-4.9 23.3 0 23.3 15.5-.1 89.9-.1 112.4 0 4.8.1 3.9-19.3 0-23.3z"/></g></svg>
+                </template>
               </button>
           </li>
-          <li class="account__item">
-              <button class="account__button">
-              DA
-              </button>
-          </li>
-          <li class="account__item">
-              <button class="account__button">
-              DA
-              </button>
-          </li>
-          <li class="account__item">
-              <button class="account__button">
-              DA
-              </button>
-          </li>
-          <li class="account__item">
-              <button class="account__button">
-              DA
-              </button>
-          </li>
-          <li class="account__item">
-              <button class="account__button">
-              DA
-              </button>
-          </li>
-          <li class="account__item">
-              <button class="account__button">
-              DA
-              </button>
-          </li>
-          <li class="account__item">
-              <button class="account__button">
-              DA
+          <li class="account__item account--add">
+              <button class="account__button" v-b-modal.addaccount>
+                <feather-icon name="plus"></feather-icon>
               </button>
           </li>
       </ul>
@@ -196,6 +168,7 @@
     <sync-settings></sync-settings>
     <edit-feed :feed="activeFeed"></edit-feed>
     <edit-category :feed="activeFeed"></edit-category>
+    <add-account></add-account>
   </div>
 </template>
 <script>
@@ -236,6 +209,8 @@ export default {
   mounted () {
     const self = this
     this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
+    this.$store.dispatch('loadAccounts')
+    this.$store.dispatch('loadActiveWorkspace')
     this.$store.dispatch('refreshFeeds')
     this.$store.dispatch('loadCategories')
     this.$store.dispatch('loadFeeds')
@@ -323,6 +298,10 @@ export default {
       }
     })
 
+    this.$electron.ipcRenderer.on('Add account', (events, args) => {
+      self.$bvModal.show('addaccount')
+    })
+
     this.$electron.ipcRenderer.on('Settings', (events, args) => {
       self.$bvModal.show('settings')
     })
@@ -406,6 +385,9 @@ export default {
     allUnread: 'unreadChange'
   },
   computed: {
+    accounts () {
+      return this.$store.state.Account.accounts
+    },
     categoryItems () {
       return this.$store.state.Category.categories
     },
@@ -414,6 +396,9 @@ export default {
     },
     activeFeedId () {
       return this.$store.getters.activeFeedId
+    },
+    activeWorkspace () {
+      return this.$store.state.Workspace.activeWorkspace
     }
   },
   methods: {
@@ -727,6 +712,17 @@ export default {
       menu.once('menu-will-close', () => {
         menu.destroy()
       })
+    },
+    setWorkspace (account) {
+      if (account) {
+        account.id = `${account.type}_${account._id}`
+        this.$store.dispatch('setWorkspace', account)
+      } else {
+        this.$store.dispatch('setWorkspace', null)
+      }
+      this.$store.dispatch('loadCategories')
+      this.$store.dispatch('loadFeeds')
+      this.$store.dispatch('loadArticles')
     }
   }
 }
@@ -991,7 +987,7 @@ export default {
   position: relative;
   height: 100%;
   overflow: auto;
-  background: var(--background-color, #e3e3e3);
+  background: #000;
 }
 
 .accounts__list {
@@ -999,10 +995,10 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
+    height: auto;
     list-style: none;
-    background-color: rgba(0, 0, 0, 0.4);
     padding-left: 0;
+    margin-bottom: 0;
 }
 
 .account__item {
@@ -1038,9 +1034,17 @@ export default {
     box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
+.account--add:after {
+  content: "" !important;
+}
+
 .account__item:after {
     content: "⌘" counter(account-counter);
     color: #fff;
     text-align: center;
+}
+
+.feedbin-icon path {
+  fill: #ffffff;
 }
 </style>
