@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    <strong>All your articles in one place. Beautiful.</strong>
+    <strong>All your articles in one place. Beautiful. 2019</strong>
 </p>
 
 <p align="center">
