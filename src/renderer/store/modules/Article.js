@@ -1,4 +1,5 @@
 import db from '../../services/db'
+import { markRead, markUnread, markAsFavourite, markAsNotFavourite } from '../../services/feedbin'
 import helper from '../../services/helpers'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -209,11 +210,9 @@ const mutations = {
 const actions = {
   loadArticles ({ commit }) {
     const activeSpace = store.get('active_workspace', null)
-    let type = null
-    if (activeSpace && activeSpace.type === 'feedbin') {
-      type = 'feedbin'
-    }
-    db.fetchArticles(type, docs => {
+    const id = activeSpace ? activeSpace.id : null
+    console.log('Load articles')
+    db.fetchArticles(id, docs => {
       commit('LOAD_ARTICLES', docs)
     })
   },
@@ -223,17 +222,38 @@ const actions = {
     })
   },
   markAction ({ commit }, data) {
+    const activeWorkspace = store.get('active_workspace')
     switch (data.type) {
       case 'FAVOURITE':
+        if (activeWorkspace) {
+          if (activeWorkspace.type === 'feedbin') {
+            markAsFavourite([data.article_id])
+          }
+        }
         db.markFavourite(data.id)
         break
       case 'UNFAVOURITE':
+        if (activeWorkspace) {
+          if (activeWorkspace.type === 'feedbin') {
+            markAsNotFavourite([data.article_id])
+          }
+        }
         db.markUnfavourite(data.id)
         break
       case 'READ':
+        if (activeWorkspace) {
+          if (activeWorkspace.type === 'feedbin') {
+            markRead([data.article_id])
+          }
+        }
         db.markRead(data.id)
         break
       case 'UNREAD':
+        if (activeWorkspace) {
+          if (activeWorkspace.type === 'feedbin') {
+            markUnread([data.article_id])
+          }
+        }
         db.markUnread(data.id)
         break
     }

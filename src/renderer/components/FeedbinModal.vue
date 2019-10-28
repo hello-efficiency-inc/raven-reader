@@ -32,8 +32,9 @@
 </template>
 <script>
 import axios from 'axios'
-import { encrypt } from '../services/encryption'
+// import { encrypt } from '../services/encryption'
 import { syncFeedbin } from '../services/feedbin'
+import uuid from 'uuid-by-string'
 
 export default {
   data () {
@@ -56,15 +57,26 @@ export default {
         }
       }).then((res) => {
         self.error = false
+        var id = uuid(`feedbin-${this.form.email}`)
         self.$store.dispatch('addAccount', {
+          id: id,
           type: 'feedbin',
           server: null,
           email: self.form.email,
-          password: encrypt(self.form.password),
+          password: self.form.password,
           access_token: null
+        }).then(() => {
+          syncFeedbin().then(() => {
+            self.$store.dispatch('loadFeeds')
+          })
+          self.$refs.feedbin.hide()
+        }).catch((err) => {
+          if (err) {}
+          self.error = true
+          self.errorMessage = 'Account already added'
+          self.form.email = ''
+          self.form.password = ''
         })
-        syncFeedbin()
-        self.$refs.feedbin.hide()
       }).catch((error) => {
         if (error) {}
         self.error = true

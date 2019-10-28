@@ -21,14 +21,14 @@ const actions = {
     commit('LOAD_ACTIVE_WORKSPACE', store.get('active_workspace'))
   },
   async setWorkspace ({
-    dispatch,
     commit
   }, account) {
-    store.set('active_workspace', account)
-    commit('SET_WORKSPACE', account)
-    await dispatch('loadCategories')
-    await dispatch('loadFeeds')
-    await dispatch('loadArticles')
+    return new Promise((resolve, reject) => {
+      store.set('active_workspace', account)
+      commit('SET_WORKSPACE', account)
+      console.log('SET WORKSPACE')
+      resolve()
+    })
   }
 }
 

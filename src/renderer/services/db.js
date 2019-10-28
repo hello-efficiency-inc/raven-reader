@@ -19,10 +19,19 @@ export default {
       return cb(docs)
     })
   },
-  addAccounts (data, cb) {
-    return accounts.insert(data, (err, docs) => {
+  fetchAccount (workspace, cb) {
+    return accounts.find({ workspace: workspace }, (err, docs) => {
       if (err) {}
       return cb(docs)
+    })
+  },
+  addAccounts (data, cb) {
+    this.ensureIndex(accounts, 'id')
+    return accounts.insert(data, (err, docs) => {
+      if (err) {
+        cb(err)
+      }
+      return cb(null, docs)
     })
   },
   fetchFeed (data, cb) {
@@ -33,30 +42,22 @@ export default {
       return cb(docs)
     })
   },
-  fetchFeeds (type = null, cb) {
-    let query
-    if (type === 'feedbin') {
-      query = {
-        workspace: 'feedbin'
-      }
-    } else {
-      query = {
-        workspace: null
-      }
+  fetchFeeds (id = null, cb) {
+    const query = {
+      workspace: id
     }
     return feed.find(query, (err, docs) => {
-      if (err) {}
+      if (err) {
+        console.log(err)
+      }
       if (cb) {
         cb(docs)
       }
     })
   },
-  fetchArticles (type = null, cb) {
-    let query
-    if (type === 'feedbin') {
-      query = { workspace: 'feedbin' }
-    } else {
-      query = { workspace: null }
+  fetchArticles (id = null, cb) {
+    const query = {
+      workspace: id
     }
     return article.find(query).sort({ pubDate: -1 }).exec((err, docs) => {
       if (err) {}
@@ -71,14 +72,9 @@ export default {
       return cb(doc)
     })
   },
-  fetchCategories (type = null, cb) {
-    let query
-    if (type === 'feedbin') {
-      query = {
-        workspace: 'feedbin'
-      }
-    } else {
-      query = {}
+  fetchCategories (id = null, cb) {
+    const query = {
+      workspace: id
     }
     return category.find(query, (err, docs) => {
       if (err) {}
@@ -242,8 +238,9 @@ export default {
       if (err) {}
     })
   },
-  updateArticlesRead (items) {
+  updateArticlesRead (workspace, items) {
     article.update({
+      workspace: workspace,
       id: {
         $nin: items
       }
@@ -257,8 +254,9 @@ export default {
       if (err) {}
     })
   },
-  updateArticlesUnread (items) {
+  updateArticlesUnread (workspace, items) {
     article.update({
+      workspace: workspace,
       id: {
         $in: items
       }

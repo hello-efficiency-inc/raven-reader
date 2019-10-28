@@ -555,6 +555,7 @@ export default {
       data.category = article.category
       data.feed_url = article.feed_url
       data.feed_link = article.feed_link
+      data.article_id = article.id
       data._id = article._id
       data.link = article.link
       data.favourite = article.favourite
@@ -579,14 +580,16 @@ export default {
     fetchData () {
       const self = this
       if (this.$route.params.id) {
-        this.$store.dispatch('markAction', {
-          type: 'READ',
-          id: this.$route.params.id
-        })
         self.articleData = null
         self.loading = true
         db.fetchArticle(this.$route.params.id, async function (article) {
           let data
+          article.article_id = article.id
+          self.$store.dispatch('markAction', {
+            type: 'READ',
+            article_id: article.id,
+            id: self.$route.params.id
+          })
           if (self.$store.state.Setting.offline) {
             data = await cacheService.getCachedArticleData(
               article._id,
@@ -715,7 +718,6 @@ export default {
     },
     setWorkspace (account) {
       if (account) {
-        account.id = `${account.type}_${account._id}`
         this.$store.dispatch('setWorkspace', account)
       } else {
         this.$store.dispatch('setWorkspace', null)

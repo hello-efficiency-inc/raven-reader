@@ -52,9 +52,8 @@ export default {
   methods: {
     async checkLicenseKey () {
       const licenseKey = this.$electronstore.get('license_key')
-      console.log(licenseKey)
       if (licenseKey === TEST_LICENSE_KEY) {
-        this.$electronstore.set('license_key', this.licenseKey)
+        this.$electronstore.set('license_key', licenseKey)
         this.$router.push('/')
       } else {
         try {

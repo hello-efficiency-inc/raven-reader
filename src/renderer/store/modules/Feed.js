@@ -47,18 +47,19 @@ const mutations = {
 
 const actions = {
   loadFeeds ({ commit }) {
+    console.log('LOAD FEEDS')
     const activeSpace = store.get('active_workspace', null)
-    let type = null
-    if (activeSpace && activeSpace.type === 'feedbin') {
-      type = 'feedbin'
-    }
-    db.fetchFeeds(type, docs => {
+    const id = activeSpace ? activeSpace.id : null
+    db.fetchFeeds(id, docs => {
       commit('LOAD_FEEDS', docs)
     })
   },
   addFeed ({ commit }, feed) {
-    db.addFeed(feed, docs => {
-      commit('ADD_FEED', docs)
+    return new Promise((resolve, reject) => {
+      db.addFeed(feed, docs => {
+        commit('ADD_FEED', docs)
+        resolve()
+      })
     })
   },
   async deleteFeed ({ dispatch, commit }, id) {

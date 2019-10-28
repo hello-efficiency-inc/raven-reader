@@ -35,13 +35,18 @@ const actions = {
     dispatch,
     commit
   }, account) {
-    db.addAccounts(account, async docs => {
-      commit('ADD_ACCOUNT', docs)
-      docs.id = `${docs.type}_${docs._id}`
-      await dispatch('setWorkspace', docs)
-      await dispatch('loadCategories')
-      await dispatch('loadFeeds')
-      await dispatch('loadArticles')
+    return new Promise((resolve, reject) => {
+      db.addAccounts(account, async (err, docs) => {
+        if (err) {
+          reject(new Error('Already registered'))
+        }
+        if (docs) {
+          commit('ADD_ACCOUNT', docs)
+          await dispatch('setWorkspace', docs)
+        }
+        console.log('ADD ACCOUNT')
+        resolve()
+      })
     })
   },
   async deleteAccount ({

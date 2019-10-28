@@ -189,11 +189,13 @@ export default {
       if (this.article.favourite) {
         this.$store.dispatch('markAction', {
           type: markTypes.unfavourite,
+          article_id: this.article.article_id,
           id: this.$route.params.id
         })
       } else {
         this.$store.dispatch('markAction', {
           type: markTypes.favourite,
+          article_id: this.article.article_id,
           id: this.$route.params.id
         })
       }
@@ -242,11 +244,13 @@ export default {
       if (this.article.read) {
         this.$store.dispatch('markAction', {
           type: markTypes.unread,
+          article_id: this.article.article_id,
           id: this.$route.params.id
         })
       } else {
         this.$store.dispatch('markAction', {
           type: markTypes.read,
+          article_id: this.article.article_id,
           id: this.$route.params.id
         })
       }
