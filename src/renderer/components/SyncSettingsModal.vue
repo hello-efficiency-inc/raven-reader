@@ -59,6 +59,7 @@ export default {
   },
   methods: {
     async signInPocketWithPopUp () {
+      const self = this
       return new Promise((resolve, reject) => {
         var consumerKey
         var code
@@ -98,7 +99,7 @@ export default {
                   }
                 }).then((data) => {
                 data.data.consumer_key = consumerKey
-                store.set('pocket_token', JSON.stringify(data.data))
+                self.$store.dispatch('setPocket', JSON.stringify(data.data))
                 resolve(data.data)
               })
               authWindow.removeAllListeners('closed')

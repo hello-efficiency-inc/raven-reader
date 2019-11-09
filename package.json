@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "standard": {
     "globals": [
       "describe",
@@ -16,7 +16,7 @@
   },
   "author": "Hello Efficiency Inc <welcome@helloefficiency.com>",
   "description": "Simple Desktop RSS Reader made using VueJS",
-  "license": "MIT",
+  "license": "LGPL-3.0",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
