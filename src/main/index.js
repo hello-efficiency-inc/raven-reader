@@ -392,7 +392,7 @@ function createWindow () {
       webviewTag: true,
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
-      webSecurity: false
+      webSecurity: true
     },
     maximizable: true,
     title: 'Raven Reader',
@@ -483,6 +483,8 @@ app.whenReady().then(() => {
 
 app.on('before-quit', () => {
   app.isQuiting = true
+  globalShortcut.unregisterAll()
+  tray.destroy()
 })
 
 app.on('window-all-closed', () => {

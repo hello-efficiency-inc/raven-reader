@@ -8,7 +8,7 @@ export default {
   name: 'rss-reader',
   mounted () {
     if (!this.$electronstore.get('license')) {
-      this.$router.push('/license')
+      this.$router.push('/license').catch(err => { if (err) {} })
     }
   }
 }
