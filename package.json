@@ -119,7 +119,7 @@
     "dayjs": "^1.6.2",
     "electron-context-menu": "^0.15.0",
     "electron-store": "^5.0.0",
-    "electron-updater": "^4.2.0",
+    "electron-updater": "^4.0.6",
     "electron-util": "^0.12.1",
     "feather-icons": "^4.7.3",
     "feedparser": "^2.2.9",
