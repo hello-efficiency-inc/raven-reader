@@ -254,6 +254,22 @@ export default {
       if (err) {}
     })
   },
+  updateArticlesStarred (workspace, items) {
+    article.update({
+      workspace: workspace,
+      id: {
+        $in: items
+      }
+    }, {
+      $set: {
+        favourite: true
+      }
+    }, {
+      multi: true
+    }, (err, docs) => {
+      if (err) {}
+    })
+  },
   updateArticlesUnread (workspace, items) {
     article.update({
       workspace: workspace,

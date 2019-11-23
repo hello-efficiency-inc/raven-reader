@@ -62,7 +62,8 @@ const getters = {
     if (state.category) {
       return filters.category(orderedArticles, state.category)
     }
-    return filters[state.type](orderedArticles, state.feed)
+
+    return filters[state.type](orderedArticles, !isNaN(parseInt(state.feed)) ? parseInt(state.feed) : state.feed)
   }
 }
 

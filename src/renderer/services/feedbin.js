@@ -1,7 +1,6 @@
 import axios from 'axios'
 import Store from 'electron-store'
 import vueStore from '../store'
-// import _ from 'lodash'
 import dayjs from 'dayjs'
 import db from './db'
 import uuid from 'uuid-by-string'
@@ -17,6 +16,7 @@ export async function syncFeedbin () {
   await getSubscriptions()
   await getEntries()
   await fetchUnreadEntries()
+  await fetchStarredEntries()
   vueStore.dispatch('loadArticles')
 }
 
@@ -53,7 +53,7 @@ export async function getSubscriptions () {
 }
 
 export async function getEntries () {
-  const today = dayjs().subtract(6, 'day').toISOString()
+  const today = dayjs().subtract(7, 'day').toISOString()
   const activeWorkspace = await store.get('active_workspace')
   if (activeWorkspace) {
     const {
@@ -85,7 +85,7 @@ export async function getEntries () {
         item.link = item.url
         item.pubDate = item.published
         item.category = null
-        item.feed_id = feed.feed_id
+        item.feed_id = feed.id
         item.feed_title = feed.title
         item.feed_url = feed.xmlurl
         item.feed_link = feed.link
@@ -93,6 +93,7 @@ export async function getEntries () {
         item.favourite = false
         item.offline = false
         item.favicon = `https://www.google.com/s2/favicons?domain=${item.url}`
+        console.log(activeWorkspace.id)
         item.workspace = activeWorkspace.id
         delete item.created_at
         delete item.published
@@ -127,6 +128,35 @@ export async function fetchUnreadEntries () {
       return new Promise((resolve, reject) => {
         db.updateArticlesUnread(activeWorkspace.id, data)
         db.updateArticlesRead(activeWorkspace.id, data)
+        resolve(true)
+      })
+    }
+  }
+}
+
+export async function fetchStarredEntries () {
+  const activeWorkspace = await store.get('active_workspace')
+  if (activeWorkspace) {
+    const {
+      error,
+      data
+    } = await axios.get('https://api.feedbin.com/v2/starred_entries.json', {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      auth: {
+        username: activeWorkspace ? activeWorkspace.email : null,
+        password: activeWorkspace ? activeWorkspace.password : null
+      }
+    })
+    if (error) {
+      throw new ApiError(error.response)
+    }
+    if (data.length > 0) {
+      console.log('Loaded favourites')
+      console.log(data)
+      return new Promise((resolve, reject) => {
+        db.updateArticlesStarred(activeWorkspace.id, data)
         resolve(true)
       })
     }

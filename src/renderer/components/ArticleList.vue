@@ -91,6 +91,12 @@ export default {
       const self = this
       this.syncState = true
       const feeds = this.$store.state.Feed.feeds
+      if (this.$store.state.Workspace.activeWorkspace) {
+        setTimeout(() => {
+          self.syncState = false
+        }, feeds.length * 1500)
+        return
+      }
       if (feeds.length === 0) {
         log.info('No feeds to process')
       } else {

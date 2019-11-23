@@ -109,18 +109,16 @@ export default {
     },
     saveCronjob (cronValue) {
       this.$store.dispatch('setCronJob', cronValue)
-      this.$toasted.show('Settings for cronjob successfully saved.', {
-        theme: 'outline',
-        position: 'top-center',
+      this.$breadstick.notify('Settings for cronjob successfully saved.', {
+        position: 'top',
         duration: 3000
       })
       this.hideModal()
     },
     saveSortPreference (sortPreference) {
       this.$store.dispatch('setSortPreference', sortPreference)
-      this.$toasted.show('Sorting preference changed.', {
-        theme: 'outline',
-        position: 'top-center',
+      this.$breadstick.notify('Sorting preference changed.', {
+        position: 'top',
         duration: 3000
       })
       this.hideModal()
@@ -128,9 +126,8 @@ export default {
     saveAppearance (theme) {
       this.$store.dispatch('setThemeOption', theme)
       this.setTheme(theme)
-      this.$toasted.show('Changed appearance settings.', {
-        theme: 'outline',
-        position: 'top-center',
+      this.$breadstick.notify('Changed appearance settings.', {
+        position: 'top',
         duration: 3000
       })
       this.hideModal()
