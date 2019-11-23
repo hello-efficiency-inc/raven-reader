@@ -43,7 +43,7 @@
           <template slot="button-content" class="pt-1">
             <feather-icon name="share-2"></feather-icon>
           </template>
-          <b-dropdown-item v-if="pocket_connected" @click="saveToPocket(article.url)">
+          <b-dropdown-item v-if="pocketConnected" @click="saveToPocket(article.url)">
                 Pocket
             </b-dropdown-item>
           <b-dropdown-item>
@@ -139,9 +139,7 @@ export default {
     }
   },
   mounted () {
-    if (store.get('pocket_token')) {
-      this.pocket_connected = true
-    }
+    this.pocket_connected = this.$store.state.Setting.pocket_connected
   },
   computed: {
     markFavouriteButton () {
@@ -149,6 +147,9 @@ export default {
     },
     markReadButton () {
       return this.article.read ? 'Mark as unread' : 'Mark as read'
+    },
+    pocketConnected () {
+      return this.$store.state.Setting.pocket_connected
     }
   },
   watch: {

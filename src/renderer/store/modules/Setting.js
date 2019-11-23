@@ -1,6 +1,7 @@
 import Store from 'electron-store'
 
 const state = {
+  pocket_connected: false,
   cronSettings: '*/5 * * * *',
   themeOption: null,
   oldestArticles: false,
@@ -20,6 +21,9 @@ const mutations = {
     state.themeOption = store.get('settings.theme_option')
     state.oldestArticles = store.get('settings.oldestArticles')
     state.proxy = store.get('settings.proxy')
+    if (store.get('pocket_token')) {
+      state.pocket_connected = true
+    }
   },
   CHECK_OFFLINE (state) {
     state.offline = !navigator.onLine
@@ -38,6 +42,9 @@ const mutations = {
   },
   SET_PROXY (state, data) {
     state.proxy = data
+  },
+  SET_POCKET_CONNECTED (state) {
+    state.pocket_connected = true
   }
 }
 
@@ -55,6 +62,10 @@ const actions = {
   setThemeOption ({ commit }, data) {
     store.set('settings.theme_option', data)
     commit('SET_THEME_OPTION', data)
+  },
+  setPocket ({ commit }, data) {
+    store.set('pocket_token', data)
+    commit('SET_POCKET_CONNECTED')
   },
   async setSortPreference ({ dispatch, commit }, data) {
     store.set('settings.oldestArticles', data)
