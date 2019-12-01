@@ -174,6 +174,7 @@
 <script>
 import db from '../services/db'
 import { parseArticle } from '../parsers/article'
+import { syncFeedbin, deleteSubscription } from '../services/feedbin'
 import cheerio from 'cheerio'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
@@ -255,7 +256,6 @@ export default {
         const index = _.findIndex(self.$store.getters.filteredArticles, {
           _id: self.$route.params.id
         })
-        console.log(index)
         if (index > 0) {
           const prevArticle = self.$store.getters.filteredArticles[index - 1]
           self.$router.push({
@@ -330,14 +330,6 @@ export default {
       self.$store.dispatch('setOffline', status)
     })
 
-    // Sync Updates
-    scheduler.scheduleJob('*/5 * * * *', async function () {
-      if (typeof self.$electronstore.get('inoreader_token') !== 'undefined') {
-        this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
-        await helper.syncInoReader()
-        log.info('Syncing inoreader')
-      }
-    })
     // Feed Crawling
     const job = scheduler.scheduleJob(
       self.$store.state.Setting.cronSettings,
@@ -348,7 +340,8 @@ export default {
         } else {
           this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
           log.info(`Processing ${feeds.length} feeds`)
-          helper.subscribe(feeds, null, null, true, false)
+          helper.subscribe(feeds.filter(item => item.workspace === null), null, null, true, false)
+          syncFeedbin()
           self.$store.dispatch('loadArticles')
         }
       }
@@ -536,6 +529,9 @@ export default {
     },
     async unsubscribeFeed (id, category = null) {
       await this.$emit('delete', 'yes')
+      if (this.$store.state.Workspace.activeWorkspace.type === 'feedbin') {
+        deleteSubscription(id)
+      }
       await this.$store.dispatch('deleteFeed', id)
     },
     prepareArticleData (data, article) {
@@ -664,9 +660,8 @@ export default {
       menu.append(new MenuItem({
         label: 'Delete',
         click () {
-          const feedIndex = _.findIndex(self.$store.state.Feed.feeds, { category: feed.category.title })
           self.$store.dispatch('deleteCategory', feed.category.title)
-          self.$store.dispatch('deleteFeed', self.$store.state.Feed.feeds[feedIndex].id)
+          self.$store.dispatch('updateFeedCategory', { old: { title: feed.category.title }, new: { title: null } })
           self.$store.dispatch('deleteArticleCategory', feed.category.title)
         }
       }))

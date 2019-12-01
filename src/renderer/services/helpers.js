@@ -60,7 +60,7 @@ export default {
         post.favicon = task.favicon
         post.category = !refresh ? category : task.feed.meta.category
         post.link = post.link ? post.link : task.feed.meta.xmlurl
-        post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
+        post.guid = uuid(post.link ? `local-${post.link}` : `local-${task.feed.meta.xmlurl}`)
         post.workspace = null
         const postItem = _.omit(post, ['creator', 'dc:creator'])
         posts.push(postItem)

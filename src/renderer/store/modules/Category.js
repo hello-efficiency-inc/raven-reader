@@ -35,11 +35,8 @@ const mutations = {
 const actions = {
   loadCategories ({ commit }) {
     const activeSpace = store.get('active_workspace', null)
-    let type = null
-    if (activeSpace && activeSpace.type === 'feedbin') {
-      type = 'feedbin'
-    }
-    db.fetchCategories(type, docs => {
+    const id = activeSpace ? activeSpace.id : null
+    db.fetchCategories(id, docs => {
       commit('LOAD_CATEGORY', docs)
     })
   },

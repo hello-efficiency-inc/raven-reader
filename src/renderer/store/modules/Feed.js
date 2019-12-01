@@ -39,7 +39,7 @@ const mutations = {
       const index = _.findIndex(state.feeds, {
         _id: feeds[i]._id
       })
-      db.updateFeedCategory(state.feeds[index].id, data.new.title)
+      db.updateFeedCategory(state.feeds[index].id, data.new.title, state.feeds[index].workspace)
       state.feeds[index].category = data.new.title
     }
   }

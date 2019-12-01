@@ -44,6 +44,7 @@
 import { mapGetters } from 'vuex'
 import log from 'electron-log'
 import helper from '../services/helpers'
+import { syncFeedbin } from '../services/feedbin'
 
 export default {
   data () {
@@ -92,6 +93,8 @@ export default {
       this.syncState = true
       const feeds = this.$store.state.Feed.feeds
       if (this.$store.state.Workspace.activeWorkspace) {
+        log.info(`${this.$store.state.Workspace.activeWorkspace.type} processing`)
+        syncFeedbin()
         setTimeout(() => {
           self.syncState = false
         }, feeds.length * 1500)

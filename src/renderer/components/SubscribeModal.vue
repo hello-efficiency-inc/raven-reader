@@ -65,6 +65,7 @@ import finder from 'rss-finder'
 import normalizeUrl from 'normalize-url'
 import he from 'he'
 import helper from '../services/helpers'
+import { createSubscription } from '../services/feedbin'
 import uuid from 'uuid-by-string'
 import axios from 'axios'
 
@@ -174,11 +175,22 @@ export default {
     subscribe () {
       const favicon = this.feeddata.site.favicon
       if (this.newcategory) {
-        this.$store.dispatch('addCategory', { id: uuid(this.newcategory), title: this.newcategory, type: 'category' })
+        this.$store.dispatch('addCategory', {
+          id: uuid(`local-${this.newcategory}`),
+          title: this.newcategory,
+          type: 'category',
+          workspace: null
+        })
       } else {
         this.newcategory = this.selectedCat
       }
-      helper.subscribe(this.selected_feed, this.newcategory, favicon, false)
+      if (this.$store.state.Workspace.activeWorkspace) {
+        this.selected_feed.forEach((data) => {
+          createSubscription(data.url)
+        })
+      } else {
+        helper.subscribe(this.selected_feed, this.newcategory, favicon, false)
+      }
       this.hideModal()
     },
     onHidden () {

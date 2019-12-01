@@ -89,7 +89,7 @@ export default {
     })
   },
   addCategory (data, cb) {
-    this.ensureIndex(category, 'title')
+    this.ensureIndex(category, 'id')
     return category.insert(data, (err, docs) => {
       if (err) {}
       return cb(docs)
@@ -109,11 +109,41 @@ export default {
     })
   },
   addFeed (data, cb) {
-    this.ensureIndex(feed, 'xmlurl')
-    return feed.insert(data, (err, docs) => {
-      if (err) {}
-      return cb(docs)
-    })
+    const self = this
+    if (data.length > 0) {
+      data.forEach((item) => {
+        self.fetchFeed(item.feed_id, docs => {
+          console.log(docs)
+          if (docs.length === 0) {
+            feed.insert(item, (err, docs) => {
+              if (err) {}
+              return cb(docs)
+            })
+          } else {
+            feed.update({
+              id: item.id
+            }, {
+              $set: {
+                title: item.title
+              }
+            }, (err, num) => {
+              if (err) {
+                console.log(err)
+              }
+            })
+          }
+        })
+      })
+    } else {
+      self.fetchFeed(data.feed_id, docs => {
+        if (docs.length === 0) {
+          feed.insert(data, (err, docs) => {
+            if (err) {}
+            return cb(docs)
+          })
+        }
+      })
+    }
   },
   updateFeedTitle (id, title, category) {
     feed.update({
@@ -129,9 +159,10 @@ export default {
       }
     })
   },
-  updateFeedCategory (id, category) {
+  updateFeedCategory (id, category, workspace) {
     feed.update({
-      id: id
+      id: id,
+      workspace: workspace
     }, {
       $set: {
         category: category
@@ -190,12 +221,18 @@ export default {
     })
   },
   deleteArticlesCategory (category) {
-    article.remove({
+    article.update({
       category: category
     }, {
+      $set: {
+        category: null
+      }
+    }, {
       multi: true
-    }, (err, numRemoved) => {
-      if (err) {}
+    }, (err, num) => {
+      if (err) {
+        console.log(err)
+      }
     })
   },
   deleteArticles (id) {

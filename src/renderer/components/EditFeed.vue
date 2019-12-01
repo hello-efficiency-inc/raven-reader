@@ -34,6 +34,7 @@
 </template>
 <script>
 import uuid from 'uuid-by-string'
+import { updateSubscription, createTagging } from '../services/feedbin'
 
 export default {
   props: {
@@ -67,9 +68,20 @@ export default {
     },
     updateSubscriptionTitle () {
       if (this.newcategory) {
-        this.$store.dispatch('addCategory', { id: uuid(this.newcategory), title: this.newcategory, type: 'category' })
+        if (this.$store.state.Workspace.activeWorkspace) {
+          createTagging(this.feed.feed_id, this.newcategory)
+        }
+        this.$store.dispatch('addCategory', {
+          id: uuid(this.newcategory),
+          title: this.newcategory,
+          type: 'category',
+          workspace: this.$store.state.Workspace.activeWorkspace ? this.$store.state.Workspace.activeWorkspace.id : null
+        })
       } else {
         this.newcategory = this.feed.category
+      }
+      if (this.$store.state.Workspace.activeWorkspace) {
+        updateSubscription(this.feed.id, this.feed.title)
       }
       this.$store.dispatch('updateFeedTitle', {
         title: this.feed.title,

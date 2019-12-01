@@ -11,7 +11,6 @@ import {
   createGlobalProxyAgent
 } from 'global-agent'
 import vClickOutside from 'v-click-outside'
-// import Breadstick from 'breadstick'
 
 import App from './App'
 import router from './router'
@@ -22,7 +21,6 @@ import './helper/external_links.js'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
-// import 'breadstick/dist/breadstick.css'
 
 // nodejs global proxy
 const settingsStore = new SettingsStore()
@@ -48,7 +46,6 @@ Vue.use(Toasted)
 Vue.use(PerfectScrollbar)
 Vue.use(SocialSharing)
 Vue.use(vClickOutside)
-// Vue.use(Breadstick)
 
 Register.registerComponents()
 
