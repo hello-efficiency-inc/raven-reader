@@ -302,14 +302,6 @@ export default {
       self.$store.dispatch('setOffline', status)
     })
 
-    // Sync Updates
-    scheduler.scheduleJob('*/5 * * * *', async function () {
-      if (typeof self.$electronstore.get('inoreader_token') !== 'undefined') {
-        this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
-        await helper.syncInoReader()
-        log.info('Syncing inoreader')
-      }
-    })
     // Feed Crawling
     const job = scheduler.scheduleJob(
       self.$store.state.Setting.cronSettings,
