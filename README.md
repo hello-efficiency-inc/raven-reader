@@ -26,8 +26,7 @@
 </p>
 
 ## Download
-To download, please visit https://ravenreader.app and purchase license key ($9.99/year).
-**Moving forward all new release build would be an paid application. Previous releases will stay as it is and free. But no updates would be available.** If there are any questions please contact us at [welcome@helloefficiency.com](welcome@helloefficiency.com)
+To download, please visit https://ravenreader.app. Trial free for 7 days and $9.99/year USD after that. If there are any questions please contact us at [welcome@helloefficiency.com](welcome@helloefficiency.com)
 
 ![newscreenshot](/newscreenshot.png)
 ![darkscreenshot](/darkscreenshot.png)

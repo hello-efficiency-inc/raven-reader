@@ -22,6 +22,10 @@
                   <p class="text-center">
                       <button class="btn btn--brand" tag="button" @click="submitLicenseKey">Submit</button>
                   </p>
+                  <p class="text-center">
+                    Don't have license key? <a href="https://gum.co/ravenreader" class="js-external-link">Click here</a> to purchase.
+                  </p>
+                  <p v-if="$route.query.check"><router-link to="/">Back to app</router-link></p>
                 </div>
             </div>
         </div>
@@ -47,13 +51,19 @@ export default {
     }
   },
   mounted () {
-    this.checkLicenseKey()
+    console.log(this.$route.query.check)
+    if (typeof this.$route.query.check === 'undefined') {
+      this.checkLicenseKey()
+    } else {
+      this.loading = false
+    }
   },
   methods: {
     async checkLicenseKey () {
       const licenseKey = this.$electronstore.get('license_key')
       if (licenseKey === TEST_LICENSE_KEY) {
         this.$electronstore.set('license_key', licenseKey)
+        this.$electron.ipcRenderer.send('license-added')
         this.$router.push('/')
       } else {
         try {
@@ -70,6 +80,14 @@ export default {
             this.loading = false
           }
         } catch (e) {
+          if (!this.$electronstore.get('trial_start') && !this.$electronstore.get('trial_expire')) {
+            this.$electronstore.set('trial_start', dayjs().valueOf())
+            this.$electronstore.set('trial_expire', dayjs().add(7, 'day').valueOf())
+            this.loading = false
+            this.$router.push('/')
+          } else if (dayjs().unix() < this.$electronstore.get('trial_expire')) {
+            this.$router.push('/')
+          }
           this.loading = false
         }
       }
@@ -86,6 +104,7 @@ export default {
       if (activateMachine.data.data.success) {
         this.$electronstore.set('license_key', key)
         this.licenseError = false
+        this.$electron.ipcRenderer.send('license-added')
         this.$router.push('/')
       }
     },
@@ -97,6 +116,7 @@ export default {
       } else {
         this.$electronstore.set('license_key', this.licenseKey)
         this.licenseError = true
+        this.$electron.ipcRenderer.send('license-added')
         this.$router.push('/')
       }
       if (checkLicenseKey.data.data.success) {
@@ -108,7 +128,6 @@ export default {
 
         try {
           const machineVerify = await axios.get(`${API_DOMAIN}/machine/verify?license_key=${this.licenseKey}&machine_id=${machineId}`)
-          console.log(machineVerify)
           if (!machineVerify.data.data.exists && machineVerify.data.data.machines < 3) {
             this.activateMachine(this.licenseKey, machineId, checkLicenseKey.data.data)
           } else if (!machineVerify.data.data.exists && machineVerify.data.data.machines === 3) {

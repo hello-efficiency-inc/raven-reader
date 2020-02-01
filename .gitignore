@@ -13,4 +13,5 @@ thumbs.db
 src/renderer/config.js
 coverage
 windows_codesign.pfx
+windows2020.pfx
 .env

@@ -290,6 +290,10 @@ export default {
       self.$refs.markallread.click()
     })
 
+    this.$electron.ipcRenderer.on('License', (events, args) => {
+      this.$router.push({ path: '/license', query: { check: 'false' } })
+    })
+
     this.$electron.ipcRenderer.on('View in browser', (events, args) => {
       if (self.$route.params.id) {
         if (self.$refs.articleDetail) {

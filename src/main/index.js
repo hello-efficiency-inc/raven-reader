@@ -23,6 +23,7 @@ import {
 import {
   touchBar
 } from './touchbar.js'
+import dayjs from 'dayjs'
 
 const contextMenu = require('electron-context-menu')
 
@@ -195,6 +196,8 @@ function createMenu () {
   ]
 
   const version = app.getVersion()
+  const trialLeft = store.get('trial_expire') ? dayjs(store.get('trial_expire')).diff(dayjs(), 'day') : 6
+  const days = trialLeft === 1 ? 'day' : 'days'
 
   if (process.platform === 'win32' || process.platform === 'linux') {
     template.unshift({
@@ -204,7 +207,23 @@ function createMenu () {
         enabled: false
       },
       {
+        label: `Trial expires in ${trialLeft} ${days}`,
+        id: 'trial',
+        visible: !store.has('license_key'),
+        enabled: false
+      },
+      {
+        label: 'Register License',
+        visible: !store.has('license_key'),
+        id: 'register',
+        click: function () {
+          mainWindow.webContents.send('License')
+        }
+      },
+      {
         label: 'Check for update',
+        id: 'checkupdate',
+        visible: store.has('license_key'),
         click: function (menuItem, browserWindow, event) {
           checkForUpdates(menuItem, browserWindow, event)
         }
@@ -248,7 +267,26 @@ function createMenu () {
         enabled: false
       },
       {
+        label: `Trial expires in ${trialLeft} ${days}`,
+        id: 'trial',
+        visible: !store.has('license_key'),
+        enabled: false
+      },
+      {
+        label: 'Register License',
+        id: 'register',
+        visible: !store.has('license_key'),
+        click: function () {
+          mainWindow.webContents.send('License')
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: 'Check for update',
+        id: 'checkupdate',
+        visible: store.has('license_key'),
         click: function (menuItem, browserWindow, event) {
           checkForUpdates(menuItem, browserWindow, event)
         }
@@ -507,6 +545,16 @@ darkMode.onChange(() => {
       darkmode: darkMode.isEnabled
     })
   }
+})
+
+ipcMain.on('license-added', (event, status) => {
+  const menuItemRegister = menu.getMenuItemById('register')
+  const menuItemTrial = menu.getMenuItemById('trial')
+  const checkUpdate = menu.getMenuItemById('checkupdate')
+
+  menuItemRegister.visible = false
+  menuItemTrial.visible = false
+  checkUpdate.visible = true
 })
 
 ipcMain.on('article-selected', (event, status) => {
