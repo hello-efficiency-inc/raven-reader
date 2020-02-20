@@ -43,6 +43,9 @@
           <template slot="button-content" class="pt-1">
             <feather-icon name="share-2"></feather-icon>
           </template>
+           <b-dropdown-item v-if="instapaperConnected" @click="saveToInstapaper(article.url)">
+                Instapaper
+            </b-dropdown-item>
           <b-dropdown-item v-if="pocketConnected" @click="saveToPocket(article.url)">
                 Pocket
             </b-dropdown-item>
@@ -116,6 +119,7 @@ export default {
   data () {
     return {
       pocket_connected: false,
+      instapaper_connected: false,
       settingspanel: false,
       fontstyle: null,
       original: false,
@@ -140,6 +144,7 @@ export default {
   },
   mounted () {
     this.pocket_connected = this.$store.state.Setting.pocket_connected
+    this.instapaper_connected = this.$store.state.Setting.instapaper_connected
   },
   computed: {
     markFavouriteButton () {
@@ -147,6 +152,9 @@ export default {
     },
     markReadButton () {
       return this.article.read ? 'Mark as unread' : 'Mark as read'
+    },
+    instapaperConnected () {
+      return this.$store.state.Setting.instapaper_connected
     },
     pocketConnected () {
       return this.$store.state.Setting.pocket_connected
@@ -218,6 +226,24 @@ export default {
             article: self.article
           })
         })
+      }
+    },
+    async saveToInstapaper (url) {
+      var creds = JSON.parse(store.get('instapaper_creds'))
+      const res = await axios.post(`https://www.instapaper.com/api/add?url=${url}`, {
+      }, {
+        auth: {
+          username: creds.username,
+          password: creds.password
+        }
+      })
+      if (res.status === 201) {
+        this.$toasted.show('Saved to Instapaper.', {
+          theme: 'outline',
+          position: 'top-center',
+          duration: 3000
+        })
+        this.$refs.socialshare.hide(true)
       }
     },
     saveToPocket (url) {

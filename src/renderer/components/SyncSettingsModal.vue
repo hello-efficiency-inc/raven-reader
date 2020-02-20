@@ -1,6 +1,14 @@
 <template>
-<b-modal id="integrations" ref="integrations" size="md" title="Integrations" hide-footer centered>
-  <!-- <div class="row">
+  <div>
+    <b-modal
+      id="integrations"
+      ref="integrations"
+      size="md"
+      title="Integrations"
+      hide-footer
+      centered
+    >
+      <!-- <div class="row">
     <div class="col">
       <p class="text-left">Inoreader</p>
     </div>
@@ -18,17 +26,69 @@
         Sync Feeds
       </button>
     </div>
-  </div> -->
-  <div class="row">
-    <div class="col">
-      <p class="text-left">Pocket</p>
-    </div>
-    <div class="col">
-      <button class="btn-primary float-right" @click="signInPocket" v-if="!pocket_connected">Connect</button>
-      <button class="btn-danger float-right" @click="disconnectPocket" v-if="pocket_connected">Disconnect</button>
-    </div>
+      </div>-->
+      <div class="row">
+        <div class="col">
+          <p class="text-left font-bold">Instapaper</p>
+        </div>
+        <div class="col">
+          <button class="btn-primary float-right" v-b-modal.instapaper  v-if="!instapaper_connected">Connect</button>
+          <button
+            class="btn-danger float-right"
+            @click="disconnectInstapaper"
+            v-if="instapaper_connected"
+          >Disconnect</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <p class="text-left font-bold">Pocket</p>
+        </div>
+        <div class="col">
+          <button
+            class="btn-primary float-right"
+            @click="signInPocket"
+            v-if="!pocket_connected"
+          >Connect</button>
+          <button
+            class="btn-danger float-right"
+            @click="disconnectPocket"
+            v-if="pocket_connected"
+          >Disconnect</button>
+        </div>
+      </div>
+    </b-modal>
+    <b-modal
+      id="instapaper"
+      ref="instapaperLogin"
+      title="Log into Instapaper"
+      centered
+      @hidden="onHidden"
+    >
+      <b-form-group id="input-group-1">
+        <b-form-input
+          id="input-1"
+          v-model="instapaper.username"
+          type="email"
+          required
+          placeholder="Enter email"
+        ></b-form-input>
+      </b-form-group>
+      <b-form-group id="input-group-1">
+        <b-form-input
+          id="input-1"
+          v-model="instapaper.password"
+          type="password"
+          required
+          placeholder="Enter password"
+        ></b-form-input>
+      </b-form-group>
+      <div slot="modal-footer">
+        <button type="button" class="btn btn-secondary" @click="hideModal">Cancel</button>
+        <button type="button" class="btn btn-primary" @click="loginInstapaper">Login</button>
+      </div>
+    </b-modal>
   </div>
-</b-modal>
 </template>
 <script>
 import oauth from '../services/oauth'
@@ -38,7 +98,11 @@ import helper from '../services/helpers'
 import Store from 'electron-store'
 import axios from 'axios'
 import os from 'os'
-import { POCKET_MAC_KEY, POCKET_WINDOWS_KEY, POCKET_LINUX_KEY } from '../config'
+import {
+  POCKET_MAC_KEY,
+  POCKET_WINDOWS_KEY,
+  POCKET_LINUX_KEY
+} from '../config'
 
 const store = new Store()
 
@@ -46,12 +110,21 @@ export default {
   data () {
     return {
       inoreader_connected: false,
-      pocket_connected: false
+      pocket_connected: false,
+      instapaper_connected: false,
+      instapaper_error: null,
+      instapaper: {
+        username: null,
+        password: null
+      }
     }
   },
   mounted () {
     if (store.get('inoreader_token')) {
       this.inoreader_connected = true
+    }
+    if (store.has('instapaper_creds')) {
+      this.instapaper_connected = true
     }
     if (store.get('pocket_token')) {
       this.pocket_connected = true
@@ -87,21 +160,25 @@ export default {
               setImmediate(() => authWindow.close())
               resolve(false)
             } else if (hostname === '127.0.0.1') {
-              axios.post('https://getpocket.com/v3/oauth/authorize',
-                {
-                  consumer_key: consumerKey,
-                  code: code
-                },
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'X-Accept': 'application/json'
+              axios
+                .post(
+                  'https://getpocket.com/v3/oauth/authorize',
+                  {
+                    consumer_key: consumerKey,
+                    code: code
+                  },
+                  {
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'X-Accept': 'application/json'
+                    }
                   }
-                }).then((data) => {
-                data.data.consumer_key = consumerKey
-                self.$store.dispatch('setPocket', JSON.stringify(data.data))
-                resolve(data.data)
-              })
+                )
+                .then(data => {
+                  data.data.consumer_key = consumerKey
+                  self.$store.dispatch('setPocket', JSON.stringify(data.data))
+                  resolve(data.data)
+                })
               authWindow.removeAllListeners('closed')
               authWindow.close()
             }
@@ -121,9 +198,12 @@ export default {
           handleNavigation(url)
         })
 
-        authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
-          handleNavigation(newUrl)
-        })
+        authWindow.webContents.on(
+          'did-get-redirect-request',
+          (event, oldUrl, newUrl) => {
+            handleNavigation(newUrl)
+          }
+        )
 
         if (os.platform() === 'darwin') {
           consumerKey = POCKET_MAC_KEY
@@ -137,20 +217,26 @@ export default {
           consumerKey = POCKET_LINUX_KEY
         }
 
-        axios.post('https://getpocket.com/v3/oauth/request',
-          {
-            consumer_key: consumerKey,
-            redirect_uri: 'http://127.0.0.1'
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Accept': 'application/json'
+        axios
+          .post(
+            'https://getpocket.com/v3/oauth/request',
+            {
+              consumer_key: consumerKey,
+              redirect_uri: 'http://127.0.0.1'
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Accept': 'application/json'
+              }
             }
-          }).then((data) => {
-          code = data.data.code
-          authWindow.loadURL(`https://getpocket.com/auth/authorize?request_token=${data.data.code}&redirect_uri=http://127.0.0.1`)
-        })
+          )
+          .then(data => {
+            code = data.data.code
+            authWindow.loadURL(
+              `https://getpocket.com/auth/authorize?request_token=${data.data.code}&redirect_uri=http://127.0.0.1`
+            )
+          })
       })
     },
     async signInPocket () {
@@ -180,7 +266,6 @@ export default {
           const urlItem = new URL(url)
           const params = urlItem.searchParams
           const hostname = urlItem.hostname
-          console.log(params)
           if (params) {
             if (params.get('error')) {
               authWindow.removeAllListeners('closed')
@@ -207,20 +292,34 @@ export default {
           handleNavigation(url)
         })
 
-        authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
-          handleNavigation(newUrl)
-        })
+        authWindow.webContents.on(
+          'did-get-redirect-request',
+          (event, oldUrl, newUrl) => {
+            handleNavigation(newUrl)
+          }
+        )
 
         authWindow.loadURL(authUrl)
       })
     },
     disconnectPocket () {
-      store.delete('pocket_token')
+      this.$store.dispatch('unsetPocket')
       this.pocket_connected = false
+    },
+    disconnectInstapaper () {
+      this.$store.dispatch('unsetInstapaper')
+      this.instapaper_connected = false
     },
     disconnect () {
       store.delete('inoreader_token')
       this.inoreader_connected = false
+    },
+    onHidden () {
+      this.instapaper.username = null
+      this.instapaper.password = null
+    },
+    hideModal () {
+      this.$refs.instapaperLogin.hide()
     },
     async syncFeedsFromInoreader () {
       await helper.syncInoReader()
@@ -239,6 +338,19 @@ export default {
       if (token) {
         store.set('inoreader_token', JSON.stringify(token))
         this.inoreader_connected = true
+      }
+    },
+    async loginInstapaper () {
+      const login = await axios.post('https://www.instapaper.com/api/authenticate', {}, {
+        auth: {
+          username: this.instapaper.username,
+          password: this.instapaper.password
+        }
+      })
+      if (login.status === 200) {
+        this.$refs.instapaperLogin.hide()
+        this.$store.dispatch('setInstapaper', JSON.stringify(this.instapaper))
+        this.instapaper_connected = true
       }
     }
   }

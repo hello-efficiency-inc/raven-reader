@@ -2,6 +2,7 @@ import Store from 'electron-store'
 
 const state = {
   pocket_connected: false,
+  instapaper_connected: false,
   cronSettings: '*/5 * * * *',
   themeOption: null,
   oldestArticles: false,
@@ -24,6 +25,9 @@ const mutations = {
     if (store.get('pocket_token')) {
       state.pocket_connected = true
     }
+    if (store.has('instapaper_creds')) {
+      state.instapaper_connected = true
+    }
   },
   CHECK_OFFLINE (state) {
     state.offline = !navigator.onLine
@@ -45,6 +49,15 @@ const mutations = {
   },
   SET_POCKET_CONNECTED (state) {
     state.pocket_connected = true
+  },
+  UNSET_POCKET (state) {
+    state.pocket_connected = false
+  },
+  SET_INSTAPAPER_CONNECTED (state) {
+    state.instapaper_connected = true
+  },
+  UNSET_INSTAPAPER (state) {
+    state.instapaper_connected = false
   }
 }
 
@@ -63,9 +76,21 @@ const actions = {
     store.set('settings.theme_option', data)
     commit('SET_THEME_OPTION', data)
   },
+  setInstapaper ({ commit }, data) {
+    store.set('instapaper_creds', data)
+    commit('SET_INSTAPAPER_CONNECTED')
+  },
   setPocket ({ commit }, data) {
     store.set('pocket_token', data)
     commit('SET_POCKET_CONNECTED')
+  },
+  unsetInstapaper ({ commit }) {
+    store.delete('instapaper_creds')
+    commit('UNSET_INSTAPAPER')
+  },
+  unsetPocket ({ commit }) {
+    store.delete('pocket_token')
+    commit('UNSET_POCKET')
   },
   async setSortPreference ({ dispatch, commit }, data) {
     store.set('settings.oldestArticles', data)
