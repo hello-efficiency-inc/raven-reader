@@ -13,16 +13,16 @@
 <a href="https://travis-ci.org/mrgodhani/raven-reader">
 <img src="https://travis-ci.org/mrgodhani/raven-reader.svg?branch=master">
 </a>
-<a href="https://codeclimate.com/github/mrgodhani/raven-reader/maintainability">
+<a href="https://codeclimate.com/github/hello-efficiency-inc/raven-reader/maintainability">
 <img src="https://api.codeclimate.com/v1/badges/b19f2a2aaaeae1f85910/maintainability" />
 </a>
-<a href="https://david-dm.org/helloefficiency/raven-reader" title="dependencies status">
-<img src="https://david-dm.org/helloefficiency/raven-reader/status.svg"/>
+<a href="https://david-dm.org/hello-efficiency-inc/raven-reader" title="dependencies status">
+<img src="https://david-dm.org/hello-efficiency-inc/raven-reader/status.svg"/>
 </a>
-<a href="https://david-dm.org/helloefficiency/raven-reader?type=dev" title="devDependencies status">
-<img src="https://david-dm.org/helloefficiency/raven-reader/dev-status.svg"/></a>
+<a href="https://david-dm.org/hello-efficiency-inc/raven-reader?type=dev" title="devDependencies status">
+<img src="https://david-dm.org/hello-efficiency-inc/raven-reader/dev-status.svg"/></a>
 <a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/rss-reader-v2-0/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/12-shield.svg"/></a>
-<a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fhelloefficiency%2Fraven-reader?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhelloefficiency%2Fraven-reader.svg?type=shield"/></a>
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fhello-efficiency-inc%2Fraven-reader?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhello-efficiency-inc%2Fraven-reader.svg?type=shield"/></a>
 </p>
 
 ## Download
