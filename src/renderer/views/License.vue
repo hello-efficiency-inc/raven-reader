@@ -1,35 +1,60 @@
 <template>
-    <div>
-        <div class="main-splash">
-            <div>
-                <div v-if="loading" class="lds-ripple"><div></div><div></div></div>
-                <div v-if="!loading">
-                  <img id="logo" src="static/raven-logo.svg" alt="Raven Reader" key="mainpage">
-                  <p>All your articles in one place. Beautiful.</p>
-                  <p>Please enter license key to get started.</p>
-                  <div class="form-group">
-                      <b-form-input id="email"
-                          v-model.trim="licenseKey"
-                          type="text"
-                          :state="licenseError"
-                          aria-describedby="license licenseFeedback"
-                          placeholder="License Key" required>
-                      </b-form-input>
-                      <b-form-invalid-feedback id="licenseFeedback">
-                              {{ licenseErrorMessage }}
-                      </b-form-invalid-feedback>
-                  </div>
-                  <p class="text-center">
-                      <button class="btn btn--brand" tag="button" @click="submitLicenseKey">Submit</button>
-                  </p>
-                  <p class="text-center">
-                    Don't have license key? <a href="https://gum.co/ravenreader" class="js-external-link">Click here</a> to purchase.
-                  </p>
-                  <p v-if="$route.query.check"><router-link to="/">Back to app</router-link></p>
-                </div>
-            </div>
+  <div>
+    <div class="main-splash">
+      <div>
+        <div
+          v-if="loading"
+          class="lds-ripple"
+        >
+          <div /><div />
         </div>
+        <div v-if="!loading">
+          <img
+            id="logo"
+            key="mainpage"
+            src="static/raven-logo.svg"
+            alt="Raven Reader"
+          >
+          <p>All your articles in one place. Beautiful.</p>
+          <p>Please enter license key to get started.</p>
+          <div class="form-group">
+            <b-form-input
+              id="email"
+              v-model.trim="licenseKey"
+              type="text"
+              :state="licenseError"
+              aria-describedby="license licenseFeedback"
+              placeholder="License Key"
+              required
+            />
+            <b-form-invalid-feedback id="licenseFeedback">
+              {{ licenseErrorMessage }}
+            </b-form-invalid-feedback>
+          </div>
+          <p class="text-center">
+            <button
+              class="btn btn--brand"
+              tag="button"
+              @click="submitLicenseKey"
+            >
+              Submit
+            </button>
+          </p>
+          <p class="text-center">
+            Don't have license key? <a
+              href="https://gum.co/ravenreader"
+              class="js-external-link"
+            >Click here</a> to purchase.
+          </p>
+          <p v-if="$route.query.check">
+            <router-link to="/">
+              Back to app
+            </router-link>
+          </p>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 <script>
 import axios from 'axios'

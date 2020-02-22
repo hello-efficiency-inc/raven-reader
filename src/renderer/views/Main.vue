@@ -1,68 +1,114 @@
 <template>
   <div class="app-wrapper">
-    <nav class="sidebar" v-if="true" ref="sidebar">
-      <subscribe-toolbar ref="subscribetoolbar"></subscribe-toolbar>
+    <nav
+      v-if="true"
+      ref="sidebar"
+      class="sidebar"
+    >
+      <subscribe-toolbar ref="subscribetoolbar" />
       <perfect-scrollbar class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <router-link class="nav-link feed-mix-link" to="/all" active-class="active">
-              <feed-mix feed-id="allFeeds" mark="allFeeds">
-                <feather-icon name="list"></feather-icon>All Feeds
+            <router-link
+              class="nav-link feed-mix-link"
+              to="/all"
+              active-class="active"
+            >
+              <feed-mix
+                feed-id="allFeeds"
+                mark="allFeeds"
+              >
+                <feather-icon name="list" />All Feeds
                 <span class="sr-only">(current)</span>
                 <span
-                  class="items-counter"
                   v-if="getArticlesCount('','') > 0"
+                  class="items-counter"
                 >{{ getArticlesCount('','') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link feed-mix-link" to="/favourites" active-class="active">
-              <feed-mix feed-id="favourites" mark="favourites">
-                <feather-icon name="star"></feather-icon>Favourites
+            <router-link
+              class="nav-link feed-mix-link"
+              to="/favourites"
+              active-class="active"
+            >
+              <feed-mix
+                feed-id="favourites"
+                mark="favourites"
+              >
+                <feather-icon name="star" />Favourites
                 <span
-                  class="items-counter"
                   v-if="getArticlesCount('favourites','') > 0"
+                  class="items-counter"
                 >{{ getArticlesCount('favourites','') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link feed-mix-link" to="/unread" active-class="active">
-              <feed-mix feed-id="unreadArticles" mark="unreadArticles">
-                <feather-icon name="circle"></feather-icon>Unread Articles
+            <router-link
+              class="nav-link feed-mix-link"
+              to="/unread"
+              active-class="active"
+            >
+              <feed-mix
+                feed-id="unreadArticles"
+                mark="unreadArticles"
+              >
+                <feather-icon name="circle" />Unread Articles
                 <span
-                  class="items-counter"
                   v-if="getArticlesCount('unread', '') > 0"
+                  class="items-counter"
                 >{{ getArticlesCount('unread', '') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link feed-mix-link" to="/read" active-class="active">
-              <feed-mix feed-id="recentlyRead" mark="recentlyRead">
-                <feather-icon name="circle" filled></feather-icon>Recently Read
+            <router-link
+              class="nav-link feed-mix-link"
+              to="/read"
+              active-class="active"
+            >
+              <feed-mix
+                feed-id="recentlyRead"
+                mark="recentlyRead"
+              >
+                <feather-icon
+                  name="circle"
+                  filled
+                />Recently Read
                 <span
-                  class="items-counter"
                   v-if="getArticlesCount('read', '') > 0"
+                  class="items-counter"
                 >{{ getArticlesCount('read', '') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link feed-mix-link" to="/saved" active-class="active">
-              <feed-mix feed-id="savedArticles" mark="savedArticles">
-                <feather-icon name="wifi-off"></feather-icon>Saved articles
+            <router-link
+              class="nav-link feed-mix-link"
+              to="/saved"
+              active-class="active"
+            >
+              <feed-mix
+                feed-id="savedArticles"
+                mark="savedArticles"
+              >
+                <feather-icon name="wifi-off" />Saved articles
                 <span
-                  class="items-counter"
                   v-if="getArticlesCount('saved', '') > 0"
+                  class="items-counter"
                 >{{ getArticlesCount('saved', '') }}</span>
               </feed-mix>
             </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" v-b-modal.integrations>
-              <feather-icon name="package"></feather-icon>Integrations
+            <a
+              v-b-modal.integrations
+              class="nav-link"
+              href="#"
+            >
+              <feather-icon name="package" />Integrations
             </a>
           </li>
         </ul>
@@ -73,80 +119,125 @@
         </h6>
         <ul class="nav flex-column">
           <template
-          v-for="feed in mapFeeds(feeds, categoryItems)"
+            v-for="feed in mapFeeds(feeds, categoryItems)"
           >
-          <li
-            class="feed nav-item d-flex justify-content-between align-items-center pr-2"
-            v-bind:key="feed.id"
-            mark="feed"
-            @click="setActiveFeedId(feed)"
-            v-if="!feed.type && feed.category === null"
-            v-bind:class="{ active: feed.isActive }"
-            @contextmenu.prevent="openFeedMenu($event, {feed: feed})"
-          >
-            <router-link v-if="!feed.type && feed.category === null" class="nav-link" :to="`/feed/${feed.id}`">
-              <img v-if="feed.favicon" :src="feed.favicon" height="16" width="16" class="mr-1" />
-              {{ feed.title }}
-            </router-link>
-            <div v-if="!feed.type && feed.category === null && getArticlesCount('', feed.id) > 0" class="nav-link feed-counter">
-              <span class="item-counter">{{ getArticlesCount('', feed.id) }}</span>
-            </div>
-          </li>
-          <li
-            class="feed nav-item d-flex align-items-center pr-2"
-            v-bind:key="feed.id"
-            mark="category"
-            @click="categoryHandler(feed)"
-            v-bind:class="{ active: feed.isActive }"
-            @contextmenu.prevent="openCategoryMenu($event, { category: feed})"
-            v-if="feed.type"
-          >
-            <button v-if="feed.type" class="btn btn-link category-link pr-0" v-b-toggle="`collapse-${feed.title}`">
-              <feather-icon name="chevron-right"></feather-icon>
-            </button>
-            <a href="#" class="nav-link pl-1" replace>{{ feed.title }}</a>
-            <div v-if="getArticlesCount('category', feed.title) > 0" class="nav-link feed-counter">
-                <span class="item-counter">{{ getArticlesCount('category', feed.title) }}</span>
-            </div>
-          </li>
-          <b-collapse  v-if="feed.type" v-bind:key="`collapse-${feed.title}`" :id="`collapse-${feed.title}`">
-            <template v-for="categoryfeed in categoryFeeds(feeds, feed.title)">
-              <li 
-                class="feed nav-item d-flex justify-content-between align-items-center pr-2" 
-                v-bind:key="categoryfeed.id"
-                mark="feed"
-                @click="setActiveFeedId(categoryfeed)"
-                v-bind:class="{ active: categoryfeed.isActive }"
-                @contextmenu.prevent="openFeedMenu($event, {feed: categoryfeed})"
+            <li
+              v-if="!feed.type && feed.category === null"
+              :key="feed.id"
+              class="feed nav-item d-flex justify-content-between align-items-center pr-2"
+              mark="feed"
+              :class="{ active: feed.isActive }"
+              @click="setActiveFeedId(feed)"
+              @contextmenu.prevent="openFeedMenu($event, {feed: feed})"
+            >
+              <router-link
+                v-if="!feed.type && feed.category === null"
+                class="nav-link"
+                :to="`/feed/${feed.id}`"
+              >
+                <img
+                  v-if="feed.favicon"
+                  :src="feed.favicon"
+                  height="16"
+                  width="16"
+                  class="mr-1"
                 >
-                  <router-link :to="`/feed/${categoryfeed.id}`" class="nav-link ml-1">
-                    <img v-if="categoryfeed.favicon" :src="categoryfeed.favicon" height="16" width="16" class="mr-1" />
+                {{ feed.title }}
+              </router-link>
+              <div
+                v-if="!feed.type && feed.category === null && getArticlesCount('', feed.id) > 0"
+                class="nav-link feed-counter"
+              >
+                <span class="item-counter">{{ getArticlesCount('', feed.id) }}</span>
+              </div>
+            </li>
+            <li
+              v-if="feed.type"
+              :key="feed.id"
+              class="feed nav-item d-flex align-items-center pr-2"
+              mark="category"
+              :class="{ active: feed.isActive }"
+              @click="categoryHandler(feed)"
+              @contextmenu.prevent="openCategoryMenu($event, { category: feed})"
+            >
+              <button
+                v-if="feed.type"
+                v-b-toggle="`collapse-${feed.title}`"
+                class="btn btn-link category-link pr-0"
+              >
+                <feather-icon name="chevron-right" />
+              </button>
+              <a
+                href="#"
+                class="nav-link pl-1"
+                replace
+              >{{ feed.title }}</a>
+              <div
+                v-if="getArticlesCount('category', feed.title) > 0"
+                class="nav-link feed-counter"
+              >
+                <span class="item-counter">{{ getArticlesCount('category', feed.title) }}</span>
+              </div>
+            </li>
+            <b-collapse
+              v-if="feed.type"
+              :id="`collapse-${feed.title}`"
+              :key="`collapse-${feed.title}`"
+            >
+              <template v-for="categoryfeed in categoryFeeds(feeds, feed.title)">
+                <li
+                  :key="categoryfeed.id"
+                  class="feed nav-item d-flex justify-content-between align-items-center pr-2"
+                  mark="feed"
+                  :class="{ active: categoryfeed.isActive }"
+                  @click="setActiveFeedId(categoryfeed)"
+                  @contextmenu.prevent="openFeedMenu($event, {feed: categoryfeed})"
+                >
+                  <router-link
+                    :to="`/feed/${categoryfeed.id}`"
+                    class="nav-link ml-1"
+                  >
+                    <img
+                      v-if="categoryfeed.favicon"
+                      :src="categoryfeed.favicon"
+                      height="16"
+                      width="16"
+                      class="mr-1"
+                    >
                     {{ categoryfeed.title }}
                   </router-link>
-                  <div v-if="getArticlesCount('', categoryfeed.id) > 0" class="nav-link feed-counter">
+                  <div
+                    v-if="getArticlesCount('', categoryfeed.id) > 0"
+                    class="nav-link feed-counter"
+                  >
                     <span class="item-counter">{{ getArticlesCount('', categoryfeed.id) }}</span>
                   </div>
                 </li>
-            </template>
-           </b-collapse>
+              </template>
+            </b-collapse>
           </template>
         </ul>
       </perfect-scrollbar>
     </nav>
-    <article-list :type="articleType" :feed="feed" @type-change="updateType" ref="articleList"></article-list>
+    <article-list
+      ref="articleList"
+      :type="articleType"
+      :feed="feed"
+      @type-change="updateType"
+    />
     <article-detail
       :id="$route.params.id"
-      :article="articleData"
-      :emptyState="empty"
-      :loading="loading"
       ref="articleDetail"
-    ></article-detail>
-    <import-modal></import-modal>
-    <settings-modal></settings-modal>
-    <markallread-modal></markallread-modal>
-    <sync-settings></sync-settings>
-    <edit-feed :feed="activeFeed"></edit-feed>
-    <edit-category :feed="activeFeed"></edit-category>
+      :article="articleData"
+      :empty-state="empty"
+      :loading="loading"
+    />
+    <import-modal />
+    <settings-modal />
+    <markallread-modal />
+    <sync-settings />
+    <edit-feed :feed="activeFeed" />
+    <edit-category :feed="activeFeed" />
   </div>
 </template>
 <script>
@@ -183,6 +274,36 @@ export default {
       this.$electron.ipcRenderer.send('article-selected')
     }
     next()
+  },
+  computed: {
+    categoryItems () {
+      return this.$store.state.Category.categories
+    },
+    feeds () {
+      return this.$store.state.Feed.feeds
+    },
+    activeFeedId () {
+      return this.$store.getters.activeFeedId
+    }
+  },
+  watch: {
+    $route (to, from) {
+      switch (to.name) {
+        case 'feed-page':
+          this.feedChange()
+          break
+        case 'category-page':
+          this.categoryChange()
+          break
+        case 'type-page':
+          this.typeChange()
+          break
+        case 'article-page':
+          this.fetchData()
+          break
+      }
+    },
+    allUnread: 'unreadChange'
   },
   mounted () {
     const self = this
@@ -332,36 +453,6 @@ export default {
         job.reschedule()
       }
     })
-  },
-  watch: {
-    $route (to, from) {
-      switch (to.name) {
-        case 'feed-page':
-          this.feedChange()
-          break
-        case 'category-page':
-          this.categoryChange()
-          break
-        case 'type-page':
-          this.typeChange()
-          break
-        case 'article-page':
-          this.fetchData()
-          break
-      }
-    },
-    allUnread: 'unreadChange'
-  },
-  computed: {
-    categoryItems () {
-      return this.$store.state.Category.categories
-    },
-    feeds () {
-      return this.$store.state.Feed.feeds
-    },
-    activeFeedId () {
-      return this.$store.getters.activeFeedId
-    }
   },
   methods: {
     onCtxOpen (locals) {
@@ -738,7 +829,6 @@ export default {
         color: #000;
       }
     }
-  
 
   & .sidebar {
     --background-color: rgba(var(--sunset-background), 1);

@@ -1,6 +1,11 @@
 <template>
-  <div class="feed-mix" :mark="mark" @click="setActiveFeedId(getFeed())" v-bind:class="{ active: isFeedActive(getFeed()) }">
-    <slot></slot>
+  <div
+    class="feed-mix"
+    :mark="mark"
+    :class="{ active: isFeedActive(getFeed()) }"
+    @click="setActiveFeedId(getFeed())"
+  >
+    <slot />
   </div>
 </template>
 <script>

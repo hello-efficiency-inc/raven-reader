@@ -29,32 +29,48 @@
       </div>-->
       <div class="row">
         <div class="col">
-          <p class="text-left font-bold">Instapaper</p>
+          <p class="text-left font-bold">
+            Instapaper
+          </p>
         </div>
         <div class="col">
-          <button class="btn-primary float-right" v-b-modal.instapaper  v-if="!instapaper_connected">Connect</button>
           <button
+            v-if="!instapaper_connected"
+            v-b-modal.instapaper
+            class="btn-primary float-right"
+          >
+            Connect
+          </button>
+          <button
+            v-if="instapaper_connected"
             class="btn-danger float-right"
             @click="disconnectInstapaper"
-            v-if="instapaper_connected"
-          >Disconnect</button>
+          >
+            Disconnect
+          </button>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <p class="text-left font-bold">Pocket</p>
+          <p class="text-left font-bold">
+            Pocket
+          </p>
         </div>
         <div class="col">
           <button
+            v-if="!pocket_connected"
             class="btn-primary float-right"
             @click="signInPocket"
-            v-if="!pocket_connected"
-          >Connect</button>
+          >
+            Connect
+          </button>
           <button
+            v-if="pocket_connected"
             class="btn-danger float-right"
             @click="disconnectPocket"
-            v-if="pocket_connected"
-          >Disconnect</button>
+          >
+            Disconnect
+          </button>
         </div>
       </div>
     </b-modal>
@@ -72,7 +88,7 @@
           type="email"
           required
           placeholder="Enter email"
-        ></b-form-input>
+        />
       </b-form-group>
       <b-form-group id="input-group-1">
         <b-form-input
@@ -81,11 +97,23 @@
           type="password"
           required
           placeholder="Enter password"
-        ></b-form-input>
+        />
       </b-form-group>
       <div slot="modal-footer">
-        <button type="button" class="btn btn-secondary" @click="hideModal">Cancel</button>
-        <button type="button" class="btn btn-primary" @click="loginInstapaper">Login</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          @click="hideModal"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="loginInstapaper"
+        >
+          Login
+        </button>
       </div>
     </b-modal>
   </div>

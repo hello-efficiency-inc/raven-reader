@@ -5,37 +5,77 @@
         <div class="search-input input-group mb-0">
           <div class="input-group-prepend">
             <span class="input-group-text">
-              <feather-icon name="search"></feather-icon>
+              <feather-icon name="search" />
             </span>
           </div>
-          <input type="text" class="form-control" placeholder="Search" aria-label="Search" v-model="search">
+          <input
+            v-model="search"
+            type="text"
+            class="form-control"
+            placeholder="Search"
+            aria-label="Search"
+          >
           <div class="toolsbar">
             <div class="tool">
-              <button class="btn btn-toolbar" type="button" @click="sync" v-b-tooltip.hover title="Sync">
-                <feather-icon name="refresh-cw" :class="{ 'fa-spin': syncState }"></feather-icon>
+              <button
+                v-b-tooltip.hover
+                class="btn btn-toolbar"
+                type="button"
+                title="Sync"
+                @click="sync"
+              >
+                <feather-icon
+                  name="refresh-cw"
+                  :class="{ 'fa-spin': syncState }"
+                />
               </button>
             </div>
             <div class="tool">
-              <button class="btn btn-toolbar" type="button" v-b-tooltip.hover title="Mark all as read" v-b-modal.markallread ref="markallread">
-                <feather-icon name="check-circle"></feather-icon>
+              <button
+                ref="markallread"
+                v-b-tooltip.hover
+                v-b-modal.markallread
+                class="btn btn-toolbar"
+                type="button"
+                title="Mark all as read"
+              >
+                <feather-icon name="check-circle" />
               </button>
             </div>
           </div>
         </div>
       </form>
       <div class="articles">
-          <perfect-scrollbar class="list-group">
-            <article-item v-if="filteredArticles.length > 0" :article="article" v-for="article in mapArticles(filteredArticles)" :key="article._id"></article-item>
-            <div class="no-articles" v-if="filteredArticles.length === 0">
-              No articles available
-            </div>
-          </perfect-scrollbar>
+        <perfect-scrollbar class="list-group">
+          <template v-if="filteredArticles.length > 0">
+            <article-item
+              v-for="article in mapArticles(filteredArticles)"
+              :key="article._id"
+              :article="article"
+            />
+          </template>
+          <div
+            v-if="filteredArticles.length === 0"
+            class="no-articles"
+          >
+            No articles available
+          </div>
+        </perfect-scrollbar>
       </div>
-      <div class="statusBar" ref="statusBar">
-        <button @click="fold" class="btn foldBtn">
-          <feather-icon :name="featherIcon"></feather-icon>
+      <div
+        ref="statusBar"
+        class="statusBar"
+      >
+        <button
+          class="btn foldBtn"
+          @click="fold"
+        >
+          <feather-icon :name="featherIcon" />
         </button>
-        <span ref="statusMsg" class="statusMsg"></span>
+        <span
+          ref="statusMsg"
+          class="statusMsg"
+        />
       </div>
     </div>
   </div>
@@ -46,13 +86,6 @@ import log from 'electron-log'
 import helper from '../services/helpers'
 
 export default {
-  data () {
-    return {
-      search: null,
-      featherIcon: 'chevron-left',
-      syncState: false
-    }
-  },
   props: {
     type: {
       type: String,
@@ -60,6 +93,13 @@ export default {
     },
     feed: {
       type: String
+    }
+  },
+  data () {
+    return {
+      search: null,
+      featherIcon: 'chevron-left',
+      syncState: false
     }
   },
   watch: {
@@ -136,7 +176,7 @@ export default {
 .app-sunsetmode {
   &.articles-list {
     --input-background-color: var(--background-color);
-    --input-color: #c8cacc;    
+    --input-color: #c8cacc;
   }
   .search-input {
     input[type="text"] {
@@ -150,7 +190,7 @@ export default {
 .app-darkmode {
   & .articles-list {
     --input-background-color: var(--background-color);
-    --input-color: #c8cacc;    
+    --input-color: #c8cacc;
   }
 
   .search-input {
@@ -183,7 +223,7 @@ export default {
 
   .search-form {
     border-bottom-color: var(--border-color);
-    
+
     .form-control {
       background: var(--input-background-color);
       color: var(--input-color);
@@ -359,7 +399,7 @@ export default {
   display: flex;
   z-index: 10;
   align-items: center;
-  
+
   .btn {
       color: rgb(65, 65, 65);
       margin-right: 2px;

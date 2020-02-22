@@ -5,58 +5,104 @@
     hide-header
     :hide-footer="feeddata === null"
     size="lg"
-    @shown="focusMyElement"
     centered
+    @shown="focusMyElement"
     @hidden="onHidden"
   >
-      <form v-on:submit.prevent="fetchFeed">
-        <b-input-group size="md">
-          <b-input-group-text slot="prepend">
-            <strong>
-              Add
-              <feather-icon name="plus"></feather-icon>
-            </strong>
-          </b-input-group-text>
-          <b-input-group-text slot="append">
-            <loader v-if="loading"></loader>
-            <div class="favicon-img" v-if="feeddata !== null && !loading">
-              <img :src="feeddata.site.favicon" height="20" />
-            </div>
-          </b-input-group-text>
-          <b-form-input
-            class="no-border"
-            placeholder="Enter website or feed url"
-            ref="focusThis"
-            v-model="feed_url"
-          ></b-form-input>
-        </b-input-group>
-      </form>
-      <div v-if="feeddata !== null" class="subscription-content col pt-3">
-        <template v-for="(feed, index) in feeddata.feedUrls">
+    <form @submit.prevent="fetchFeed">
+      <b-input-group size="md">
+        <b-input-group-text slot="prepend">
+          <strong>
+            Add
+            <feather-icon name="plus" />
+          </strong>
+        </b-input-group-text>
+        <b-input-group-text slot="append">
+          <loader v-if="loading" />
+          <div
+            v-if="feeddata !== null && !loading"
+            class="favicon-img"
+          >
+            <img
+              :src="feeddata.site.favicon"
+              height="20"
+            >
+          </div>
+        </b-input-group-text>
+        <b-form-input
+          ref="focusThis"
+          v-model="feed_url"
+          class="no-border"
+          placeholder="Enter website or feed url"
+        />
+      </b-input-group>
+    </form>
+    <div
+      v-if="feeddata !== null"
+      class="subscription-content col pt-3"
+    >
+      <template v-for="(feed, index) in feeddata.feedUrls">
+        <div :key="index">
           <b-input-group size="md">
             <b-input-group-text slot="append">
-              <b-form-checkbox v-model="selected_feed" :value="feed"></b-form-checkbox>
+              <b-form-checkbox
+                v-model="selected_feed"
+                :value="feed"
+              />
             </b-input-group-text>
-            <b-form-input v-model="feed.title"></b-form-input>
+            <b-form-input v-model="feed.title" />
           </b-input-group>
-          <b-form-text id="inputLiveHelp" class="mb-3">{{ feed.url }}</b-form-text>
+          <b-form-text
+            id="inputLiveHelp"
+            class="mb-3"
+          >
+            {{ feed.url }}
+          </b-form-text>
+        </div>
+      </template>
+      <b-form-select
+        v-model="selectedCat"
+        :options="categoryItems"
+        class="mb-3"
+      >
+        <template slot="first">
+          <option :value="null">
+            Please select category
+          </option>
         </template>
-          <b-form-select v-model="selectedCat" :options="categoryItems" class="mb-3">
-            <template slot="first">
-              <option :value="null">Please select category</option>
-            </template>
-          </b-form-select>
-          <p><button class="btn btn-link pl-0" type="button" @click="addCategory">Add new category</button></p>
-          <p v-if="showAddCat"><b-form-input v-model="newcategory" placeholder="Enter new category"></b-form-input></p>
-      </div>
+      </b-form-select>
+      <p>
+        <button
+          class="btn btn-link pl-0"
+          type="button"
+          @click="addCategory"
+        >
+          Add new category
+        </button>
+      </p>
+      <p v-if="showAddCat">
+        <b-form-input
+          v-model="newcategory"
+          placeholder="Enter new category"
+        />
+      </p>
+    </div>
     <div slot="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="hideModal">Close</button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="hideModal"
+      >
+        Close
+      </button>
       <button
         type="button"
         class="btn btn-primary"
-        @click="subscribe"
         :disabled="disableSubscribe"
-      >Subscribe</button>
+        @click="subscribe"
+      >
+        Subscribe
+      </button>
     </div>
   </b-modal>
 </template>
@@ -69,7 +115,7 @@ import uuid from 'uuid-by-string'
 import axios from 'axios'
 
 export default {
-  name: 'addfeed-modal',
+  name: 'AddfeedModal',
   data () {
     return {
       feed_url: '',

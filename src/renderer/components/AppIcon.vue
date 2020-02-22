@@ -1,6 +1,9 @@
 <template>
-  <svg class="feather" :class="{ 'feather-filled': filled, 'feather-success': success }">
-    <use :xlink:href="`static/feather-sprite.svg#${name}`"/>
+  <svg
+    class="feather"
+    :class="{ 'feather-filled': filled, 'feather-success': success }"
+  >
+    <use :xlink:href="`static/feather-sprite.svg#${name}`" />
   </svg>
 </template>
 <script>

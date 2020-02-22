@@ -1,35 +1,62 @@
 <template>
-  <b-modal id="settings" ref="settings" title="Settings" hide-footer centered>
+  <b-modal
+    id="settings"
+    ref="settings"
+    title="Settings"
+    hide-footer
+    centered
+  >
     <b-form-group label="Set refresh interval for news feed">
-      <b-form-select v-model="cronjob" :options="cron_options" size="sm" @change="saveCronjob"/>
+      <b-form-select
+        v-model="cronjob"
+        :options="cron_options"
+        size="sm"
+        @change="saveCronjob"
+      />
     </b-form-group>
     <b-form-group label="Choose appearance">
-      <b-form-select v-model="theme_option" :options="themeOptions" size="sm" @change="saveAppearance" />
+      <b-form-select
+        v-model="theme_option"
+        :options="themeOptions"
+        size="sm"
+        @change="saveAppearance"
+      />
     </b-form-group>
     <b-form-group label="Oldest articles first">
-      <b-form-radio-group id="btnradios1"
-      buttons
-      button-variant="outline-primary"
-      size="sm"
-      v-model="oldestArticles"
-      :options="options"
-      name="sortPref" @input="saveSortPreference"/>
+      <b-form-radio-group
+        id="btnradios1"
+        v-model="oldestArticles"
+        buttons
+        button-variant="outline-primary"
+        size="sm"
+        :options="options"
+        name="sortPref"
+        @input="saveSortPreference"
+      />
     </b-form-group>
     <h5>Proxy Settings</h5>
     <b-form-group label="Web Server (HTTP):">
-      <b-form-input v-model="proxy.http"
-      type="text"></b-form-input>
+      <b-form-input
+        v-model="proxy.http"
+        type="text"
+      />
     </b-form-group>
     <b-form-group label="Secure Web Server (HTTPS):">
-      <b-form-input v-model="proxy.https"
-      type="text"></b-form-input>
+      <b-form-input
+        v-model="proxy.https"
+        type="text"
+      />
     </b-form-group>
     <b-form-group label="Bypass proxy settings for these hosts & domains:">
-      <b-form-textarea v-model="proxy.bypass"
-      :rows="3"
-      :max-rows="6"></b-form-textarea>
+      <b-form-textarea
+        v-model="proxy.bypass"
+        :rows="3"
+        :max-rows="6"
+      />
     </b-form-group>
-    <b-button @click="applyProxy">Apply proxy & restart</b-button>
+    <b-button @click="applyProxy">
+      Apply proxy & restart
+    </b-button>
   </b-modal>
 </template>
 <script>

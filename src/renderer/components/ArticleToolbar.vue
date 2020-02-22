@@ -1,101 +1,205 @@
 <template>
-<div class="position-relative">
-  <div class="article-toolbar" v-if="article !== null && article.content !== null">
-    <div class="site-info">
-      <div class="wrap">
-        <button class="btn btn-toolbar" v-b-modal.editSubscription>
-          <span v-if="article.favicon" class="favicon-wrap">
-            <img :src="article.favicon" width="16" height="16">
-          </span>
-          <span :class="{ 'ml-4': article.favicon }">{{ article.sitetitle }}</span>
-        </button>
-         <edit-subscription :article="article"></edit-subscription>
+  <div class="position-relative">
+    <div
+      v-if="article !== null && article.content !== null"
+      class="article-toolbar"
+    >
+      <div class="site-info">
+        <div class="wrap">
+          <button
+            v-b-modal.editSubscription
+            class="btn btn-toolbar"
+          >
+            <span
+              v-if="article.favicon"
+              class="favicon-wrap"
+            >
+              <img
+                :src="article.favicon"
+                width="16"
+                height="16"
+              >
+            </span>
+            <span :class="{ 'ml-4': article.favicon }">{{ article.sitetitle }}</span>
+          </button>
+          <edit-subscription :article="article" />
+        </div>
       </div>
-    </div>
-    <div class="article-buttons">
-      <div class="wrap">
-        <button v-click-outside="vcoConfig" class="btn btn-toolbar" @click="openSettings" v-b-tooltip.hover title="Format Options">
-          <feather-icon name="settings"></feather-icon>
-        </button>
-      </div>
-      <div class="wrap">
-        <button class="btn btn-toolbar" @click="markFavourite" v-b-tooltip.hover :title="markFavouriteButton">
-          <feather-icon name="star" :filled="article.favourite"></feather-icon>
-        </button>
-      </div>
-      <div class="wrap">
-        <button class="btn btn-toolbar" @click="markRead" v-b-tooltip.hover :title="markReadButton">
-          <feather-icon name="circle" :filled="article.read"></feather-icon>
-        </button>
-      </div>
-      <div class="wrap">
-        <button @click="openOriginal(article.url)" class="btn btn-toolbar js-external-link" v-b-tooltip.hover title="View original" ref="openlink">
-          <feather-icon name="globe" :success="original"></feather-icon>
-        </button>
-      </div>
-      <div class="wrap">
-        <button class="btn btn-toolbar" @click="saveArticle" v-b-tooltip.hover title="Save article" ref="saveoffline">
-          <feather-icon name="wifi-off" :success="article.offline"></feather-icon>
-        </button>
-      </div>
-      <div class="wrap">
-        <b-dropdown variant="link" no-caret ref="socialshare" toogle-class="btn-toolbar">
-          <template slot="button-content" class="pt-1">
-            <feather-icon name="share-2"></feather-icon>
-          </template>
-           <b-dropdown-item v-if="instapaperConnected" @click="saveToInstapaper(article.url)">
-                Instapaper
+      <div class="article-buttons">
+        <div class="wrap">
+          <button
+            v-click-outside="vcoConfig"
+            v-b-tooltip.hover
+            class="btn btn-toolbar"
+            title="Format Options"
+            @click="openSettings"
+          >
+            <feather-icon name="settings" />
+          </button>
+        </div>
+        <div class="wrap">
+          <button
+            v-b-tooltip.hover
+            class="btn btn-toolbar"
+            :title="markFavouriteButton"
+            @click="markFavourite"
+          >
+            <feather-icon
+              name="star"
+              :filled="article.favourite"
+            />
+          </button>
+        </div>
+        <div class="wrap">
+          <button
+            v-b-tooltip.hover
+            class="btn btn-toolbar"
+            :title="markReadButton"
+            @click="markRead"
+          >
+            <feather-icon
+              name="circle"
+              :filled="article.read"
+            />
+          </button>
+        </div>
+        <div class="wrap">
+          <button
+            ref="openlink"
+            v-b-tooltip.hover
+            class="btn btn-toolbar js-external-link"
+            title="View original"
+            @click="openOriginal(article.url)"
+          >
+            <feather-icon
+              name="globe"
+              :success="original"
+            />
+          </button>
+        </div>
+        <div class="wrap">
+          <button
+            ref="saveoffline"
+            v-b-tooltip.hover
+            class="btn btn-toolbar"
+            title="Save article"
+            @click="saveArticle"
+          >
+            <feather-icon
+              name="wifi-off"
+              :success="article.offline"
+            />
+          </button>
+        </div>
+        <div class="wrap">
+          <b-dropdown
+            ref="socialshare"
+            variant="link"
+            no-caret
+            toogle-class="btn-toolbar"
+          >
+            <template
+              slot="button-content"
+              class="pt-1"
+            >
+              <feather-icon name="share-2" />
+            </template>
+            <b-dropdown-item
+              v-if="instapaperConnected"
+              @click="saveToInstapaper(article.url)"
+            >
+              Instapaper
             </b-dropdown-item>
-          <b-dropdown-item v-if="pocketConnected" @click="saveToPocket(article.url)">
-                Pocket
+            <b-dropdown-item
+              v-if="pocketConnected"
+              @click="saveToPocket(article.url)"
+            >
+              Pocket
             </b-dropdown-item>
-          <b-dropdown-item>
-              <social-sharing :url="article.url" inline-template>
+            <b-dropdown-item>
+              <social-sharing
+                :url="article.url"
+                inline-template
+              >
                 <network network="email">
                   Email
                 </network>
               </social-sharing>
             </b-dropdown-item>
-          <b-dropdown-item>
-              <social-sharing :url="article.url" inline-template>
+            <b-dropdown-item>
+              <social-sharing
+                :url="article.url"
+                inline-template
+              >
                 <network network="facebook">
                   Facebook
                 </network>
               </social-sharing>
             </b-dropdown-item>
             <b-dropdown-item>
-              <social-sharing :url="article.url" inline-template>
+              <social-sharing
+                :url="article.url"
+                inline-template
+              >
                 <network network="twitter">
-                    Twitter
+                  Twitter
                 </network>
               </social-sharing>
             </b-dropdown-item>
             <b-dropdown-item>
-               <social-sharing :url="article.url" inline-template>
-                  <network network="linkedin">
-                    Linkedin
-                  </network>
-               </social-sharing>
+              <social-sharing
+                :url="article.url"
+                inline-template
+              >
+                <network network="linkedin">
+                  Linkedin
+                </network>
+              </social-sharing>
             </b-dropdown-item>
-        </b-dropdown>
+          </b-dropdown>
+        </div>
       </div>
     </div>
-  </div>
-  <div tabindex="0" class="article-setting" v-bind:class="{ hidden: !settingspanel || !this.$store.state.Article.fontSettingOn }">
+    <div
+      tabindex="0"
+      class="article-setting"
+      :class="{ hidden: !settingspanel || !this.$store.state.Article.fontSettingOn }"
+    >
       <div class="settings-wrap dropdown-setting">
-        <b-form-select class="article-settings-btn" v-model="fontstyle" :options="options" @change="changeFontStyle"></b-form-select>
+        <b-form-select
+          v-model="fontstyle"
+          class="article-settings-btn"
+          :options="options"
+          @change="changeFontStyle"
+        />
       </div>
       <div class="settings-wrap">
-        <button class="article-settings-btn btn btn-link" @click="decreaseFontSize">
-          <svg class="article-settings-btn icon-smaller-text" xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path d="M17.973 29.845v-.321c.446-.051.781-.219 1.004-.504.223-.286.606-1.067 1.148-2.345l3.617-8.52h.346l4.326 9.842c.288.651.519 1.056.69 1.21s.463.26.869.316v.321h-4.415v-.321c.507-.046.835-.101.981-.166.146-.064.221-.223.221-.476a2.08 2.08 0 0 0-.086-.447 4.885 4.885 0 0 0-.236-.675l-.695-1.67h-4.575a85.484 85.484 0 0 0-.808 2.079c-.087.25-.131.448-.131.595 0 .293.119.495.356.607.146.067.423.118.829.152v.321h-3.441zm7.476-4.458l-1.989-4.782-1.999 4.782h3.988z"></path></svg>
+        <button
+          class="article-settings-btn btn btn-link"
+          @click="decreaseFontSize"
+        >
+          <svg
+            class="article-settings-btn icon-smaller-text"
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+          ><path d="M17.973 29.845v-.321c.446-.051.781-.219 1.004-.504.223-.286.606-1.067 1.148-2.345l3.617-8.52h.346l4.326 9.842c.288.651.519 1.056.69 1.21s.463.26.869.316v.321h-4.415v-.321c.507-.046.835-.101.981-.166.146-.064.221-.223.221-.476a2.08 2.08 0 0 0-.086-.447 4.885 4.885 0 0 0-.236-.675l-.695-1.67h-4.575a85.484 85.484 0 0 0-.808 2.079c-.087.25-.131.448-.131.595 0 .293.119.495.356.607.146.067.423.118.829.152v.321h-3.441zm7.476-4.458l-1.989-4.782-1.999 4.782h3.988z" /></svg>
         </button>
       </div>
       <div class="settings-wrap">
-        <button class="article-settings-btn btn btn-link" @click="increaseFontSize">
-          <svg class="article-settings-btn icon-smaller-text" xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path d="M11.654 36v-.661c.916-.104 1.604-.448 2.062-1.034s1.244-2.191 2.356-4.812L23.499 12h.709l8.881 20.207c.592 1.338 1.063 2.166 1.419 2.482.354.317.948.534 1.783.649V36h-9.064v-.661c1.042-.093 1.713-.205 2.016-.339.301-.132.451-.458.451-.978 0-.173-.058-.479-.174-.919a9.874 9.874 0 0 0-.487-1.385l-1.427-3.429h-9.393c-.926 2.332-1.479 3.755-1.659 4.269s-.27.922-.27 1.222c0 .601.244 1.017.73 1.247.301.139.868.242 1.702.312V36h-7.062zm15.35-9.154L22.92 17.03l-4.104 9.816h8.188z"></path></svg>
+        <button
+          class="article-settings-btn btn btn-link"
+          @click="increaseFontSize"
+        >
+          <svg
+            class="article-settings-btn icon-smaller-text"
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+          ><path d="M11.654 36v-.661c.916-.104 1.604-.448 2.062-1.034s1.244-2.191 2.356-4.812L23.499 12h.709l8.881 20.207c.592 1.338 1.063 2.166 1.419 2.482.354.317.948.534 1.783.649V36h-9.064v-.661c1.042-.093 1.713-.205 2.016-.339.301-.132.451-.458.451-.978 0-.173-.058-.479-.174-.919a9.874 9.874 0 0 0-.487-1.385l-1.427-3.429h-9.393c-.926 2.332-1.479 3.755-1.659 4.269s-.27.922-.27 1.222c0 .601.244 1.017.73 1.247.301.139.868.242 1.702.312V36h-7.062zm15.35-9.154L22.92 17.03l-4.104 9.816h8.188z" /></svg>
         </button>
       </div>
-  </div>
+    </div>
   </div>
 </template>
 <script>
@@ -116,6 +220,14 @@ const markTypes = {
 const store = new Store()
 
 export default {
+  directives: {
+    clickOutside: vClickOutside.directive
+  },
+  props: {
+    article: {
+      type: Object
+    }
+  },
   data () {
     return {
       pocket_connected: false,
@@ -136,15 +248,6 @@ export default {
         events: ['click']
       }
     }
-  },
-  props: {
-    article: {
-      type: Object
-    }
-  },
-  mounted () {
-    this.pocket_connected = this.$store.state.Setting.pocket_connected
-    this.instapaper_connected = this.$store.state.Setting.instapaper_connected
   },
   computed: {
     markFavouriteButton () {
@@ -168,8 +271,9 @@ export default {
       }
     }
   },
-  directives: {
-    clickOutside: vClickOutside.directive
+  mounted () {
+    this.pocket_connected = this.$store.state.Setting.pocket_connected
+    this.instapaper_connected = this.$store.state.Setting.instapaper_connected
   },
   methods: {
     resetData () {
@@ -305,7 +409,7 @@ export default {
 
 // Dark color mode
 .app-sunsetmode,
-.app-darkmode {  
+.app-darkmode {
   & .article-toolbar {
     --feather-success-color: green;
   }
@@ -323,7 +427,7 @@ export default {
   height: 41px;
 
   background-color: var(--background-color);
-  
+
   .article-buttons,
   .site-info {
     background: var(--background-color);

@@ -1,35 +1,83 @@
 <template>
   <div class="article-detail">
-    <article-toolbar :article="article" ref="articleToolbar" @openOriginalArticle="openWebArticle"></article-toolbar>
+    <article-toolbar
+      ref="articleToolbar"
+      :article="article"
+      @openOriginalArticle="openWebArticle"
+    />
     <div class="content-wrapper">
-      <perfect-scrollbar v-if="!originalArticle" class="article-contentarea" :class="{ 'px-4': !originalArticle, 'px-0 py-0': originalArticle }" v-bind:style="{ fontFamily: currentFontStyle }">
-        <div class="article-wrap" v-bind:class="{ 'offset-content': fontSettingsOn }" v-if="article !== null && article.content !== null && !emptyState && !originalArticle" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
+      <perfect-scrollbar
+        v-if="!originalArticle"
+        class="article-contentarea"
+        :class="{ 'px-4': !originalArticle, 'px-0 py-0': originalArticle }"
+        :style="{ fontFamily: currentFontStyle }"
+      >
+        <div
+          v-if="article !== null && article.content !== null && !emptyState && !originalArticle"
+          class="article-wrap"
+          :class="{ 'offset-content': fontSettingsOn }"
+          :style="{ fontSize: `${currentFontSize}% !important` }"
+        >
           <h2>
-            <strong>{{ article.title }}</strong><br/>
+            <strong>{{ article.title }}</strong><br>
             <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
           </h2>
-          <div class="article-detail" v-if="article.content" v-html="article.content"></div>
-          <div class="article-detail" v-if="!article.content">
+          <div
+            v-if="article.content"
+            class="article-detail"
+            v-html="article.content"
+          />
+          <div
+            v-if="!article.content"
+            class="article-detail"
+          >
             {{ article.description }}
           </div>
         </div>
       </perfect-scrollbar>
-      <div v-if="originalArticle && !emptyState" class="article-contentarea" :class="{ 'px-4': !originalArticle, 'px-0 py-0': originalArticle }" v-bind:style="{ fontFamily: currentFontStyle }">
-        <div class="web-wrap" v-if="article !== null && article.content !== null && !emptyState && originalArticle" v-bind:style="{ fontSize: `${currentFontSize}% !important` }">
-          <webview id="foo" :src="articleUrl" style="height: 100vh" nodeintegration></webview>
+      <div
+        v-if="originalArticle && !emptyState"
+        class="article-contentarea"
+        :class="{ 'px-4': !originalArticle, 'px-0 py-0': originalArticle }"
+        :style="{ fontFamily: currentFontStyle }"
+      >
+        <div
+          v-if="article !== null && article.content !== null && !emptyState && originalArticle"
+          class="web-wrap"
+          :style="{ fontSize: `${currentFontSize}% !important` }"
+        >
+          <webview
+            id="foo"
+            :src="articleUrl"
+            style="height: 100vh"
+            nodeintegration
+          />
         </div>
       </div>
-      <div class="article-contentarea  px-4" v-if="article !== null && article.content === null && emptyState && !originalArticle">
-        <div class="article-detail d-flex flex-column justify-content-center align-items-center
-">
-          <h3 class="mb-4">Whoops! not able to load content.</h3>
-          <a :href="article.url" class="btn btn-primary btn-outline-primary js-external-link">
+      <div
+        v-if="article !== null && article.content === null && emptyState && !originalArticle"
+        class="article-contentarea  px-4"
+      >
+        <div
+          class="article-detail d-flex flex-column justify-content-center align-items-center
+"
+        >
+          <h3 class="mb-4">
+            Whoops! not able to load content.
+          </h3>
+          <a
+            :href="article.url"
+            class="btn btn-primary btn-outline-primary js-external-link"
+          >
             View it on web
           </a>
         </div>
       </div>
-      <div class="article-contentarea loading-state px-4" v-if="loading">
-        <loader v-if="loading"></loader>
+      <div
+        v-if="loading"
+        class="article-contentarea loading-state px-4"
+      >
+        <loader v-if="loading" />
       </div>
     </div>
   </div>
@@ -38,30 +86,26 @@
 export default {
   props: {
     id: {
-      type: String
+      type: String,
+      default: null
     },
     article: {
-      type: Object
+      type: Object,
+      default: null
     },
     emptyState: {
-      type: Boolean
+      type: Boolean,
+      default: null
     },
     loading: {
-      type: Boolean
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       originalArticle: false,
       articleUrl: null
-    }
-  },
-  watch: {
-    '$route.fullPath': {
-      immediate: true, // Immediate option to call watch handler on first mount
-      handler () {
-        this.resetData()
-      }
     }
   },
   computed: {
@@ -73,6 +117,14 @@ export default {
     },
     fontSettingsOn () {
       return this.$store.state.Article.fontSettingOn
+    }
+  },
+  watch: {
+    '$route.fullPath': {
+      immediate: true, // Immediate option to call watch handler on first mount
+      handler () {
+        this.resetData()
+      }
     }
   },
   methods: {

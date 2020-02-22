@@ -3,21 +3,36 @@
     id="editCategory"
     ref="editCategory"
     title="Rename category"
+    centered
     @shown="initialData"
     @hidden="onHidden"
-    centered
   >
     <div v-if="feed">
       <b-form-group
         id="subscription-group"
         label="Title"
       >
-        <b-form-input type="text" v-model="feed.title"></b-form-input>
+        <b-form-input
+          v-model="feed.title"
+          type="text"
+        />
       </b-form-group>
     </div>
     <div slot="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="hideModal">Cancel</button>
-      <button type="button" class="btn btn-primary" @click="updateCategoryTitle">Update</button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="hideModal"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="updateCategoryTitle"
+      >
+        Update
+      </button>
     </div>
   </b-modal>
 </template>
@@ -28,9 +43,11 @@ export default {
   props: {
     feed: {
       type: Object,
-      default: {
-        title: '',
-        category: null
+      default () {
+        return {
+          title: '',
+          category: null
+        }
       }
     }
   },
