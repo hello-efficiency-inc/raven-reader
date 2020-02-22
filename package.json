@@ -111,7 +111,6 @@
     }
   },
   "dependencies": {
-    "@babel/preset-env": "^7.8.4",
     "@postlight/mercury-parser": "^2.0.0",
     "axios": "^0.19.0",
     "bootstrap-vue": "^2.0.0-rc.11",
@@ -168,6 +167,7 @@
     "@babel/plugin-syntax-import-meta": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/register": "^7.0.0",
+    "@babel/preset-env": "^7.8.4",
     "babel-eslint": "^10.0.0",
     "babel-loader": "^8.0.6",
     "babili-webpack-plugin": "^0.1.2",
