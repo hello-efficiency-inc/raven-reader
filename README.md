@@ -16,25 +16,21 @@
 <a href="https://codeclimate.com/github/mrgodhani/raven-reader/maintainability">
 <img src="https://api.codeclimate.com/v1/badges/b19f2a2aaaeae1f85910/maintainability" />
 </a>
-<a href="https://david-dm.org/mrgodhani/raven-reader" title="dependencies status">
-<img src="https://david-dm.org/mrgodhani/raven-reader/status.svg"/>
+<a href="https://david-dm.org/helloefficiency/raven-reader" title="dependencies status">
+<img src="https://david-dm.org/helloefficiency/raven-reader/status.svg"/>
 </a>
-<a href="https://david-dm.org/mrgodhani/raven-reader?type=dev" title="devDependencies status">
-<img src="https://david-dm.org/mrgodhani/raven-reader/dev-status.svg"/></a>
+<a href="https://david-dm.org/helloefficiency/raven-reader?type=dev" title="devDependencies status">
+<img src="https://david-dm.org/helloefficiency/raven-reader/dev-status.svg"/></a>
 <a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/rss-reader-v2-0/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/12-shield.svg"/></a>
-<a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmrgodhani%2Fraven-reader.svg?type=shield"/></a>
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fhelloefficiency%2Fraven-reader?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhelloefficiency%2Fraven-reader.svg?type=shield"/></a>
 </p>
 
 ## Download
-To download, please visit https://ravenreader.app. Trial free for 7 days and $9.99/year USD after that. If there are any questions please contact us at [welcome@helloefficiency.com](welcome@helloefficiency.com)
+To download, please visit https://ravenreader.app. Trial free for 7 days and $9.99/year USD after that and no credit card needed upfront. If there are any questions please contact us at [welcome@helloefficiency.com](welcome@helloefficiency.com)
 
 ![newscreenshot](/newscreenshot.png)
 ![darkscreenshot](/darkscreenshot.png)
 ![sunsetscreenshot](/sunsetscreenshot.png)
-
-<a href="https://snapcraft.io/raven-reader">
-  <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg" />
-</a>
 
 ## Features
 
@@ -53,23 +49,12 @@ To download, please visit https://ravenreader.app. Trial free for 7 days and $9.
 - [x] Linux support
 - [x] Offline reading
 - [x] Keyboard Shortcuts
-- [x] Inoreader Integration
 - [x] Sidebar count
 - [x] Text size configuration
 - [x] Text font style configuration (Currently has Playfair Display, Muli, Open Sans and Roboto Slab)
 - [x] Supports categorizing of the feeds. 
 - [x] macOS touchbar shortcuts
-
-## Roadmap
-- [ ] Feedbin, Feedly and Inoreader full sync would be available in PRO
-- [x] New brand name and icons
-- [x] Text configuration
-- [ ] Supporting authenticated feeds
-- [ ] Feedly synchronization
-- [ ] Web app
-- [x] Pocket Integration
-- [ ] Moving to web based. Reason: NeDB won't be scalable and handle large datasets? Or look for different local db.
-- [ ] For ongoing support. Soon this would be a paid app with reasonable pricing per month.
+- [x] Integration with read it later apps: Pocket, Instapaper
 
 Please feel free to suggest more ideas to improve this app.
 
