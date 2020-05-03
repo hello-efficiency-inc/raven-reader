@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "standard": {
     "globals": [
       "describe",
@@ -201,7 +201,7 @@
     "eslint-plugin-vue": "^6.2.1",
     "file-loader": "^6.0.0",
     "hoek": "^6.1.2",
-    "html-webpack-plugin": "^4.3.0",
+    "html-webpack-plugin": "^3.2.0",
     "jquery": "^3.5.0",
     "karma": "^5.0.1",
     "karma-chai": "^0.1.0",
