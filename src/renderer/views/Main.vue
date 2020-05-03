@@ -119,50 +119,50 @@
         </h6>
         <ul class="nav flex-column">
           <template
-            v-for="feed in mapFeeds(feeds, categoryItems)"
+            v-for="feeditem in mapFeeds(feeds, categoryItems)"
           >
             <li
-              v-if="!feed.type && feed.category === null"
-              :key="feed.id"
+              v-if="!feeditem.type && feeditem.category === null"
+              :key="feeditem.id"
               class="feed nav-item d-flex justify-content-between align-items-center pr-2"
               mark="feed"
-              :class="{ active: feed.isActive }"
-              @click="setActiveFeedId(feed)"
-              @contextmenu.prevent="openFeedMenu($event, {feed: feed})"
+              :class="{ active: feeditem.isActive }"
+              @click="setActiveFeedId(feeditem)"
+              @contextmenu.prevent="openFeedMenu($event, {feed: feeditem})"
             >
               <router-link
-                v-if="!feed.type && feed.category === null"
+                v-if="!feeditem.type && feeditem.category === null"
                 class="nav-link"
-                :to="`/feed/${feed.id}`"
+                :to="`/feed/${feeditem.id}`"
               >
                 <img
-                  v-if="feed.favicon"
-                  :src="feed.favicon"
+                  v-if="feeditem.favicon"
+                  :src="feeditem.favicon"
                   height="16"
                   width="16"
                   class="mr-1"
                 >
-                {{ feed.title }}
+                {{ feeditem.title }}
               </router-link>
               <div
-                v-if="!feed.type && feed.category === null && getArticlesCount('', feed.id) > 0"
+                v-if="!feeditem.type && feeditem.category === null && getArticlesCount('', feeditem.id) > 0"
                 class="nav-link feed-counter"
               >
-                <span class="item-counter">{{ getArticlesCount('', feed.id) }}</span>
+                <span class="item-counter">{{ getArticlesCount('', feeditem.id) }}</span>
               </div>
             </li>
             <li
-              v-if="feed.type"
-              :key="feed.id"
+              v-if="feeditem.type"
+              :key="feeditem.id"
               class="feed nav-item d-flex align-items-center pr-2"
               mark="category"
-              :class="{ active: feed.isActive }"
-              @click="categoryHandler(feed)"
-              @contextmenu.prevent="openCategoryMenu($event, { category: feed})"
+              :class="{ active: feeditem.isActive }"
+              @click="categoryHandler(feeditem)"
+              @contextmenu.prevent="openCategoryMenu($event, { category: feeditem})"
             >
               <button
-                v-if="feed.type"
-                v-b-toggle="`collapse-${feed.title}`"
+                v-if="feeditem.type"
+                v-b-toggle="`collapse-${feeditem.title}`"
                 class="btn btn-link category-link pr-0"
               >
                 <feather-icon name="chevron-right" />
@@ -171,20 +171,20 @@
                 href="#"
                 class="nav-link pl-1"
                 replace
-              >{{ feed.title }}</a>
+              >{{ feeditem.title }}</a>
               <div
-                v-if="getArticlesCount('category', feed.title) > 0"
+                v-if="getArticlesCount('category', feeditem.title) > 0"
                 class="nav-link feed-counter"
               >
-                <span class="item-counter">{{ getArticlesCount('category', feed.title) }}</span>
+                <span class="item-counter">{{ getArticlesCount('category', feeditem.title) }}</span>
               </div>
             </li>
             <b-collapse
-              v-if="feed.type"
-              :id="`collapse-${feed.title}`"
-              :key="`collapse-${feed.title}`"
+              v-if="feeditem.type"
+              :id="`collapse-${feeditem.title}`"
+              :key="`collapse-${feeditem.title}`"
             >
-              <template v-for="categoryfeed in categoryFeeds(feeds, feed.title)">
+              <template v-for="categoryfeed in categoryFeeds(feeds, feeditem.title)">
                 <li
                   :key="categoryfeed.id"
                   class="feed nav-item d-flex justify-content-between align-items-center pr-2"

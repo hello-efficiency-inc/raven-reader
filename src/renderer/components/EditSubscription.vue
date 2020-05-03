@@ -67,7 +67,8 @@ import uuid from 'uuid-by-string'
 export default {
   props: {
     article: {
-      type: Object
+      type: Object,
+      default: null
     }
   },
   data () {

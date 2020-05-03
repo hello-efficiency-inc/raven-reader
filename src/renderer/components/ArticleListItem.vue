@@ -41,7 +41,8 @@ const markTypes = {
 export default {
   props: {
     article: {
-      type: Object
+      type: Object,
+      default: null
     }
   },
   computed: {

@@ -92,7 +92,8 @@ export default {
       default: 'all'
     },
     feed: {
-      type: String
+      type: String,
+      default: null
     }
   },
   data () {
@@ -102,20 +103,20 @@ export default {
       syncState: false
     }
   },
-  watch: {
-    search (val) {
-      this.$store.dispatch('changeType', 'search')
-      this.$store.dispatch('setSearch', val)
-    },
-    filteredArticles: 'itemsChange'
-  },
-  computed: {
+    computed: {
     ...mapGetters([
       'filteredArticles'
     ]),
     activeArticleId () {
       return this.$store.getters.activeArticleId
     }
+  },
+  watch: {
+    search (val) {
+      this.$store.dispatch('changeType', 'search')
+      this.$store.dispatch('setSearch', val)
+    },
+    filteredArticles: 'itemsChange'
   },
   methods: {
     mapArticles (articles) {
