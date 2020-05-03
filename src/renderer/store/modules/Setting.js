@@ -3,6 +3,7 @@ import Store from 'electron-store'
 const state = {
   pocket_connected: false,
   instapaper_connected: false,
+  keepRead: 604800,
   cronSettings: '*/5 * * * *',
   themeOption: null,
   oldestArticles: false,
@@ -22,6 +23,7 @@ const mutations = {
     state.themeOption = store.get('settings.theme_option')
     state.oldestArticles = store.get('settings.oldestArticles')
     state.proxy = store.get('settings.proxy')
+    state.keepRead = store.get('settings.keepread')
     if (store.get('pocket_token')) {
       state.pocket_connected = true
     }
@@ -31,6 +33,9 @@ const mutations = {
   },
   CHECK_OFFLINE (state) {
     state.offline = !navigator.onLine
+  },
+  SET_KEEP_READ (state, data) {
+    state.keepRead = data > 1 ? data * 604800 : 604800
   },
   SET_CRONJOB (state, data) {
     state.cronSettings = data
@@ -64,6 +69,10 @@ const mutations = {
 const actions = {
   loadSettings ({ commit }) {
     commit('LOAD_SETTINGS')
+  },
+  setKeepRead ({ commit }, data) {
+    store.set('settings.keepread', data > 1 ? data * 604800 : 604800)
+    commit('SET_KEEP_READ', data)
   },
   setCronJob ({ commit }, data) {
     store.set('settings.cronjob', data)

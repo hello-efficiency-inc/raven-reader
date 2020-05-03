@@ -30,17 +30,20 @@ export default class {
 
     database.article = new DataStore({
       filename: this.useDataDir.path(`${dirName}/${db.article}`),
-      autoload: true
+      autoload: true,
+      timestampData: true
     })
 
     database.feed = new DataStore({
       filename: this.useDataDir.path(`${dirName}/${db.feed}`),
-      autoload: true
+      autoload: true,
+      timestampData: true
     })
 
     database.category = new DataStore({
       filename: this.useDataDir.path(`${dirName}/${db.category}`),
-      autoload: true
+      autoload: true,
+      timestampData: true
     })
 
     return database

@@ -6,6 +6,14 @@
     hide-footer
     centered
   >
+    <b-form-group label="Keep read RSS items">
+      <b-form-select
+        v-model="keepread"
+        :options="keepread_options"
+        size="sm"
+        @change="saveKeepRead"
+      />
+    </b-form-group>
     <b-form-group label="Set refresh interval for news feed">
       <b-form-select
         v-model="cronjob"
@@ -63,10 +71,23 @@
 export default {
   data () {
     return {
+      keepread: '1 week',
       cronjob: null,
       theme_option: null,
       darkMode: 'off',
       oldestArticles: 'off',
+      keepread_options: [
+        { value: 1, text: '1 week' },
+        { value: 2, text: '2 weeks' },
+        { value: 3, text: '3 weeks' },
+        { value: 4, text: '4 weeks' },
+        { value: 5, text: '5 weeks' },
+        { value: 6, text: '6 weeks' },
+        { value: 7, text: '7 weeks' },
+        { value: 8, text: '8 weeks' },
+        { value: 9, text: '9 weeks' },
+        { value: 10, text: '10 weeks' }
+      ],
       cron_options: [
         { value: null, text: 'Please select an option' },
         { value: '*/5 * * * *', text: 'Every 5 minutes' },
@@ -100,6 +121,7 @@ export default {
   },
   mounted () {
     this.$store.dispatch('loadSettings')
+    this.keepread = this.$store.state.Setting.keepRead
     this.cronjob = this.$store.state.Setting.cronSettings
     this.theme_option = this.$store.state.Setting.themeOption
     this.setTheme(this.$store.state.Setting.themeOption)
@@ -133,6 +155,15 @@ export default {
       } else {
         el.classList.remove(className)
       }
+    },
+    saveKeepRead (keepread) {
+      this.$store.dispatch('setKeepRead', keepread)
+      this.$toasted.show('Settings for keeping read items successfully saved.', {
+        theme: 'outline',
+        position: 'top-center',
+        duration: 3000
+      })
+      this.hideModal()
     },
     saveCronjob (cronValue) {
       this.$store.dispatch('setCronJob', cronValue)

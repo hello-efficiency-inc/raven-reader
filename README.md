@@ -24,6 +24,14 @@
 ## Download
 To download, please visit https://ravenreader.app. Trial free for 7 days and $9.99/year USD after that and no credit card needed upfront. If there are any questions please contact us at [welcome@helloefficiency.com](welcome@helloefficiency.com)
 
+## Install via Homebrew (macOS)
+To use Homebrew-Cask you just need to have [Homebrew](https://brew.sh/) installed.
+
+```bash
+brew cask install raven-reader
+```
+
+
 ![newscreenshot](/newscreenshot.png)
 ![darkscreenshot](/darkscreenshot.png)
 ![sunsetscreenshot](/sunsetscreenshot.png)

@@ -1,4 +1,7 @@
 import DB from '../db'
+import ElectronStore from 'electron-store'
+
+const electronStore = new ElectronStore()
 
 const db = new DB()
 const connect = db.init()
@@ -182,12 +185,22 @@ export default {
     })
   },
   markRead (id) {
+    article.ensureIndex({
+      fieldName: 'createdAt',
+      expireAfterSeconds: electronStore.get('settings.keepread', 604800)
+    })
     article.update({ _id: id }, { $set: { read: true } }, (err, num) => {
       if (err) {}
     })
   },
   markUnread (id) {
+    article.removeIndex('createdAt')
     article.update({ _id: id }, { $set: { read: false } }, (err, num) => {
+      if (err) {}
+    })
+  },
+  getReadItems (value, cb) {
+    article.remove({ read: true, createdAt: { $lte: value } }, { multi: true }, (err, num) => {
       if (err) {}
     })
   }
