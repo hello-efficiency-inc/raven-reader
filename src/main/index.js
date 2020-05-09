@@ -176,16 +176,6 @@ darkMode.onChange(() => {
   }
 })
 
-ipcMain.on('license-added', (event, status) => {
-  const menuItemRegister = menu.getMenuItemById('register')
-  const menuItemTrial = menu.getMenuItemById('trial')
-  const checkUpdate = menu.getMenuItemById('checkupdate')
-
-  menuItemRegister.visible = false
-  menuItemTrial.visible = false
-  checkUpdate.visible = true
-})
-
 ipcMain.on('article-selected', (event, status) => {
   const menuItemViewBrowser = menu.getMenuItemById('view-browser')
   const menuItemToggleFavourite = menu.getMenuItemById('toggle-favourite')

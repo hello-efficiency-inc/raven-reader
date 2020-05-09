@@ -203,6 +203,9 @@ const mutations = {
       state.articles[index].read = true
       db.markRead(state.articles[index]._id)
     }
+  },
+  REMOVE_OLD_READ (state) {
+    db.removeOldReadItems(dayjs().valueOf(), dayjs().subtract(1, 'week').valueOf())
   }
 }
 
@@ -302,6 +305,10 @@ const actions = {
     commit
   }, id) {
     commit('MARK_FEED_READ', id)
+  },
+  async removeOldReadItems ({ dispatch, commit }) {
+    commit('REMOVE_OLD_READ')
+    await dispatch('loadArticles')
   }
 }
 

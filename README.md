@@ -22,7 +22,7 @@
 </p>
 
 ## Download
-To download, please visit https://ravenreader.app. Trial free for 7 days and $9.99/year USD after that and no credit card needed upfront. If there are any questions please contact us at [welcome@helloefficiency.com](welcome@helloefficiency.com)
+To download, please visit https://ravenreader.app.
 
 ## Install via Homebrew (macOS)
 To use Homebrew-Cask you just need to have [Homebrew](https://brew.sh/) installed.
@@ -99,4 +99,4 @@ For more documentation please follow link from [Electron Vue](https://simulatedg
 
 
 ## License
-[LGPLv3](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)
+[MIT](https://github.com/mrgodhani/rss-reader/blob/master/LICENSE)

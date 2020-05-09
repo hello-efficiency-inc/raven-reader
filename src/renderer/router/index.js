@@ -31,11 +31,6 @@ export default new Router({
       component: require('@/views/Shortcuts').default
     },
     {
-      path: '/license',
-      name: 'license',
-      component: require('@/views/License').default
-    },
-    {
       path: '/:type',
       name: 'type-page',
       component: require('@/views/Main').default

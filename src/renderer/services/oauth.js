@@ -1,11 +1,8 @@
-import { INOREADER_CLIENT_ID, INOREADER_CLIENT_SECRET, POCKET_MAC_KEY, POCKET_WINDOWS_KEY, POCKET_LINUX_KEY } from '../config'
+import { POCKET_MAC_KEY, POCKET_WINDOWS_KEY, POCKET_LINUX_KEY } from '../config'
 import qs from 'qs'
-import axios from 'axios'
 import os from 'os'
 
 const POCKET_AUTHORIZATION_URL = 'https://getpocket.com/v3/oauth/request'
-const INOREADER_AUTHORIZATION_URL = 'https://www.inoreader.com/oauth2/auth'
-const INOREADER_TOKEN_URL = 'https://www.inoreader.com/oauth2/token'
 const cryptObj = window.crypto
 
 export default {
@@ -43,33 +40,5 @@ export default {
       state: this.guid()
     }
     return `${authUrl}?${qs.stringify(urlParams)}`
-  },
-  buildAuthUrl (provider) {
-    const authUrl = INOREADER_AUTHORIZATION_URL
-    const urlParams = {
-      response_type: 'code',
-      redirect_uri: 'https://127.0.0.1/',
-      client_id: INOREADER_CLIENT_ID,
-      client_secret: INOREADER_CLIENT_SECRET,
-      state: this.guid(),
-      scope: 'read'
-    }
-    return `${authUrl}?${qs.stringify(urlParams)}`
-  },
-  async fetchToken (code) {
-    const tokenUrl = INOREADER_TOKEN_URL
-    const response = await axios.post(tokenUrl, qs.stringify({
-      code,
-      client_id: INOREADER_CLIENT_ID,
-      client_secret: INOREADER_CLIENT_SECRET,
-      redirect_uri: 'https://127.0.0.1/',
-      grant_type: 'authorization_code'
-    }), {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    })
-    return response.data
   }
 }

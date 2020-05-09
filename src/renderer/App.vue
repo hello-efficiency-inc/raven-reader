@@ -5,12 +5,7 @@
 </template>
 <script>
 export default {
-  name: 'RssReader',
-  mounted () {
-    if (!this.$electronstore.get('license')) {
-      this.$router.push('/license').catch(err => { if (err) {} })
-    }
-  }
+  name: 'RssReader'
 }
 </script>
 

@@ -313,6 +313,7 @@ export default {
     this.$store.dispatch('loadFeeds')
     this.$store.dispatch('loadArticles')
     this.$store.dispatch('checkOffline')
+    this.$store.dispatch('removeOldReadItems')
     if (self.$electronstore.get('inoreader_token')) {
       helper.syncInoReader()
     }
@@ -352,7 +353,6 @@ export default {
         const index = _.findIndex(self.$store.getters.filteredArticles, {
           _id: self.$route.params.id
         })
-        console.log(index)
         if (index > 0) {
           const prevArticle = self.$store.getters.filteredArticles[index - 1]
           self.$router.push({
@@ -411,10 +411,6 @@ export default {
       self.$refs.markallread.click()
     })
 
-    this.$electron.ipcRenderer.on('License', (events, args) => {
-      this.$router.push({ path: '/license', query: { check: 'false' } })
-    })
-
     this.$electron.ipcRenderer.on('View in browser', (events, args) => {
       if (self.$route.params.id) {
         if (self.$refs.articleDetail) {
@@ -425,6 +421,11 @@ export default {
 
     this.$electron.ipcRenderer.on('onlinestatus', (event, status) => {
       self.$store.dispatch('setOffline', status)
+    })
+
+    scheduler.scheduleJob('*/5 * * * *', () => {
+      log.info('Pruning old read items')
+      self.$store.dispatch('removeOldReadItems')
     })
 
     // Feed Crawling

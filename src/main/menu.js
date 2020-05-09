@@ -157,8 +157,6 @@ export default function createMenu (mainWindow) {
   ]
 
   const version = app.getVersion()
-  const trialLeft = store.get('trial_expire') ? dayjs(store.get('trial_expire')).diff(dayjs(), 'day') : 6
-  const days = trialLeft === 1 ? 'day' : 'days'
 
   if (process.platform === 'win32' || process.platform === 'linux') {
     template.unshift({
@@ -168,23 +166,8 @@ export default function createMenu (mainWindow) {
         enabled: false
       },
       {
-        label: `Trial expires in ${trialLeft} ${days}`,
-        id: 'trial',
-        visible: !store.has('license_key'),
-        enabled: false
-      },
-      {
-        label: 'Register License',
-        visible: !store.has('license_key'),
-        id: 'register',
-        click: function () {
-          mainWindow.webContents.send('License')
-        }
-      },
-      {
         label: 'Check for update',
         id: 'checkupdate',
-        visible: store.has('license_key'),
         click: function (menuItem, browserWindow, event) {
           checkForUpdates(menuItem, browserWindow, event)
         }
@@ -228,26 +211,11 @@ export default function createMenu (mainWindow) {
         enabled: false
       },
       {
-        label: `Trial expires in ${trialLeft} ${days}`,
-        id: 'trial',
-        visible: !store.has('license_key'),
-        enabled: false
-      },
-      {
-        label: 'Register License',
-        id: 'register',
-        visible: !store.has('license_key'),
-        click: function () {
-          mainWindow.webContents.send('License')
-        }
-      },
-      {
         type: 'separator'
       },
       {
         label: 'Check for update',
         id: 'checkupdate',
-        visible: store.has('license_key'),
         click: function (menuItem, browserWindow, event) {
           checkForUpdates(menuItem, browserWindow, event)
         }
