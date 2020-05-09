@@ -3,7 +3,7 @@ import Store from 'electron-store'
 const state = {
   pocket_connected: false,
   instapaper_connected: false,
-  keepRead: 604800,
+  keepRead: 1,
   cronSettings: '*/5 * * * *',
   themeOption: null,
   oldestArticles: false,
@@ -19,12 +19,12 @@ const store = new Store()
 
 const mutations = {
   LOAD_SETTINGS (state) {
-    state.cronSettings = store.get('settings.cronjob')
-    state.themeOption = store.get('settings.theme_option')
-    state.oldestArticles = store.get('settings.oldestArticles')
-    state.proxy = store.get('settings.proxy')
-    state.keepRead = store.get('settings.keepread')
-    if (store.get('pocket_token')) {
+    state.cronSettings = store.get('settings.cronjob', '*/5 * * * *')
+    state.themeOption = store.get('settings.theme_option', null)
+    state.oldestArticles = store.get('settings.oldestArticles', false)
+    state.proxy = store.get('settings.proxy', { http: '', https: '', bypass: '' })
+    state.keepRead = store.get('settings.keepread', 1)
+    if (store.has('pocket_token')) {
       state.pocket_connected = true
     }
     if (store.has('instapaper_creds')) {
@@ -35,7 +35,7 @@ const mutations = {
     state.offline = !navigator.onLine
   },
   SET_KEEP_READ (state, data) {
-    state.keepRead = data > 1 ? data * 604800 : 604800
+    state.keepRead = data
   },
   SET_CRONJOB (state, data) {
     state.cronSettings = data
@@ -71,7 +71,7 @@ const actions = {
     commit('LOAD_SETTINGS')
   },
   setKeepRead ({ commit }, data) {
-    store.set('settings.keepread', data > 1 ? data * 604800 : 604800)
+    store.set('settings.keepread', data)
     commit('SET_KEEP_READ', data)
   },
   setCronJob ({ commit }, data) {

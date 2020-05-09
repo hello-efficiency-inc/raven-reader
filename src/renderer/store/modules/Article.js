@@ -71,7 +71,6 @@ const mutations = {
       item.feed_title = _.truncate(item.feed_title, { length: 20 })
       item.title = _.truncate(item.title, { length: 50 })
       item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
-      item.pubDate = dayjs(item.pubDate).unix()
       if (!('offline' in item)) {
         item.offline = false
       }
@@ -205,7 +204,8 @@ const mutations = {
     }
   },
   REMOVE_OLD_READ (state) {
-    db.removeOldReadItems(dayjs().valueOf(), dayjs().subtract(1, 'week').valueOf())
+    const week = store.get('settings.keepread', 1)
+    db.removeOldReadItems(dayjs().subtract(week, 'week').unix())
   }
 }
 

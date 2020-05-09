@@ -5,29 +5,10 @@ import opmlGenerator from 'opml-generator'
 import async from 'async'
 import db from './db.js'
 import notifier from 'node-notifier'
+import dayjs from 'dayjs'
 import _ from 'lodash'
-import axios from 'axios'
-import ElectronStore from 'electron-store'
-
-const electronStore = new ElectronStore()
 
 export default {
-  async syncInoReader () {
-    const token = electronStore.get('inoreader_token')
-    if (token) {
-      const subscriptionLists = await axios.get('https://www.inoreader.com/reader/api/0/subscription/list', {
-        headers: {
-          Authorization: `Bearer ${JSON.parse(token).access_token}`
-        }
-      })
-      const rssFeedUrls = subscriptionLists.data.subscriptions.map((item) => {
-        item.feedUrl = item.url
-        return item
-      })
-      this.subscribe(rssFeedUrls, null, false)
-      return true
-    }
-  },
   exportOpml () {
     const header = {
       title: 'RSS Reader',
@@ -60,6 +41,7 @@ export default {
         post.category = !refresh ? category : task.feed.meta.category
         post.link = post.link ? post.link : task.feed.meta.xmlurl
         post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
+        post.publishUnix = dayjs(post.pubDate).unix()
         const postItem = _.omit(post, ['creator', 'dc:creator'])
         posts.push(postItem)
       })

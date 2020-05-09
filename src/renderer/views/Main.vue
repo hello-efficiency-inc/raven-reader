@@ -314,9 +314,6 @@ export default {
     this.$store.dispatch('loadArticles')
     this.$store.dispatch('checkOffline')
     this.$store.dispatch('removeOldReadItems')
-    if (self.$electronstore.get('inoreader_token')) {
-      helper.syncInoReader()
-    }
 
     this.$electron.ipcRenderer.on('Add subscription', (event, args) => {
       if (self.$refs.subscribetoolbar) {
@@ -423,39 +420,54 @@ export default {
       self.$store.dispatch('setOffline', status)
     })
 
-    scheduler.scheduleJob('*/5 * * * *', () => {
-      log.info('Pruning old read items')
-      self.$store.dispatch('removeOldReadItems')
+    this.runPruneCronJob()
+    this.runArticleCronJob()
+
+    this.$electron.remote.powerMonitor.on('resume', () => {
+        log.info('Power resumed')
+        this.runPruneCronJob().reschedule()
+        this.runPruneCronJob().reschedule()
     })
 
-    // Feed Crawling
-    const job = scheduler.scheduleJob(
-      self.$store.state.Setting.cronSettings,
-      () => {
-        const feeds = self.$store.state.Feed.feeds
-        if (feeds.length === 0) {
-          log.info('No feeds to process')
-        } else {
-          this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
-          log.info(`Processing ${feeds.length} feeds`)
-          helper.subscribe(feeds, null, null, true, false)
-          self.$store.dispatch('loadArticles')
-        }
-      }
-    )
-
     if (this.$store.state.Setting.offline) {
-      job.reschedule()
+        this.runPruneCronJob().reschedule()
+        this.runPruneCronJob().reschedule()
     }
-    // On delete stop Crawler Job
+      // On delete stop Crawler Job
     this.$on('delete', msg => {
-      if (msg === 'yes') {
-        log.info('Job is cancelled')
-        job.reschedule()
-      }
+        if (msg === 'yes') {
+          log.info('Job is cancelled')
+          this.runPruneCronJob().reschedule()
+          this.runPruneCronJob().reschedule()
+        }
     })
   },
   methods: {
+    runPruneCronJob () {
+      const self = this
+      return scheduler.scheduleJob('*/5 * * * *', () => {
+        log.info('Pruning old read items')
+        self.$store.dispatch('removeOldReadItems')
+      })
+    },
+    runArticleCronJob () {
+      const self = this
+      // Feed Crawling
+      return scheduler.scheduleJob(
+        self.$store.state.Setting.cronSettings,
+        () => {
+          const feeds = self.$store.state.Feed.feeds
+          if (feeds.length === 0) {
+            log.info('No feeds to process')
+          } else {
+            this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
+            log.info(`Processing ${feeds.length} feeds`)
+            helper.subscribe(feeds, null, null, true, false)
+            self.$store.dispatch('loadArticles')
+          }
+        }
+      )
+    },
     onCtxOpen (locals) {
       this.feedMenuData = locals.feed
     },

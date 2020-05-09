@@ -1,11 +1,7 @@
 import { app, Menu } from 'electron'
-import Store from 'electron-store'
 import {
   checkForUpdates
 } from './updater.js'
-import dayjs from 'dayjs'
-
-const store = new Store()
 var articleSelected = false
 
 export default function createMenu (mainWindow) {

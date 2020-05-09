@@ -192,12 +192,21 @@ export default {
       if (err) {}
     })
   },
-  removeOldReadItems (current, week, cb) {
-    article.remove({ read: true, createdAt: { $lte: current, $gte: week } }, { multi: true }, (err, num) => {
-      if (err) {
-        log.error(err)
-      }
-      log.info(num)
+  removeOldReadItems (week, cb) {
+    article.remove({
+        read: true,
+        publishUnix: {
+          $lte: week
+        }
+      },
+      {
+        multi: true
+      },
+      (err, num) => {
+        if (err) {
+          log.error(err)
+        }
+        log.info(num)
     })
   }
 }

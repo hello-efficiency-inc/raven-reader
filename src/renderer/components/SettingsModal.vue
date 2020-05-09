@@ -4,6 +4,7 @@
     ref="settings"
     title="Settings"
     hide-footer
+    scrollable
     centered
   >
     <b-form-group label="Keep read RSS items">
@@ -71,7 +72,7 @@
 export default {
   data () {
     return {
-      keepread: '1 week',
+      keepread: 1,
       cronjob: null,
       theme_option: null,
       darkMode: 'off',

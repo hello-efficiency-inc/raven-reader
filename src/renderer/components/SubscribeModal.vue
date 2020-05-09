@@ -112,7 +112,7 @@ import normalizeUrl from 'normalize-url'
 import he from 'he'
 import helper from '../services/helpers'
 import uuid from 'uuid-by-string'
-import axios from 'axios'
+import got from 'got'
 
 export default {
   name: 'AddfeedModal',
@@ -142,8 +142,18 @@ export default {
       this.showAddCat = !this.showAddCat
     },
     async isContentXML (link) {
-      const content = await axios.get(link)
-      return content.headers['content-type'] === 'application/xml'
+      const validHeaders = [
+        'application/xml',
+        'text/xml;charset=UTF-8',
+        'text/xml',
+        'text/rss+xml',
+        'application/rss+xml',
+        'application/rdf+xml',
+        'application/atom+xml'
+      ]
+      const content = await got(link)
+      console.log(content.headers['content-type'])
+      return validHeaders.includes(content.headers['content-type'])
     },
     async fetchFeed () {
       const self = this
@@ -152,6 +162,7 @@ export default {
         if (this.feed_url) {
           try {
             const isXML = await this.isContentXML(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }))
+            console.log(isXML)
             finder(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }), { feedParserOptions: { feedurl: this.feed_url } }).then(
               res => {
                 this.loading = false

@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "standard": {
     "globals": [
       "describe",
@@ -189,7 +189,7 @@
     "electron-devtools-installer": "^3.0.0",
     "electron-log": "^4.1.0",
     "electron-notarize": "^0.3.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.0.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^4.0.0",
@@ -207,7 +207,7 @@
     "karma-chai": "^0.1.0",
     "karma-coverage": "^2.0.1",
     "karma-electron": "^6.0.0",
-    "karma-mocha": "^1.3.0",
+    "karma-mocha": "^2.0.1",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "^0.0.32",
     "karma-webpack": "^4.0.2",
