@@ -71,10 +71,13 @@ export async function parseFeedParser (stream) {
  */
 export function ParseFeedPost (feed) {
   feed.posts.map((item) => {
+    const podcast = checkIsPodCast(item)
     item.favourite = false
     item.read = false
     item.offline = false
     item.favicon = null
+    item.podcast = podcast
+    item.played = false
     item.feed_title = feed.meta.title
     item.feed_url = feed.meta.xmlurl
     item.feed_link = feed.meta.link
@@ -84,4 +87,9 @@ export function ParseFeedPost (feed) {
     return item
   })
   return feed
+}
+
+function checkIsPodCast (post) {
+  return typeof post.enclosure !== 'undefined' &&
+  post.enclosure.length && post.enclosure.type.indexOf('audio') !== -1
 }

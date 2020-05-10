@@ -144,5 +144,9 @@ export default {
     background-color: var(--active-item-background-color);
     border-radius: 0.3rem;
   }
+
+  h6 {
+    line-height: 1.5;
+  }
 }
 </style>

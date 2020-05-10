@@ -77,7 +77,10 @@
             />
           </button>
         </div>
-        <div class="wrap">
+        <div
+          v-if="!article.podcast"
+          class="wrap"
+        >
           <button
             ref="saveoffline"
             v-b-tooltip.hover
@@ -374,12 +377,14 @@ export default {
       if (this.article.read) {
         this.$store.dispatch('markAction', {
           type: markTypes.unread,
-          id: this.$route.params.id
+          id: this.$route.params.id,
+          podcast: this.article.podcast
         })
       } else {
         this.$store.dispatch('markAction', {
           type: markTypes.read,
-          id: this.$route.params.id
+          id: this.$route.params.id,
+          podcast: this.article.podcast
         })
       }
       this.article.read = !this.article.read

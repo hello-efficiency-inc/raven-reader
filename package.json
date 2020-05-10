@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "standard": {
     "globals": [
       "describe",
@@ -16,7 +16,7 @@
   },
   "author": "Hello Efficiency Inc <welcome@helloefficiency.com>",
   "description": "Simple Desktop RSS Reader made using VueJS",
-  "license": "LGPL-3.0",
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -143,6 +143,7 @@
     "uuid-by-string": "^3.0.2",
     "v-click-outside": "^3.0.0",
     "v8-compile-cache": "^2.1.0",
+    "vue-aplayer": "^1.6.1",
     "vue-social-sharing": "^2.4.3",
     "vue-toasted": "^1.1.28",
     "vue2-perfect-scrollbar": "^1.2.0"

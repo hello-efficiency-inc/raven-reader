@@ -15,3 +15,4 @@ coverage
 windows_codesign.pfx
 windows2020.pfx
 .env
+*.log

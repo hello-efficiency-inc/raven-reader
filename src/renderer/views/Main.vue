@@ -87,6 +87,26 @@
           <li class="nav-item">
             <router-link
               class="nav-link feed-mix-link"
+              to="/read"
+              active-class="active"
+            >
+              <feed-mix
+                feed-id="recentlyPlayed"
+                mark="recentlyPlayed"
+              >
+                <feather-icon
+                  name="play-circle"
+                />Recently Played
+                <span
+                  v-if="getArticlesCount('played', '') > 0"
+                  class="items-counter"
+                >{{ getArticlesCount('played', '') }}</span>
+              </feed-mix>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link
+              class="nav-link feed-mix-link"
               to="/saved"
               active-class="active"
             >
@@ -537,6 +557,8 @@ export default {
       }
       if (type === 'read') {
         return articles.filter(article => article.read).length
+      } else if (type === 'played') {
+        return articles.filter(article => article.podcast && article.played).length
       } else if (type === 'unread') {
         return articles.filter(article => !article.read).length
       } else if (type === 'favourites') {
@@ -608,27 +630,31 @@ export default {
       const self = this
       self.empty = false
       const $ = cheerio.load(data.content)
-      $('a').addClass('js-external-link')
-      $('img').addClass('img-fluid')
-      $('iframe').parent().addClass('embed-responsive embed-responsive-16by9')
-      data.content = $.text().trim() === '' ? article.description : $.html()
-      data.date_published = data.date_published
-        ? dayjs(data.date_published).format('MMMM D, YYYY')
-        : null
-      data.favicon = article.favicon
-      data.sitetitle = _.truncate(article.feed_title, 20)
-      data.feed_id = article.feed_id
-      data.category = article.category
-      data.feed_url = article.feed_url
-      data.feed_link = article.feed_link
-      data._id = article._id
-      data.link = article.link
-      data.favourite = article.favourite
-      data.read = article.read
-      data.offline = article.offline
-      data.readtime = data.content ? stat(data.content).text : 0
-      self.articleData = data
-      self.loading = false
+        $('a').addClass('js-external-link')
+        $('img').addClass('img-fluid')
+        $('iframe').parent().addClass('embed-responsive embed-responsive-16by9')
+        data.content = $.text().trim() === '' ? article.description : $.html()
+        if (article.podcast) {
+          data.author = article.itunes.author
+          data.itunes.image = article.itunes.image ? article.itunes.image : article.favicon
+        }
+        data.date_published = data.date_published
+          ? dayjs(data.date_published).format('MMMM D, YYYY')
+          : null
+        data.favicon = article.favicon
+        data.sitetitle = _.truncate(article.feed_title, 20)
+        data.feed_id = article.feed_id
+        data.category = article.category
+        data.feed_url = article.feed_url
+        data.feed_link = article.feed_link
+        data._id = article._id
+        data.link = article.link
+        data.favourite = article.favourite
+        data.read = article.read
+        data.offline = article.offline
+        data.readtime = data.content && !data.podcast ? stat(data.content).text : ''
+        self.articleData = data
+        self.loading = false
     },
     unreadChange () {
       // unread changed, sort feeds by unread count
@@ -645,14 +671,15 @@ export default {
     fetchData () {
       const self = this
       if (this.$route.params.id) {
-        this.$store.dispatch('markAction', {
-          type: 'READ',
-          id: this.$route.params.id
-        })
         self.articleData = null
         self.loading = true
         db.fetchArticle(this.$route.params.id, async function (article) {
           let data
+          self.$store.dispatch('markAction', {
+            type: 'READ',
+            id: self.$route.params.id,
+            podcast: article.podcast
+          })
           if (self.$store.state.Setting.offline) {
             data = await cacheService.getCachedArticleData(
               article._id,
@@ -660,22 +687,31 @@ export default {
             )
           } else {
             try {
-              data = await parseArticle(article.link)
+              if (!article.podcast) {
+                data = await parseArticle(article.link)
+                if (self.$store.state.Setting.offline && data) {
+                  self.prepareArticleData(data, article)
+                } else if (!self.$store.state.Setting.offline && data) {
+                  self.prepareArticleData(data, article)
+                } else {
+                  article.content = null
+                  article.url = article.link
+                  self.articleData = article
+                  self.empty = true
+                  self.loading = false
+                }
+              } else {
+                self.prepareArticleData(article, article)
+              }
             } catch (e) {
               console.log(e)
+              console.log('EMPTY')
+              article.content = null
+              article.url = article.link
+              self.articleData = article
+              self.empty = true
+              self.loading = false
             }
-          }
-          if (self.$store.state.Setting.offline && data) {
-            self.prepareArticleData(data, article)
-          } else if (!self.$store.state.Setting.offline && data) {
-            self.prepareArticleData(data, article)
-          } else {
-            console.log('EMPTY')
-            article.content = null
-            article.url = article.link
-            self.articleData = article
-            self.empty = true
-            self.loading = false
           }
         })
       }

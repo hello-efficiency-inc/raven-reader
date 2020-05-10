@@ -182,20 +182,58 @@ export default {
       if (err) {}
     })
   },
-  markRead (id) {
-    article.update({ _id: id }, { $set: { read: true } }, (err, num) => {
-      if (err) {}
-    })
+  markRead (id, podcast) {
+    if (podcast) {
+      article.update({
+        _id: id
+      }, {
+        $set: {
+          read: true,
+          played: true
+        }
+      }, (err, num) => {
+        if (err) {}
+      })
+    } else {
+      article.update({
+        _id: id
+      }, {
+        $set: {
+          read: true
+        }
+      }, (err, num) => {
+        if (err) {}
+      })
+    }
   },
-  markUnread (id) {
-    article.update({ _id: id }, { $set: { read: false } }, (err, num) => {
-      if (err) {}
-    })
+  markUnread (id, podcast) {
+    if (podcast) {
+      article.update({
+        _id: id
+      }, {
+        $set: {
+          read: false,
+          played: false
+        }
+      }, (err, num) => {
+        if (err) {}
+      })
+    } else {
+      article.update({
+        _id: id
+      }, {
+        $set: {
+          read: false
+        }
+      }, (err, num) => {
+        if (err) {}
+      })
+    }
   },
   removeOldReadItems (week, cb) {
     article.remove({
         read: true,
-        publishUnix: {
+        createdAt: {
           $lte: week
         }
       },

@@ -59,6 +59,7 @@ brew cask install raven-reader
 - [x] Supports categorizing of the feeds. 
 - [x] macOS touchbar shortcuts
 - [x] Integration with read it later apps: Pocket, Instapaper
+- [x] Podcast support. Subscribe to podcast rss feed and listen within app.
 
 Please feel free to suggest more ideas to improve this app.
 

@@ -2,7 +2,6 @@ import _ from 'lodash'
 
 export default {
   async getCachedArticleData (id, url) {
-    console.log(url)
     const articleRequest = new Request(url, {
       mode: 'no-cors',
       headers: {

@@ -144,7 +144,10 @@ export default {
     async isContentXML (link) {
       const validHeaders = [
         'application/xml',
+        'application/xml; charset=utf-8',
+        'application/rss+xml; charset=utf-8',
         'text/xml;charset=UTF-8',
+        'text/rss+xml;charset=UTF-8',
         'text/xml',
         'text/rss+xml',
         'application/rss+xml',

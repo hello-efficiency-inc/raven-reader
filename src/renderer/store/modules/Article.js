@@ -25,6 +25,7 @@ const store = new Store()
 const filters = {
   search: (articles, search) => articles.filter(article => article.title.match(search)),
   unread: articles => articles.filter(article => !article.read),
+  played: articles => articles.filter(article => article.podcast && article.played),
   read: articles => articles.filter(article => article.read),
   favourites: articles => articles.filter(article => article.favourite),
   feed: (articles, feed) => articles.filter(article => article.feed_id === feed),
@@ -34,13 +35,12 @@ const filters = {
 }
 
 const searchOption = {
-  caseSensitive: true,
+  minMatchCharLength: 2,
+  isCaseSensitive: true,
   shouldSort: true,
-  threshold: 0.6,
-  location: 0,
-  distance: 100,
-  maxPatternLength: 100,
-  minMatchCharLength: 1,
+  findAllMatches: true,
+  includeScore: true,
+  threshold: 0.2,
   keys: ['title']
 }
 
@@ -54,7 +54,7 @@ const getters = {
     if (state.type === 'search') {
       const fuse = new Fuse(state.articles, searchOption)
       if (state.search !== '') {
-        return fuse.search(state.search)
+        return fuse.search(state.search).map(article => article.item)
       }
       return filters.all(orderedArticles)
     }
@@ -69,7 +69,7 @@ const mutations = {
   LOAD_ARTICLES (state, articles) {
     state.articles = articles.map((item) => {
       item.feed_title = _.truncate(item.feed_title, { length: 20 })
-      item.title = _.truncate(item.title, { length: 50 })
+      item.title = _.truncate(item.title, { length: 250 })
       item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
       if (!('offline' in item)) {
         item.offline = false
@@ -100,16 +100,22 @@ const mutations = {
     }
     if (data.type === 'READ') {
       state.articles[index].read = true
+      if (state.articles[index].podcast) {
+        state.articles[index].played = true
+      }
     }
 
     if (data.type === 'UNREAD') {
       state.articles[index].read = false
+      if (state.articles[index].podcast) {
+        state.articles[index].played = false
+      }
     }
   },
   MARK_ALL_READ (state) {
     for (let i = 0; i < state.articles.length; i++) {
       state.articles[i].read = true
-      db.markRead(state.articles[i]._id)
+      db.markRead(state.articles[i]._id, null)
     }
   },
   MARK_FEED_READ (state, id) {
@@ -117,7 +123,7 @@ const mutations = {
     for (let i = 0; i < feedArticles.length; i++) {
       const index = _.findIndex(state.articles, { _id: feedArticles[i]._id })
       state.articles[index].read = true
-      db.markRead(state.articles[index]._id)
+      db.markRead(state.articles[index]._id, null)
     }
   },
   DELETE_ARTICLES_CATEGORY (state, category) {
@@ -229,10 +235,10 @@ const actions = {
         db.markUnfavourite(data.id)
         break
       case 'READ':
-        db.markRead(data.id)
+        db.markRead(data.id, data.podcast)
         break
       case 'UNREAD':
-        db.markUnread(data.id)
+        db.markUnread(data.id, data.podcast)
         break
     }
     commit('MARK_ACTION', data)

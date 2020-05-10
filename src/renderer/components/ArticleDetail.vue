@@ -34,6 +34,20 @@
           >
             {{ article.description }}
           </div>
+          <div
+            v-if="article.podcast"
+            class="mt-5 mb-5"
+          >
+            <aplayer
+              autoplay
+              :music="{
+                title: article.title,
+                artist: article.itunes.author,
+                src: article.enclosure.url,
+                pic: article.itunes.image
+              }"
+            />
+          </div>
         </div>
       </perfect-scrollbar>
       <div
@@ -84,7 +98,12 @@
   </div>
 </template>
 <script>
+import Aplayer from 'vue-aplayer'
+
 export default {
+  components: {
+    Aplayer
+  },
   props: {
     id: {
       type: String,
@@ -281,7 +300,7 @@ export default {
 }
 
 .article-wrap {
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
 
   img {

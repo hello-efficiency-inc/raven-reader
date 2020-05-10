@@ -40,7 +40,11 @@ export default {
         post.favicon = task.favicon
         post.category = !refresh ? category : task.feed.meta.category
         post.link = post.link ? post.link : task.feed.meta.xmlurl
-        post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
+        if (post.podcast) {
+          post.guid = uuid(post.enclosure.url)
+        } else {
+          post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
+        }
         post.publishUnix = dayjs(post.pubDate).unix()
         const postItem = _.omit(post, ['creator', 'dc:creator'])
         posts.push(postItem)
