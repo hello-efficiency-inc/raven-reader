@@ -1,6 +1,8 @@
 const { dialog } = require('electron')
 const { autoUpdater } = require('electron-updater')
 const log = require('electron-log')
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = 'info'
 
 let updater
 autoUpdater.autoDownload = false
@@ -13,7 +15,7 @@ autoUpdater.on('update-available', () => {
   dialog.showMessageBox({
     type: 'info',
     title: 'Found Updates',
-    message: 'Found updates, do you want update now? ✅',
+    message: 'Found updates, do you want update now?',
     buttons: ['Sure', 'No']
   }, (buttonIndex) => {
     if (buttonIndex === 0) {
