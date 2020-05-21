@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "0.7.7",
+  "version": "0.7.8",
   "standard": {
     "globals": [
       "describe",
@@ -184,7 +184,7 @@
     "del": "^5.0.0",
     "devtron": "^1.4.0",
     "dotenv": "^8.1.0",
-    "electron": "^8.0.1",
+    "electron": "^8.0.0",
     "electron-builder": "^22.4.1",
     "electron-debug": "^3.0.0",
     "electron-devtools-installer": "^3.0.0",

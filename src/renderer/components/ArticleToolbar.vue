@@ -63,7 +63,10 @@
             />
           </button>
         </div>
-        <div class="wrap" v-if="!article.podcast">
+        <div
+          v-if="!article.podcast"
+          class="wrap"
+        >
           <button
             ref="openlink"
             v-b-tooltip.hover

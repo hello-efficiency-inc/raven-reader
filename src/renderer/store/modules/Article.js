@@ -47,7 +47,7 @@ const searchOption = {
 const getters = {
   filteredArticles: state => {
     const sortPref = store.get('settings.oldestArticles') === 'off' ? 'desc' : 'asc'
-    const orderedArticles = _.orderBy(state.articles, ['pubDate'], [sortPref])
+    const orderedArticles = _.orderBy(state.articles, ['publishUnix'], [sortPref])
     if (state.type !== 'feed' && state.type !== 'search') {
       return filters[state.type](orderedArticles)
     }
