@@ -36,12 +36,12 @@ const filters = {
 
 const searchOption = {
   minMatchCharLength: 2,
-  isCaseSensitive: true,
+  isCaseSensitive: false,
   shouldSort: true,
   findAllMatches: true,
   includeScore: true,
-  threshold: 0.2,
-  keys: ['title']
+  threshold: 0.3,
+  keys: ['title', 'content']
 }
 
 const getters = {

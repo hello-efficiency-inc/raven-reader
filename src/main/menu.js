@@ -1,7 +1,4 @@
 import { app, Menu } from 'electron'
-import {
-  checkForUpdates
-} from './updater.js'
 var articleSelected = false
 
 export default function createMenu (mainWindow) {
@@ -162,13 +159,6 @@ export default function createMenu (mainWindow) {
         enabled: false
       },
       {
-        label: 'Check for update',
-        id: 'checkupdate',
-        click: function (menuItem, browserWindow, event) {
-          checkForUpdates(menuItem, browserWindow, event)
-        }
-      },
-      {
         label: 'Settings',
         id: 'settings',
         type: 'normal',
@@ -205,16 +195,6 @@ export default function createMenu (mainWindow) {
       {
         label: `Version ${version}`,
         enabled: false
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Check for update',
-        id: 'checkupdate',
-        click: function (menuItem, browserWindow, event) {
-          checkForUpdates(menuItem, browserWindow, event)
-        }
       },
       {
         type: 'separator'

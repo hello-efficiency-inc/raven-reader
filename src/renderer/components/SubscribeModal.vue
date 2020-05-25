@@ -124,6 +124,7 @@ export default {
       newcategory: null,
       showAddCat: false,
       selectedCat: null,
+      isXML: false,
       selected_feed: []
     }
   },
@@ -148,6 +149,7 @@ export default {
         'application/rss+xml; charset=utf-8',
         'text/xml;charset=UTF-8',
         'text/rss+xml;charset=UTF-8',
+        'text/xml; charset=utf-8',
         'text/xml',
         'text/rss+xml',
         'application/rss+xml',
@@ -155,7 +157,6 @@ export default {
         'application/atom+xml'
       ]
       const content = await got(link)
-      console.log(content.headers['content-type'])
       return validHeaders.includes(content.headers['content-type'])
     },
     async fetchFeed () {
@@ -165,7 +166,6 @@ export default {
         if (this.feed_url) {
           try {
             const isXML = await this.isContentXML(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }))
-            console.log(isXML)
             finder(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }), { feedParserOptions: { feedurl: this.feed_url } }).then(
               res => {
                 this.loading = false

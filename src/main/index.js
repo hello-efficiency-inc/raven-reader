@@ -22,7 +22,14 @@ import {
 import createMenu from './menu'
 import createTray from './tray'
 
+const log = require('electron-log')
 const contextMenu = require('electron-context-menu')
+const {
+  autoUpdater
+} = require('electron-updater')
+
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = 'info'
 
 contextMenu({
   showInspectElement: false
@@ -139,6 +146,7 @@ app.on('second-instance', (event, argv, cwd) => {
 
 app.on('ready', () => {
   createWindow()
+  autoUpdater.checkForUpdatesAndNotify()
 })
 
 app.whenReady().then(() => {
@@ -196,4 +204,29 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+autoUpdater.on('checking-for-update', () => {
+  log.info('Checking for update...')
+})
+autoUpdater.on('update-available', (info) => {
+  log.info('Update available.')
+})
+autoUpdater.on('update-not-available', (info) => {
+  log.info('Update not available.')
+})
+autoUpdater.on('error', (err) => {
+  log.info('Error in auto-updater. ' + err)
+})
+
+autoUpdater.on('update-downloaded', (info) => {
+  log.info('Update downloaded')
+  autoUpdater.quitAndInstall()
+})
+
+autoUpdater.on('download-progress', (progressObj) => {
+  let logMessage = 'Download speed: ' + progressObj.bytesPerSecond
+  logMessage = logMessage + ' - Downloaded ' + progressObj.percent + '%'
+  logMessage = logMessage + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
+  log.info(logMessage)
 })

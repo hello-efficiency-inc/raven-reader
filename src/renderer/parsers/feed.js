@@ -1,5 +1,6 @@
 import he from 'he'
 import got from 'got'
+
 import FeedParser from 'feedparser'
 import RssParser from 'rss-parser'
 
@@ -17,6 +18,7 @@ const parser = new RssParser({
  */
 export async function parseFeed (feedUrl, faviconUrl = null) {
   let feed
+  console.log(feedUrl)
   const feeditem = {
     meta: '',
     posts: []
@@ -24,13 +26,18 @@ export async function parseFeed (feedUrl, faviconUrl = null) {
   try {
     feed = await parser.parseURL(feedUrl)
   } catch (e) {
-    const stream = await got.stream(feedUrl, { retries: 0 })
+    const stream = await got.stream(feedUrl, {
+      retries: 0,
+      headers: {
+        'user-agent': 'Raven Reader'
+      }
+    })
     feed = await parseFeedParser(stream)
   }
 
   feeditem.meta = {
     link: feed.link,
-    xmlurl: feed.feedUrl ? feed.feedUrl : feedUrl,
+    xmlurl: feedUrl,
     favicon: typeof faviconUrl !== 'undefined' ? faviconUrl : null,
     description: feed.description ? feed.description : null,
     title: feed.title
