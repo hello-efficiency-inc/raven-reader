@@ -272,10 +272,17 @@ import helper from '../services/helpers'
 import notifier from 'node-notifier'
 import fs from 'fs'
 import path from 'path'
-import _ from 'lodash'
+import truncate from 'lodash.truncate'
 import cacheService from '../services/cacheArticle'
 const { remote } = require('electron')
 const { Menu, MenuItem } = require('electron').remote
+
+const sortBy = (key, pref) => {
+  if (pref === 'asc') {
+    return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0)
+  }
+    return (a, b) => (a[key] < b[key]) ? 1 : ((b[key] < a[key]) ? -1 : 0)
+}
 
 export default {
   data () {
@@ -347,9 +354,7 @@ export default {
 
     this.$electron.ipcRenderer.on('Next item', (event, args) => {
       if (self.$route.params.id) {
-        const index = _.findIndex(self.$store.getters.filteredArticles, {
-          _id: self.$route.params.id
-        })
+        const index = self.$store.getters.filteredArticles.findIndex(item => item._id === self.$route.params.id)
         if (index !== self.$store.getters.filteredArticles.length - 1) {
           const nextArticle = self.$store.getters.filteredArticles[index + 1]
           self.$router.push({
@@ -367,9 +372,7 @@ export default {
 
     this.$electron.ipcRenderer.on('Previous item', (event, args) => {
       if (self.$route.params.id) {
-        const index = _.findIndex(self.$store.getters.filteredArticles, {
-          _id: self.$route.params.id
-        })
+        const index = self.$store.getters.filteredArticles.findIndex(item => item._id === self.$route.params.id)
         if (index > 0) {
           const prevArticle = self.$store.getters.filteredArticles[index - 1]
           self.$router.push({
@@ -495,7 +498,7 @@ export default {
       this.feedMenuData = null
     },
     categoryFeeds (feeds, category) {
-      var items = _.filter(feeds, { category: category }).map(feed => ({
+      var items = feeds.filter(item => item.category === category).map(feed => ({
         ...feed,
         isActive: this.isFeedActive(feed)
       }))
@@ -642,7 +645,7 @@ export default {
           ? dayjs(data.date_published).format('MMMM D, YYYY')
           : null
         data.favicon = article.favicon
-        data.sitetitle = _.truncate(article.feed_title, 20)
+        data.sitetitle = truncate(article.feed_title, 20)
         data.feed_id = article.feed_id
         data.category = article.category
         data.feed_url = article.feed_url
@@ -665,7 +668,7 @@ export default {
         item.unread = this.getArticlesCount('unread', item.id)
         return item
       })
-      feedsCopy = _.orderBy(feedsCopy, ['unread'], ['desc'])
+      feedsCopy = feedsCopy.concat().sort(sortBy('unread', 'desc'))
       this.$store.dispatch('orderFeeds', feedsCopy)
     },
     fetchData () {
@@ -685,6 +688,7 @@ export default {
               article._id,
               article.link
             )
+            console.log(data)
           } else {
             try {
               if (!article.podcast) {
@@ -704,8 +708,6 @@ export default {
                 self.prepareArticleData(article, article)
               }
             } catch (e) {
-              console.log(e)
-              console.log('EMPTY')
               article.content = null
               article.url = article.link
               self.articleData = article
@@ -763,7 +765,7 @@ export default {
       menu.append(new MenuItem({
         label: 'Delete',
         click () {
-          const feedIndex = _.findIndex(self.$store.state.Feed.feeds, { category: feed.category.title })
+          const feedIndex = self.$store.state.Feed.feeds.findIndex(item => item.category === feed.category.title)
           self.$store.dispatch('deleteCategory', feed.category.title)
           self.$store.dispatch('deleteFeed', self.$store.state.Feed.feeds[feedIndex].id)
           self.$store.dispatch('deleteArticleCategory', feed.category.title)

@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 export default {
   async getCachedArticleData (id, url) {
     const articleRequest = new Request(url, {
@@ -10,7 +8,7 @@ export default {
     })
     const cacheName = `raven-${id}`
     const cacheKeys = await caches.keys()
-    const check = _.indexOf(cacheKeys, cacheName)
+    const check = cacheKeys.indexOf(cacheName)
     if (check >= 0) {
       const cache = await caches.open(cacheName)
       const response = await cache.match(articleRequest, {
@@ -67,7 +65,7 @@ export default {
   },
   async uncache (name) {
     const cacheKeys = await caches.keys()
-    const check = _.indexOf(cacheKeys, name)
+    const check = cacheKeys.indexOf(name)
     if (check >= 0) {
       return caches.delete(name)
     }

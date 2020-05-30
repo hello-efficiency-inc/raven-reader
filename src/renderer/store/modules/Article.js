@@ -2,7 +2,7 @@ import db from '../../services/db'
 import helper from '../../services/helpers'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import _ from 'lodash'
+import truncate from 'lodash.truncate'
 import Fuse from 'fuse.js'
 import cacheService from '../../services/cacheArticle'
 import Store from 'electron-store'
@@ -44,10 +44,16 @@ const searchOption = {
   keys: ['title', 'content']
 }
 
+const sortBy = (key, pref) => {
+  if (pref === 'asc') {
+    return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0)
+  }
+    return (a, b) => (a[key] < b[key]) ? 1 : ((b[key] < a[key]) ? -1 : 0)
+}
 const getters = {
   filteredArticles: state => {
     const sortPref = store.get('settings.oldestArticles') === 'off' ? 'desc' : 'asc'
-    const orderedArticles = _.orderBy(state.articles, ['publishUnix'], [sortPref])
+    const orderedArticles = state.articles.concat().sort(sortBy('publishUnix', sortPref))
     if (state.type !== 'feed' && state.type !== 'search') {
       return filters[state.type](orderedArticles)
     }
@@ -68,8 +74,8 @@ const getters = {
 const mutations = {
   LOAD_ARTICLES (state, articles) {
     state.articles = articles.map((item) => {
-      item.feed_title = _.truncate(item.feed_title, { length: 20 })
-      item.title = _.truncate(item.title, { length: 250 })
+      item.feed_title = truncate(item.feed_title, { length: 20 })
+      item.title = truncate(item.title, { length: 250 })
       item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
       if (!('offline' in item)) {
         item.offline = false
@@ -80,7 +86,7 @@ const mutations = {
   ADD_ARTICLES (state, articles) {
     if (articles) {
       state.articles.unshift(...articles.map((item) => {
-        item.feed_title = _.truncate(item.feed_title, {
+        item.feed_title = truncate(item.feed_title, {
           length: 20
         })
         item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
@@ -90,7 +96,7 @@ const mutations = {
     }
   },
   MARK_ACTION (state, data) {
-    const index = _.findIndex(state.articles, { _id: data.id })
+    const index = state.articles.findIndex(item => item._id === data.id)
     if (data.type === 'FAVOURITE') {
       state.articles[index].favourite = true
     }
@@ -119,22 +125,22 @@ const mutations = {
     }
   },
   MARK_FEED_READ (state, id) {
-    const feedArticles = _.filter(state.articles, { feed_id: id })
+    const feedArticles = state.articles.filter(item => item.feed_id === id)
     for (let i = 0; i < feedArticles.length; i++) {
-      const index = _.findIndex(state.articles, { _id: feedArticles[i]._id })
+      const index = state.articles.findIndex(item => item._id === feedArticles[i]._id)
       state.articles[index].read = true
       db.markRead(state.articles[index]._id, null)
     }
   },
   DELETE_ARTICLES_CATEGORY (state, category) {
-    const articles = _.filter(state.articles, { title: category })
+    const articles = state.articles.filter(item => item.title === category)
     articles.forEach(async (article) => {
       await cacheService.uncache(`raven-${article._id}`)
     })
     db.deleteArticlesCategory(category)
   },
   DELETE_ARTICLES (state, id) {
-    const articles = _.filter(state.articles, { feed_id: id })
+    const articles = state.articles.filter(item => item.feed_id === id)
     articles.forEach(async (article) => {
       await cacheService.uncache(`raven-${article._id}`)
     })
@@ -158,7 +164,7 @@ const mutations = {
     state.feed = feed
   },
   SAVE_ARTICLE (state, data) {
-    const index = _.findIndex(state.articles, { _id: data.article._id })
+    const index = state.articles.findIndex(item => item._id === data.article._id)
     state.articles[index].offline = data.type === 'CACHE'
   },
   INCREASE_FONT (state) {
@@ -175,9 +181,7 @@ const mutations = {
     state.fontSettingOn = data
   },
   UPDATE_FEED_TITLE (state, data) {
-    const index = _.findIndex(state.articles, {
-      _id: data.article_id
-    })
+    const index = state.articles.findIndex(item => item._id === data.article_id)
     if (index >= 0) {
       state.articles[index].feed_title = data.title
     }
@@ -186,25 +190,17 @@ const mutations = {
     state.fontStyle = data
   },
   UPDATE_ARTICLE_CATEGORY (state, data) {
-    const articles = _.filter(state.articles, {
-      category: data.old.title
-    })
+    const articles = state.articles.filter(item => item.category === data.old.title)
     for (let i = 0; i < articles.length; i++) {
-      const index = _.findIndex(state.articles, {
-        _id: articles[i]._id
-      })
+      const index = state.articles.findIndex(item => item._id === articles[i]._id)
       db.updateArticleCategory(state.articles[index]._id, data.new.title)
       state.articles[index].category = data.new.title
     }
   },
   MARK_CATEGORY_READ (state, data) {
-    const feedArticles = _.filter(state.articles, {
-      category: data
-    })
+    const feedArticles = state.articles.filter(item => item.category === data)
     for (let i = 0; i < feedArticles.length; i++) {
-      const index = _.findIndex(state.articles, {
-        _id: feedArticles[i]._id
-      })
+      const index = state.articles.findIndex(item => item._id === feedArticles[i]._id)
       state.articles[index].read = true
       db.markRead(state.articles[index]._id)
     }

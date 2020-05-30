@@ -37,8 +37,6 @@
   </b-modal>
 </template>
 <script>
-// import uuid from 'uuid-by-string'
-
 export default {
   props: {
     feed: {

@@ -109,7 +109,7 @@
 <script>
 import finder from 'rss-finder'
 import normalizeUrl from 'normalize-url'
-import he from 'he'
+import unescape from '../services/unescape'
 import helper from '../services/helpers'
 import uuid from 'uuid-by-string'
 import got from 'got'
@@ -170,7 +170,7 @@ export default {
               res => {
                 this.loading = false
                 res.feedUrls.map(item => {
-                  item.title = he.unescape(item.title)
+                  item.title = unescape(item.title)
                   if (isXML) {
                     item.url = self.feed_url
                   }

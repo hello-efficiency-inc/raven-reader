@@ -1,5 +1,5 @@
 import db from '../../services/db'
-import _ from 'lodash'
+import truncate from 'lodash.truncate'
 
 const state = {
   feeds: []
@@ -8,18 +8,18 @@ const state = {
 const mutations = {
   LOAD_FEEDS (state, feed) {
     state.feeds = feed.map((item) => {
-      item.title = _.truncate(item.title, { length: 22 })
+      item.title = truncate(item.title, { length: 22 })
       return item
     })
   },
   ADD_FEED (state, docs) {
     if (docs) {
-      docs.title = _.truncate(docs.title, { length: 22 })
+      docs.title = truncate(docs.title, { length: 22 })
       state.feeds.unshift(docs)
     }
   },
   DELETE_FEED (state, id) {
-    const index = _.findIndex(state.feeds, { id: id })
+    const index = state.feeds.findIndex(item => item.id === id)
     db.deleteFeed(id)
     state.feeds.splice(index, 1)
   },
@@ -27,16 +27,14 @@ const mutations = {
     state.feeds = feeds
   },
   UPDATE_FEED_TITLE (state, data) {
-    const index = _.findIndex(state.feeds, { id: data.id })
+    const index = state.feeds.findIndex(item => item.id === data.id)
     state.feeds[index].title = data.title
     state.feeds[index].category = data.category
   },
   UPDATE_FEED_CATEGORY (state, data) {
-    const feeds = _.filter(state.feeds, { category: data.old.title })
+    const feeds = state.feeds.filter(item => item.category === data.old.title)
     for (let i = 0; i < feeds.length; i++) {
-      const index = _.findIndex(state.feeds, {
-        _id: feeds[i]._id
-      })
+      const index = state.feeds.findIndex(item => item._id === feeds[i]._id)
       db.updateFeedCategory(state.feeds[index].id, data.new.title)
       state.feeds[index].category = data.new.title
     }
