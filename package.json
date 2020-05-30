@@ -124,7 +124,7 @@
     "feather-icons": "^4.7.3",
     "feedparser": "^2.2.9",
     "fs-jetpack": "^2.0.0",
-    "fuse.js": "^5.0.1-beta",
+    "fuse.js": "^6.0.0",
     "global-agent": "^2.0.0",
     "got": "^11.1.0",
     "he": "^1.1.1",
