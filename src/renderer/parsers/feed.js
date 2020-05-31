@@ -1,5 +1,5 @@
-import he from 'he'
 import got from 'got'
+import unescape from '../services/unescape'
 
 import FeedParser from 'feedparser'
 import RssParser from 'rss-parser'
@@ -89,7 +89,7 @@ export function ParseFeedPost (feed) {
     item.feed_url = feed.meta.xmlurl
     item.feed_link = feed.meta.link
     if (item.content) {
-      item.content = he.unescape(item.content)
+      item.content = unescape(item.content)
     }
     return item
   })

@@ -1,12 +1,12 @@
 import store from '../store'
-import { parseFeed } from '../parsers/feed'
+import {
+  parseFeed
+} from '../parsers/feed'
 import uuid from 'uuid-by-string'
 import opmlGenerator from 'opml-generator'
-import async from 'async'
 import db from './db.js'
-import notifier from 'node-notifier'
 import dayjs from 'dayjs'
-import _ from 'lodash'
+const notifier = require('node-notifier')
 
 export default {
   exportOpml () {
@@ -27,8 +27,29 @@ export default {
 
     return opmlGenerator(header, outlines)
   },
+  queue (concurrency = 1) {
+    let running = 0
+    const taskQueue = []
+
+    const runTask = (task) => {
+      running++
+      task(_ => {
+        running--
+        if (taskQueue.length > 0) {
+          runTask(taskQueue.shift())
+        }
+      })
+    }
+
+    const enqueueTask = task => taskQueue.push(task)
+
+    return {
+      push: task =>
+        running < concurrency ? runTask(task) : enqueueTask(task)
+    }
+  },
   subscribe (feeds, category = null, faviconData = null, refresh = false, importData = false) {
-    const q = async.queue((task, cb) => {
+    const task = (task, category, refresh) => {
       const posts = []
       if (!refresh) {
         task.feed.meta.favicon = task.favicon
@@ -46,31 +67,28 @@ export default {
           post.guid = uuid(post.link ? post.link : task.feed.meta.xmlurl)
         }
         post.publishUnix = dayjs(post.pubDate).unix()
-        const postItem = _.omit(post, ['creator', 'dc:creator'])
+        const {
+          creator,
+          ...postItem
+        } = post
+        delete postItem['dc:creator']
         posts.push(postItem)
       })
       if (refresh) {
         db.addArticles(posts, docs => {
           if (typeof docs !== 'undefined') {
             notifier.notify({
-              type: 'info',
-              title: `${docs.length} articles added`,
-              timeout: 3,
-              sticky: false,
-              wait: false,
-              sound: true
+              title: 'Articles added',
+              message: `${docs.length} articles added`
             })
           }
         })
       } else {
         store.dispatch('addArticle', posts)
       }
-      cb()
-    }, 2)
-
-    q.drain = () => {
-      console.log('all feeds are processed')
     }
+
+    const runner = this.queue(2)
 
     feeds.forEach(async function (feed) {
       let url
@@ -97,7 +115,17 @@ export default {
       if (refresh) {
         feeditem.meta.id = feed.id
       }
-      q.push({ feed: feeditem, favicon: faviconUrl })
+      const taskItem = done => setTimeout(() => {
+        task({
+            feed: feeditem,
+            favicon: faviconUrl
+          },
+          category,
+          refresh
+        )
+        done()
+      }, 100)
+      runner.push(taskItem)
     })
   }
 }

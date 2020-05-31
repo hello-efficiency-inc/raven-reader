@@ -180,6 +180,15 @@ export default {
   }
 }
 
+.app-nightmode {
+  & .article-contentarea {
+    --text-color-gray: #c8cacc;
+    --h2-color: var(--text-color);
+    --h2-small-color: var(--text-color-gray);
+    --paragraph-color: var(--text-color-gray);
+  }
+}
+
 // Dark color mode
 .app-sunsetmode {
   & .article-contentarea {
