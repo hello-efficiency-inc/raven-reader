@@ -32,9 +32,7 @@ brew cask install raven-reader
 ```
 
 
-![newscreenshot](/newscreenshot.png)
 ![darkscreenshot](/darkscreenshot.png)
-![sunsetscreenshot](/sunsetscreenshot.png)
 
 ## Features
 
