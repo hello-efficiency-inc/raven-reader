@@ -63,7 +63,10 @@
               </feed-mix>
             </router-link>
           </li>
-          <li class="nav-item">
+          <li
+            class="nav-item"
+            :class="{ 'd-none': showLess }"
+          >
             <router-link
               class="nav-link feed-mix-link"
               to="/read"
@@ -84,7 +87,10 @@
               </feed-mix>
             </router-link>
           </li>
-          <li class="nav-item">
+          <li
+            class="nav-item"
+            :class="{ 'd-none': showLess }"
+          >
             <router-link
               class="nav-link feed-mix-link"
               to="/read"
@@ -94,9 +100,7 @@
                 feed-id="recentlyPlayed"
                 mark="recentlyPlayed"
               >
-                <feather-icon
-                  name="play-circle"
-                />Recently Played
+                <feather-icon name="play-circle" />Recently Played
                 <span
                   v-if="getArticlesCount('played', '') > 0"
                   class="items-counter"
@@ -104,7 +108,10 @@
               </feed-mix>
             </router-link>
           </li>
-          <li class="nav-item">
+          <li
+            class="nav-item"
+            :class="{ 'd-none': showLess }"
+          >
             <router-link
               class="nav-link feed-mix-link"
               to="/saved"
@@ -122,13 +129,27 @@
               </feed-mix>
             </router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item d-none">
             <a
               v-b-modal.integrations
               class="nav-link"
               href="#"
             >
               <feather-icon name="package" />Integrations
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              @click="showLessItems"
+            >
+              <template v-if="showLess">
+                <feather-icon name="arrow-down" /> Show more
+              </template>
+              <template v-if="!showLess">
+                <feather-icon name="arrow-up" /> Show less
+              </template>
             </a>
           </li>
         </ul>
@@ -138,9 +159,7 @@
           <span>Subscriptions</span>
         </h6>
         <ul class="nav flex-column">
-          <template
-            v-for="feeditem in mapFeeds(feeds, categoryItems)"
-          >
+          <template v-for="feeditem in mapFeeds(feeds, categoryItems)">
             <li
               v-if="!feeditem.type && feeditem.category === null"
               :key="feeditem.id"
@@ -279,14 +298,15 @@ const { Menu, MenuItem } = require('electron').remote
 
 const sortBy = (key, pref) => {
   if (pref === 'asc') {
-    return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0)
+    return (a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0)
   }
-    return (a, b) => (a[key] < b[key]) ? 1 : ((b[key] < a[key]) ? -1 : 0)
+  return (a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0)
 }
 
 export default {
   data () {
     return {
+      showLess: false,
       articleData: null,
       articleType: 'all',
       empty: null,
@@ -354,7 +374,9 @@ export default {
 
     this.$electron.ipcRenderer.on('Next item', (event, args) => {
       if (self.$route.params.id) {
-        const index = self.$store.getters.filteredArticles.findIndex(item => item._id === self.$route.params.id)
+        const index = self.$store.getters.filteredArticles.findIndex(
+          item => item._id === self.$route.params.id
+        )
         if (index !== self.$store.getters.filteredArticles.length - 1) {
           const nextArticle = self.$store.getters.filteredArticles[index + 1]
           self.$router.push({
@@ -372,7 +394,9 @@ export default {
 
     this.$electron.ipcRenderer.on('Previous item', (event, args) => {
       if (self.$route.params.id) {
-        const index = self.$store.getters.filteredArticles.findIndex(item => item._id === self.$route.params.id)
+        const index = self.$store.getters.filteredArticles.findIndex(
+          item => item._id === self.$route.params.id
+        )
         if (index > 0) {
           const prevArticle = self.$store.getters.filteredArticles[index - 1]
           self.$router.push({
@@ -447,25 +471,28 @@ export default {
     this.runArticleCronJob()
 
     this.$electron.remote.powerMonitor.on('resume', () => {
-        log.info('Power resumed')
-        this.runPruneCronJob().reschedule()
-        this.runPruneCronJob().reschedule()
+      log.info('Power resumed')
+      this.runPruneCronJob().reschedule()
+      this.runPruneCronJob().reschedule()
     })
 
     if (this.$store.state.Setting.offline) {
-        this.runPruneCronJob().reschedule()
-        this.runPruneCronJob().reschedule()
+      this.runPruneCronJob().reschedule()
+      this.runPruneCronJob().reschedule()
     }
-      // On delete stop Crawler Job
+    // On delete stop Crawler Job
     this.$on('delete', msg => {
-        if (msg === 'yes') {
-          log.info('Job is cancelled')
-          this.runPruneCronJob().reschedule()
-          this.runPruneCronJob().reschedule()
-        }
+      if (msg === 'yes') {
+        log.info('Job is cancelled')
+        this.runPruneCronJob().reschedule()
+        this.runPruneCronJob().reschedule()
+      }
     })
   },
   methods: {
+    showLessItems () {
+      this.showLess = !this.showLess
+    },
     runPruneCronJob () {
       const self = this
       return scheduler.scheduleJob('*/5 * * * *', () => {
@@ -498,13 +525,19 @@ export default {
       this.feedMenuData = null
     },
     categoryFeeds (feeds, category) {
-      var items = feeds.filter(item => item.category === category).map(feed => ({
-        ...feed,
-        isActive: this.isFeedActive(feed)
-      }))
+      var items = feeds
+        .filter(item => item.category === category)
+        .map(feed => ({
+          ...feed,
+          isActive: this.isFeedActive(feed)
+        }))
       var sorted = items.sort((a, b) => {
-        if (a.title.toLowerCase() < b.title.toLowerCase()) { return -1 }
-        if (a.title.toLowerCase() > b.title.toLowerCase()) { return 1 }
+        if (a.title.toLowerCase() < b.title.toLowerCase()) {
+          return -1
+        }
+        if (a.title.toLowerCase() > b.title.toLowerCase()) {
+          return 1
+        }
         return 0
       })
       return sorted
@@ -547,8 +580,12 @@ export default {
         isActive: this.isFeedActive(feed)
       }))
       var sorted = items.sort((a, b) => {
-        if (a.title.toLowerCase() < b.title.toLowerCase()) { return -1 }
-        if (a.title.toLowerCase() > b.title.toLowerCase()) { return 1 }
+        if (a.title.toLowerCase() < b.title.toLowerCase()) {
+          return -1
+        }
+        if (a.title.toLowerCase() > b.title.toLowerCase()) {
+          return 1
+        }
         return 0
       })
       return sorted
@@ -569,7 +606,8 @@ export default {
       if (type === 'read') {
         return articles.filter(article => article.read).length
       } else if (type === 'played') {
-        return articles.filter(article => article.podcast && article.played).length
+        return articles.filter(article => article.podcast && article.played)
+          .length
       } else if (type === 'unread') {
         return articles.filter(article => !article.read).length
       } else if (type === 'favourites') {
@@ -641,31 +679,36 @@ export default {
       const self = this
       self.empty = false
       const $ = cheerio.load(data.content)
-        $('a').addClass('js-external-link')
-        $('img').addClass('img-fluid')
-        $('iframe').parent().addClass('embed-responsive embed-responsive-16by9')
-        data.content = $.text().trim() === '' ? article.description : $.html()
-        if (article.podcast) {
-          data.author = article.itunes.author
-          data.itunes.image = article.itunes.image ? article.itunes.image : article.favicon
-        }
-        data.date_published = data.date_published
-          ? dayjs(data.date_published).format('MMMM D, YYYY')
-          : null
-        data.favicon = article.favicon
-        data.sitetitle = truncate(article.feed_title, 20)
-        data.feed_id = article.feed_id
-        data.category = article.category
-        data.feed_url = article.feed_url
-        data.feed_link = article.feed_link
-        data._id = article._id
-        data.link = article.link
-        data.favourite = article.favourite
-        data.read = article.read
-        data.offline = article.offline
-        data.readtime = data.content && !data.podcast ? stat(data.content).text : ''
-        self.articleData = data
-        self.loading = false
+      $('a').addClass('js-external-link')
+      $('img').addClass('img-fluid')
+      $('iframe')
+        .parent()
+        .addClass('embed-responsive embed-responsive-16by9')
+      data.content = $.text().trim() === '' ? article.description : $.html()
+      if (article.podcast) {
+        data.author = article.itunes.author
+        data.itunes.image = article.itunes.image
+          ? article.itunes.image
+          : article.favicon
+      }
+      data.date_published = data.date_published
+        ? dayjs(data.date_published).format('MMMM D, YYYY')
+        : null
+      data.favicon = article.favicon
+      data.sitetitle = truncate(article.feed_title, 20)
+      data.feed_id = article.feed_id
+      data.category = article.category
+      data.feed_url = article.feed_url
+      data.feed_link = article.feed_link
+      data._id = article._id
+      data.link = article.link
+      data.favourite = article.favourite
+      data.read = article.read
+      data.offline = article.offline
+      data.readtime =
+        data.content && !data.podcast ? stat(data.content).text : ''
+      self.articleData = data
+      self.loading = false
     },
     unreadChange () {
       // unread changed, sort feeds by unread count
@@ -691,37 +734,35 @@ export default {
             id: self.$route.params.id,
             podcast: article.podcast
           })
-          if (self.$store.state.Setting.offline) {
-            data = await cacheService.getCachedArticleData(
-              article._id,
-              article.link
-            )
-            console.log(data)
-          } else {
-            try {
-              if (!article.podcast) {
-                data = await parseArticle(article.link)
-                if (self.$store.state.Setting.offline && data) {
-                  self.prepareArticleData(data, article)
-                } else if (!self.$store.state.Setting.offline && data) {
-                  self.prepareArticleData(data, article)
-                } else {
-                  article.content = null
-                  article.url = article.link
-                  self.articleData = article
-                  self.empty = true
-                  self.loading = false
-                }
+          try {
+            if (!article.podcast) {
+              if (self.$store.state.Setting.offline) {
+                data = await cacheService.getCachedArticleData(
+                  article._id,
+                  article.link
+                )
+                console.log(data)
               } else {
-                self.prepareArticleData(article, article)
+                data = await parseArticle(article.link)
               }
-            } catch (e) {
-              article.content = null
-              article.url = article.link
-              self.articleData = article
-              self.empty = true
-              self.loading = false
+              if (data) {
+                self.prepareArticleData(data, article)
+              } else {
+                article.content = null
+                article.url = article.link
+                self.articleData = article
+                self.empty = true
+                self.loading = false
+              }
+            } else {
+              self.prepareArticleData(article, article)
             }
+          } catch (e) {
+            article.content = null
+            article.url = article.link
+            self.articleData = article
+            self.empty = true
+            self.loading = false
           }
         })
       }
@@ -752,33 +793,46 @@ export default {
       const self = this
       const menu = new Menu()
 
-      menu.append(new MenuItem({
-        label: `Mark ${feed.category.title} as read`,
-        click () {
-          self.markCategoryRead(feed.category.title)
-        }
-      }))
-      menu.append(new MenuItem({
-        label: 'Rename folder',
-        click () {
-          self.openCategoryEditModal(feed.category)
-          self.$bvModal.show('editCategory')
-        }
-      }))
+      menu.append(
+        new MenuItem({
+          label: `Mark ${feed.category.title} as read`,
+          click () {
+            self.markCategoryRead(feed.category.title)
+          }
+        })
+      )
+      menu.append(
+        new MenuItem({
+          label: 'Rename folder',
+          click () {
+            self.openCategoryEditModal(feed.category)
+            self.$bvModal.show('editCategory')
+          }
+        })
+      )
 
-      menu.append(new MenuItem({
-        type: 'separator'
-      }))
+      menu.append(
+        new MenuItem({
+          type: 'separator'
+        })
+      )
 
-      menu.append(new MenuItem({
-        label: 'Delete',
-        click () {
-          const feedIndex = self.$store.state.Feed.feeds.findIndex(item => item.category === feed.category.title)
-          self.$store.dispatch('deleteCategory', feed.category.title)
-          self.$store.dispatch('deleteFeed', self.$store.state.Feed.feeds[feedIndex].id)
-          self.$store.dispatch('deleteArticleCategory', feed.category.title)
-        }
-      }))
+      menu.append(
+        new MenuItem({
+          label: 'Delete',
+          click () {
+            const feedIndex = self.$store.state.Feed.feeds.findIndex(
+              item => item.category === feed.category.title
+            )
+            self.$store.dispatch('deleteCategory', feed.category.title)
+            self.$store.dispatch(
+              'deleteFeed',
+              self.$store.state.Feed.feeds[feedIndex].id
+            )
+            self.$store.dispatch('deleteArticleCategory', feed.category.title)
+          }
+        })
+      )
 
       menu.popup({ window: remote.getCurrentWindow() })
       menu.once('menu-will-close', () => {
@@ -788,38 +842,48 @@ export default {
     openFeedMenu (e, feed) {
       const self = this
       const menu = new Menu()
-      menu.append(new MenuItem({
-        label: 'Copy feed link',
-        click () {
-          self.copyFeedLink(feed.feed.xmlurl)
-        }
-      }))
+      menu.append(
+        new MenuItem({
+          label: 'Copy feed link',
+          click () {
+            self.copyFeedLink(feed.feed.xmlurl)
+          }
+        })
+      )
 
-      menu.append(new MenuItem({
-        label: 'Mark as read',
-        click () {
-          self.markFeedRead(feed.feed.id)
-        }
-      }))
+      menu.append(
+        new MenuItem({
+          label: 'Mark as read',
+          click () {
+            self.markFeedRead(feed.feed.id)
+          }
+        })
+      )
 
-      menu.append(new MenuItem({
-        label: 'Edit feed',
-        click () {
-          self.openEditModal(feed.feed)
-          self.$bvModal.show('editFeed')
-        }
-      }))
+      menu.append(
+        new MenuItem({
+          label: 'Edit feed',
+          click () {
+            self.openEditModal(feed.feed)
+            self.$bvModal.show('editFeed')
+          }
+        })
+      )
 
-      menu.append(new MenuItem({
-        type: 'separator'
-      }))
+      menu.append(
+        new MenuItem({
+          type: 'separator'
+        })
+      )
 
-      menu.append(new MenuItem({
-        label: 'Unsubscribe',
-        click () {
-          self.unsubscribeFeed(feed.feed.id)
-        }
-      }))
+      menu.append(
+        new MenuItem({
+          label: 'Unsubscribe',
+          click () {
+            self.unsubscribeFeed(feed.feed.id)
+          }
+        })
+      )
       menu.popup({ window: remote.getCurrentWindow() })
       menu.once('menu-will-close', () => {
         menu.destroy()
@@ -862,8 +926,8 @@ export default {
   .export-link,
   .category-link {
     svg {
-        color: #fff;
-      }
+      color: #fff;
+    }
   }
 
   & .sidebar {
@@ -886,8 +950,8 @@ export default {
   .export-link,
   .category-link {
     svg {
-        color: #fff;
-      }
+      color: #fff;
+    }
   }
 
   & .sidebar {
@@ -908,9 +972,9 @@ export default {
 
   .category-link {
     svg {
-        color: #000;
-      }
+      color: #000;
     }
+  }
 
   & .sidebar {
     --background-color: rgba(var(--sunset-background), 1);
@@ -924,11 +988,11 @@ export default {
         color: #fff;
         border-radius: 0;
 
-          .category-link {
-            svg {
-                color: #fff;
-              }
-            }
+        .category-link {
+          svg {
+            color: #fff;
+          }
+        }
 
         .nav-link {
           color: #fff !important;
@@ -945,7 +1009,6 @@ export default {
     }
 
     .nav-link {
-
       & .feed-mix {
         padding: 0.5rem 1rem;
 
@@ -979,12 +1042,16 @@ export default {
   .custom-file-label,
   input[type="tel"],
   input[type="color"] {
-    background: rgba(var(--input-color), 0.2) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
+    background: rgba(var(--input-color), 0.2)
+      url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e")
+      no-repeat right 0.75rem center/8px 10px;
     color: var(--text-color);
     border: 0;
 
     &:focus {
-      background: rgba(var(--input-color), 0.2) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
+      background: rgba(var(--input-color), 0.2)
+        url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e")
+        no-repeat right 0.75rem center/8px 10px;
       color: #000;
     }
   }
@@ -1023,12 +1090,16 @@ export default {
   .custom-file-label,
   input[type="tel"],
   input[type="color"] {
-    background: rgba(var(--input-color), 0.8) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
+    background: rgba(var(--input-color), 0.8)
+      url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e")
+      no-repeat right 0.75rem center/8px 10px;
     color: var(--text-color);
     border: 0;
 
     &:focus {
-      background: rgba(var(--input-color), 0.8) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
+      background: rgba(var(--input-color), 0.8)
+        url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e")
+        no-repeat right 0.75rem center/8px 10px;
       color: #000;
     }
   }
@@ -1141,7 +1212,6 @@ export default {
 }
 
 .category-link {
-
   svg {
     transform: rotate(90deg);
     color: #000;
