@@ -110,8 +110,9 @@ export default {
       ],
       themeOptions: [
         { value: null, text: 'Default' },
-        { text: 'Dark', value: 'dark' },
-        { text: 'Sunset', value: 'sunset' }
+        { text: 'Dusk', value: 'dark' },
+        { text: 'Sunset', value: 'sunset' },
+         { text: 'Night', value: 'night' }
       ],
       proxy: {
         http: '',
@@ -136,15 +137,23 @@ export default {
   methods: {
     setTheme (themeValue) {
       switch (themeValue) {
+        case 'night':
+          this.toggleBodyClass(false, 'app-sunsetmode')
+          this.toggleBodyClass(false, 'app-darkmode')
+          this.toggleBodyClass(true, 'app-nightmode')
+          break
         case 'dark':
+           this.toggleBodyClass(false, 'app-nightmode')
           this.toggleBodyClass(false, 'app-sunsetmode')
           this.toggleBodyClass(true, 'app-darkmode')
           break
         case 'sunset':
+           this.toggleBodyClass(false, 'app-nightmode')
           this.toggleBodyClass(false, 'app-darkmode')
           this.toggleBodyClass(true, 'app-sunsetmode')
           break
         case null:
+           this.toggleBodyClass(false, 'app-nightmode')
           this.toggleBodyClass(false, 'app-darkmode')
           this.toggleBodyClass(false, 'app-sunsetmode')
       }

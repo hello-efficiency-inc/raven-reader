@@ -511,15 +511,23 @@ export default {
     },
     setTheme (themeValue) {
       switch (themeValue) {
+        case 'night':
+          this.toggleBodyClass(true, 'app-nightmode')
+          this.toggleBodyClass(false, 'app-sunsetmode')
+          this.toggleBodyClass(false, 'app-darkmode')
+          break
         case 'dark':
+          this.toggleBodyClass(false, 'app-nightmode')
           this.toggleBodyClass(false, 'app-sunsetmode')
           this.toggleBodyClass(true, 'app-darkmode')
           break
         case 'sunset':
+          this.toggleBodyClass(false, 'app-nightmode')
           this.toggleBodyClass(false, 'app-darkmode')
           this.toggleBodyClass(true, 'app-sunsetmode')
           break
         case null:
+          this.toggleBodyClass(false, 'app-nightmode')
           this.toggleBodyClass(false, 'app-darkmode')
           this.toggleBodyClass(false, 'app-sunsetmode')
       }
@@ -843,6 +851,29 @@ export default {
   }
 }
 
+.app-nightmode {
+  --nightmode-background: 0, 0, 0;
+  --background-color: rgba(var(--nightmode-background), 1);
+  --border-color: #242424;
+  --text-color: #fff;
+  --input-color: 89, 91, 93;
+  --active-item-background-color: #504e4e;
+
+  .export-link,
+  .category-link {
+    svg {
+        color: #fff;
+      }
+  }
+
+  & .sidebar {
+    --background-color: rgba(var(--nightmode-background), 1);
+    --btn-subscribe-color: var(--text-color);
+    --nav-link-color: var(--text-color);
+    --heading-color: #979797;
+  }
+}
+
 // Dark color mode
 .app-darkmode {
   --darkmode-background: 55, 55, 55;
@@ -929,9 +960,9 @@ export default {
   }
 }
 
-.app-sunsetmode,
-.app-darkmode {
+.app-nightmode {
   textarea,
+  select.custom-select,
   input[type="text"],
   input[type="password"],
   input[type="datetime"],
@@ -948,12 +979,56 @@ export default {
   .custom-file-label,
   input[type="tel"],
   input[type="color"] {
-    background: rgba(var(--input-color), 0.8);
+    background: rgba(var(--input-color), 0.2) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
     color: var(--text-color);
     border: 0;
 
     &:focus {
-      background: #fff;
+      background: rgba(var(--input-color), 0.2) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
+      color: #000;
+    }
+  }
+
+  .modal-content {
+    background: #16161d;
+    color: var(--text-color);
+  }
+
+  .modal-header,
+  .modal-footer {
+    border-color: #16161d;
+    .close {
+      color: var(--text-color);
+    }
+  }
+}
+
+.app-sunsetmode,
+.app-darkmode {
+  textarea,
+  select.custom-select,
+  input[type="text"],
+  input[type="password"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="month"],
+  input[type="time"],
+  input[type="week"],
+  input[type="number"],
+  input[type="email"],
+  input[type="url"],
+  input[type="search"],
+  input[type="file"],
+  .custom-file-label,
+  input[type="tel"],
+  input[type="color"] {
+    background: rgba(var(--input-color), 0.8) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
+    color: var(--text-color);
+    border: 0;
+
+    &:focus {
+      background: rgba(var(--input-color), 0.8) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
       color: #000;
     }
   }

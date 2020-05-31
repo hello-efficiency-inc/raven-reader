@@ -56,7 +56,7 @@ function createWindow () {
   const newDirectory = jetpack.cwd(app.getPath('home'))
   const existsArticle = jetpack.exists(oldDirectory.path('articles.db'))
   const existsFeed = jetpack.exists(oldDirectory.path('feeds.db'))
-  const winURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080' : `file://${__dirname}/index.html`
+  const winURL = process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:9080' : `file://${__dirname}/index.html`
 
   if (existsArticle && existsFeed) {
     jetpack.move(oldDirectory.path('feeds.db'), newDirectory.path('.rss-reader/feeds.db'))
@@ -80,7 +80,6 @@ function createWindow () {
     height: 768
   })
 
-  // mainWindow.webContents.openDevTools()
   mainWindow.setTouchBar(touchBar)
 
   if (mainWindow) {

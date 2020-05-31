@@ -417,6 +417,7 @@ export default {
 }
 
 // Dark color mode
+.app-nightmode,
 .app-sunsetmode,
 .app-darkmode {
   & .article-toolbar {
@@ -561,6 +562,34 @@ export default {
 
   .icon-smaller-text {
     fill: #000;
+  }
+}
+
+.app-nightmode {
+  .dropdown-setting {
+    select {
+      background: rgba(var(--nightmode-background), 0.8);
+      border: 0;
+      color: #fff;
+    }
+  }
+
+  .settings-wrap {
+    &:after {
+      border-color: #fff transparent transparent transparent;
+    }
+  }
+  .article-setting {
+    background-color: var(--background-color);
+    border-color: var(--border-color);
+  }
+
+  .settings-wrap {
+    border-color: var(--border-color);
+  }
+
+  .icon-smaller-text {
+    fill: #fff;
   }
 }
 

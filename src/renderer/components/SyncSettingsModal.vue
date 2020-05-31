@@ -8,25 +8,6 @@
       hide-footer
       centered
     >
-      <!-- <div class="row">
-    <div class="col">
-      <p class="text-left">Inoreader</p>
-    </div>
-    <div class="col">
-      <button class="btn-primary float-right" @click="signIn" v-if="!inoreader_connected">Connect</button>
-      <button class="btn-danger float-right" @click="disconnect" v-if="inoreader_connected">Disconnect</button>
-    </div>
-  </div>
-  <div class="row" v-if="inoreader_connected">
-    <div class="col">
-      <p>Sync feeds from inoreader</p>
-    </div>
-    <div class="col">
-      <button class="btn-primary float-right" @click="syncFeedsFromInoreader">
-        Sync Feeds
-      </button>
-    </div>
-      </div>-->
       <div class="row">
         <div class="col">
           <p class="text-left font-bold">
@@ -122,7 +103,6 @@
 import oauth from '../services/oauth'
 import { URL } from 'url'
 import { setImmediate } from 'timers'
-import helper from '../services/helpers'
 import Store from 'electron-store'
 import axios from 'axios'
 import os from 'os'
@@ -133,11 +113,11 @@ import {
 } from '../config'
 
 const store = new Store()
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:9080'
 
 export default {
   data () {
     return {
-      inoreader_connected: false,
       pocket_connected: false,
       instapaper_connected: false,
       instapaper_error: null,
@@ -148,9 +128,6 @@ export default {
     }
   },
   mounted () {
-    if (store.get('inoreader_token')) {
-      this.inoreader_connected = true
-    }
     if (store.has('instapaper_creds')) {
       this.instapaper_connected = true
     }
@@ -169,8 +146,9 @@ export default {
           height: 720,
           show: true,
           webPreferences: {
+            webSecurity: false,
             nodeIntegration: false,
-            devTools: true
+            devTools: false
           }
         })
         const ses = authWindow.webContents.session
@@ -196,6 +174,7 @@ export default {
                     code: code
                   },
                   {
+                    withCredentials: true,
                     headers: {
                       'Content-Type': 'application/json',
                       'X-Accept': 'application/json'
@@ -253,6 +232,7 @@ export default {
               redirect_uri: 'http://127.0.0.1'
             },
             {
+              withCredentials: true,
               headers: {
                 'Content-Type': 'application/json',
                 'X-Accept': 'application/json'
@@ -280,6 +260,7 @@ export default {
           height: 720,
           show: true,
           webPreferences: {
+            webSecurity: false,
             nodeIntegration: false,
             devTools: false
           }
@@ -338,35 +319,12 @@ export default {
       this.$store.dispatch('unsetInstapaper')
       this.instapaper_connected = false
     },
-    disconnect () {
-      store.delete('inoreader_token')
-      this.inoreader_connected = false
-    },
     onHidden () {
       this.instapaper.username = null
       this.instapaper.password = null
     },
     hideModal () {
       this.$refs.instapaperLogin.hide()
-    },
-    async syncFeedsFromInoreader () {
-      await helper.syncInoReader()
-    },
-    async signIn () {
-      let token
-      const code = await this.signInWithPopUp()
-      if (code) {
-        try {
-          token = await oauth.fetchToken(code)
-        } catch (e) {
-          console.error(e)
-        }
-      }
-
-      if (token) {
-        store.set('inoreader_token', JSON.stringify(token))
-        this.inoreader_connected = true
-      }
     },
     async loginInstapaper () {
       const login = await axios.post('https://www.instapaper.com/api/authenticate', {}, {

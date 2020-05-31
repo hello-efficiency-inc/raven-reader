@@ -273,6 +273,35 @@ export default {
     }
   }
 }
+.app-nightmode {
+  #addfeed {
+    form {
+      background: #16161d;
+      color: var(--text-color);
+    }
+
+    .no-border {
+      background: #16161d;
+      color: var(--text-color);
+      &:focus {
+        color: #fff;
+      }
+    }
+
+    .input-group-text {
+      color: #fff;
+    }
+
+    .subscription-content {
+      background: #16161d;
+      border-color: var(--border-color);
+    }
+  }
+
+  .bouncing-loader > div {
+    background: #fff;
+  }
+}
 .app-darkmode {
   #addfeed {
     form {
