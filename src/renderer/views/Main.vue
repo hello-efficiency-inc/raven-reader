@@ -201,7 +201,7 @@
             >
               <button
                 v-if="feeditem.type"
-                v-b-toggle="`collapse-${feeditem.title}`"
+                v-b-toggle="`collapse-${feeditem.id}`"
                 class="btn btn-link category-link pr-0"
               >
                 <feather-icon name="chevron-right" />
@@ -220,8 +220,8 @@
             </li>
             <b-collapse
               v-if="feeditem.type"
-              :id="`collapse-${feeditem.title}`"
-              :key="`collapse-${feeditem.title}`"
+              :id="`collapse-${feeditem.id}`"
+              :key="`collapse-${feeditem.id}`"
             >
               <template v-for="categoryfeed in categoryFeeds(feeds, feeditem.title)">
                 <li
