@@ -10,9 +10,6 @@ import {
 import jetpack from 'fs-jetpack'
 import Store from 'electron-store'
 import {
-  autoUpdateApp
-} from './updater.js'
-import {
   enforceMacOSAppLocation,
   darkMode
 } from 'electron-util'
@@ -150,9 +147,6 @@ app.on('ready', () => {
 
 app.whenReady().then(() => {
   enforceMacOSAppLocation()
-  if (process.env.NODE_ENV === 'production') {
-    autoUpdateApp()
-  }
 })
 
 app.on('before-quit', () => {

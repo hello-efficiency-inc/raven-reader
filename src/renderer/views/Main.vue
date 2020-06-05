@@ -489,6 +489,9 @@ export default {
       }
     })
   },
+  destroyed () {
+    this.$electron.ipcRenderer.removeAllListeners()
+  },
   methods: {
     showLessItems () {
       this.showLess = !this.showLess
@@ -736,15 +739,10 @@ export default {
           })
           try {
             if (!article.podcast) {
-              if (self.$store.state.Setting.offline) {
-                data = await cacheService.getCachedArticleData(
+              data = self.$store.state.Setting.offline ? await cacheService.getCachedArticleData(
                   article._id,
                   article.link
-                )
-                console.log(data)
-              } else {
-                data = await parseArticle(article.link)
-              }
+                ) : await parseArticle(article.link)
               if (data) {
                 self.prepareArticleData(data, article)
               } else {
