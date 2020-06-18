@@ -129,7 +129,10 @@
               </feed-mix>
             </router-link>
           </li>
-          <li class="nav-item d-none">
+          <li
+            class="nav-item"
+            :class="{ 'd-none': showLess }"
+          >
             <a
               v-b-modal.integrations
               class="nav-link"
