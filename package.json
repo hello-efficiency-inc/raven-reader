@@ -142,7 +142,7 @@
     "v-click-outside": "^3.0.0",
     "v8-compile-cache": "^2.1.0",
     "vue-aplayer": "^1.6.1",
-    "vue-social-sharing": "^2.4.7",
+    "vue-social-sharing": "^3.0.0-beta.11",
     "vue-toasted": "^1.1.28",
     "vue2-perfect-scrollbar": "^1.2.0"
   },
@@ -212,7 +212,7 @@
     "mini-css-extract-plugin": "^0.9.0",
     "mocha": "^8.0.1",
     "multispinner": "^0.2.1",
-    "node-loader": "^0.6.0",
+    "node-loader": "^1.0.0",
     "node-sass": "^4.9.0",
     "require-dir": "^1.2.0",
     "sass-loader": "^8.0.0",
