@@ -105,12 +105,13 @@
 <script>
 import articleCount from '../mixins/articleCount'
 import dataSets from '../mixins/dataItems'
+import feedMix from '../mixins/feedMix'
 
 const { remote } = require('electron')
 const { Menu, MenuItem } = require('electron').remote
 
 export default {
-  mixins: [articleCount, dataSets],
+  mixins: [articleCount, dataSets, feedMix],
   data () {
       return {
         feed: null,
@@ -119,14 +120,6 @@ export default {
       }
   },
   methods: {
-    // TODO: Source this method out
-    isFeedActive (feed) {
-      return !!feed && feed.id !== undefined && feed.id === this.activeFeedId
-    },
-    // TODO: Source this method out
-    setActiveFeedId (feed) {
-      return this.$store.dispatch('setActiveFeedId', feed)
-    },
     onCtxOpen (locals) {
       this.feedMenuData = locals.feed
     },
