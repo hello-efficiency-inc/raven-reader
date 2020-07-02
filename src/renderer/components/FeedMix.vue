@@ -9,28 +9,21 @@
   </div>
 </template>
 <script>
+import dataSet from '../mixins/dataItems'
+import feedMix from '../mixins/feedMix'
 
 export default {
+  mixins: [
+    dataSet,
+    feedMix
+  ],
   props: {
     feedId: { type: String, required: true },
     mark: { type: String, required: true }
   },
-  computed: {
-    activeFeedId () {
-      return this.$store.getters.activeFeedId
-    }
-  },
   methods: {
     getFeed () {
       return { id: this.feedId }
-    },
-    // TODO: Source this method out
-    isFeedActive (feed) {
-      return !!feed && feed.id !== undefined && feed.id === this.activeFeedId
-    },
-    // TODO: Source this method out
-    setActiveFeedId (feed) {
-      return this.$store.dispatch('setActiveFeedId', feed)
     }
   }
 }

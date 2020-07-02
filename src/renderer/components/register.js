@@ -15,6 +15,8 @@ import EditSubscriptionModal from './EditSubscription'
 import EditFeedModal from './EditFeed'
 import EditCategoryModal from './EditCategory'
 import FeedMix from './FeedMix'
+import MenuItems from './MenuItems'
+import Subscriptions from './Subscriptions'
 
 export default {
   registerComponents () {
@@ -34,5 +36,7 @@ export default {
     Vue.component('feed-mix', FeedMix)
     Vue.component('edit-feed', EditFeedModal)
     Vue.component('edit-category', EditCategoryModal)
+    Vue.component('menu-items', MenuItems)
+    Vue.component('subscriptions', Subscriptions)
   }
 }
