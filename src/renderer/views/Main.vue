@@ -7,258 +7,13 @@
     >
       <subscribe-toolbar ref="subscribetoolbar" />
       <perfect-scrollbar class="sidebar-sticky">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <router-link
-              class="nav-link feed-mix-link"
-              to="/all"
-              active-class="active"
-            >
-              <feed-mix
-                feed-id="allFeeds"
-                mark="allFeeds"
-              >
-                <feather-icon name="list" />All Feeds
-                <span class="sr-only">(current)</span>
-                <span
-                  v-if="getArticlesCount('','') > 0"
-                  class="items-counter"
-                >{{ getArticlesCount('','') }}</span>
-              </feed-mix>
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link
-              class="nav-link feed-mix-link"
-              to="/favourites"
-              active-class="active"
-            >
-              <feed-mix
-                feed-id="favourites"
-                mark="favourites"
-              >
-                <feather-icon name="star" />Favourites
-                <span
-                  v-if="getArticlesCount('favourites','') > 0"
-                  class="items-counter"
-                >{{ getArticlesCount('favourites','') }}</span>
-              </feed-mix>
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link
-              class="nav-link feed-mix-link"
-              to="/unread"
-              active-class="active"
-            >
-              <feed-mix
-                feed-id="unreadArticles"
-                mark="unreadArticles"
-              >
-                <feather-icon name="circle" />Unread Articles
-                <span
-                  v-if="getArticlesCount('unread', '') > 0"
-                  class="items-counter"
-                >{{ getArticlesCount('unread', '') }}</span>
-              </feed-mix>
-            </router-link>
-          </li>
-          <li
-            class="nav-item"
-            :class="{ 'd-none': showLess }"
-          >
-            <router-link
-              class="nav-link feed-mix-link"
-              to="/read"
-              active-class="active"
-            >
-              <feed-mix
-                feed-id="recentlyRead"
-                mark="recentlyRead"
-              >
-                <feather-icon
-                  name="circle"
-                  filled
-                />Recently Read
-                <span
-                  v-if="getArticlesCount('read', '') > 0"
-                  class="items-counter"
-                >{{ getArticlesCount('read', '') }}</span>
-              </feed-mix>
-            </router-link>
-          </li>
-          <li
-            class="nav-item"
-            :class="{ 'd-none': showLess }"
-          >
-            <router-link
-              class="nav-link feed-mix-link"
-              to="/read"
-              active-class="active"
-            >
-              <feed-mix
-                feed-id="recentlyPlayed"
-                mark="recentlyPlayed"
-              >
-                <feather-icon name="play-circle" />Recently Played
-                <span
-                  v-if="getArticlesCount('played', '') > 0"
-                  class="items-counter"
-                >{{ getArticlesCount('played', '') }}</span>
-              </feed-mix>
-            </router-link>
-          </li>
-          <li
-            class="nav-item"
-            :class="{ 'd-none': showLess }"
-          >
-            <router-link
-              class="nav-link feed-mix-link"
-              to="/saved"
-              active-class="active"
-            >
-              <feed-mix
-                feed-id="savedArticles"
-                mark="savedArticles"
-              >
-                <feather-icon name="wifi-off" />Saved articles
-                <span
-                  v-if="getArticlesCount('saved', '') > 0"
-                  class="items-counter"
-                >{{ getArticlesCount('saved', '') }}</span>
-              </feed-mix>
-            </router-link>
-          </li>
-          <li
-            class="nav-item"
-            :class="{ 'd-none': showLess }"
-          >
-            <a
-              v-b-modal.integrations
-              class="nav-link"
-              href="#"
-            >
-              <feather-icon name="package" />Integrations
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="#"
-              @click="showLessItems"
-            >
-              <template v-if="showLess">
-                <feather-icon name="arrow-down" /> Show more
-              </template>
-              <template v-if="!showLess">
-                <feather-icon name="arrow-up" /> Show less
-              </template>
-            </a>
-          </li>
-        </ul>
+        <menu-items />
         <h6
           class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
         >
           <span>Subscriptions</span>
         </h6>
-        <ul class="nav flex-column">
-          <template v-for="feeditem in mapFeeds(feeds, categoryItems)">
-            <li
-              v-if="!feeditem.type && feeditem.category === null"
-              :key="feeditem.id"
-              class="feed nav-item d-flex justify-content-between align-items-center pr-2"
-              mark="feed"
-              :class="{ active: feeditem.isActive }"
-              @click="setActiveFeedId(feeditem)"
-              @contextmenu.prevent="openFeedMenu($event, {feed: feeditem})"
-            >
-              <router-link
-                v-if="!feeditem.type && feeditem.category === null"
-                class="nav-link"
-                :to="`/feed/${feeditem.id}`"
-              >
-                <img
-                  v-if="feeditem.favicon"
-                  :src="feeditem.favicon"
-                  height="16"
-                  width="16"
-                  class="mr-1"
-                >
-                {{ feeditem.title }}
-              </router-link>
-              <div
-                v-if="!feeditem.type && feeditem.category === null && getArticlesCount('', feeditem.id) > 0"
-                class="nav-link feed-counter"
-              >
-                <span class="item-counter">{{ getArticlesCount('', feeditem.id) }}</span>
-              </div>
-            </li>
-            <li
-              v-if="feeditem.type"
-              :key="feeditem.id"
-              class="feed nav-item d-flex align-items-center pr-2"
-              mark="category"
-              :class="{ active: feeditem.isActive }"
-              @click="categoryHandler(feeditem)"
-              @contextmenu.prevent="openCategoryMenu($event, { category: feeditem})"
-            >
-              <button
-                v-if="feeditem.type"
-                v-b-toggle="`collapse-${feeditem.id}`"
-                class="btn btn-link category-link pr-0"
-              >
-                <feather-icon name="chevron-right" />
-              </button>
-              <a
-                href="#"
-                class="nav-link pl-1"
-                replace
-              >{{ feeditem.title }}</a>
-              <div
-                v-if="getArticlesCount('category', feeditem.title) > 0"
-                class="nav-link feed-counter"
-              >
-                <span class="item-counter">{{ getArticlesCount('category', feeditem.title) }}</span>
-              </div>
-            </li>
-            <b-collapse
-              v-if="feeditem.type"
-              :id="`collapse-${feeditem.id}`"
-              :key="`collapse-${feeditem.id}`"
-            >
-              <template v-for="categoryfeed in categoryFeeds(feeds, feeditem.title)">
-                <li
-                  :key="categoryfeed.id"
-                  class="feed nav-item d-flex justify-content-between align-items-center pr-2"
-                  mark="feed"
-                  :class="{ active: categoryfeed.isActive }"
-                  @click="setActiveFeedId(categoryfeed)"
-                  @contextmenu.prevent="openFeedMenu($event, {feed: categoryfeed})"
-                >
-                  <router-link
-                    :to="`/feed/${categoryfeed.id}`"
-                    class="nav-link ml-1"
-                  >
-                    <img
-                      v-if="categoryfeed.favicon"
-                      :src="categoryfeed.favicon"
-                      height="16"
-                      width="16"
-                      class="mr-1"
-                    >
-                    {{ categoryfeed.title }}
-                  </router-link>
-                  <div
-                    v-if="getArticlesCount('', categoryfeed.id) > 0"
-                    class="nav-link feed-counter"
-                  >
-                    <span class="item-counter">{{ getArticlesCount('', categoryfeed.id) }}</span>
-                  </div>
-                </li>
-              </template>
-            </b-collapse>
-          </template>
-        </ul>
+        <subscriptions />
       </perfect-scrollbar>
     </nav>
     <article-list
@@ -278,8 +33,6 @@
     <settings-modal />
     <markallread-modal />
     <sync-settings />
-    <edit-feed :feed="activeFeed" />
-    <edit-category :feed="activeFeed" />
   </div>
 </template>
 <script>
@@ -296,8 +49,8 @@ import fs from 'fs'
 import path from 'path'
 import truncate from 'lodash.truncate'
 import cacheService from '../services/cacheArticle'
-const { remote } = require('electron')
-const { Menu, MenuItem } = require('electron').remote
+import articleCount from '../mixins/articleCount'
+import dataSets from '../mixins/dataItems'
 
 const sortBy = (key, pref) => {
   if (pref === 'asc') {
@@ -307,16 +60,17 @@ const sortBy = (key, pref) => {
 }
 
 export default {
+  mixins: [
+    articleCount,
+    dataSets
+  ],
   data () {
     return {
-      showLess: false,
+      feed: null,
       articleData: null,
       articleType: 'all',
       empty: null,
-      feed: null,
-      feedMenuData: null,
-      loading: false,
-      activeFeed: null
+      loading: false
     }
   },
   beforeRouteUpdate (to, from, next) {
@@ -325,28 +79,28 @@ export default {
     }
     next()
   },
-  computed: {
-    categoryItems () {
-      return this.$store.state.Category.categories
-    },
-    feeds () {
-      return this.$store.state.Feed.feeds
-    },
-    activeFeedId () {
-      return this.$store.getters.activeFeedId
-    }
-  },
   watch: {
     $route (to, from) {
       switch (to.name) {
         case 'feed-page':
-          this.feedChange()
+          if (this.$route.params.feedid) {
+            this.articleType = 'feed'
+            this.$store.dispatch('setFeed', this.$route.params.feedid)
+            this.$store.dispatch('setCategory', null)
+            this.$store.dispatch('changeType', 'feed')
+          }
           break
         case 'category-page':
-          this.categoryChange()
+          this.articleType = 'category'
+          this.$store.dispatch('setCategory', this.$route.params.category)
+          this.$store.dispatch('setFeed', null)
+          this.$store.dispatch('changeType', 'feed')
           break
         case 'type-page':
-          this.typeChange()
+          if (this.$route.params.type) {
+            this.articleType = this.$route.params.type
+            this.$store.dispatch('changeType', this.$route.params.type)
+          }
           break
         case 'article-page':
           this.fetchData()
@@ -496,9 +250,6 @@ export default {
     this.$electron.ipcRenderer.removeAllListeners()
   },
   methods: {
-    showLessItems () {
-      this.showLess = !this.showLess
-    },
     runPruneCronJob () {
       const self = this
       return scheduler.scheduleJob('*/5 * * * *', () => {
@@ -523,30 +274,6 @@ export default {
           }
         }
       )
-    },
-    onCtxOpen (locals) {
-      this.feedMenuData = locals.feed
-    },
-    resetCtxLocals () {
-      this.feedMenuData = null
-    },
-    categoryFeeds (feeds, category) {
-      var items = feeds
-        .filter(item => item.category === category)
-        .map(feed => ({
-          ...feed,
-          isActive: this.isFeedActive(feed)
-        }))
-      var sorted = items.sort((a, b) => {
-        if (a.title.toLowerCase() < b.title.toLowerCase()) {
-          return -1
-        }
-        if (a.title.toLowerCase() > b.title.toLowerCase()) {
-          return 1
-        }
-        return 0
-      })
-      return sorted
     },
     setTheme (themeValue) {
       switch (themeValue) {
@@ -579,54 +306,6 @@ export default {
         el.classList.remove(className)
       }
     },
-    mapFeeds (feeds, category) {
-      var mixed = feeds.concat(category)
-      var items = mixed.map(feed => ({
-        ...feed,
-        isActive: this.isFeedActive(feed)
-      }))
-      var sorted = items.sort((a, b) => {
-        if (a.title.toLowerCase() < b.title.toLowerCase()) {
-          return -1
-        }
-        if (a.title.toLowerCase() > b.title.toLowerCase()) {
-          return 1
-        }
-        return 0
-      })
-      return sorted
-    },
-    // TODO: Source this method out
-    isFeedActive (feed) {
-      return !!feed && feed.id !== undefined && feed.id === this.activeFeedId
-    },
-    // TODO: Source this method out
-    setActiveFeedId (feed) {
-      return this.$store.dispatch('setActiveFeedId', feed)
-    },
-    getArticlesCount (type, feedid) {
-      let articles = this.$store.state.Article.articles
-      if (type === '' && feedid !== '') {
-        articles = articles.filter(article => article.feed_id === feedid)
-      }
-      if (type === 'read') {
-        return articles.filter(article => article.read).length
-      } else if (type === 'played') {
-        return articles.filter(article => article.podcast && article.played)
-          .length
-      } else if (type === 'unread') {
-        return articles.filter(article => !article.read).length
-      } else if (type === 'favourites') {
-        return articles.filter(article => article.favourite).length
-      } else if (type === 'saved') {
-        return articles.filter(article => article.offline).length
-      } else if (type === 'category') {
-        return articles.filter(article => article.category === feedid).length
-      } else {
-        // all
-        return articles.length
-      }
-    },
     exportOpml () {
       const xmlData = helper.exportOpml()
       const self = this
@@ -656,30 +335,6 @@ export default {
     },
     updateType (newVal) {
       this.articleType = newVal
-    },
-    typeChange () {
-      if (this.$route.params.type) {
-        this.articleType = this.$route.params.type
-        this.$store.dispatch('changeType', this.$route.params.type)
-      }
-    },
-    categoryChange () {
-      this.articleType = 'category'
-      this.$store.dispatch('setCategory', this.$route.params.category)
-      this.$store.dispatch('setFeed', null)
-      this.$store.dispatch('changeType', 'feed')
-    },
-    feedChange () {
-      if (this.$route.params.feedid) {
-        this.articleType = 'feed'
-        this.$store.dispatch('setFeed', this.$route.params.feedid)
-        this.$store.dispatch('setCategory', null)
-        this.$store.dispatch('changeType', 'feed')
-      }
-    },
-    async unsubscribeFeed (id, category = null) {
-      await this.$emit('delete', 'yes')
-      await this.$store.dispatch('deleteFeed', id)
     },
     prepareArticleData (data, article) {
       const self = this
@@ -767,128 +422,6 @@ export default {
           }
         })
       }
-    },
-    markCategoryRead (id) {
-      this.$store.dispatch('markCategoryRead', id)
-    },
-    markFeedRead (id) {
-      this.$store.dispatch('markFeedRead', id)
-    },
-    copyFeedLink (xml) {
-      this.$electron.clipboard.writeText(xml)
-    },
-    categoryHandler (feed) {
-      this.setActiveFeedId(feed)
-      this.$router.push({
-        name: 'category-page',
-        params: { category: feed.title }
-      })
-    },
-    openCategoryEditModal (category) {
-      this.activeFeed = category
-    },
-    openEditModal (feed) {
-      this.activeFeed = feed
-    },
-    openCategoryMenu (e, feed) {
-      const self = this
-      const menu = new Menu()
-
-      menu.append(
-        new MenuItem({
-          label: `Mark ${feed.category.title} as read`,
-          click () {
-            self.markCategoryRead(feed.category.title)
-          }
-        })
-      )
-      menu.append(
-        new MenuItem({
-          label: 'Rename folder',
-          click () {
-            self.openCategoryEditModal(feed.category)
-            self.$bvModal.show('editCategory')
-          }
-        })
-      )
-
-      menu.append(
-        new MenuItem({
-          type: 'separator'
-        })
-      )
-
-      menu.append(
-        new MenuItem({
-          label: 'Delete',
-          click () {
-            const feedIndex = self.$store.state.Feed.feeds.findIndex(
-              item => item.category === feed.category.title
-            )
-            self.$store.dispatch('deleteCategory', feed.category.title)
-            self.$store.dispatch(
-              'deleteFeed',
-              self.$store.state.Feed.feeds[feedIndex].id
-            )
-            self.$store.dispatch('deleteArticleCategory', feed.category.title)
-          }
-        })
-      )
-
-      menu.popup({ window: remote.getCurrentWindow() })
-      menu.once('menu-will-close', () => {
-        menu.destroy()
-      })
-    },
-    openFeedMenu (e, feed) {
-      const self = this
-      const menu = new Menu()
-      menu.append(
-        new MenuItem({
-          label: 'Copy feed link',
-          click () {
-            self.copyFeedLink(feed.feed.xmlurl)
-          }
-        })
-      )
-
-      menu.append(
-        new MenuItem({
-          label: 'Mark as read',
-          click () {
-            self.markFeedRead(feed.feed.id)
-          }
-        })
-      )
-
-      menu.append(
-        new MenuItem({
-          label: 'Edit feed',
-          click () {
-            self.openEditModal(feed.feed)
-            self.$bvModal.show('editFeed')
-          }
-        })
-      )
-
-      menu.append(
-        new MenuItem({
-          type: 'separator'
-        })
-      )
-
-      menu.append(
-        new MenuItem({
-          label: 'Unsubscribe',
-          click () {
-            self.unsubscribeFeed(feed.feed.id)
-          }
-        })
-      )
-      menu.popup({ window: remote.getCurrentWindow() })
-      menu.once('menu-will-close', () => {
-        menu.destroy()
-      })
     }
   }
 }
