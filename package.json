@@ -142,7 +142,7 @@
     "v-click-outside": "^3.0.0",
     "v8-compile-cache": "^2.1.0",
     "vue-aplayer": "^1.6.1",
-    "vue-social-sharing": "^3.0.0-beta.11",
+    "vue-social-sharing": "2.4.7",
     "vue-toasted": "^1.1.28",
     "vue2-perfect-scrollbar": "^1.2.0"
   },
