@@ -66,8 +66,7 @@ function createWindow () {
     webPreferences: {
       webviewTag: true,
       nodeIntegration: true,
-      nodeIntegrationInWorker: true,
-      webSecurity: false
+      nodeIntegrationInWorker: true
     },
     maximizable: true,
     title: 'Raven Reader',

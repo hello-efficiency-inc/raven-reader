@@ -65,7 +65,7 @@
             id="foo"
             :src="articleUrl"
             style="height: 100vh"
-            nodeintegration
+            enableremotemodule="false"
           />
         </div>
       </div>
