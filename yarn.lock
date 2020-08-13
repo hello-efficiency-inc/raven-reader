@@ -4584,9 +4584,9 @@ electron-localshortcut@^3.1.0:
     keyboardevents-areequal "^0.2.1"
 
 electron-log@^4.1.0:
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-4.2.2.tgz#b358dc6d1e4772465609ee3d8ad9f594d9e742c8"
-  integrity sha512-lBpLh1Q8qayrTxFIrTPcNjSHsosvUfOYyZ8glhiLcx7zCNPDGuj8+nXlEaaSS6LRiQQbLgLG+wKpuvztNzBIrA==
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-4.2.3.tgz#09adbf156ae80012a13f765aa4d444b1a1a9ea83"
+  integrity sha512-QU4uZyBaSwbo/KiSWdWCeQSc0gQEpsfUIz/L3nEl9HzSXHOjhyFLyytk4/kBT9yYvJNHIS4E9F3dD4+SIc8vMA==
 
 electron-notarize@^1.0.0:
   version "1.0.0"
@@ -12154,9 +12154,9 @@ vue-loader@^15.4.1:
     vue-style-loader "^4.1.0"
 
 vue-router@^3.0.7:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.4.2.tgz#541221d7ac467786c1c9381bcf36019d883b9cf8"
-  integrity sha512-n3Ok70hW0EpcJF4lcWIwSHAQbFTnIOLl/fhO8+oTs4jHNtBNsovcVvPZeTOyKEd8C3xF1Crft2ASuOiVT5K1mw==
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.4.3.tgz#fa93768616ee338aa174f160ac965167fa572ffa"
+  integrity sha512-BADg1mjGWX18Dpmy6bOGzGNnk7B/ZA0RxuA6qedY/YJwirMfKXIDzcccmHbQI0A6k5PzMdMloc0ElHfyOoX35A==
 
 vue-social-sharing@2.4.7:
   version "2.4.7"
