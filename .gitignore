@@ -1,18 +1,28 @@
 .DS_Store
-dist/electron/*
-dist/web/*
-build/*
-!build/icons
-node_modules/
 node_modules
-coverage
-npm-debug.log
-npm-debug.log.*
-thumbs.db
-!.gitkeep
-src/renderer/config.js
-coverage
-windows_codesign.pfx
-windows2020.pfx
+/dist
+
+# local env files
 .env
-*.log
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+#Electron-builder output
+/dist_electron
+
+*.pfx
