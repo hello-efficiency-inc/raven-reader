@@ -10,6 +10,7 @@
 
 <p align="center">
 <img src="https://img.shields.io/github/package-json/v/hello-efficiency-inc/raven-reader">    
+<a href="https://deepscan.io/dashboard#view=project&tid=10825&pid=13709&bid=237952"><img src="https://deepscan.io/api/teams/10825/projects/13709/branches/237952/badge/grade.svg" alt="DeepScan grade"></a>
 <a href="https://travis-ci.org/mrgodhani/raven-reader">
 <img src="https://travis-ci.org/mrgodhani/raven-reader.svg?branch=master">
 </a>
