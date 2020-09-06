@@ -9,42 +9,56 @@ const category = connect.category
 export default {
   ensureIndex (db, field) {
     db.ensureIndex({ fieldName: field, unique: true }, (err) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   fetchFeeds (cb) {
     return feed.find({}, (err, docs) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
       return cb(docs)
     })
   },
   fetchArticles (cb) {
     return article.find({}).sort({ pubDate: -1 }).exec((err, docs) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
       cb(docs)
     })
   },
   fetchArticle (id, cb) {
     return article.findOne({ _id: id }, (err, doc) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
       return cb(doc)
     })
   },
   fetchCategories (cb) {
     return category.find({}, (err, docs) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
       return cb(docs)
     })
   },
   deleteCategory (title) {
     category.remove({ title: title }, {}, (err, numRemoved) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   addCategory (data, cb) {
     this.ensureIndex(category, 'title')
     return category.insert(data, (err, docs) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
       return cb(docs)
     })
   },
@@ -57,14 +71,16 @@ export default {
       }
     }, (err, num) => {
       if (err) {
-        console.log(err)
+        window.log.info(err)
       }
     })
   },
   addFeed (data, cb) {
     this.ensureIndex(feed, 'xmlurl')
     return feed.insert(data, (err, docs) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
       return cb(docs)
     })
   },
@@ -78,7 +94,7 @@ export default {
       }
     }, (err, num) => {
       if (err) {
-        console.log(err)
+        window.log.info(err)
       }
     })
   },
@@ -93,7 +109,7 @@ export default {
       multi: true
     }, (err, num) => {
       if (err) {
-        console.log(err)
+        window.log.info(err)
       }
     })
   },
@@ -106,7 +122,7 @@ export default {
     this.ensureIndex(article, 'guid')
     return article.insert(data, (err, docs) => {
       if (err) {
-        console.log(err)
+        window.log.info(err)
       }
       return cb(docs)
     })
@@ -123,7 +139,7 @@ export default {
       multi: true
     }, (err, num) => {
       if (err) {
-        console.log(err)
+        window.log.info(err)
       }
     })
   },
@@ -138,7 +154,7 @@ export default {
       multi: true
     }, (err, num) => {
       if (err) {
-        console.log(err)
+        window.log.info(err)
       }
     })
   },
@@ -148,37 +164,51 @@ export default {
     }, {
       multi: true
     }, (err, numRemoved) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   deleteArticles (id) {
     article.remove({ feed_id: id }, { multi: true }, (err, numRemoved) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   markOffline (id) {
     article.update({ _id: id }, { $set: { offline: true } }, (err, num) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   markOnline (id) {
     article.update({ _id: id }, { $set: { offline: false } }, (err, num) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   markFavourite (id) {
     article.update({ _id: id }, { $set: { favourite: true } }, (err, num) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   markUnfavourite (id) {
     article.update({ _id: id }, { $set: { favourite: false } }, (err, num) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   markCategory (id) {
     article.update({ category: id }, { $set: { read: true } }, (err, name) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   markRead (id, podcast) {
@@ -191,7 +221,9 @@ export default {
           played: true
         }
       }, (err, num) => {
-        if (err) {}
+        if (err) {
+          window.log.info(err)
+        }
       })
     } else {
       article.update({
@@ -201,7 +233,9 @@ export default {
           read: true
         }
       }, (err, num) => {
-        if (err) {}
+        if (err) {
+          window.log.info(err)
+        }
       })
     }
   },
@@ -215,7 +249,9 @@ export default {
           played: false
         }
       }, (err, num) => {
-        if (err) {}
+        if (err) {
+          window.log.info(err)
+        }
       })
     } else {
       article.update({
@@ -225,7 +261,9 @@ export default {
           read: false
         }
       }, (err, num) => {
-        if (err) {}
+        if (err) {
+          window.log.info(err)
+        }
       })
     }
   },
