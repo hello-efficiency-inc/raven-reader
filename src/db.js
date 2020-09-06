@@ -11,7 +11,9 @@ export default class {
     const existsDir = window.jetpack.exists(this.useDataDir.path(dirName))
     if (!existsDir) {
       window.fs.mkdir(this.useDataDir.path(`${dirName}`), (err) => {
-        if (err) {}
+        if (err) {
+          window.log.info(err)
+        }
       })
     }
     const existsArticle = window.fs.existsSync(this.useDataDir.path(`${dirName}/${db.article}`))

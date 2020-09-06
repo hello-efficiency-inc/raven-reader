@@ -183,6 +183,7 @@ export default {
               },
               error => {
                 if (error) {
+                  window.log.info(error)
                 }
                 this.showError()
               }

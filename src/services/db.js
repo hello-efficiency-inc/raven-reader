@@ -115,7 +115,9 @@ export default {
   },
   deleteFeed (id) {
     feed.remove({ id: id }, {}, (err, numRemoved) => {
-      if (err) {}
+      if (err) {
+        window.log.info(err)
+      }
     })
   },
   addArticles (data, cb) {
