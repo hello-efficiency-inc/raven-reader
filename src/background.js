@@ -49,6 +49,7 @@ function createWindow () {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       webviewTag: true,
       webSecurity: false,
+      enableRemoteModule: true,
       allowRunningInsecureContent: isDevelopment,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, 'preload.js')
