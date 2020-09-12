@@ -76,10 +76,10 @@ cp src/renderer/config.example.js src/renderer/config.js
 yarn install
 
 # serve with hot reload at localhost:9080
-yarn dev
+yarn electron:serve
 
 # build electron application for production
-yarn build
+yarn electron:build
 
 
 # lint all JS/Vue component files in `src/`
@@ -87,11 +87,8 @@ yarn run lint
 
 ```
 
-For more documentation please follow link from [Electron Vue](https://simulatedgreg.gitbooks.io/electron-vue/content/)
-
 ## Powered by
 
-- [Electron Vue](https://github.com/SimulatedGREG/electron-vue)
 - [Bootstrap](https://getbootstrap.com)
 - [Vue](https://www.vuejs.org) & [Vuex](https://vuex.vuejs.org)
 - [NeDB](https://github.com/louischatriot/nedb)
