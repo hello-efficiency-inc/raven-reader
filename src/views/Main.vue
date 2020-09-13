@@ -46,7 +46,9 @@ import helper from '../services/helpers'
 import truncate from 'lodash.truncate'
 import cacheService from '../services/cacheArticle'
 import articleCount from '../mixins/articleCount'
+import setTheme from '../mixins/setTheme'
 import dataSets from '../mixins/dataItems'
+import bridge from '../services/bridge'
 
 const sortBy = (key, pref) => {
   if (pref === 'asc') {
@@ -58,6 +60,7 @@ const sortBy = (key, pref) => {
 export default {
   mixins: [
     articleCount,
+    setTheme,
     dataSets
   ],
   data () {
@@ -106,7 +109,6 @@ export default {
     allUnread: 'unreadChange'
   },
   mounted () {
-    const self = this
     this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
     this.$store.dispatch('refreshFeeds')
     this.$store.dispatch('loadCategories')
@@ -115,110 +117,22 @@ export default {
     this.$store.dispatch('checkOffline')
     this.$store.dispatch('removeOldReadItems')
 
-    window.electron.ipcRenderer.on('Add subscription', (event, args) => {
-      if (self.$refs.subscribetoolbar) {
-        self.$refs.subscribetoolbar.$refs.subscribefeed.click()
-      }
-    })
-
-    window.electron.ipcRenderer.on('Dark mode', (event, args) => {
-      this.$store.dispatch('setDarkMode', args.darkmode ? 'on' : 'off')
-    })
-
-    window.electron.ipcRenderer.on('Next item', (event, args) => {
-      if (self.$route.params.id) {
-        const index = self.$store.getters.filteredArticles.findIndex(
-          item => item._id === self.$route.params.id
-        )
-        if (index !== self.$store.getters.filteredArticles.length - 1) {
-          const nextArticle = self.$store.getters.filteredArticles[index + 1]
-          self.$router.push({
-            name: 'article-page',
-            params: { id: nextArticle._id }
-          })
-        }
-      } else {
-        self.$router.push({
-          name: 'article-page',
-          params: { id: self.$store.getters.filteredArticles[0]._id }
-        })
-      }
-    })
-
-    window.electron.ipcRenderer.on('Previous item', (event, args) => {
-      if (self.$route.params.id) {
-        const index = self.$store.getters.filteredArticles.findIndex(
-          item => item._id === self.$route.params.id
-        )
-        if (index > 0) {
-          const prevArticle = self.$store.getters.filteredArticles[index - 1]
-          self.$router.push({
-            name: 'article-page',
-            params: { id: prevArticle._id }
-          })
-        }
-      } else {
-        const articleLength = self.$store.getters.filteredArticles.length
-        self.$router.push({
-          name: 'article-page',
-          params: {
-            id: self.$store.getters.filteredArticles[articleLength - 1]._id
-          }
-        })
-      }
-    })
-
-    window.electron.ipcRenderer.on('Save offline', (events, args) => {
-      if (self.$route.params.id) {
-        if (self.$refs.articleDetail) {
-          self.$refs.articleDetail.$refs.articleToolbar.$refs.saveoffline.click()
-        }
-      }
-    })
-
-    window.electron.ipcRenderer.on('Toggle favourite', (events, args) => {
-      if (self.$route.params.id) {
-        if (self.$refs.articleDetail) {
-          self.$refs.articleDetail.$refs.articleToolbar.markFavourite()
-        }
-      }
-    })
-
-    window.electron.ipcRenderer.on('Toggle read', (events, args) => {
-      if (self.$route.params.id) {
-        if (self.$refs.articleDetail) {
-          self.$refs.articleDetail.$refs.articleToolbar.markRead()
-        }
-      }
-    })
-
-    window.electron.ipcRenderer.on('Settings', (events, args) => {
-      self.$bvModal.show('settings')
-    })
-
-    window.electron.ipcRenderer.on('Import subscriptions', (events, args) => {
-      self.$bvModal.show('importfeed')
-    })
-
-    window.electron.ipcRenderer.on('Export subscriptions', (events, args) => {
-      self.exportOpml()
-    })
-
-    window.electron.ipcRenderer.on('Mark all read', (events, args) => {
-      self.$refs.markallread.click()
-    })
-
-    window.electron.ipcRenderer.on('View in browser', (events, args) => {
-      if (self.$route.params.id) {
-        if (self.$refs.articleDetail) {
-          self.$refs.articleDetail.$refs.articleToolbar.$refs.openlink.click()
-        }
-      }
-    })
-
-    window.electron.ipcRenderer.on('onlinestatus', (event, status) => {
-      self.$store.dispatch('setOffline', status)
-    })
+    // Register event listeners
+    bridge([
+      'Add subscription',
+      'Dark mode',
+      'Next item',
+      'Previous item',
+      'Save offline',
+      'Mark all read',
+      'View in browser',
+      'Import subscriptions',
+      'Export subscriptions',
+      'Toggle read',
+      'Toggle favourite',
+      'onlinestatus',
+      'Settings'
+    ], this)
 
     this.runPruneCronJob()
     this.runArticleCronJob()
@@ -226,18 +140,15 @@ export default {
     window.electron.remote.powerMonitor.on('resume', () => {
       window.log.info('Power resumed')
       this.runPruneCronJob().reschedule()
-      this.runPruneCronJob().reschedule()
     })
 
     if (this.$store.state.Setting.offline) {
-      this.runPruneCronJob().reschedule()
       this.runPruneCronJob().reschedule()
     }
     // On delete stop Crawler Job
     this.$on('delete', msg => {
       if (msg === 'yes') {
         window.log.info('Job is cancelled')
-        this.runPruneCronJob().reschedule()
         this.runPruneCronJob().reschedule()
       }
     })
@@ -272,37 +183,6 @@ export default {
           }
         }
       )
-    },
-    setTheme (themeValue) {
-      switch (themeValue) {
-        case 'night':
-          this.toggleBodyClass(true, 'app-nightmode')
-          this.toggleBodyClass(false, 'app-sunsetmode')
-          this.toggleBodyClass(false, 'app-darkmode')
-          break
-        case 'dark':
-          this.toggleBodyClass(false, 'app-nightmode')
-          this.toggleBodyClass(false, 'app-sunsetmode')
-          this.toggleBodyClass(true, 'app-darkmode')
-          break
-        case 'sunset':
-          this.toggleBodyClass(false, 'app-nightmode')
-          this.toggleBodyClass(false, 'app-darkmode')
-          this.toggleBodyClass(true, 'app-sunsetmode')
-          break
-        case null:
-          this.toggleBodyClass(false, 'app-nightmode')
-          this.toggleBodyClass(false, 'app-darkmode')
-          this.toggleBodyClass(false, 'app-sunsetmode')
-      }
-    },
-    toggleBodyClass (addClass, className) {
-      const el = document.body
-      if (addClass) {
-        el.classList.add(className)
-      } else {
-        el.classList.remove(className)
-      }
     },
     exportOpml () {
       const xmlData = helper.exportOpml()

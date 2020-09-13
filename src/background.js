@@ -1,9 +1,9 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, globalShortcut, systemPreferences, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-import { enforceMacOSAppLocation, darkMode } from 'electron-util'
+import { enforceMacOSAppLocation } from 'electron-util'
 import { touchBar } from './touchbar'
 import createMenu from './menu'
 import createTray from './tray'
@@ -137,20 +137,11 @@ app.on('window-all-closed', () => {
   }
 })
 
-if (darkMode.isEnabled) {
-  if (win) {
-    win.webContents.send('Dark mode', {
-      darkmode: systemPreferences.isDarkMode()
-    })
-  }
-}
-
-darkMode.onChange(() => {
-  if (win) {
-    win.webContents.send('Dark mode', {
-      darkmode: darkMode.isEnabled
-    })
-  }
+nativeTheme.on('updated', () => {
+  store.set('isDarkMode', nativeTheme.shouldUseDarkColors)
+  win.webContents.send('Dark mode', {
+    darkmode: nativeTheme.shouldUseDarkColors
+  })
 })
 
 ipcMain.on('article-selected', (event, status) => {
@@ -200,6 +191,10 @@ app.on('ready', async () => {
 
 app.whenReady().then(() => {
   enforceMacOSAppLocation()
+  store.set('isDarkMode', nativeTheme.shouldUseDarkColors)
+  if (!store.has('settings.theme_option')) {
+    store.set('settings.theme_option', 'system')
+  }
 })
 
 app.on('before-quit', () => {

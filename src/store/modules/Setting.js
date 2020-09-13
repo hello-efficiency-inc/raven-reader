@@ -3,7 +3,7 @@ const state = {
   instapaper_connected: false,
   keepRead: 1,
   cronSettings: '*/5 * * * *',
-  themeOption: null,
+  themeOption: 'system',
   oldestArticles: false,
   offline: false,
   proxy: {
@@ -19,7 +19,7 @@ const store = new Store()
 const mutations = {
   LOAD_SETTINGS (state) {
     state.cronSettings = store.get('settings.cronjob', '*/5 * * * *')
-    state.themeOption = store.get('settings.theme_option', null)
+    state.themeOption = store.get('settings.theme_option', 'system')
     state.oldestArticles = store.get('settings.oldestArticles', false)
     state.proxy = store.get('settings.proxy', { http: '', https: '', bypass: '' })
     state.keepRead = store.get('settings.keepread', 1)

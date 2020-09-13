@@ -69,7 +69,11 @@
   </b-modal>
 </template>
 <script>
+import setTheme from '../mixins/setTheme'
 export default {
+  mixins: [
+    setTheme
+  ],
   data () {
     return {
       keepread: 1,
@@ -109,6 +113,7 @@ export default {
         { text: 'Off', value: 'off' }
       ],
       themeOptions: [
+        { value: 'system', text: 'Follow system' },
         { value: null, text: 'Default' },
         { text: 'Dusk', value: 'dark' },
         { text: 'Sunset', value: 'sunset' },
@@ -135,37 +140,6 @@ export default {
     }
   },
   methods: {
-    setTheme (themeValue) {
-      switch (themeValue) {
-        case 'night':
-          this.toggleBodyClass(false, 'app-sunsetmode')
-          this.toggleBodyClass(false, 'app-darkmode')
-          this.toggleBodyClass(true, 'app-nightmode')
-          break
-        case 'dark':
-          this.toggleBodyClass(false, 'app-nightmode')
-          this.toggleBodyClass(false, 'app-sunsetmode')
-          this.toggleBodyClass(true, 'app-darkmode')
-          break
-        case 'sunset':
-          this.toggleBodyClass(false, 'app-nightmode')
-          this.toggleBodyClass(false, 'app-darkmode')
-          this.toggleBodyClass(true, 'app-sunsetmode')
-          break
-        case null:
-          this.toggleBodyClass(false, 'app-nightmode')
-          this.toggleBodyClass(false, 'app-darkmode')
-          this.toggleBodyClass(false, 'app-sunsetmode')
-      }
-    },
-    toggleBodyClass (addClass, className) {
-      const el = document.body
-      if (addClass) {
-        el.classList.add(className)
-      } else {
-        el.classList.remove(className)
-      }
-    },
     saveKeepRead (keepread) {
       this.$store.dispatch('setKeepRead', keepread)
       this.$toasted.show('Settings for keeping read items successfully saved.', {
