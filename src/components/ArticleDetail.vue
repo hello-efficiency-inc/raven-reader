@@ -38,15 +38,11 @@
             v-if="article.podcast"
             class="mt-5 mb-5"
           >
-            <aplayer
-              autoplay
-              :music="{
-                title: article.title,
-                artist: article.itunes.author,
-                src: article.enclosure.url,
-                pic: article.itunes.image
-              }"
-            />
+            <vue-plyr>
+              <audio autoplay>
+                <source :src="article.enclosure.url"/>
+              </audio>
+            </vue-plyr>
           </div>
         </div>
       </perfect-scrollbar>
@@ -98,12 +94,7 @@
   </div>
 </template>
 <script>
-import Aplayer from 'vue-aplayer'
-
 export default {
-  components: {
-    Aplayer
-  },
   props: {
     id: {
       type: String,

@@ -5,6 +5,7 @@ import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import SocialSharing from 'vue-social-sharing'
 import Toasted from 'vue-toasted'
 import vClickOutside from 'v-click-outside'
+import VuePlyr from 'vue-plyr'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -42,6 +43,7 @@ Vue.use(Toasted)
 Vue.use(PerfectScrollbar)
 Vue.use(SocialSharing)
 Vue.use(vClickOutside)
+Vue.use(VuePlyr)
 
 Register.registerComponents()
 
