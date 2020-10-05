@@ -22,6 +22,14 @@ export default {
       return cb(docs)
     })
   },
+  fetchArticlesByFeed (feedId, cb) {
+    return article.find({ feed_id: feedId }).exec((err, docs) => {
+      if (err) {
+        window.log(err)
+      }
+      cb(docs)
+    })
+  },
   fetchArticles (cb) {
     return article.find({}).sort({ pubDate: -1 }).exec((err, docs) => {
       if (err) {
@@ -121,7 +129,7 @@ export default {
     })
   },
   addArticles (data, cb) {
-    this.ensureIndex(article, 'guid')
+    // this.ensureIndex(article, 'guid')
     return article.insert(data, (err, docs) => {
       if (err) {
         window.log.info(err)

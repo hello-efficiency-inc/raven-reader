@@ -230,13 +230,12 @@ export default {
       this.$refs.addFeedModal.hide()
     },
     subscribe () {
-      const favicon = this.feeddata.site.favicon
       if (this.newcategory) {
         this.$store.dispatch('addCategory', { id: window.uuidstring(this.newcategory), title: this.newcategory, type: 'category' })
       } else {
         this.newcategory = this.selectedCat
       }
-      helper.subscribe(this.selected_feed, this.newcategory, favicon, false)
+      helper.subscribe(this.selected_feed, this.newcategory, false)
       this.hideModal()
     },
     onHidden () {

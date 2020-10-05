@@ -21,7 +21,8 @@
                 v-b-tooltip.hover
                 class="btn btn-toolbar"
                 type="button"
-                title="Sync"
+                title="Refresh All Feeds"
+                aria-label="Refresh All Feeds"
                 @click="sync"
               >
                 <feather-icon
@@ -68,6 +69,8 @@
       >
         <button
           class="btn foldBtn"
+          type="button"
+          :aria-label="ariaLabelFoldSidebar"
           @click="fold"
         >
           <feather-icon :name="featherIcon" />
@@ -99,6 +102,7 @@ export default {
     return {
       search: null,
       featherIcon: 'chevron-left',
+      ariaLabelFoldSidebar: 'Hide Sidebar',
       syncState: false
     }
   },
@@ -134,9 +138,8 @@ export default {
       if (feeds.length === 0) {
         window.log.info('No feeds to process')
       } else {
-        // this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
         window.log.info(`Processing ${feeds.length} feeds`)
-        helper.subscribe(feeds, null, null, true, false)
+        helper.subscribe(feeds, null, true, false)
         this.$store.dispatch('loadArticles')
       }
       setTimeout(() => {
@@ -147,8 +150,10 @@ export default {
       this.$parent.$refs.sidebar.hidden = !this.$parent.$refs.sidebar.hidden
       if (this.$parent.$refs.sidebar.hidden) {
         this.featherIcon = 'chevron-right'
+        this.ariaLabelFoldSidebar = 'Show Sidebar'
       } else {
         this.featherIcon = 'chevron-left'
+        this.ariaLabelFoldSidebar = 'Hide Sidebar'
       }
     }
   }

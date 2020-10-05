@@ -46,7 +46,7 @@ export default {
         running < concurrency ? runTask(task) : enqueueTask(task)
     }
   },
-  subscribe (feeds, category = null, faviconData = null, refresh = false, importData = false) {
+  subscribe (feeds, category = null, refresh = false, importData = false) {
     const task = (task, category, refresh) => {
       const posts = []
       if (!refresh) {
@@ -73,14 +73,29 @@ export default {
         posts.push(postItem)
       })
       if (refresh) {
-        db.addArticles(posts, docs => {
-          if (typeof docs !== 'undefined') {
-            window.notifier.notify({
-              title: 'Articles added',
-              message: `${docs.length} articles added`
+        window.log.info('Refreshing feeds')
+        const currentArticles = new Promise((resolve, reject) => {
+          db.fetchArticlesByFeed(task.feed.meta.id, docs => {
+            resolve(docs)
+          })
+        })
+        currentArticles.then((currentArticles) => {
+          const filteredPosts = posts.filter((item) => {
+            return !currentArticles.map(current => current.guid).includes(item.guid)
+          })
+          console.log(filteredPosts)
+          if (filteredPosts.length > 0) {
+            db.addArticles(filteredPosts, docs => {
+              if (typeof docs !== 'undefined') {
+                window.notifier.notify({
+                  title: 'Articles added',
+                  message: `${docs.length} articles added`
+                })
+              }
             })
           }
         })
+        store.dispatch('loadArticles')
       } else {
         store.dispatch('addArticle', posts)
       }
