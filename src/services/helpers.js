@@ -83,7 +83,6 @@ export default {
           const filteredPosts = posts.filter((item) => {
             return !currentArticles.map(current => current.guid).includes(item.guid)
           })
-          console.log(filteredPosts)
           if (filteredPosts.length > 0) {
             db.addArticles(filteredPosts, docs => {
               if (typeof docs !== 'undefined') {
