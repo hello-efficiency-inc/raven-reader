@@ -13,7 +13,7 @@ const parser = new RssParser({
  * @param  string feedUrl
  * @return array
  */
-export async function parseFeed (feedUrl, faviconUrl = null, category = null) {
+export async function parseFeed (feedUrl, category = null) {
   let feed
   const feeditem = {
     meta: '',
@@ -37,7 +37,7 @@ export async function parseFeed (feedUrl, faviconUrl = null, category = null) {
     link: feed.link,
     category: category,
     xmlurl: feedUrl,
-    favicon: typeof faviconUrl !== 'undefined' ? faviconUrl : null,
+    favicon: `https://www.google.com/s2/favicons?domain=${feed.link}`,
     description: feed.description ? feed.description : null,
     title: feed.title
   }
@@ -89,7 +89,6 @@ export function ParseFeedPost (feed) {
     item.favourite = false
     item.read = false
     item.offline = false
-    item.favicon = null
     item.podcast = podcast
     item.played = false
     item.feed_uuid = feed.meta.uuid

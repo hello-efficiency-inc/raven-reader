@@ -231,12 +231,7 @@ export default {
       this.$refs.addFeedModal.hide()
     },
     subscribe () {
-      if (this.newcategory) {
-        this.$store.dispatch('addCategory', { id: window.uuidstring(this.newcategory), title: this.newcategory, type: 'category' })
-          .then(() => {
-            this.$store.dispatch('loadCategories')
-          })
-      } else {
+      if (this.newcategory === null) {
         this.newcategory = this.selectedCat
       }
       helper.subscribe(this.selected_feed, this.newcategory, false)

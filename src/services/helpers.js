@@ -51,14 +51,10 @@ export default {
   },
   subscribe (feeds, category = null, refresh = false, importData = false) {
     const task = (task, category, refresh) => {
-      if (!refresh) {
-        task.feed.meta.favicon = task.favicon
-        store.dispatch('addFeed', task.feed.meta)
+      if (category !== null) {
+        store.dispatch('addCategory', category).then(() => store.dispatch('loadCategories'))
       }
-      // const posts = task.feed.posts.map((post) => {
-      //   post.category = !refresh ? category : task.feed.meta.category
-      //   return post
-      // })
+      store.dispatch('addFeed', task.feed.meta)
       if (refresh) {
         window.log.info('Refreshing feeds')
         db.fetchArticlesByFeed(task.feed.meta.uuid).then((currentArticles) => {
@@ -79,7 +75,6 @@ export default {
 
     feeds.forEach(async function (feed) {
       let url
-      var faviconUrl
 
       if (!importData) {
         url = feed.url
@@ -93,19 +88,18 @@ export default {
         url = feed.feedUrl
       }
 
-      const feeditem = await parseFeed(url, faviconUrl, category)
-      faviconUrl = `https://www.google.com/s2/favicons?domain=${feeditem.meta.link}`
-
-      if (refresh) {
-        feeditem.meta.uuid = feed.uuid
-        feeditem.meta.id = feed.id
+      category = category ?? feed.category ?? null
+      const categoryObj = {
+        id: window.uuidstring(category),
+        title: category,
+        type: 'category'
       }
+      const feeditem = await parseFeed(url, category)
       const taskItem = done => setTimeout(() => {
         task({
-          feed: feeditem,
-          favicon: faviconUrl
+          feed: feeditem
         },
-        category,
+        categoryObj,
         refresh
         )
         done()
