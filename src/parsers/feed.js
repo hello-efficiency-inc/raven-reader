@@ -1,4 +1,4 @@
-import unescape from '../services/unescape'
+import dayjs from 'dayjs'
 
 const RssParser = window.rssParser
 const parser = new RssParser({
@@ -13,7 +13,7 @@ const parser = new RssParser({
  * @param  string feedUrl
  * @return array
  */
-export async function parseFeed (feedUrl, faviconUrl = null) {
+export async function parseFeed (feedUrl, faviconUrl = null, category = null) {
   let feed
   const feeditem = {
     meta: '',
@@ -32,7 +32,10 @@ export async function parseFeed (feedUrl, faviconUrl = null) {
   }
 
   feeditem.meta = {
+    id: window.uuidstring(feedUrl),
+    uuid: window.uuidstring(feedUrl),
     link: feed.link,
+    category: category,
     xmlurl: feedUrl,
     favicon: typeof faviconUrl !== 'undefined' ? faviconUrl : null,
     description: feed.description ? feed.description : null,
@@ -76,19 +79,28 @@ export async function parseFeedParser (stream) {
 export function ParseFeedPost (feed) {
   feed.posts.map((item) => {
     const podcast = checkIsPodCast(item)
+    if (podcast) {
+      item.id = window.uuidstring(item.enclosure.url)
+      item.uuid = window.uuidstring(item.enclosure.url)
+    } else {
+      item.id = window.uuidstring(item.link ? item.link : feed.meta.xmlurl)
+      item.uuid = window.uuidstring(item.link ? item.link : feed.meta.xmlurl)
+    }
     item.favourite = false
     item.read = false
     item.offline = false
     item.favicon = null
     item.podcast = podcast
     item.played = false
-    item.feed_title = feed.meta.title
-    item.feed_url = feed.meta.xmlurl
-    item.feed_link = feed.meta.link
-    if (item.content) {
-      item.content = unescape(item.content)
-    }
-    return item
+    item.feed_uuid = feed.meta.uuid
+    item.category = feed.meta.category
+    item.publishUnix = dayjs(item.pubDate).unix()
+    const {
+      creator,
+      ...postItem
+    } = item
+    delete postItem['dc:creator']
+    return postItem
   })
   return feed
 }

@@ -21,7 +21,7 @@
     <div slot="modal-footer">
       <button
         type="button"
-        class="btn btn-secondary"
+        class="btn btn-secondary mr-3"
         @click="hideModal"
       >
         Cancel

@@ -4,7 +4,7 @@ import {
 } from '../parsers/feed'
 import opmlGenerator from 'opml-generator'
 import db from './db.js'
-import dayjs from 'dayjs'
+import * as database from '../db'
 
 export default {
   exportOpml () {
@@ -25,7 +25,7 @@ export default {
 
     return opmlGenerator(header, outlines)
   },
-  queue (concurrency = 1) {
+  queue (concurrency = 2) {
     let running = 0
     const taskQueue = []
 
@@ -46,61 +46,36 @@ export default {
         running < concurrency ? runTask(task) : enqueueTask(task)
     }
   },
+  addArticles (posts) {
+    db.addArticles(posts.map(item => database.articleTable.createRow(item)))
+  },
   subscribe (feeds, category = null, refresh = false, importData = false) {
     const task = (task, category, refresh) => {
-      const posts = []
       if (!refresh) {
         task.feed.meta.favicon = task.favicon
-        task.feed.meta.id = window.uuidstring(task.feed.meta.xmlurl)
         store.dispatch('addFeed', task.feed.meta)
       }
-      task.feed.posts.forEach((post) => {
-        post.feed_id = task.feed.meta.id
-        post.favicon = task.favicon
-        post.category = !refresh ? category : task.feed.meta.category
-        post.link = post.link ? post.link : task.feed.meta.xmlurl
-        if (post.podcast) {
-          post.guid = window.uuidstring(post.enclosure.url)
-        } else {
-          post.guid = window.uuidstring(post.link ? post.link : task.feed.meta.xmlurl)
-        }
-        post.publishUnix = dayjs(post.pubDate).unix()
-        const {
-          creator,
-          ...postItem
-        } = post
-        delete postItem['dc:creator']
-        posts.push(postItem)
-      })
+      // const posts = task.feed.posts.map((post) => {
+      //   post.category = !refresh ? category : task.feed.meta.category
+      //   return post
+      // })
       if (refresh) {
         window.log.info('Refreshing feeds')
-        const currentArticles = new Promise((resolve, reject) => {
-          db.fetchArticlesByFeed(task.feed.meta.id, docs => {
-            resolve(docs)
-          })
-        })
-        currentArticles.then((currentArticles) => {
-          const filteredPosts = posts.filter((item) => {
-            return !currentArticles.map(current => current.guid).includes(item.guid)
+        db.fetchArticlesByFeed(task.feed.meta.uuid).then((currentArticles) => {
+          const filteredPosts = task.feed.posts.filter((item) => {
+            return !currentArticles.map(current => current.uuid).includes(item.uuid)
           })
           if (filteredPosts.length > 0) {
-            db.addArticles(filteredPosts, docs => {
-              if (typeof docs !== 'undefined') {
-                window.notifier.notify({
-                  title: 'Articles added',
-                  message: `${docs.length} articles added`
-                })
-              }
-            })
+            this.addArticles(filteredPosts)
           }
         })
-        store.dispatch('loadArticles')
       } else {
-        store.dispatch('addArticle', posts)
+        this.addArticles(task.feed.posts)
       }
+      store.dispatch('loadArticles')
     }
 
-    const runner = this.queue(2)
+    const runner = this.queue(3)
 
     feeds.forEach(async function (feed) {
       let url
@@ -118,13 +93,11 @@ export default {
         url = feed.feedUrl
       }
 
-      const feeditem = await parseFeed(url, faviconUrl)
+      const feeditem = await parseFeed(url, faviconUrl, category)
       faviconUrl = `https://www.google.com/s2/favicons?domain=${feeditem.meta.link}`
 
-      if (!refresh) {
-        feeditem.meta.category = category
-      }
       if (refresh) {
+        feeditem.meta.uuid = feed.uuid
         feeditem.meta.id = feed.id
       }
       const taskItem = done => setTimeout(() => {
@@ -136,7 +109,7 @@ export default {
         refresh
         )
         done()
-      }, 100)
+      }, 1000)
       runner.push(taskItem)
     })
   }

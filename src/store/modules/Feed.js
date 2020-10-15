@@ -15,7 +15,7 @@ const mutations = {
   ADD_FEED (state, docs) {
     if (docs) {
       docs.title = truncate(docs.title, { length: 22 })
-      state.feeds.unshift(docs)
+      state.feeds.unshift(...docs)
     }
   },
   DELETE_FEED (state, id) {
@@ -42,14 +42,12 @@ const mutations = {
 }
 
 const actions = {
-  loadFeeds ({ commit }) {
-    db.fetchFeeds(docs => {
-      commit('LOAD_FEEDS', docs)
-    })
+  async loadFeeds ({ commit }) {
+    commit('LOAD_FEEDS', await db.fetchFeeds())
   },
   addFeed ({ commit }, feed) {
-    db.addFeed(feed, docs => {
-      commit('ADD_FEED', docs)
+    db.addFeed(feed).then((result) => {
+      commit('ADD_FEED', result)
     })
   },
   async deleteFeed ({ dispatch, commit }, id) {

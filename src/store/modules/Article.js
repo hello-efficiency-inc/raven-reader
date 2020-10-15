@@ -23,14 +23,14 @@ const Store = window.electronstore
 const store = new Store()
 
 const filters = {
-  search: (articles, search) => articles.filter(article => article.title.match(search)),
-  unread: articles => articles.filter(article => !article.read),
-  played: articles => articles.filter(article => article.podcast && article.played),
-  read: articles => articles.filter(article => article.read),
-  favourites: articles => articles.filter(article => article.favourite),
-  feed: (articles, feed) => articles.filter(article => article.feed_id === feed),
-  category: (articles, category) => articles.filter(article => article.category === category),
-  saved: articles => articles.filter(article => article.offline),
+  search: (articles, search) => articles.filter(article => article.articles.title.match(search)),
+  unread: articles => articles.filter(article => !article.articles.read),
+  played: articles => articles.filter(article => article.articles.podcast && article.articles.played),
+  read: articles => articles.filter(article => article.articles.read),
+  favourites: articles => articles.filter(article => article.articles.favourite),
+  feed: (articles, feed) => articles.filter(article => article.articles.feed_uuid === feed),
+  category: (articles, category) => articles.filter(article => article.articles.category === category),
+  saved: articles => articles.filter(article => article.articles.offline),
   all: articles => articles
 }
 
@@ -46,9 +46,9 @@ const searchOption = {
 
 const sortBy = (key, pref) => {
   if (pref === 'asc') {
-    return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0)
+    return (a, b) => (a.articles[key] > b.articles[key]) ? 1 : ((b.articles[key] > a.articles[key]) ? -1 : 0)
   }
-  return (a, b) => (a[key] < b[key]) ? 1 : ((b[key] < a[key]) ? -1 : 0)
+  return (a, b) => (a.articles[key] < b.articles[key]) ? 1 : ((b.articles[key] < a.articles[key]) ? -1 : 0)
 }
 const getters = {
   filteredArticles: state => {
@@ -67,6 +67,7 @@ const getters = {
     if (state.category) {
       return filters.category(orderedArticles, state.category)
     }
+
     return filters[state.type](orderedArticles, state.feed)
   }
 }
@@ -74,11 +75,14 @@ const getters = {
 const mutations = {
   LOAD_ARTICLES (state, articles) {
     state.articles = articles.map((item) => {
-      item.feed_title = truncate(item.feed_title, { length: 20 })
-      item.title = truncate(item.title, { length: 250 })
-      item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
-      if (!('offline' in item)) {
-        item.offline = false
+      item.feeds.title = truncate(item.feeds.title, { length: 20 })
+      item.articles.title = truncate(item.articles.title, { length: 250 })
+      item.articles.contentSnippet = truncate(item.articles.contentSnippet, {
+        length: 100
+      })
+      item.formatDate = dayjs(item.articles.pubDate).format('DD MMMM YYYY')
+      if (!('offline' in item.articles)) {
+        item.articles.offline = false
       }
       return item
     })
@@ -96,33 +100,31 @@ const mutations = {
     }
   },
   MARK_ACTION (state, data) {
-    const index = state.articles.findIndex(item => item._id === data.id)
+    const index = state.articles.findIndex(item => item.articles.uuid === data.id)
+    console.log(index)
     if (data.type === 'FAVOURITE') {
-      state.articles[index].favourite = true
+      state.articles[index].articles.favourite = true
     }
 
     if (data.type === 'UNFAVOURITE') {
-      state.articles[index].favourite = false
+      state.articles[index].articles.favourite = false
     }
     if (data.type === 'READ') {
-      state.articles[index].read = true
-      if (state.articles[index].podcast) {
-        state.articles[index].played = true
+      state.articles[index].articles.read = true
+      if (state.articles[index].articles.podcast) {
+        state.articles[index].articles.played = true
       }
     }
 
     if (data.type === 'UNREAD') {
-      state.articles[index].read = false
-      if (state.articles[index].podcast) {
-        state.articles[index].played = false
+      state.articles[index].articles.read = false
+      if (state.articles[index].articles.podcast) {
+        state.articles[index].articles.played = false
       }
     }
   },
   MARK_ALL_READ (state) {
-    for (let i = 0; i < state.articles.length; i++) {
-      state.articles[i].read = true
-      db.markRead(state.articles[i]._id, null)
-    }
+    db.markAllRead(state.articles.map(item => item.articles.uuid))
   },
   MARK_FEED_READ (state, id) {
     const feedArticles = state.articles.filter(item => item.feed_id === id)
@@ -180,21 +182,15 @@ const mutations = {
   FONT_SETTINGS_ON (state, data) {
     state.fontSettingOn = data
   },
-  UPDATE_FEED_TITLE (state, data) {
-    const index = state.articles.findIndex(item => item._id === data.article_id)
-    if (index >= 0) {
-      state.articles[index].feed_title = data.title
-    }
-  },
   CHANGE_FONT_STYLE (state, data) {
     state.fontStyle = data
   },
   UPDATE_ARTICLE_CATEGORY (state, data) {
-    const articles = state.articles.filter(item => item.category === data.old.title)
+    const articles = state.articles.filter(item => item.articles.category === data.old.title)
     for (let i = 0; i < articles.length; i++) {
-      const index = state.articles.findIndex(item => item._id === articles[i]._id)
-      db.updateArticleCategory(state.articles[index]._id, data.new.title)
-      state.articles[index].category = data.new.title
+      const index = state.articles.findIndex(item => item.articles.uuid === articles[i].articles.uuid)
+      db.updateArticleCategory(state.articles[index].articles.uuid, data.new.title)
+      state.articles[index].articles.category = data.new.title
     }
   },
   MARK_CATEGORY_READ (state, data) {
@@ -212,29 +208,26 @@ const mutations = {
 }
 
 const actions = {
-  loadArticles ({ commit }) {
-    db.fetchArticles(docs => {
-      commit('LOAD_ARTICLES', docs)
-    })
+  async loadArticles ({ commit }) {
+    commit('LOAD_ARTICLES', await db.fetchArticles())
   },
-  addArticle ({ commit }, article) {
-    db.addArticles(article, docs => {
-      commit('ADD_ARTICLES', docs)
-    })
+  async addArticle ({ commit }, article) {
+    commit('ADD_ARTICLES', await db.addArticles(article))
   },
   markAction ({ commit }, data) {
+    console.log(data.type)
     switch (data.type) {
       case 'FAVOURITE':
-        db.markFavourite(data.id)
+        db.markFavourite(data.id, true)
         break
       case 'UNFAVOURITE':
-        db.markUnfavourite(data.id)
+        db.markFavourite(data.id, false)
         break
       case 'READ':
-        db.markRead(data.id, data.podcast)
+        db.markRead(data.id, data.podcast, true)
         break
       case 'UNREAD':
-        db.markUnread(data.id, data.podcast)
+        db.markRead(data.id, data.podcast, false)
         break
     }
     commit('MARK_ACTION', data)
@@ -261,10 +254,8 @@ const actions = {
     commit('DELETE_ARTICLES', id)
     await dispatch('loadArticles')
   },
-  refreshFeeds ({ commit }) {
-    db.fetchFeeds(docs => {
-      commit('REFRESH_FEEDS', docs)
-    })
+  async refreshFeeds ({ commit }) {
+    commit('REFRESH_FEEDS', await db.fetchFeeds())
   },
   changeType ({ commit }, type) {
     commit('CHANGE_TYPE', type)
@@ -293,10 +284,8 @@ const actions = {
   updateArticleCategory ({ commit }, data) {
     commit('UPDATE_ARTICLE_CATEGORY', data)
   },
-  async updateArticleFeedTitle ({ dispatch, commit }, data) {
-    db.updateArticleFeedTitle(data.id, data.title, data.category)
-    commit('UPDATE_FEED_TITLE', data)
-    await dispatch('loadArticles')
+  updateArticleFeedTitle ({ commit }, data) {
+    db.updateArticleFeedCategory(data.id, data.category)
   },
   markCategoryRead ({
     commit

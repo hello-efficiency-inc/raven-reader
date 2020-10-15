@@ -1,44 +1,55 @@
-import DataStore from 'nedb'
+import lf from 'lovefield'
 
-export default class {
-  constructor () {
-    this.db = null
-  }
+const schemaBuilder = lf.schema.create('raven', 1)
 
-  createOrReadDatabase (db) {
-    const database = {}
-    database.article = new DataStore({
-      filename: db.article,
-      autoload: true,
-      timestampData: true
-    })
+schemaBuilder.createTable('feeds')
+  .addColumn('id', lf.Type.INTEGER)
+  .addColumn('uuid', lf.Type.STRING)
+  .addColumn('link', lf.Type.STRING)
+  .addColumn('xmlurl', lf.Type.STRING)
+  .addColumn('favicon', lf.Type.STRING)
+  .addColumn('description', lf.Type.STRING)
+  .addColumn('title', lf.Type.STRING)
+  .addColumn('category', lf.Type.STRING)
+  .addPrimaryKey(['id'])
+  .addUnique('unique_uuid', ['uuid'])
+  .addNullable(['description', 'category', 'link'])
 
-    database.feed = new DataStore({
-      filename: db.feed,
-      autoload: true,
-      timestampData: true
-    })
+schemaBuilder.createTable('articles')
+  .addColumn('id', lf.Type.INTEGER)
+  .addColumn('uuid', lf.Type.STRING)
+  .addColumn('title', lf.Type.STRING)
+  .addColumn('link', lf.Type.STRING)
+  .addColumn('pubDate', lf.Type.STRING)
+  .addColumn('author', lf.Type.STRING)
+  .addColumn('content', lf.Type.STRING)
+  .addColumn('contentSnippet', lf.Type.STRING)
+  .addColumn('favourite', lf.Type.BOOLEAN)
+  .addColumn('read', lf.Type.BOOLEAN)
+  .addColumn('podcast', lf.Type.BOOLEAN)
+  .addColumn('played', lf.Type.BOOLEAN)
+  .addColumn('offline', lf.Type.BOOLEAN)
+  .addColumn('feed_uuid', lf.Type.STRING)
+  .addColumn('category', lf.Type.STRING)
+  .addColumn('publishUnix', lf.Type.INTEGER)
+  .addPrimaryKey(['id'])
+  .addUnique('unique_uuid', ['uuid'])
+  .addNullable(['content', 'contentSnippet', 'author', 'category'])
 
-    database.category = new DataStore({
-      filename: db.category,
-      autoload: true,
-      timestampData: true
-    })
+schemaBuilder.createTable('categories')
+  .addColumn('id', lf.Type.INTEGER)
+  .addColumn('title', lf.Type.STRING)
+  .addColumn('type', lf.Type.STRING)
+  .addPrimaryKey(['id'])
 
-    return database
-  }
+export let database
+export let feedTable
+export let articleTable
+export let categoryTable
 
-  init () {
-    if (this.db) {
-      return this.db
-    }
-
-    this.db = this.createOrReadDatabase({
-      article: 'articles.db',
-      feed: 'feeds.db',
-      category: 'categories.db'
-    })
-
-    return this.db
-  }
+export async function init () {
+  database = await schemaBuilder.connect()
+  feedTable = database.getSchema().table('feeds')
+  articleTable = database.getSchema().table('articles')
+  categoryTable = database.getSchema().table('categories')
 }

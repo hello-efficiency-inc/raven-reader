@@ -51,7 +51,7 @@
           <template v-if="filteredArticles.length > 0">
             <article-item
               v-for="article in mapArticles(filteredArticles)"
-              :key="article._id"
+              :key="article.uuid"
               :article="article"
             />
           </template>
@@ -123,10 +123,10 @@ export default {
   },
   methods: {
     mapArticles (articles) {
-      return articles.map(article => ({ ...article, id: article._id, isActive: this.isArticleActive(article) }))
+      return articles.map(article => ({ ...article, id: article.articles.id, isActive: this.isArticleActive(article) }))
     },
     isArticleActive (article) {
-      return !!article && article.id !== undefined && article.id === this.activeArticleId
+      return !!article && article.articles.id !== undefined && article.articles.id === this.activeArticleId
     },
     itemsChange () {
       this.$refs.statusMsg.innerText = `${this.filteredArticles.length} items`

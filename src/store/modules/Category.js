@@ -24,21 +24,19 @@ const mutations = {
     state.categories.splice(index, 1)
   },
   RENAME_CATEGORY (state, category) {
-    const index = state.categories.findIndex(item => item._id === category._id)
+    const index = state.categories.findIndex(item => item.id === category.id)
     state.categories[index].title = category.title
-    db.updateCategory(category._id, category.title)
+    db.updateCategory(category.id, category.title)
   }
 }
 
 const actions = {
-  loadCategories ({ commit }) {
-    db.fetchCategories(docs => {
-      commit('LOAD_CATEGORY', docs)
-    })
+  async loadCategories ({ commit }) {
+    commit('LOAD_CATEGORY', await db.fetchCategories())
   },
   addCategory ({ commit }, category) {
-    db.addCategory(category, docs => {
-      commit('ADD_CATEGORY', docs)
+    db.addCategory(category).then((result) => {
+      commit('ADD_CATEGORY', result)
     })
   },
   deleteCategory ({ commit }, category) {

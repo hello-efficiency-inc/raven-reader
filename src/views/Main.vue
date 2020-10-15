@@ -110,12 +110,14 @@ export default {
   },
   mounted () {
     this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
-    this.$store.dispatch('refreshFeeds')
-    this.$store.dispatch('loadCategories')
-    this.$store.dispatch('loadFeeds')
-    this.$store.dispatch('loadArticles')
-    this.$store.dispatch('checkOffline')
-    this.$store.dispatch('removeOldReadItems')
+    this.$store.dispatch('initializeDB').then(() => {
+      // this.$store.dispatch('refreshFeeds')
+      this.$store.dispatch('loadCategories')
+      this.$store.dispatch('loadFeeds')
+      this.$store.dispatch('loadArticles')
+      // this.$store.dispatch('checkOffline')
+      // this.$store.dispatch('removeOldReadItems')
+    })
 
     // Register event listeners
     bridge([
