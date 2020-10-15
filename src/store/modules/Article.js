@@ -254,7 +254,7 @@ const actions = {
     commit('DELETE_ARTICLES', id)
     await dispatch('loadArticles')
   },
-  async refreshFeeds ({ commit }) {
+  async refreshFeeds ({ dispatch, commit }) {
     commit('REFRESH_FEEDS', await db.fetchFeeds())
   },
   changeType ({ commit }, type) {

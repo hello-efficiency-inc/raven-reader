@@ -19,8 +19,15 @@ export default {
       .where(db.articleTable.feed_uuid.eq(feedId))
       .exec()
   },
+  fetchArticlesByFeedMulti (feedIds) {
+    return db.database
+      .select()
+      .from(db.articleTable)
+      .where(db.articleTable.feed_uuid.in(feedIds))
+      .exec()
+  },
   addFeed (data) {
-    return db.database.insertOrReplace().into(db.feedTable).values([db.feedTable.createRow(data)]).exec()
+    return db.database.insertOrReplace().into(db.feedTable).values(data).exec()
   },
   updateFeedTitle (id, title, category) {
     return db.database.update(db.feedTable)
@@ -48,7 +55,7 @@ export default {
       .exec()
   },
   addCategory (data) {
-    return db.database.insertOrReplace().into(db.categoryTable).values([db.categoryTable.createRow(data)]).exec()
+    return db.database.insertOrReplace().into(db.categoryTable).values(data).exec()
   },
   fetchCategories () {
     return db.database.select().from(db.categoryTable).exec()

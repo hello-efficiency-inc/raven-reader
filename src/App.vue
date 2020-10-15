@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-  name: 'RssReader'
+  name: 'Raven'
 }
 </script>
 

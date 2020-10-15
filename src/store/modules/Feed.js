@@ -13,10 +13,7 @@ const mutations = {
     })
   },
   ADD_FEED (state, docs) {
-    if (docs) {
-      docs.title = truncate(docs.title, { length: 22 })
-      state.feeds.unshift(...docs)
-    }
+    db.addFeed(docs)
   },
   DELETE_FEED (state, id) {
     const index = state.feeds.findIndex(item => item.id === id)
@@ -46,9 +43,7 @@ const actions = {
     commit('LOAD_FEEDS', await db.fetchFeeds())
   },
   addFeed ({ commit }, feed) {
-    db.addFeed(feed).then((result) => {
-      commit('ADD_FEED', result)
-    })
+    commit('ADD_FEED', feed)
   },
   async deleteFeed ({ dispatch, commit }, id) {
     await dispatch('deleteArticle', id)

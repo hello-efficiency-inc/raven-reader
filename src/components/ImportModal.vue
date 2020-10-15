@@ -34,6 +34,7 @@
   </b-modal>
 </template>
 <script>
+import { parseOPML } from '../services/opml'
 import helper from '../services/helpers'
 
 export default {
@@ -63,18 +64,8 @@ export default {
             duration: 3000
           })
         }
-
-        window.opmlParser(data, (err, data) => {
-          if (err) {
-            this.$toasted.show('Oops! something went wrong', {
-              theme: 'outline',
-              position: 'top-center',
-              duration: 3000
-            })
-          } else {
-            helper.subscribe(data, null, null, false, true)
-          }
-        })
+        const parsedData = parseOPML(data).filter(item => item !== null)
+        helper.subscribe(parsedData, null, false, true)
       })
 
       this.file = null

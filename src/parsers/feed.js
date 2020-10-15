@@ -77,19 +77,21 @@ export async function parseFeedParser (stream) {
  * @constructor
  */
 export function ParseFeedPost (feed) {
-  feed.posts.map((item) => {
+  const feeditems = JSON.parse(JSON.stringify(feed))
+  feeditems.posts.map((item) => {
     const podcast = checkIsPodCast(item)
+    const articleLink = item.link ?? feed.meta.xmlurl ?? Math.random().toString(36).substring(7)
     if (podcast) {
       item.id = window.uuidstring(item.enclosure.url)
       item.uuid = window.uuidstring(item.enclosure.url)
     } else {
-      item.id = window.uuidstring(item.link ? item.link : feed.meta.xmlurl)
-      item.uuid = window.uuidstring(item.link ? item.link : feed.meta.xmlurl)
+      item.id = window.uuidstring(articleLink)
+      item.uuid = window.uuidstring(articleLink)
     }
     item.favourite = false
     item.read = false
     item.offline = false
-    item.podcast = podcast
+    item.podcast = podcast ?? false
     item.played = false
     item.feed_uuid = feed.meta.uuid
     item.category = feed.meta.category
@@ -101,7 +103,7 @@ export function ParseFeedPost (feed) {
     delete postItem['dc:creator']
     return postItem
   })
-  return feed
+  return feeditems
 }
 
 function checkIsPodCast (post) {

@@ -11,8 +11,7 @@ schemaBuilder.createTable('feeds')
   .addColumn('description', lf.Type.STRING)
   .addColumn('title', lf.Type.STRING)
   .addColumn('category', lf.Type.STRING)
-  .addPrimaryKey(['id'])
-  .addUnique('unique_uuid', ['uuid'])
+  .addPrimaryKey(['id'], true)
   .addNullable(['description', 'category', 'link'])
 
 schemaBuilder.createTable('articles')
@@ -32,15 +31,14 @@ schemaBuilder.createTable('articles')
   .addColumn('feed_uuid', lf.Type.STRING)
   .addColumn('category', lf.Type.STRING)
   .addColumn('publishUnix', lf.Type.INTEGER)
-  .addPrimaryKey(['id'])
-  .addUnique('unique_uuid', ['uuid'])
-  .addNullable(['content', 'contentSnippet', 'author', 'category'])
+  .addPrimaryKey(['id'], true)
+  .addNullable(['content', 'contentSnippet', 'author', 'category', 'pubDate', 'link'])
 
 schemaBuilder.createTable('categories')
   .addColumn('id', lf.Type.INTEGER)
   .addColumn('title', lf.Type.STRING)
   .addColumn('type', lf.Type.STRING)
-  .addPrimaryKey(['id'])
+  .addPrimaryKey(['id'], true)
 
 export let database
 export let feedTable

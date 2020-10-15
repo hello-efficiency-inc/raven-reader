@@ -25,55 +25,17 @@ export default {
 
     return opmlGenerator(header, outlines)
   },
-  queue (concurrency = 2) {
-    let running = 0
-    const taskQueue = []
-
-    const runTask = (task) => {
-      running++
-      task(_ => {
-        running--
-        if (taskQueue.length > 0) {
-          runTask(taskQueue.shift())
-        }
-      })
-    }
-
-    const enqueueTask = task => taskQueue.push(task)
-
-    return {
-      push: task =>
-        running < concurrency ? runTask(task) : enqueueTask(task)
-    }
+  addCategories (categories) {
+    return db.addCategory(categories.map(item => database.categoryTable.createRow(item)))
+  },
+  addFeeds (feeds) {
+    return db.addFeed(feeds.map(item => database.feedTable.createRow(item)))
   },
   addArticles (posts) {
-    db.addArticles(posts.map(item => database.articleTable.createRow(item)))
+    return db.addArticles(posts.map(item => database.articleTable.createRow(item)))
   },
   subscribe (feeds, category = null, refresh = false, importData = false) {
-    const task = (task, category, refresh) => {
-      if (category !== null) {
-        store.dispatch('addCategory', category).then(() => store.dispatch('loadCategories'))
-      }
-      store.dispatch('addFeed', task.feed.meta)
-      if (refresh) {
-        window.log.info('Refreshing feeds')
-        db.fetchArticlesByFeed(task.feed.meta.uuid).then((currentArticles) => {
-          const filteredPosts = task.feed.posts.filter((item) => {
-            return !currentArticles.map(current => current.uuid).includes(item.uuid)
-          })
-          if (filteredPosts.length > 0) {
-            this.addArticles(filteredPosts)
-          }
-        })
-      } else {
-        this.addArticles(task.feed.posts)
-      }
-      store.dispatch('loadArticles')
-    }
-
-    const runner = this.queue(3)
-
-    feeds.forEach(async function (feed) {
+    const items = feeds.map(async (feed) => {
       let url
 
       if (!importData) {
@@ -88,23 +50,45 @@ export default {
         url = feed.feedUrl
       }
 
-      category = category ?? feed.category ?? null
-      const categoryObj = {
-        id: window.uuidstring(category),
-        title: category,
+      const categoryItem = category ?? feed.category ?? null
+      const categoryObj = categoryItem ? {
+        id: window.uuidstring(categoryItem),
+        title: categoryItem,
         type: 'category'
+      } : null
+      const feeditem = await parseFeed(url, categoryItem)
+      return {
+        feed: feeditem.meta,
+        posts: feeditem.posts,
+        category: categoryObj
       }
-      const feeditem = await parseFeed(url, category)
-      const taskItem = done => setTimeout(() => {
-        task({
-          feed: feeditem
-        },
-        categoryObj,
-        refresh
-        )
-        done()
-      }, 1000)
-      runner.push(taskItem)
+    })
+
+    return Promise.all(items).then((result) => {
+      const feeds = result.map((item) => item.feed)
+      const categories = result.map((item) => item.category)
+      const articles = result.map((item) => item.posts).flat()
+      console.log(categories)
+      if (!refresh) {
+        this.addCategories(categories.filter(item => item !== null)).then(() => store.dispatch('loadCategories'))
+        this.addFeeds(feeds).then(() => store.dispatch('loadFeeds'))
+      }
+      if (refresh) {
+        window.log.info('Refreshing feeds')
+        db.fetchArticlesByFeedMulti(feeds.map(item => item.uuid)).then((currentArticles) => {
+          const filteredPosts = articles.filter((item) => {
+            return !currentArticles.map(current => current.uuid).includes(item.uuid)
+          })
+          console.log(filteredPosts)
+          if (filteredPosts.length > 0) {
+            this.addArticles(filteredPosts).then(() => store.dispatch('loadArticles'))
+          } else {
+            window.log.info('Nothing to refresh')
+          }
+        })
+      } else {
+        this.addArticles(articles).then(() => store.dispatch('loadArticles'))
+      }
     })
   }
 }
