@@ -1,3 +1,4 @@
+require('v8-compile-cache')
 window.fs = require('fs')
 window.shell = require('electron').shell
 window.globalagent = require('global-agent')

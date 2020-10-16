@@ -12,6 +12,7 @@
             v-model="search"
             type="text"
             class="form-control"
+            @keyup.enter="searchList"
             placeholder="Search"
             aria-label="Search"
           >

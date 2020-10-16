@@ -25,7 +25,7 @@ const store = new Store()
 const filters = {
   search: (articles, search) => articles.filter(article => article.articles.title.match(search)),
   unread: articles => articles.filter(article => !article.articles.read),
-  played: articles => articles.filter(article => article.articles.podcast && article.articles.played),
+  played: articles => articles.filter(article => article.articles.played),
   read: articles => articles.filter(article => article.articles.read),
   favourites: articles => articles.filter(article => article.articles.favourite),
   feed: (articles, feed) => articles.filter(article => article.articles.feed_uuid === feed),

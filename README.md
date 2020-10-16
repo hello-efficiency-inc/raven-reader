@@ -91,7 +91,7 @@ yarn run lint
 
 - [Bootstrap](https://getbootstrap.com)
 - [Vue](https://www.vuejs.org) & [Vuex](https://vuex.vuejs.org)
-- [NeDB](https://github.com/louischatriot/nedb)
+- [Lovefield](https://github.com/google/lovefield)
 - [Mercury Parser](https://mercury.postlight.com/web-parser/)
 
 
