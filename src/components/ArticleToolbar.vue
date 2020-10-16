@@ -5,14 +5,14 @@
       class="article-toolbar"
     >
       <div class="site-info">
-        <div class="wrap">
+        <div class="wrap w-100">
           <button
             v-b-modal.editSubscription
             class="btn btn-toolbar d-flex align-items-center"
           >
-            <div
+            <span
               v-if="article.favicon"
-              class="favicon-wrap mr-2"
+              class="favicon-wrap mr-3"
             >
               <img
                 :src="article.favicon"
@@ -20,8 +20,8 @@
                 height="16"
                 class="mb-0"
               >
-            </div>
-            <div>{{ article.sitetitle }}</div>
+            </span>
+            <span>{{ article.sitetitle }}</span>
           </button>
           <edit-subscription :article="article" />
         </div>
@@ -531,16 +531,10 @@ export default {
 }
 
 .favicon-wrap {
-  // position: absolute;
-  // box-shadow: none;
-  height: 20px;
-  width: 20px;
-  // left: 12px;
-  // top: 17px;
   display: flex;
   align-items: center;
-  // pointer-events: none;
-  // z-index: 0;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .dropdown-item span {

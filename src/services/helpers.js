@@ -9,7 +9,7 @@ import * as database from '../db'
 export default {
   exportOpml () {
     const header = {
-      title: 'RSS Reader',
+      title: 'Raven Reader',
       dateCreated: new Date(2014, 2, 9)
     }
     const outlines = []

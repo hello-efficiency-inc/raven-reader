@@ -145,11 +145,10 @@ export default {
       } else {
         window.log.info(`Processing ${feeds.length} feeds`)
         helper.subscribe(feeds, null, true, false)
-        this.$store.dispatch('loadArticles')
+        this.$store.dispatch('loadArticles').then(() => {
+          self.syncState = false
+        })
       }
-      setTimeout(() => {
-        self.syncState = false
-      }, feeds.length * 1500)
     },
     fold () {
       this.$parent.$refs.sidebar.hidden = !this.$parent.$refs.sidebar.hidden

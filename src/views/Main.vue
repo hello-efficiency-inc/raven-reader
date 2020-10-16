@@ -279,7 +279,7 @@ export default {
             type: 'READ',
             id: self.$route.params.id,
             podcast: articleItem.articles.podcast
-          })
+          }).then(() => self.$store.dispatch('loadArticles'))
           try {
             if (!articleItem.articles.podcast) {
               data = self.$store.state.Setting.offline ? await cacheService.getCachedArticleData(
