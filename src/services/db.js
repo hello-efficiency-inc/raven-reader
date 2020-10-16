@@ -29,6 +29,9 @@ export default {
   addFeed (data) {
     return db.database.insertOrReplace().into(db.feedTable).values(data).exec()
   },
+  deleteFeed (feedId) {
+    return db.database.delete().from(db.feedTable).where(db.feedTable.uuid.eq(feedId)).exec()
+  },
   updateFeedTitle (id, title, category) {
     return db.database.update(db.feedTable)
       .set(db.feedTable.title, title)
@@ -44,6 +47,9 @@ export default {
   },
   addArticles (data) {
     return db.database.insertOrReplace().into(db.articleTable).values(data).exec()
+  },
+  deleteArticles (feedId) {
+    return db.database.delete().from(db.articleTable).where(db.articleTable.feed_uuid.eq(feedId)).exec()
   },
   fetchArticle (uuid) {
     return db.database.select()

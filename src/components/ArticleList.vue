@@ -115,13 +115,17 @@ export default {
     }
   },
   watch: {
-    search (val) {
-      this.$store.dispatch('changeType', 'search')
-      this.$store.dispatch('setSearch', val)
-    },
+    // search (val) {
+    //   this.$store.dispatch('changeType', 'search')
+    //   this.$store.dispatch('setSearch', val)
+    // },
     filteredArticles: 'itemsChange'
   },
   methods: {
+    searchList () {
+      this.$store.dispatch('changeType', 'search')
+      this.$store.dispatch('setSearch', this.search)
+    },
     mapArticles (articles) {
       return articles.map(article => ({ ...article, id: article.articles.id, isActive: this.isArticleActive(article) }))
     },

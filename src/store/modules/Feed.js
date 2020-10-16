@@ -8,8 +8,8 @@ const state = {
 const mutations = {
   LOAD_FEEDS (state, feed) {
     state.feeds = Object.freeze(feed.map((item) => {
-      item.title = truncate(item.title, { length: 22 })
       item.fulltitle = item.title
+      item.title = truncate(item.title, { length: 22 })
       return item
     }))
   },
@@ -17,9 +17,7 @@ const mutations = {
     db.addFeed(docs)
   },
   DELETE_FEED (state, id) {
-    const index = state.feeds.findIndex(item => item.id === id)
     db.deleteFeed(id)
-    state.feeds.splice(index, 1)
   },
   ORDER_FEEDS (state, feeds) {
     state.feeds = feeds
@@ -47,6 +45,7 @@ const actions = {
     commit('ADD_FEED', feed)
   },
   async deleteFeed ({ dispatch, commit }, id) {
+    console.log(id)
     await dispatch('deleteArticle', id)
     commit('DELETE_FEED', id)
   },

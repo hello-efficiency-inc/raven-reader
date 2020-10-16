@@ -50,6 +50,7 @@
     "rss-parser": "^3.9.0",
     "uuid-by-string": "^3.0.2",
     "v-click-outside": "^3.0.1",
+    "v8-compile-cache": "^2.1.1",
     "vue": "^2.6.11",
     "vue-plyr": "^6.0.4",
     "vue-router": "^3.2.0",

@@ -15,8 +15,9 @@
         type="text"
       />
     </b-form-group>
-    <b-form-group label="Category">
+    <b-form-group :label="categoryItems.length > 0 ? 'Category' : ''">
       <b-form-select
+        v-if="categoryItems.length > 0"
         v-model="article.category"
         :options="categoryItems"
         class="mb-3"
@@ -91,19 +92,21 @@ export default {
     },
     updateSubscriptionTitle () {
       if (this.newcategory) {
-        this.$store.dispatch('addCategory', { id: window.uuidstring(this.newcategory), title: this.newcategory, type: 'category' })
+        this.$store.dispatch('addCategory', { id: window.uuidstring(this.newcategory), title: this.newcategory, type: 'category' }).then(() => this.$store.dispatch('loadCategories'))
       } else {
         this.newcategory = this.article.category
       }
       this.$store.dispatch('updateFeedTitle', {
-        title: this.article.sitetitle,
+        title: this.article.fulltitle,
         category: this.newcategory,
-        id: this.article.feed_id
+        id: this.article.feed_uuid
       })
       this.$store.dispatch('updateArticleFeedTitle', {
         category: this.newcategory,
-        title: this.article.sitetitle,
-        id: this.article.feed_id
+        id: this.article.feed_uuid
+      }).then(() => {
+        this.$store.dispatch('loadFeeds')
+        this.$store.dispatch('loadArticles')
       })
       this.$toasted.show('Subscription title updated.', {
         theme: 'outline',
