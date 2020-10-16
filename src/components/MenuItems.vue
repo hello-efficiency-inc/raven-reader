@@ -85,7 +85,7 @@
     >
       <router-link
         class="nav-link feed-mix-link"
-        to="/read"
+        to="/played"
         active-class="active"
       >
         <feed-mix

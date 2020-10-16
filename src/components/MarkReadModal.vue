@@ -11,7 +11,7 @@
     </p><div slot="modal-footer">
       <button
         type="button"
-        class="btn btn-secondary"
+        class="btn btn-secondary mr-3"
         @click="markAllRead"
       >
         Yes
@@ -33,7 +33,9 @@ export default {
       this.$refs.markallread.hide()
     },
     markAllRead () {
-      this.$store.dispatch('markAllRead')
+      this.$store.dispatch('markAllRead').then(() => {
+        this.$store.dispatch('loadArticles')
+      })
       this.$refs.markallread.hide()
     }
   }

@@ -6,7 +6,7 @@ const state = {
   activeFeed: null
 }
 
-const getId = item => !!item && item.id !== undefined && !!(item.id) ? item.id : null
+const getId = item => !!item && item.uuid !== undefined && !!(item.uuid) ? item.uuid : null
 
 const getters = {
   activeFeedId: state => {

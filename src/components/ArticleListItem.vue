@@ -2,25 +2,32 @@
   <div
     class="artcle-list-item"
     mark="article"
-    :class="{ active: isArticleActive(article) }"
-    @click="setActiveArticleId(article)"
-    @contextmenu.prevent="openArticleContextMenu($event, { article: article })"
+    :class="{ active: isArticleActive(article.articles) }"
+    @click="setActiveArticleId(article.articles)"
+    @contextmenu.prevent="openArticleContextMenu($event, { article: article.articles })"
   >
     <router-link
-      :to="`/article/${article._id}`"
-      :class="{ 'article-read': article.read }"
+      :to="`/article/${article.id}`"
+      :class="{ 'article-read': article.articles.read }"
       class="list-group-item list-group-item-action flex-column align-items-start"
     >
       <div class="d-flex w-100 justify-content-between mb-3">
         <small><img
-          v-if="article.favicon"
-          :src="article.favicon"
+          v-if="article.feeds.favicon"
+          :src="article.feeds.favicon"
           width="16"
           height="16"
-        > {{ article.feed_title }}</small>
+          class="mr-2"
+        > {{ article.feeds.title }}</small>
         <small>{{ article.formatDate }}</small>
       </div>
-      <h6><strong>{{ article.title }}</strong></h6>
+      <h6><strong>{{ article.articles.title }}</strong></h6>
+      <p>{{ article.articles.contentSnippet }}</p>
+      <p class="text-right mb-0" v-if="article.articles.favourite"><feather-icon
+              name="star"
+              size="sm"
+              :filled="article.articles.favourite"
+            /></p>
     </router-link>
   </div>
 </template>
@@ -54,7 +61,7 @@ export default {
       this.$electron.clipboard.writeText(url)
     },
     openArticleContextMenu (e, article) {
-      this.$router.push({ path: `/article/${article.article._id}` })
+      this.$router.push({ path: `/article/${article.article.uuid}` })
 
       const self = this
       const menu = new Menu()
@@ -73,12 +80,14 @@ export default {
           if (!article.article.read) {
             self.$store.dispatch('markAction', {
               type: markTypes.read,
-              id: article.article._id
+              podcast: article.article.podcast,
+              id: article.article.uuid
             })
           } else {
             self.$store.dispatch('markAction', {
               type: markTypes.unread,
-              id: article.article._id
+              podcast: article.article.podcast,
+              id: article.article.uuid
             })
           }
         }
@@ -86,15 +95,15 @@ export default {
       menu.append(new MenuItem({
         label: !article.article.favourite ? 'Mark as favourite' : 'Remove from favourite',
         click () {
-          if (article.article.favourite) {
+          if (article.favourite) {
             self.$store.dispatch('markAction', {
               type: markTypes.unfavourite,
-              id: article.article._id
+              id: article.article.uuid
             })
           } else {
             self.$store.dispatch('markAction', {
               type: markTypes.favourite,
-              id: article.article._id
+              id: article.article.uuid
             })
           }
         }
@@ -106,7 +115,7 @@ export default {
         label: !article.article.offline ? 'Save article' : 'Remove saved article',
         click () {
           if (article.article.offline && !self.$store.state.Setting.offline) {
-            cacheService.uncache(`raven-${article.article._id}`).then(() => {
+            cacheService.uncache(`raven-${article.uuid}`).then(() => {
               self.$store.dispatch('saveArticle', {
                 type: markTypes.uncache,
                 article: article.article
@@ -122,16 +131,16 @@ export default {
           }
         }
       }))
-      menu.popup({ window: window.electronremote.getCurrentWindow() })
-      menu.once('menu-will-close', () => {
-        menu.destroy()
-      })
+      menu.popup({ window: window.electron.remote.getCurrentWindow() })
+      // menu.once('menu-will-close', () => {
+      //   menu.destroy()
+      // })
     },
     setActiveArticleId (article) {
       return this.$store.dispatch('setActiveArticleId', article)
     },
     isArticleActive (article) {
-      return !!article && article.id !== undefined && article.id === this.activeArticleId
+      return !!article && article.uuid !== undefined && article.uuid === this.activeArticleId
     }
   }
 }

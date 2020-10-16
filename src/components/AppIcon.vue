@@ -1,7 +1,7 @@
 <template>
   <svg
     class="feather"
-    :class="{ 'feather-filled': filled, 'feather-success': success }"
+    :class="{ 'feather-small': size === 'sm', 'feather-filled': filled, 'feather-success': success }"
   >
     <use :xlink:href="`/feather-sprite.svg#${name}`" />
   </svg>
@@ -16,6 +16,10 @@ export default {
     filled: {
       type: Boolean,
       default: false
+    },
+    size: {
+      type: String,
+      default: null
     },
     success: {
       type: Boolean,
@@ -38,6 +42,11 @@ export default {
 
 .feather-success {
   color: green;
+}
+
+.feather-small {
+  width: 15px;
+  height: 15px;
 }
 
 .feather-filled {

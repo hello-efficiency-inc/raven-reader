@@ -5,22 +5,23 @@
       class="article-toolbar"
     >
       <div class="site-info">
-        <div class="wrap">
+        <div class="wrap w-100">
           <button
             v-b-modal.editSubscription
-            class="btn btn-toolbar"
+            class="btn btn-toolbar d-flex align-items-center"
           >
             <span
               v-if="article.favicon"
-              class="favicon-wrap"
+              class="favicon-wrap mr-3"
             >
               <img
                 :src="article.favicon"
                 width="16"
                 height="16"
+                class="mb-0"
               >
             </span>
-            <span :class="{ 'ml-4': article.favicon }">{{ article.sitetitle }}</span>
+            <span>{{ article.sitetitle }}</span>
           </button>
           <edit-subscription :article="article" />
         </div>
@@ -310,11 +311,17 @@ export default {
         this.$store.dispatch('markAction', {
           type: markTypes.unfavourite,
           id: this.$route.params.id
+        }).then(() => {
+          this.$store.dispatch('loadFeeds')
+          this.$store.dispatch('loadArticles')
         })
       } else {
         this.$store.dispatch('markAction', {
           type: markTypes.favourite,
           id: this.$route.params.id
+        }).then(() => {
+          this.$store.dispatch('loadFeeds')
+          this.$store.dispatch('loadArticles')
         })
       }
       this.article.favourite = !this.article.favourite
@@ -327,6 +334,9 @@ export default {
           self.$store.dispatch('saveArticle', {
             type: markTypes.uncache,
             article: self.article
+          }).then(() => {
+            self.$store.dispatch('loadFeeds')
+            self.$store.dispatch('loadArticles')
           })
         })
       } else {
@@ -335,6 +345,9 @@ export default {
           self.$store.dispatch('saveArticle', {
             type: markTypes.cache,
             article: self.article
+          }).then(() => {
+            self.$store.dispatch('loadFeeds')
+            self.$store.dispatch('loadArticles')
           })
         })
       }
@@ -441,6 +454,12 @@ export default {
   .article-buttons,
   .site-info {
     background: var(--background-color);
+    color: var(--text-color);
+
+    div {
+      color: var(--text-color);
+    }
+
     span {
       color: var(--text-color);
     }
@@ -512,12 +531,6 @@ export default {
 }
 
 .favicon-wrap {
-  position: absolute;
-  box-shadow: none;
-  height: 20px;
-  width: 20px;
-  left: 12px;
-  top: 17px;
   display: flex;
   align-items: center;
   pointer-events: none;

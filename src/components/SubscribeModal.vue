@@ -62,6 +62,7 @@
       </template>
       <b-form-select
         v-model="selectedCat"
+        v-if="categoryItems.length > 0"
         :options="categoryItems"
         class="mb-3"
       >
@@ -230,9 +231,7 @@ export default {
       this.$refs.addFeedModal.hide()
     },
     subscribe () {
-      if (this.newcategory) {
-        this.$store.dispatch('addCategory', { id: window.uuidstring(this.newcategory), title: this.newcategory, type: 'category' })
-      } else {
+      if (this.newcategory === null) {
         this.newcategory = this.selectedCat
       }
       helper.subscribe(this.selected_feed, this.newcategory, false)

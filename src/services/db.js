@@ -1,297 +1,128 @@
-import DB from '../db'
-
-const db = new DB()
-const connect = db.init()
-const article = connect.article
-const feed = connect.feed
-const category = connect.category
+import lf from 'lovefield'
+import * as db from '../db'
 
 export default {
-  ensureIndex (db, field) {
-    db.ensureIndex({ fieldName: field, unique: true }, (err) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+  fetchFeeds () {
+    return db.database.select().from(db.feedTable).exec()
   },
-  fetchFeeds (cb) {
-    return feed.find({}, (err, docs) => {
-      if (err) {
-        window.log.info(err)
-      }
-      return cb(docs)
-    })
+  fetchArticles () {
+    return db.database
+      .select()
+      .from(db.articleTable)
+      .innerJoin(db.feedTable, db.feedTable.uuid.eq(db.articleTable.feed_uuid))
+      .exec()
   },
-  fetchArticlesByFeed (feedId, cb) {
-    return article.find({ feed_id: feedId }).exec((err, docs) => {
-      if (err) {
-        window.log(err)
-      }
-      cb(docs)
-    })
+  fetchArticlesByFeed (feedId) {
+    return db.database
+      .select()
+      .from(db.articleTable)
+      .where(db.articleTable.feed_uuid.eq(feedId))
+      .exec()
   },
-  fetchArticles (cb) {
-    return article.find({}).sort({ pubDate: -1 }).exec((err, docs) => {
-      if (err) {
-        window.log.info(err)
-      }
-      cb(docs)
-    })
+  fetchArticlesByFeedMulti (feedIds) {
+    return db.database
+      .select()
+      .from(db.articleTable)
+      .where(db.articleTable.feed_uuid.in(feedIds))
+      .exec()
   },
-  fetchArticle (id, cb) {
-    return article.findOne({ _id: id }, (err, doc) => {
-      if (err) {
-        window.log.info(err)
-      }
-      return cb(doc)
-    })
+  addFeed (data) {
+    return db.database.insertOrReplace().into(db.feedTable).values(data).exec()
   },
-  fetchCategories (cb) {
-    return category.find({}, (err, docs) => {
-      if (err) {
-        window.log.info(err)
-      }
-      return cb(docs)
-    })
-  },
-  deleteCategory (title) {
-    category.remove({ title: title }, {}, (err, numRemoved) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
-  },
-  addCategory (data, cb) {
-    this.ensureIndex(category, 'title')
-    return category.insert(data, (err, docs) => {
-      if (err) {
-        window.log.info(err)
-      }
-      return cb(docs)
-    })
-  },
-  updateCategory (id, title, cb) {
-    return category.update({
-      _id: id
-    }, {
-      $set: {
-        title: title
-      }
-    }, (err, num) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
-  },
-  addFeed (data, cb) {
-    this.ensureIndex(feed, 'xmlurl')
-    return feed.insert(data, (err, docs) => {
-      if (err) {
-        window.log.info(err)
-      }
-      return cb(docs)
-    })
+  deleteFeed (feedId) {
+    return db.database.delete().from(db.feedTable).where(db.feedTable.uuid.eq(feedId)).exec()
   },
   updateFeedTitle (id, title, category) {
-    feed.update({
-      id: id
-    }, {
-      $set: {
-        title: title,
-        category: category
-      }
-    }, (err, num) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+    return db.database.update(db.feedTable)
+      .set(db.feedTable.title, title)
+      .set(db.feedTable.category, category)
+      .where(db.feedTable.uuid.eq(id))
+      .exec()
   },
   updateFeedCategory (id, category) {
-    feed.update({
-      id: id
-    }, {
-      $set: {
-        category: category
-      }
-    }, {
-      multi: true
-    }, (err, num) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+    return db.database.update(db.feedTable)
+      .set(db.feedTable.category, category)
+      .where(db.feedTable.uuid.eq(id))
+      .exec()
   },
-  deleteFeed (id) {
-    feed.remove({ id: id }, {}, (err, numRemoved) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+  addArticles (data) {
+    return db.database.insertOrReplace().into(db.articleTable).values(data).exec()
   },
-  addArticles (data, cb) {
-    // this.ensureIndex(article, 'guid')
-    return article.insert(data, (err, docs) => {
-      if (err) {
-        window.log.info(err)
-      }
-      return cb(docs)
-    })
+  deleteArticles (feedId) {
+    return db.database.delete().from(db.articleTable).where(db.articleTable.feed_uuid.eq(feedId)).exec()
   },
-  updateArticleFeedTitle (id, title, category) {
-    article.update({
-      feed_id: id
-    }, {
-      $set: {
-        feed_title: title,
-        category: category
-      }
-    }, {
-      multi: true
-    }, (err, num) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+  fetchArticle (uuid) {
+    return db.database.select()
+      .from(db.articleTable)
+      .innerJoin(db.feedTable, db.feedTable.uuid.eq(db.articleTable.feed_uuid))
+      .where(db.articleTable.uuid.eq(uuid))
+      .exec()
   },
-  updateArticleCategory (id, category) {
-    article.update({
-      _id: id
-    }, {
-      $set: {
-        category: category
-      }
-    }, {
-      multi: true
-    }, (err, num) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+  updateArticleCategory (uuid, category) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.category, category)
+      .where(db.articleTable.uuid.eq(uuid))
+      .exec()
   },
-  deleteArticlesCategory (category) {
-    article.remove({
-      category: category
-    }, {
-      multi: true
-    }, (err, numRemoved) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+  addCategory (data) {
+    return db.database.insertOrReplace().into(db.categoryTable).values(data).exec()
   },
-  deleteArticles (id) {
-    article.remove({ feed_id: id }, { multi: true }, (err, numRemoved) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+  fetchCategories () {
+    return db.database.select().from(db.categoryTable).exec()
   },
-  markOffline (id) {
-    article.update({ _id: id }, { $set: { offline: true } }, (err, num) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+  updateCategory (id, category) {
+    return db.database.update(db.categoryTable)
+      .set(db.categoryTable.title, category)
+      .where(db.categoryTable.id.eq(id))
+      .exec()
   },
-  markOnline (id) {
-    article.update({ _id: id }, { $set: { offline: false } }, (err, num) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+  deleteCategory (title) {
+    return db.database.delete().from(db.categoryTable).where(db.categoryTable.title.eq(title)).exec()
   },
-  markFavourite (id) {
-    article.update({ _id: id }, { $set: { favourite: true } }, (err, num) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
+  markOffline (uuid, verdict) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.offline, verdict)
+      .where(db.articleTable.uuid.eq(uuid))
+      .exec()
   },
-  markUnfavourite (id) {
-    article.update({ _id: id }, { $set: { favourite: false } }, (err, num) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
-  },
-  markCategory (id) {
-    article.update({ category: id }, { $set: { read: true } }, (err, name) => {
-      if (err) {
-        window.log.info(err)
-      }
-    })
-  },
-  markRead (id, podcast) {
+  markRead (uuid, podcast, verdict) {
     if (podcast) {
-      article.update({
-        _id: id
-      }, {
-        $set: {
-          read: true,
-          played: true
-        }
-      }, (err, num) => {
-        if (err) {
-          window.log.info(err)
-        }
-      })
-    } else {
-      article.update({
-        _id: id
-      }, {
-        $set: {
-          read: true
-        }
-      }, (err, num) => {
-        if (err) {
-          window.log.info(err)
-        }
-      })
+      return db.database.update(db.articleTable)
+        .set(db.articleTable.read, verdict)
+        .set(db.articleTable.podcast, verdict)
+        .where(db.articleTable.uuid.eq(uuid))
+        .exec()
     }
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.read, verdict)
+      .where(db.articleTable.uuid.eq(uuid))
+      .exec()
   },
-  markUnread (id, podcast) {
-    if (podcast) {
-      article.update({
-        _id: id
-      }, {
-        $set: {
-          read: false,
-          played: false
-        }
-      }, (err, num) => {
-        if (err) {
-          window.log.info(err)
-        }
-      })
-    } else {
-      article.update({
-        _id: id
-      }, {
-        $set: {
-          read: false
-        }
-      }, (err, num) => {
-        if (err) {
-          window.log.info(err)
-        }
-      })
-    }
+  markAllRead (uuids) {
+    // Non-podcast
+    db.database.update(db.articleTable)
+      .set(db.articleTable.read, true)
+      .where(db.articleTable.uuid.in(uuids))
+      .exec()
   },
-  removeOldReadItems (week, cb) {
-    article.remove({
-      read: true,
-      createdAt: {
-        $lte: week
-      }
-    },
-    {
-      multi: true
-    },
-    (err, num) => {
-      if (err) {
-        window.log.error(err)
-      }
-      window.log.info(num)
-    })
+  markFavourite (uuid, verdict) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.favourite, verdict)
+      .where(db.articleTable.uuid.eq(uuid))
+      .exec()
+  },
+  updateArticleFeedCategory (uuid, category) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.category, category)
+      .where(db.articleTable.feed_uuid.eq(uuid))
+      .exec()
+  },
+  removeOldReadItems (week) {
+    db.database.delete()
+      .from(db.articleTable)
+      .where(lf.op.and(
+        db.articleTable.read.eq(true),
+        db.articleTable.publishUnix.lt(week)
+      )).exec()
   }
 }

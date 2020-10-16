@@ -176,6 +176,7 @@ export default {
     async unsubscribeFeed (id, category = null) {
       await this.$emit('delete', 'yes')
       await this.$store.dispatch('deleteFeed', id)
+      await this.$store.dispatch('loadFeeds')
     },
     openCategoryEditModal (category) {
       this.activeFeed = category
@@ -274,14 +275,12 @@ export default {
         new MenuItem({
           label: 'Unsubscribe',
           click () {
-            self.unsubscribeFeed(feed.feed.id)
+            console.log(feed)
+            self.unsubscribeFeed(feed.feed.uuid)
           }
         })
       )
       menu.popup({ window: window.electron.remote.getCurrentWindow() })
-      menu.once('menu-will-close', () => {
-        menu.destroy()
-      })
     }
   }
 }
