@@ -30,14 +30,21 @@ schemaBuilder.createTable('articles')
   .addColumn('offline', lf.Type.BOOLEAN)
   .addColumn('feed_uuid', lf.Type.STRING)
   .addColumn('category', lf.Type.STRING)
+  .addColumn('enclosure', lf.Type.OBJECT)
+  .addColumn('itunes', lf.Type.OBJECT)
   .addColumn('publishUnix', lf.Type.INTEGER)
   .addPrimaryKey(['id'], true)
-  .addNullable(['content', 'contentSnippet', 'author', 'category', 'pubDate', 'link'])
+  .addNullable(['content', 'contentSnippet', 'author', 'category', 'pubDate', 'link', 'itunes', 'enclosure'])
 
 schemaBuilder.createTable('categories')
   .addColumn('id', lf.Type.INTEGER)
   .addColumn('title', lf.Type.STRING)
   .addColumn('type', lf.Type.STRING)
+  .addPrimaryKey(['id'], true)
+
+schemaBuilder.createTable('pruned')
+  .addColumn('id', lf.Type.INTEGER)
+  .addColumn('uuid', lf.Type.STRING)
   .addPrimaryKey(['id'], true)
 
 export let database

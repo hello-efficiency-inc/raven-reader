@@ -279,9 +279,6 @@ export default {
         })
       )
       menu.popup({ window: window.electron.remote.getCurrentWindow() })
-      menu.once('menu-will-close', () => {
-        menu.destroy()
-      })
     }
   }
 }

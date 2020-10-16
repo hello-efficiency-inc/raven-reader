@@ -3,7 +3,7 @@ export default {
     getArticlesCount (type, feedid) {
       let articles = this.$store.state.Article.articles
       if (type === '' && feedid !== '') {
-        articles = articles.filter(article => article.articles.feed_id === feedid)
+        articles = articles.filter(article => article.articles.feed_uuid === feedid)
       }
       if (type === 'read') {
         return articles.filter(article => article.articles.read).length

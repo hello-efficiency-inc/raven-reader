@@ -110,11 +110,11 @@ export default {
   },
   mounted () {
     this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
-    this.$store.dispatch('initializeDB').then(() => {
-      // this.$store.dispatch('refreshFeeds')
-      this.$store.dispatch('loadCategories')
-      this.$store.dispatch('loadFeeds')
-      this.$store.dispatch('loadArticles')
+    this.$store.dispatch('initializeDB').then(async () => {
+      await this.$store.dispatch('refreshFeeds')
+      await this.$store.dispatch('loadCategories')
+      await this.$store.dispatch('loadFeeds')
+      await this.$store.dispatch('loadArticles')
       // this.$store.dispatch('checkOffline')
       // this.$store.dispatch('removeOldReadItems')
     })
@@ -160,11 +160,11 @@ export default {
   },
   methods: {
     runPruneCronJob () {
-      const self = this
+      // const self = this
       const schedule = window.nodescheduler
       return schedule.scheduleJob('*/5 * * * *', () => {
         window.log.info('Pruning old read items')
-        self.$store.dispatch('removeOldReadItems')
+        // self.$store.dispatch('removeOldReadItems')
       })
     },
     runArticleCronJob () {
@@ -180,8 +180,7 @@ export default {
           } else {
             this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
             window.log.info(`Processing ${feeds.length} feeds`)
-            helper.subscribe(feeds, null, true, false)
-            self.$store.dispatch('loadArticles')
+            helper.subscribe(feeds, null, true)
           }
         }
       )
@@ -219,33 +218,38 @@ export default {
     prepareArticleData (data, article) {
       const self = this
       self.empty = false
-      const $ = cheerio.load(data.content)
-      $('a').addClass('js-external-link')
-      $('img').addClass('img-fluid')
-      $('iframe')
-        .parent()
-        .addClass('embed-responsive embed-responsive-16by9')
-      data.content = $.text().trim() === '' ? article.description : $.html()
-      if (article.podcast) {
-        data.author = article.itunes.author
-        data.itunes.image = article.itunes.image
-          ? article.itunes.image
-          : article.favicon
+      if (!article.articles.podcast) {
+        const $ = cheerio.load(data.content)
+        $('a').addClass('js-external-link')
+        $('img').addClass('img-fluid')
+        $('iframe')
+          .parent()
+          .addClass('embed-responsive embed-responsive-16by9')
+        data.content = $.text().trim() === '' ? article.articles.description : $.html()
+        data.contentAlt = article.articles.content
+      }
+      if (article.articles.podcast) {
+        data.author = article.articles.itunes.author
+        data.itunes.image = article.articles.itunes.image
+          ? article.articles.itunes.image
+          : article.feeds.favicon
       }
       data.date_published = data.date_published
         ? dayjs(data.date_published).format('MMMM D, YYYY')
         : null
-      data.favicon = article.favicon
-      data.sitetitle = truncate(article.feed_title, 20)
-      data.feed_id = article.feed_id
-      data.category = article.category
-      data.feed_url = article.feed_url
-      data.feed_link = article.feed_link
-      data._id = article._id
-      data.link = article.link
-      data.favourite = article.favourite
-      data.read = article.read
-      data.offline = article.offline
+      data.favicon = article.feeds.favicon
+      data.fulltitle = article.feeds.fulltitle
+      data.sitetitle = truncate(article.feeds.title, 20)
+      data.feed_uuid = article.feeds.uuid
+      data.category = article.articles.category
+      data.podcast = article.articles.podcast
+      data.feed_url = article.feeds.xmlurl
+      data.feed_link = article.feeds.link
+      data._id = article.articles.uuid
+      data.link = article.articles.link
+      data.favourite = article.articles.favourite
+      data.read = article.articles.read
+      data.offline = article.articles.offline
       data.readtime =
         data.content && !data.podcast ? stat(data.content).text : ''
       self.articleData = data
@@ -268,35 +272,37 @@ export default {
       if (this.$route.params.id) {
         self.articleData = null
         self.loading = true
-        db.fetchArticle(this.$route.params.id, async function (article) {
+        db.fetchArticle(this.$route.params.id).then(async function (article) {
+          const articleItem = JSON.parse(JSON.stringify(article[0]))
           let data
           self.$store.dispatch('markAction', {
             type: 'READ',
             id: self.$route.params.id,
-            podcast: article.podcast
+            podcast: articleItem.articles.podcast
           })
           try {
-            if (!article.podcast) {
+            if (!articleItem.articles.podcast) {
               data = self.$store.state.Setting.offline ? await cacheService.getCachedArticleData(
-                article._id,
-                article.link
-              ) : await parseArticle(article.link)
+                articleItem.articles.id,
+                articleItem.articles.link
+              ) : await parseArticle(articleItem.articles.link)
               if (data) {
-                self.prepareArticleData(data, article)
+                self.prepareArticleData(data, articleItem)
               } else {
-                article.content = null
-                article.url = article.link
-                self.articleData = article
+                articleItem.articles.content = null
+                articleItem.articles.url = articleItem.articles.link
+                self.articleData = articleItem
                 self.empty = true
                 self.loading = false
               }
             } else {
-              self.prepareArticleData(article, article)
+              self.prepareArticleData(articleItem.articles, articleItem)
             }
           } catch (e) {
-            article.content = null
-            article.url = article.link
-            self.articleData = article
+            window.log.info(e)
+            articleItem.content = null
+            articleItem.url = articleItem.link
+            self.articleData = articleItem
             self.empty = true
             self.loading = false
           }

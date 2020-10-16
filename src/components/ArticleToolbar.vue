@@ -12,7 +12,7 @@
           >
             <span
               v-if="article.favicon"
-              class="favicon-wrap"
+              class="favicon-wrap mr-2"
             >
               <img
                 :src="article.favicon"

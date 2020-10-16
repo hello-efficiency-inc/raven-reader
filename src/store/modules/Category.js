@@ -7,10 +7,10 @@ const state = {
 
 const mutations = {
   LOAD_CATEGORY (state, data) {
-    state.categories = data.map((item) => {
+    state.categories = Object.freeze(data.map((item) => {
       item.title = truncate(item.title, { length: 22 })
       return item
-    })
+    }))
   },
   ADD_CATEGORY (state, data) {
     if (data) {

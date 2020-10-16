@@ -11,7 +11,7 @@
       label="Title"
     >
       <b-form-input
-        v-model="article.sitetitle"
+        v-model="article.fulltitle"
         type="text"
       />
     </b-form-group>

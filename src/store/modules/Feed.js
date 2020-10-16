@@ -7,10 +7,11 @@ const state = {
 
 const mutations = {
   LOAD_FEEDS (state, feed) {
-    state.feeds = feed.map((item) => {
+    state.feeds = Object.freeze(feed.map((item) => {
       item.title = truncate(item.title, { length: 22 })
+      item.fulltitle = item.title
       return item
-    })
+    }))
   },
   ADD_FEED (state, docs) {
     db.addFeed(docs)

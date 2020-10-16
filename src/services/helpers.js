@@ -64,11 +64,10 @@ export default {
       }
     })
 
-    return Promise.all(items).then((result) => {
+    Promise.all(items).then((result) => {
       const feeds = result.map((item) => item.feed)
       const categories = result.map((item) => item.category)
       const articles = result.map((item) => item.posts).flat()
-      console.log(categories)
       if (!refresh) {
         this.addCategories(categories.filter(item => item !== null)).then(() => store.dispatch('loadCategories'))
         this.addFeeds(feeds).then(() => store.dispatch('loadFeeds'))
@@ -79,7 +78,7 @@ export default {
           const filteredPosts = articles.filter((item) => {
             return !currentArticles.map(current => current.uuid).includes(item.uuid)
           })
-          console.log(filteredPosts)
+          window.log.info(`Refresh count: ${filteredPosts.length}`)
           if (filteredPosts.length > 0) {
             this.addArticles(filteredPosts).then(() => store.dispatch('loadArticles'))
           } else {
@@ -89,6 +88,8 @@ export default {
       } else {
         this.addArticles(articles).then(() => store.dispatch('loadArticles'))
       }
+    }).catch((e) => {
+      window.log.info(e)
     })
   }
 }

@@ -31,9 +31,8 @@
           <div
             v-if="!article.content"
             class="article-detail"
-          >
-            {{ article.description }}
-          </div>
+            v-html="article.contentAlt"
+          />
           <div
             v-if="article.podcast"
             class="mt-5 mb-5"

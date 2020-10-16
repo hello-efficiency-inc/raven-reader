@@ -41,7 +41,7 @@ const searchOption = {
   findAllMatches: true,
   includeScore: true,
   threshold: 0.3,
-  keys: ['title', 'content']
+  keys: ['articles.title', 'articles.content']
 }
 
 const sortBy = (key, pref) => {
@@ -58,7 +58,8 @@ const getters = {
       return filters[state.type](orderedArticles)
     }
     if (state.type === 'search') {
-      const fuse = new Fuse(state.articles, searchOption)
+      const searchIndex = Fuse.createIndex(searchOption.keys, state.articles)
+      const fuse = new Fuse(state.articles, searchOption, searchIndex)
       if (state.search !== '') {
         return fuse.search(state.search).map(article => article.item)
       }
@@ -67,14 +68,13 @@ const getters = {
     if (state.category) {
       return filters.category(orderedArticles, state.category)
     }
-
     return filters[state.type](orderedArticles, state.feed)
   }
 }
 
 const mutations = {
   LOAD_ARTICLES (state, articles) {
-    state.articles = articles.map((item) => {
+    state.articles = Object.freeze(articles.map((item) => {
       item.feeds.title = truncate(item.feeds.title, { length: 20 })
       item.articles.title = truncate(item.articles.title, { length: 250 })
       item.articles.contentSnippet = truncate(item.articles.contentSnippet, {
@@ -85,7 +85,7 @@ const mutations = {
         item.articles.offline = false
       }
       return item
-    })
+    }))
   },
   ADD_ARTICLES (state, articles) {
     if (articles) {
@@ -101,7 +101,6 @@ const mutations = {
   },
   MARK_ACTION (state, data) {
     const index = state.articles.findIndex(item => item.articles.uuid === data.id)
-    console.log(index)
     if (data.type === 'FAVOURITE') {
       state.articles[index].articles.favourite = true
     }
@@ -166,7 +165,8 @@ const mutations = {
     state.feed = feed
   },
   SAVE_ARTICLE (state, data) {
-    const index = state.articles.findIndex(item => item._id === data.article._id)
+    console.log(data.article)
+    const index = state.articles.findIndex(item => item.articles.uuid === data.article._id)
     state.articles[index].offline = data.type === 'CACHE'
   },
   INCREASE_FONT (state) {
@@ -215,7 +215,6 @@ const actions = {
     commit('ADD_ARTICLES', await db.addArticles(article))
   },
   markAction ({ commit }, data) {
-    console.log(data.type)
     switch (data.type) {
       case 'FAVOURITE':
         db.markFavourite(data.id, true)
@@ -233,14 +232,7 @@ const actions = {
     commit('MARK_ACTION', data)
   },
   saveArticle ({ commit }, data) {
-    switch (data.type) {
-      case 'CACHE':
-        db.markOffline(data.article._id)
-        break
-      case 'UNCACHE':
-        db.markOnline(data.article._id)
-        break
-    }
+    db.markOffline(data.article._id, data.type === 'CACHE')
     commit('SAVE_ARTICLE', data)
   },
   markAllRead ({ commit }) {
