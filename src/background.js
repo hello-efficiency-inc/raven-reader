@@ -244,7 +244,7 @@ autoUpdater.on('update-not-available', (info) => {
 })
 
 autoUpdater.on('error', (error) => {
-  dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString())
+  log.info(error == null ? 'unknown' : (error.stack || error).toString())
 })
 
 autoUpdater.on('update-downloaded', (info) => {
