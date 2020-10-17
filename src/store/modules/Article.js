@@ -75,12 +75,12 @@ const getters = {
 const mutations = {
   LOAD_ARTICLES (state, articles) {
     state.articles = Object.freeze(articles.map((item) => {
-      item.feeds.title = truncate(item.feeds.title, { length: 20 })
-      item.articles.title = truncate(item.articles.title, { length: 250 })
       item.articles.contentSnippet = truncate(item.articles.contentSnippet, {
         length: 100
       })
-      item.formatDate = dayjs(item.articles.pubDate).format('DD MMMM YYYY')
+      item.formatDate = dayjs(item.articles.pubDate).format('DD MMMM YYYY h:mm A', {
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      })
       if (!('offline' in item.articles)) {
         item.articles.offline = false
       }

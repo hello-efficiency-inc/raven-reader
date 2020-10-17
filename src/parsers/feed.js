@@ -95,7 +95,8 @@ export function ParseFeedPost (feed) {
     item.played = false
     item.feed_uuid = feed.meta.uuid
     item.category = feed.meta.category
-    item.publishUnix = dayjs(item.pubDate).unix()
+    item.pubDate = item.isoDate
+    item.publishUnix = dayjs(item.isoDate).unix()
     const {
       creator,
       ...postItem

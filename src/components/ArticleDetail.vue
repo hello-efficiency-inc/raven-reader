@@ -3,8 +3,8 @@
   <div class="article-detail">
     <article-toolbar
       ref="articleToolbar"
-      :article="article"
-      @openOriginalArticle="openWebArticle"
+      :article.sync="article"
+      @open-original-article="openWebArticle"
     />
     <div class="content-wrapper">
       <perfect-scrollbar

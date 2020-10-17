@@ -1,6 +1,6 @@
 'use strict'
 import 'v8-compile-cache'
-import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { enforceMacOSAppLocation } from 'electron-util'
@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+autoUpdater.autoDownload = false
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 
@@ -218,22 +219,42 @@ if (isDevelopment) {
   }
 }
 
+let updater
 autoUpdater.on('checking-for-update', () => {
   log.info('Checking for update...')
 })
 autoUpdater.on('update-available', (info) => {
   log.info('Update available.')
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Found Updates',
+    message: 'Found updates, do you want update now?',
+    buttons: ['Sure', 'No']
+  }, (buttonIndex) => {
+    if (buttonIndex === 0) {
+      autoUpdater.downloadUpdate()
+    } else {
+      updater.enabled = true
+      updater = null
+    }
+  })
 })
 autoUpdater.on('update-not-available', (info) => {
   log.info('Update not available.')
 })
-autoUpdater.on('error', (err) => {
-  log.info('Error in auto-updater. ' + err)
+
+autoUpdater.on('error', (error) => {
+  dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString())
 })
 
 autoUpdater.on('update-downloaded', (info) => {
   log.info('Update downloaded')
-  autoUpdater.quitAndInstall()
+  dialog.showMessageBox({
+    title: 'Install Updates',
+    message: 'Updates downloaded, application will be quit for update...'
+  }, () => {
+    setImmediate(() => autoUpdater.quitAndInstall())
+  })
 })
 
 autoUpdater.on('download-progress', (progressObj) => {

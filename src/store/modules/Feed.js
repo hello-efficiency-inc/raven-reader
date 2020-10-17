@@ -1,5 +1,4 @@
 import db from '../../services/db'
-import truncate from 'lodash.truncate'
 
 const state = {
   feeds: []
@@ -9,7 +8,6 @@ const mutations = {
   LOAD_FEEDS (state, feed) {
     state.feeds = Object.freeze(feed.map((item) => {
       item.fulltitle = item.title
-      item.title = truncate(item.title, { length: 22 })
       return item
     }))
   },

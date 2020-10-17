@@ -115,9 +115,9 @@ export default {
       await this.$store.dispatch('loadCategories')
       await this.$store.dispatch('loadFeeds')
       await this.$store.dispatch('loadArticles')
-      // this.$store.dispatch('checkOffline')
       // this.$store.dispatch('removeOldReadItems')
     })
+    this.$store.dispatch('checkOffline')
 
     // Register event listeners
     bridge([

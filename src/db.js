@@ -1,4 +1,6 @@
 import lf from 'lovefield'
+import db from './services/db'
+import DataStore from 'nedb'
 
 const schemaBuilder = lf.schema.create('raven', 1)
 
@@ -59,4 +61,49 @@ export async function init () {
   articleTable = database.getSchema().table('articles')
   categoryTable = database.getSchema().table('categories')
   pruneTable = database.getSchema().table('pruned')
+}
+
+export function migrateNeDB () {
+  const article = new DataStore({
+    filename: 'articles.db',
+    autoload: true,
+    timestampData: true
+  })
+
+  const feed = new DataStore({
+    filename: 'feeds.db',
+    autoload: true,
+    timestampData: true
+  })
+
+  const category = new DataStore({
+    filename: 'categories.db',
+    autoload: true,
+    timestampData: true
+  })
+
+  article.find({}, (err, docs) => {
+    if (err) { window.log.info(err) }
+    if (docs.length > 0) {
+      db.addArticles(docs.map(item => articleTable.createRow(item)))
+    }
+  })
+
+  feed.find({}, (err, docs) => {
+    if (err) {
+      window.log.info(err)
+    }
+    if (docs.length > 0) {
+      db.addFeed(docs.map(item => feedTable.createRow(item)))
+    }
+  })
+
+  category.find({}, (err, docs) => {
+    if (err) {
+      window.log.info(err)
+    }
+    if (docs.length > 0) {
+      db.addCategory(docs.map(item => categoryTable.createRow(item)))
+    }
+  })
 }

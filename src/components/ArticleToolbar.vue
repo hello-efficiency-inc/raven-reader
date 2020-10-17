@@ -286,7 +286,7 @@ export default {
     },
     openOriginal (url) {
       this.original = !this.original
-      this.$emit('openOriginalArticle', this.original, url)
+      this.$emit('open-original-article', this.original, url)
     },
     hideTextConfig () {
       this.settingspanel = !this.settingspanel
