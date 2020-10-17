@@ -4,23 +4,18 @@
       v-if="article !== null && article.content !== null"
       class="article-toolbar"
     >
-      <div class="site-info">
-        <div class="wrap w-100">
+      <div class="site-info position-relative">
+        <div class="wrap">
           <button
             v-b-modal.editSubscription
-            class="btn btn-toolbar d-flex align-items-center"
+            class="btn btn-toolbar"
           >
-            <span
-              v-if="article.favicon"
-              class="favicon-wrap mr-3"
-            >
-              <img
+            <img
                 :src="article.favicon"
                 width="16"
                 height="16"
-                class="mb-0 d-inline-flex"
+                class="mb-0 mx-3 d-inline-flex"
               >
-            </span>
             <span>{{ article.sitetitle }}</span>
           </button>
           <edit-subscription :article="article" />
@@ -489,11 +484,12 @@ export default {
 }
 
 .site-info {
-  width: 350px;
+  width: 340px;
   left: 0;
 
   .btn-toolbar {
     width: 100%;
+    text-align: left;
   }
 
   .wrap {
