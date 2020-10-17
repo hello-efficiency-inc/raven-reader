@@ -9,10 +9,10 @@
             </span>
           </div>
           <input
-            v-model="search"
+            v-model.lazy="search"
             type="text"
             class="form-control"
-            @keyup.enter="searchList"
+            @change="searchList"
             placeholder="Search"
             aria-label="Search"
           >

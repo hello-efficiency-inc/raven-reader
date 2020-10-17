@@ -32,6 +32,9 @@ export default {
   deleteFeed (feedId) {
     return db.database.delete().from(db.feedTable).where(db.feedTable.uuid.eq(feedId)).exec()
   },
+  deleteFeedMulti (feedIds) {
+    return db.database.delete().from(db.feedTable).where(db.feedTable.uuid.in(feedIds)).exec()
+  },
   updateFeedTitle (id, title, category) {
     return db.database.update(db.feedTable)
       .set(db.feedTable.title, title)
@@ -39,10 +42,10 @@ export default {
       .where(db.feedTable.uuid.eq(id))
       .exec()
   },
-  updateFeedCategory (id, category) {
+  updateFeedCategory (ids, category) {
     return db.database.update(db.feedTable)
       .set(db.feedTable.category, category)
-      .where(db.feedTable.uuid.eq(id))
+      .where(db.feedTable.uuid.in(ids))
       .exec()
   },
   addArticles (data) {
@@ -51,6 +54,9 @@ export default {
   deleteArticles (feedId) {
     return db.database.delete().from(db.articleTable).where(db.articleTable.feed_uuid.eq(feedId)).exec()
   },
+  deleteArticlesMulti (articles) {
+    return db.database.delete().from(db.articleTable).where(db.articleTable.uuid.in(articles)).exec()
+  },
   fetchArticle (uuid) {
     return db.database.select()
       .from(db.articleTable)
@@ -58,10 +64,10 @@ export default {
       .where(db.articleTable.uuid.eq(uuid))
       .exec()
   },
-  updateArticleCategory (uuid, category) {
+  updateArticleCategory (uuids, category) {
     return db.database.update(db.articleTable)
       .set(db.articleTable.category, category)
-      .where(db.articleTable.uuid.eq(uuid))
+      .where(db.articleTable.uuid.in(uuids))
       .exec()
   },
   addCategory (data) {
@@ -100,7 +106,7 @@ export default {
   },
   markAllRead (uuids) {
     // Non-podcast
-    db.database.update(db.articleTable)
+    return db.database.update(db.articleTable)
       .set(db.articleTable.read, true)
       .where(db.articleTable.uuid.in(uuids))
       .exec()

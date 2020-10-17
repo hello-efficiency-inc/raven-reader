@@ -51,10 +51,12 @@ export let database
 export let feedTable
 export let articleTable
 export let categoryTable
+export let pruneTable
 
 export async function init () {
   database = await schemaBuilder.connect()
   feedTable = database.getSchema().table('feeds')
   articleTable = database.getSchema().table('articles')
   categoryTable = database.getSchema().table('categories')
+  pruneTable = database.getSchema().table('pruned')
 }

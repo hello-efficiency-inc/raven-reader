@@ -92,7 +92,8 @@ export default {
     },
     updateSubscriptionTitle () {
       if (this.newcategory) {
-        this.$store.dispatch('addCategory', { id: window.uuidstring(this.newcategory), title: this.newcategory, type: 'category' }).then(() => this.$store.dispatch('loadCategories'))
+        this.$store.dispatch('addCategory', { id: window.uuidstring(this.newcategory), title: this.newcategory, type: 'category' })
+          .then(() => this.$store.dispatch('loadCategories'))
       } else {
         this.newcategory = this.article.category
       }

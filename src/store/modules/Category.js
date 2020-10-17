@@ -13,17 +13,6 @@ const mutations = {
       return item
     }))
   },
-  ADD_CATEGORY (state, data) {
-    if (data) {
-      data.title = truncate(data.title, { length: 22 })
-      state.categories.unshift(data)
-    }
-  },
-  DELETE_CATEGORY (state, data) {
-    const index = state.categories.findIndex(item => item.title === data)
-    db.deleteCategory(state.categories[index].title)
-    state.categories.splice(index, 1)
-  },
   RENAME_CATEGORY (state, category) {
     const index = state.categories.findIndex(item => item.id === category.id)
     state.categories[index].title = category.title
@@ -36,12 +25,7 @@ const actions = {
     commit('LOAD_CATEGORY', await db.fetchCategories())
   },
   addCategory ({ commit }, category) {
-    db.addCategory([database.categoryTable.createRow(category)]).then((result) => {
-      commit('ADD_CATEGORY', result)
-    })
-  },
-  deleteCategory ({ commit }, category) {
-    commit('DELETE_CATEGORY', category)
+    db.addCategory([database.categoryTable.createRow(category)])
   },
   renameCategory ({ commit }, title) {
     commit('RENAME_CATEGORY', title)

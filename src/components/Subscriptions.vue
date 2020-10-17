@@ -103,6 +103,8 @@
   </div>
 </template>
 <script>
+import cacheService from '../services/cacheArticle'
+import db from '../services/db'
 import articleCount from '../mixins/articleCount'
 import dataSets from '../mixins/dataItems'
 import feedMix from '../mixins/feedMix'
@@ -148,7 +150,7 @@ export default {
       this.$router.push({
         name: 'category-page',
         params: { category: feed.title }
-      })
+      }).catch((err) => { if (err) {} })
     },
     mapFeeds (feeds, category) {
       var mixed = feeds.concat(category)
@@ -168,7 +170,12 @@ export default {
       return sorted
     },
     markFeedRead (id) {
-      this.$store.dispatch('markFeedRead', id)
+      const articles = this.$store.state.Article.articles.filter((item) => {
+        return item.articles.feed_uuid === id
+      }).map(item => item.articles.uuid)
+      db.markAllRead(articles).then(() => {
+        this.$store.dispatch('loadArticles')
+      })
     },
     copyFeedLink (xml) {
       this.$electron.clipboard.writeText(xml)
@@ -192,7 +199,12 @@ export default {
         new MenuItem({
           label: `Mark ${feed.category.title} as read`,
           click () {
-            self.markCategoryRead(feed.category.title)
+            const articles = self.$store.state.Article.articles.filter((item) => {
+              return item.articles.category === feed.category.title
+            }).map(item => item.articles.uuid)
+            db.markAllRead(articles).then(() => {
+              self.$store.dispatch('loadArticles')
+            })
           }
         })
       )
@@ -216,15 +228,23 @@ export default {
         new MenuItem({
           label: 'Delete',
           click () {
-            const feedIndex = self.$store.state.Feed.feeds.findIndex(
-              item => item.category === feed.category.title
-            )
-            self.$store.dispatch('deleteCategory', feed.category.title)
-            self.$store.dispatch(
-              'deleteFeed',
-              self.$store.state.Feed.feeds[feedIndex].id
-            )
-            self.$store.dispatch('deleteArticleCategory', feed.category.title)
+            const feeds = self.$store.state.Feed.feeds.filter((item) => {
+              return item.category === feed.category.title
+            }).map(item => item.uuid)
+            const articles = self.$store.state.Article.articles.filter((item) => {
+              return item.articles.category === feed.category.title
+            }).map(item => item.articles.uuid)
+            db.deleteCategory(feed.category.title)
+            db.deleteFeedMulti(feeds).then(() => {
+              articles.forEach(async (article) => {
+                await cacheService.uncache(`raven-${article}`)
+              })
+              db.deleteArticlesMulti(articles)
+            }).then(() => {
+              self.$store.dispatch('loadCategories')
+              self.$store.dispatch('loadFeeds')
+              self.$store.dispatch('loadArticles')
+            })
           }
         })
       )

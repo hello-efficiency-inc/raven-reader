@@ -65,7 +65,10 @@ export default {
       this.$store.dispatch('renameCategory', this.feed).then(() => {
         this.$store.dispatch('updateFeedCategory', { old: this.oldValue, new: this.feed })
         this.$store.dispatch('updateArticleCategory', { old: this.oldValue, new: this.feed })
+      }).then(() => {
         this.$store.dispatch('loadCategories')
+        this.$store.dispatch('loadFeeds')
+        this.$store.dispatch('loadArticles')
       })
       this.$toasted.show('Category renamed', {
         theme: 'outline',

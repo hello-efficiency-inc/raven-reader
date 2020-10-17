@@ -29,11 +29,8 @@ const mutations = {
   },
   UPDATE_FEED_CATEGORY (state, data) {
     const feeds = state.feeds.filter(item => item.category === data.old.title)
-    for (let i = 0; i < feeds.length; i++) {
-      const index = state.feeds.findIndex(item => item._id === feeds[i]._id)
-      db.updateFeedCategory(state.feeds[index].id, data.new.title)
-      state.feeds[index].category = data.new.title
-    }
+      .map(item => item.uuid)
+    db.updateFeedCategory(feeds, data.new.title)
   }
 }
 
@@ -45,7 +42,6 @@ const actions = {
     commit('ADD_FEED', feed)
   },
   async deleteFeed ({ dispatch, commit }, id) {
-    console.log(id)
     await dispatch('deleteArticle', id)
     commit('DELETE_FEED', id)
   },

@@ -61,7 +61,9 @@ export default {
       this.$electron.clipboard.writeText(url)
     },
     openArticleContextMenu (e, article) {
-      this.$router.push({ path: `/article/${article.article.uuid}` })
+      this.$router.push({ path: `/article/${article.article.uuid}` }).then((err) => {
+        if (err) {}
+      })
 
       const self = this
       const menu = new Menu()
@@ -77,35 +79,24 @@ export default {
       menu.append(new MenuItem({
         label: !article.article.read ? 'Mark as read' : 'Mark as unread',
         click () {
-          if (!article.article.read) {
-            self.$store.dispatch('markAction', {
-              type: markTypes.read,
-              podcast: article.article.podcast,
-              id: article.article.uuid
-            })
-          } else {
-            self.$store.dispatch('markAction', {
-              type: markTypes.unread,
-              podcast: article.article.podcast,
-              id: article.article.uuid
-            })
-          }
+          self.$store.dispatch('markAction', {
+            type: !article.article.read ? markTypes.read : markTypes.unread,
+            podcast: article.article.podcast,
+            id: article.article.uuid
+          }).then(() => {
+            self.$store.dispatch('loadArticles')
+          })
         }
       }))
       menu.append(new MenuItem({
         label: !article.article.favourite ? 'Mark as favourite' : 'Remove from favourite',
         click () {
-          if (article.favourite) {
-            self.$store.dispatch('markAction', {
-              type: markTypes.unfavourite,
-              id: article.article.uuid
-            })
-          } else {
-            self.$store.dispatch('markAction', {
-              type: markTypes.favourite,
-              id: article.article.uuid
-            })
-          }
+          self.$store.dispatch('markAction', {
+            type: article.article.favourite ? markTypes.unfavourite : markTypes.favourite,
+            id: article.article.uuid
+          }).then(() => {
+            self.$store.dispatch('loadArticles')
+          })
         }
       }))
       menu.append(new MenuItem({
@@ -115,7 +106,7 @@ export default {
         label: !article.article.offline ? 'Save article' : 'Remove saved article',
         click () {
           if (article.article.offline && !self.$store.state.Setting.offline) {
-            cacheService.uncache(`raven-${article.uuid}`).then(() => {
+            cacheService.uncache(`raven-${article.article.uuid}`).then(() => {
               self.$store.dispatch('saveArticle', {
                 type: markTypes.uncache,
                 article: article.article
@@ -129,12 +120,10 @@ export default {
               })
             })
           }
+          self.$store.dispatch('loadArticles')
         }
       }))
       menu.popup({ window: window.electron.remote.getCurrentWindow() })
-      // menu.once('menu-will-close', () => {
-      //   menu.destroy()
-      // })
     },
     setActiveArticleId (article) {
       return this.$store.dispatch('setActiveArticleId', article)

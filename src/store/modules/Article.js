@@ -125,21 +125,6 @@ const mutations = {
   MARK_ALL_READ (state) {
     db.markAllRead(state.articles.map(item => item.articles.uuid))
   },
-  MARK_FEED_READ (state, id) {
-    const feedArticles = state.articles.filter(item => item.feed_id === id)
-    for (let i = 0; i < feedArticles.length; i++) {
-      const index = state.articles.findIndex(item => item._id === feedArticles[i]._id)
-      state.articles[index].read = true
-      db.markRead(state.articles[index]._id, null)
-    }
-  },
-  DELETE_ARTICLES_CATEGORY (state, category) {
-    const articles = state.articles.filter(item => item.title === category)
-    articles.forEach(async (article) => {
-      await cacheService.uncache(`raven-${article._id}`)
-    })
-    db.deleteArticlesCategory(category)
-  },
   DELETE_ARTICLES (state, id) {
     const articles = state.articles.filter(item => item.feed_id === id)
     articles.forEach(async (article) => {
@@ -186,12 +171,10 @@ const mutations = {
     state.fontStyle = data
   },
   UPDATE_ARTICLE_CATEGORY (state, data) {
+    console.log(data)
     const articles = state.articles.filter(item => item.articles.category === data.old.title)
-    for (let i = 0; i < articles.length; i++) {
-      const index = state.articles.findIndex(item => item.articles.uuid === articles[i].articles.uuid)
-      db.updateArticleCategory(state.articles[index].articles.uuid, data.new.title)
-      state.articles[index].articles.category = data.new.title
-    }
+      .map(item => item.articles.uuid)
+    db.updateArticleCategory(articles, data.new.title)
   },
   MARK_CATEGORY_READ (state, data) {
     const feedArticles = state.articles.filter(item => item.category === data)
@@ -238,10 +221,6 @@ const actions = {
   markAllRead ({ commit }) {
     commit('MARK_ALL_READ')
   },
-  async deleteArticleCategory ({ dispatch, commit }, category) {
-    commit('DELETE_ARTICLES_CATEGORY', category)
-    await dispatch('loadArticles')
-  },
   async deleteArticle ({ dispatch, commit }, id) {
     commit('DELETE_ARTICLES', id)
     await dispatch('loadArticles')
@@ -283,11 +262,6 @@ const actions = {
     commit
   }, id) {
     commit('MARK_CATEGORY_READ', id)
-  },
-  markFeedRead ({
-    commit
-  }, id) {
-    commit('MARK_FEED_READ', id)
   },
   async removeOldReadItems ({ dispatch, commit }) {
     commit('REMOVE_OLD_READ')

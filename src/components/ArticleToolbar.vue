@@ -18,7 +18,7 @@
                 :src="article.favicon"
                 width="16"
                 height="16"
-                class="mb-0"
+                class="mb-0 d-inline-flex"
               >
             </span>
             <span>{{ article.sitetitle }}</span>
