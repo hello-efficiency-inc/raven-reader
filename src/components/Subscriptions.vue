@@ -230,9 +230,6 @@ export default {
       )
 
       menu.popup({ window: window.electron.remote.getCurrentWindow() })
-      menu.once('menu-will-close', () => {
-        menu.destroy()
-      })
     },
     openFeedMenu (e, feed) {
       const self = this
@@ -275,7 +272,6 @@ export default {
         new MenuItem({
           label: 'Unsubscribe',
           click () {
-            console.log(feed)
             self.unsubscribeFeed(feed.feed.uuid)
           }
         })

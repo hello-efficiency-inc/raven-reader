@@ -62,9 +62,11 @@ export default {
       this.$refs.editCategory.hide()
     },
     updateCategoryTitle () {
-      this.$store.dispatch('renameCategory', this.feed)
-      this.$store.dispatch('updateFeedCategory', { old: this.oldValue, new: this.feed })
-      this.$store.dispatch('updateArticleCategory', { old: this.oldValue, new: this.feed })
+      this.$store.dispatch('renameCategory', this.feed).then(() => {
+        this.$store.dispatch('updateFeedCategory', { old: this.oldValue, new: this.feed })
+        this.$store.dispatch('updateArticleCategory', { old: this.oldValue, new: this.feed })
+        this.$store.dispatch('loadCategories')
+      })
       this.$toasted.show('Category renamed', {
         theme: 'outline',
         position: 'top-center',

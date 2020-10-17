@@ -1,4 +1,5 @@
 import db from '../../services/db'
+import * as database from '../../db'
 import truncate from 'lodash.truncate'
 
 const state = {
@@ -35,7 +36,7 @@ const actions = {
     commit('LOAD_CATEGORY', await db.fetchCategories())
   },
   addCategory ({ commit }, category) {
-    db.addCategory(category).then((result) => {
+    db.addCategory([database.categoryTable.createRow(category)]).then((result) => {
       commit('ADD_CATEGORY', result)
     })
   },
