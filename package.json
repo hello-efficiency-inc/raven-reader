@@ -26,7 +26,6 @@
     "cheerio": "^1.0.0-rc.3",
     "core-js": "^3.6.5",
     "dayjs": "^1.8.31",
-    "dns": "^0.2.2",
     "electron-context-menu": "^2.2.0",
     "electron-log": "^4.2.2",
     "electron-store": "^6.0.0",
