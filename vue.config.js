@@ -3,6 +3,7 @@ module.exports = {
     electronBuilder: {
       preload: 'src/preload.js',
       builderOptions: {
+        generateUpdatesFilesForAllChannels: true,
         productName: 'Raven Reader',
         appId: 'org.helloefficiency.ravenreader',
         afterSign: 'notarize.js',
@@ -31,6 +32,9 @@ module.exports = {
             name: 'ridereceiptspro',
             region: 'sfo2',
             path: '/ravenreader'
+          }, {
+            provider: 'github',
+            releaseType: 'prerelease'
           }],
           hardenedRuntime: true,
           gatekeeperAssess: false,
@@ -45,6 +49,9 @@ module.exports = {
             name: 'ridereceiptspro',
             region: 'sfo2',
             path: '/ravenreader'
+          }, {
+            provider: 'github',
+            releaseType: 'prerelease'
           }],
           icon: 'build/icons/icon.ico',
           certificateFile: 'windows2020.pfx',
@@ -56,6 +63,9 @@ module.exports = {
             name: 'ridereceiptspro',
             region: 'sfo2',
             path: '/ravenreader'
+          }, {
+            provider: 'github',
+            releaseType: 'prerelease'
           }],
           category: 'News',
           icon: 'build/icons'

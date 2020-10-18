@@ -10,13 +10,14 @@ import createTray from './tray'
 import Store from 'electron-store'
 import log from 'electron-log'
 import contextMenu from 'electron-context-menu'
-import { autoUpdater } from 'electron-updater'
+import { AppUpdater, autoUpdater } from 'electron-updater'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 autoUpdater.autoDownload = false
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
+autoUpdater.allowPrerelease = true
 
 contextMenu({
   showInspectElement: false
