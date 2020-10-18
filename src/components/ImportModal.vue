@@ -56,6 +56,7 @@ export default {
       this.file = null
     },
     importFeed () {
+      this.$parent.$refs.topProgress.start()
       window.fs.readFile(this.file.path, 'utf8', (err, data) => {
         if (err) {
           this.$toasted.show('Oops! something went wrong', {
@@ -65,7 +66,9 @@ export default {
           })
         }
         const parsedData = parseOPML(data).filter(item => item !== null)
-        helper.subscribe(parsedData, null, false, true)
+        helper.subscribe(parsedData, null, false, true).then(() => {
+          this.$parent.$refs.topProgress.done()
+        })
       })
 
       this.file = null

@@ -10,7 +10,7 @@ import createTray from './tray'
 import Store from 'electron-store'
 import log from 'electron-log'
 import contextMenu from 'electron-context-menu'
-import { AppUpdater, autoUpdater } from 'electron-updater'
+import { autoUpdater } from 'electron-updater'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 

@@ -64,7 +64,7 @@ export default {
       }
     })
 
-    Promise.all(items).then((result) => {
+    return Promise.all(items).then((result) => {
       const feeds = result.map((item) => item.feed)
       const categories = result.map((item) => item.category)
       const articles = result.map((item) => item.posts).flat()
@@ -80,7 +80,9 @@ export default {
           })
           window.log.info(`Refresh count: ${filteredPosts.length}`)
           if (filteredPosts.length > 0) {
-            this.addArticles(filteredPosts).then(() => store.dispatch('loadArticles'))
+            this.addArticles(filteredPosts).then(() => {
+              store.dispatch('loadArticles')
+            })
           } else {
             window.log.info('Nothing to refresh')
           }

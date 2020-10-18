@@ -33,8 +33,10 @@ export default {
       this.$refs.markallread.hide()
     },
     markAllRead () {
+      this.$parent.$refs.topProgress.start()
       this.$store.dispatch('markAllRead').then(() => {
         this.$store.dispatch('loadArticles')
+        this.$parent.$refs.topProgress.done()
       })
       this.$refs.markallread.hide()
     }

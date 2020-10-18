@@ -138,16 +138,12 @@ const mutations = {
     }
   },
   CHANGE_TYPE (state, type) {
-    state.type = type
+    state.type = type.type
+    state.category = type.category
+    state.feed = type.feed
   },
   SET_SEARCH_TERM (state, search) {
     state.search = search
-  },
-  SET_CATEGORY_TYPE (state, category) {
-    state.category = category
-  },
-  SET_FEED_ID (state, feed) {
-    state.feed = feed
   },
   SAVE_ARTICLE (state, data) {
     console.log(data.article)
@@ -233,12 +229,6 @@ const actions = {
   },
   setSearch ({ commit }, search) {
     commit('SET_SEARCH_TERM', search)
-  },
-  setCategory ({ commit }, title) {
-    commit('SET_CATEGORY_TYPE', title)
-  },
-  setFeed ({ commit }, feed) {
-    commit('SET_FEED_ID', feed)
   },
   decreaseFont ({ commit }) {
     commit('DRECREASE_FONT')

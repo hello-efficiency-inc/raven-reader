@@ -1,5 +1,6 @@
 <template>
   <div class="app-wrapper">
+    <vue-topprogress ref="topProgress" color="#22e3ff"></vue-topprogress>
     <nav
       v-if="true"
       ref="sidebar"
@@ -80,25 +81,40 @@ export default {
   },
   watch: {
     $route (to, from) {
+      this.$refs.topProgress.start()
       switch (to.name) {
         case 'feed-page':
           if (this.$route.params.feedid) {
             this.articleType = 'feed'
-            this.$store.dispatch('setFeed', this.$route.params.feedid)
-            this.$store.dispatch('setCategory', null)
-            this.$store.dispatch('changeType', 'feed')
+            this.$store.dispatch('changeType', {
+              type: 'feed',
+              category: null,
+              feed: this.$route.params.feedid
+            }).then(() => {
+              this.$refs.topProgress.done()
+            })
           }
           break
         case 'category-page':
           this.articleType = 'category'
-          this.$store.dispatch('setCategory', this.$route.params.category)
-          this.$store.dispatch('setFeed', null)
-          this.$store.dispatch('changeType', 'feed')
+          this.$store.dispatch('changeType', {
+            type: 'feed',
+            category: this.$route.params.category,
+            feed: null
+          }).then(() => {
+            this.$refs.topProgress.done()
+          })
           break
         case 'type-page':
           if (this.$route.params.type) {
             this.articleType = this.$route.params.type
-            this.$store.dispatch('changeType', this.$route.params.type)
+            this.$store.dispatch('changeType', {
+              type: this.$route.params.type,
+              category: null,
+              feed: null
+            }).then(() => {
+              this.$refs.topProgress.done()
+            })
           }
           break
         case 'article-page':
@@ -254,6 +270,7 @@ export default {
         data.content && !data.podcast ? stat(data.content).text : ''
       self.articleData = data
       self.loading = false
+      this.$refs.topProgress.done()
     },
     unreadChange () {
       // unread changed, sort feeds by unread count

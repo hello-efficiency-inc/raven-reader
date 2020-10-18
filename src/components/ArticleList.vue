@@ -137,16 +137,16 @@ export default {
       this.$refs.statusMsg.innerText = `${this.filteredArticles.length} items`
     },
     sync () {
-      const self = this
       this.syncState = true
       const feeds = this.$store.state.Feed.feeds
       if (feeds.length === 0) {
         window.log.info('No feeds to process')
       } else {
+        this.$parent.$refs.topProgress.start()
         window.log.info(`Processing ${feeds.length} feeds`)
-        helper.subscribe(feeds, null, true, false)
-        this.$store.dispatch('loadArticles').then(() => {
-          self.syncState = false
+        helper.subscribe(feeds, null, true, false).then(() => {
+          this.$parent.$refs.topProgress.done()
+          this.syncState = false
         })
       }
     },

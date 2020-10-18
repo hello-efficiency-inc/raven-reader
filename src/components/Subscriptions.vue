@@ -105,6 +105,7 @@
 <script>
 import cacheService from '../services/cacheArticle'
 import db from '../services/db'
+import helper from '../services/helpers'
 import articleCount from '../mixins/articleCount'
 import dataSets from '../mixins/dataItems'
 import feedMix from '../mixins/feedMix'
@@ -259,6 +260,15 @@ export default {
           label: 'Copy feed link',
           click () {
             self.copyFeedLink(feed.feed.xmlurl)
+          }
+        })
+      )
+
+      menu.append(
+        new MenuItem({
+          label: `Refresh ${feed.feed.title} feed`,
+          click () {
+            helper.subscribe([feed.feed], null, true)
           }
         })
       )
