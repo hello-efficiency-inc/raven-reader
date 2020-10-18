@@ -1,6 +1,6 @@
 <p align="center">
-    <a href="https://github.com/mrgodhani/rss-reader">
-        <img alt="raven reader logo" src="https://github.com/mrgodhani/rss-reader/blob/master/raven-logo.png?raw=true" width="400">
+    <a href="https://github.com/hello-efficiency-inc/raven-reader/">
+        <img alt="raven reader logo" src="https://github.com/hello-efficiency-inc/raven-reader/blob/master/src/assets/raven-logo.svg?raw=true" width="400">
     </a>
 </p>
 
@@ -24,6 +24,8 @@
 
 ## Download
 To download, please visit https://ravenreader.app.
+
+For Alpha/Nightly builds please go to [Releases](https://github.com/hello-efficiency-inc/raven-reader/releases) page.
 
 ## Install via Homebrew (macOS)
 To use Homebrew-Cask you just need to have [Homebrew](https://brew.sh/) installed.
