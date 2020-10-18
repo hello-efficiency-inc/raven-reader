@@ -89,6 +89,7 @@ export default {
             this.$store.dispatch('changeType', {
               type: 'feed',
               category: null,
+              search: null,
               feed: this.$route.params.feedid
             }).then(() => {
               this.$refs.topProgress.done()
@@ -100,7 +101,8 @@ export default {
           this.$store.dispatch('changeType', {
             type: 'feed',
             category: this.$route.params.category,
-            feed: null
+            feed: null,
+            search: null
           }).then(() => {
             this.$refs.topProgress.done()
           })
@@ -111,7 +113,8 @@ export default {
             this.$store.dispatch('changeType', {
               type: this.$route.params.type,
               category: null,
-              feed: null
+              feed: null,
+              search: null
             }).then(() => {
               this.$refs.topProgress.done()
             })

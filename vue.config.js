@@ -37,7 +37,7 @@ module.exports = {
             releaseType: 'prerelease'
           }],
           hardenedRuntime: true,
-          entitlements: "./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist",
+          entitlements: './node_modules/electron-builder-notarize/entitlements.mac.inherit.plist',
           gatekeeperAssess: false,
           target: [
             'dmg'

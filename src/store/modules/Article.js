@@ -141,9 +141,7 @@ const mutations = {
     state.type = type.type
     state.category = type.category
     state.feed = type.feed
-  },
-  SET_SEARCH_TERM (state, search) {
-    state.search = search
+    state.search = type.search
   },
   SAVE_ARTICLE (state, data) {
     console.log(data.article)
@@ -226,9 +224,6 @@ const actions = {
   },
   changeType ({ commit }, type) {
     commit('CHANGE_TYPE', type)
-  },
-  setSearch ({ commit }, search) {
-    commit('SET_SEARCH_TERM', search)
   },
   decreaseFont ({ commit }) {
     commit('DRECREASE_FONT')

@@ -101,6 +101,7 @@ export default {
   },
   data () {
     return {
+      articlesToShow: 4,
       search: null,
       featherIcon: 'chevron-left',
       ariaLabelFoldSidebar: 'Hide Sidebar',
@@ -116,16 +117,16 @@ export default {
     }
   },
   watch: {
-    // search (val) {
-    //   this.$store.dispatch('changeType', 'search')
-    //   this.$store.dispatch('setSearch', val)
-    // },
     filteredArticles: 'itemsChange'
   },
   methods: {
     searchList () {
-      this.$store.dispatch('changeType', 'search')
-      this.$store.dispatch('setSearch', this.search)
+      this.$store.dispatch('changeType', {
+        type: 'search',
+        search: this.search,
+        feed: null,
+        category: null
+      })
     },
     mapArticles (articles) {
       return articles.map(article => ({ ...article, id: article.articles.id, isActive: this.isArticleActive(article) }))
