@@ -20,7 +20,7 @@ jobs:
           node-version: 10
 
       - name: Build/release Raven Reader app
-        uses: samuelmeuli/action-electron-builder@v1
+        uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
           skip_build: true
 
