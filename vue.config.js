@@ -6,7 +6,7 @@ module.exports = {
         generateUpdatesFilesForAllChannels: true,
         productName: 'Raven Reader',
         appId: 'org.helloefficiency.ravenreader',
-        afterSign: 'notarize.js',
+        afterSign: 'electron-builder-notarize',
         asarUnpack: [
           './node_modules/node-notifier/vendor/**'
         ],
@@ -37,6 +37,7 @@ module.exports = {
             releaseType: 'prerelease'
           }],
           hardenedRuntime: true,
+          entitlements: "./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist",
           gatekeeperAssess: false,
           target: [
             'dmg'
