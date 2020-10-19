@@ -217,18 +217,24 @@ export default {
       const xmlData = helper.exportOpml()
       const self = this
       window.fs.unlink(
-        `${self.$electron.remote.app.getPath('downloads')}/subscriptions.xml`,
+        `${self.$electron.remote.app.getPath('downloads')}/subscriptions.opml`,
         err => {
           if (err && err.code !== 'ENOENT') throw err
           window.fs.writeFile(
             `${self.$electron.remote.app.getPath(
               'downloads'
-            )}/subscriptions.xml`,
+            )}/subscriptions.opml`,
             xmlData,
             { flag: 'w', encoding: 'utf8' },
             err => {
               if (err) throw err
-              console.log('XML Saved')
+              window.log.info('XML Saved')
+              const notification = new Notification('Raven Reader', {
+                body: 'Exported all feeds successfully to downloads folder.'
+              })
+              notification.onclick = () => {
+                window.log.info('Export notification clicked')
+              }
             }
           )
         }
