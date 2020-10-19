@@ -50,11 +50,16 @@
       <div class="articles">
         <perfect-scrollbar class="list-group">
           <template v-if="filteredArticles.length > 0">
-            <article-item
-              v-for="article in mapArticles(filteredArticles)"
-              :key="article.uuid"
-              :article="article"
-            />
+            <template v-for="(article, index) in mapArticles(filteredArticles)">
+              <article-item
+                v-if="index <= articlesToShow"
+                :key="article.uuid"
+                :article="article"
+              />
+            </template>
+            <button v-if="articlesToShow <= mapArticles(filteredArticles).length" @click="articlesToShow += 10" class="btn btn-primary rounded-0" type="button">
+              Load more
+            </button>
           </template>
           <div
             v-if="filteredArticles.length === 0"
@@ -87,6 +92,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import helper from '../services/helpers'
+import bus from '../services/bus'
 
 export default {
   props: {
@@ -101,12 +107,20 @@ export default {
   },
   data () {
     return {
-      articlesToShow: 4,
+      articlesToShow: 9,
       search: null,
       featherIcon: 'chevron-left',
       ariaLabelFoldSidebar: 'Hide Sidebar',
       syncState: false
     }
+  },
+  mounted () {
+    bus.$on('reset-articlelist-count', () => {
+      this.articlesToShow = 9
+    })
+    bus.$on('sync-complete', () => {
+      this.itemsChange()
+    })
   },
   computed: {
     ...mapGetters([
@@ -139,13 +153,12 @@ export default {
     },
     sync () {
       this.syncState = true
-      const feeds = this.$store.state.Feed.feeds
-      if (feeds.length === 0) {
-        window.log.info('No feeds to process')
-      } else {
+      if (this.$store.state.Feed.feeds.length > 0) {
         this.$parent.$refs.topProgress.start()
-        window.log.info(`Processing ${feeds.length} feeds`)
-        helper.subscribe(feeds, null, true, false).then(() => {
+        window.log.info(`Processing ${this.$store.state.Feed.feeds.length} feeds`)
+        this.$refs.statusMsg.innerText = 'Syncing...'
+        helper.subscribe(this.$store.state.Feed.feeds, null, true, false).then(() => {
+          this.itemsChange()
           this.$parent.$refs.topProgress.done()
           this.syncState = false
         })
@@ -153,13 +166,8 @@ export default {
     },
     fold () {
       this.$parent.$refs.sidebar.hidden = !this.$parent.$refs.sidebar.hidden
-      if (this.$parent.$refs.sidebar.hidden) {
-        this.featherIcon = 'chevron-right'
-        this.ariaLabelFoldSidebar = 'Show Sidebar'
-      } else {
-        this.featherIcon = 'chevron-left'
-        this.ariaLabelFoldSidebar = 'Hide Sidebar'
-      }
+      this.featherIcon = this.$parent.$refs.sidebar.hidden ? 'chevron-right' : 'chevron-left'
+      this.ariaLabelFoldSidebar = this.$parent.$refs.sidebar.hidden ? 'Show Sidebar' : 'Hide Sidebar'
     }
   }
 }

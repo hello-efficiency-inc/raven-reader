@@ -5,20 +5,14 @@
       class="article-toolbar"
     >
       <div class="site-info position-relative">
-        <div class="wrap">
-          <button
-            v-b-modal.editSubscription
-            class="btn btn-toolbar"
-          >
-            <img
+        <div class="wrap h-100 d-flex align-items-center">
+          <img
                 :src="article.favicon"
                 width="16"
                 height="16"
                 class="mb-0 mx-3 d-inline-flex"
               >
             <span>{{ article.sitetitle }}</span>
-          </button>
-          <edit-subscription :article="article" />
         </div>
       </div>
       <div class="article-buttons">
@@ -233,6 +227,7 @@ export default {
   },
   data () {
     return {
+      articleItem: JSON.parse(this.article),
       pocket_connected: false,
       instapaper_connected: false,
       settingspanel: false,
@@ -319,13 +314,13 @@ export default {
           this.$store.dispatch('loadArticles')
         })
       }
-      this.article.favourite = !this.article.favourite
+      this.articleitem.favourite = !this.articleitem.favourite
     },
     saveArticle () {
       const self = this
       if (this.article.offline && !this.$store.state.Setting.offline) {
         cacheService.uncache(`raven-${this.article._id}`).then(() => {
-          self.article.offline = false
+          self.articleitem.offline = false
           self.$store.dispatch('saveArticle', {
             type: markTypes.uncache,
             article: self.article
@@ -336,7 +331,7 @@ export default {
         })
       } else {
         cacheService.cacheArticleData(self.article).then(() => {
-          self.article.offline = true
+          self.articleitem.offline = true
           self.$store.dispatch('saveArticle', {
             type: markTypes.cache,
             article: self.article
@@ -398,7 +393,7 @@ export default {
           podcast: this.article.podcast
         })
       }
-      this.article.read = !this.article.read
+      this.articleitem.read = !this.articleitem.read
     },
     handleSetting (event, el) {
       if (this.settingspanel) {

@@ -50,6 +50,7 @@ import articleCount from '../mixins/articleCount'
 import setTheme from '../mixins/setTheme'
 import dataSets from '../mixins/dataItems'
 import bridge from '../services/bridge'
+import bus from '../services/bus'
 
 const sortBy = (key, pref) => {
   if (pref === 'asc') {
@@ -77,6 +78,7 @@ export default {
     if (to.params.id) {
       this.$electron.ipcRenderer.send('article-selected')
     }
+    bus.$emit('reset-articlelist-count')
     next()
   },
   watch: {
@@ -84,6 +86,7 @@ export default {
       this.$refs.topProgress.start()
       switch (to.name) {
         case 'feed-page':
+          this.articleData = null
           if (this.$route.params.feedid) {
             this.articleType = 'feed'
             this.$store.dispatch('changeType', {
@@ -97,6 +100,7 @@ export default {
           }
           break
         case 'category-page':
+          this.articleData = null
           this.articleType = 'category'
           this.$store.dispatch('changeType', {
             type: 'feed',
@@ -109,6 +113,7 @@ export default {
           break
         case 'type-page':
           if (this.$route.params.type) {
+            this.articleData = null
             this.articleType = this.$route.params.type
             this.$store.dispatch('changeType', {
               type: this.$route.params.type,
@@ -160,7 +165,9 @@ export default {
 
     window.electron.remote.powerMonitor.on('resume', () => {
       window.log.info('Power resumed')
+      this.$store.dispatch('refreshFeeds')
       this.runPruneCronJob().reschedule()
+      this.runArticleCronJob().reschedule()
     })
 
     if (this.$store.state.Setting.offline) {
@@ -199,7 +206,9 @@ export default {
           } else {
             this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
             window.log.info(`Processing ${feeds.length} feeds`)
-            helper.subscribe(feeds, null, true)
+            helper.subscribe(feeds, null, true).then(() => {
+              bus.$emit('sync-complete')
+            })
           }
         }
       )
@@ -320,11 +329,13 @@ export default {
             }
           } catch (e) {
             window.log.info(e)
+            console.log(articleItem)
             articleItem.content = null
-            articleItem.url = articleItem.link
+            articleItem.url = articleItem.articles.link
             self.articleData = articleItem
             self.empty = true
             self.loading = false
+            self.$refs.topProgress.done()
           }
         })
       }

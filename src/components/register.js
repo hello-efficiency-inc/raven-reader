@@ -11,7 +11,6 @@ import ImportModal from './ImportModal'
 import SettingsModal from './SettingsModal'
 import MarkReadModal from './MarkReadModal'
 import SyncSettingsModal from './SyncSettingsModal'
-import EditSubscriptionModal from './EditSubscription'
 import EditFeedModal from './EditFeed'
 import EditCategoryModal from './EditCategory'
 import FeedMix from './FeedMix'
@@ -32,7 +31,6 @@ export default {
     Vue.component('settings-modal', SettingsModal)
     Vue.component('markallread-modal', MarkReadModal)
     Vue.component('sync-settings', SyncSettingsModal)
-    Vue.component('edit-subscription', EditSubscriptionModal)
     Vue.component('feed-mix', FeedMix)
     Vue.component('edit-feed', EditFeedModal)
     Vue.component('edit-category', EditCategoryModal)

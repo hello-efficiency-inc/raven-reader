@@ -82,6 +82,12 @@ export default {
           if (filteredPosts.length > 0) {
             this.addArticles(filteredPosts).then(() => {
               store.dispatch('loadArticles')
+              const notification = new Notification('Raven Reader', {
+                body: `Successfully fetched ${filteredPosts.length} new articles.`
+              })
+              notification.onclick = () => {
+                console.log('Notification clicked')
+              }
             })
           } else {
             window.log.info('Nothing to refresh')

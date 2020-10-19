@@ -7,13 +7,13 @@
     @shown="initialData"
     @hidden="onHidden"
   >
-    <div v-if="feed">
+    <div v-if="feeditem">
       <b-form-group
         id="subscription-group"
         label="Title"
       >
         <b-form-input
-          v-model="feed.title"
+          v-model="feeditem.title"
           type="text"
         />
       </b-form-group>
@@ -51,7 +51,13 @@ export default {
   },
   data () {
     return {
+      feeditem: null,
       oldValue: {}
+    }
+  },
+  watch: {
+    feed () {
+      this.feeditem = JSON.parse(JSON.stringify(this.feed))
     }
   },
   methods: {

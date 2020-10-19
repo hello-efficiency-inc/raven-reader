@@ -13,7 +13,7 @@
         :class="{ 'px-4': !originalArticle, 'px-0 py-0': originalArticle }"
         :style="{ fontFamily: currentFontStyle }"
       >
-        <div
+        <article
           v-if="article !== null && article.content !== null && !emptyState && !originalArticle"
           class="article-wrap"
           :class="{ 'offset-content': fontSettingsOn }"
@@ -23,17 +23,17 @@
             <strong>{{ article.title }}</strong><br>
             <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
           </h2>
-          <div
+          <section
             v-if="article.content"
             class="article-detail"
             v-html="article.content"
           />
-          <div
+          <section
             v-if="!article.content"
             class="article-detail"
             v-html="article.contentAlt"
           />
-          <div
+          <section
             v-if="article.podcast"
             class="mt-5 mb-5"
           >
@@ -42,8 +42,8 @@
                 <source :src="article.enclosure.url"/>
               </audio>
             </vue-plyr>
-          </div>
-        </div>
+          </section>
+        </article>
       </perfect-scrollbar>
       <div
         v-if="originalArticle && !emptyState"
@@ -220,6 +220,11 @@ export default {
   height: calc(100% - 45px);
 
   background-color: var(--background-color);
+
+  span {
+    color: var(--text-color)
+  }
+
   h1,
   h2 {
     font-size: 2em;
@@ -234,6 +239,7 @@ export default {
     color: var(--text-color);
   }
 
+  section,
   address,
   figure,
   blockquote,

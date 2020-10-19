@@ -44,6 +44,7 @@
           <button
             v-if="feeditem.type"
             v-b-toggle="`collapse-${feeditem.id}`"
+            :aria-label="`${feeditem.title} group`"
             class="btn btn-link category-link pr-0"
           >
             <feather-icon name="chevron-right" />

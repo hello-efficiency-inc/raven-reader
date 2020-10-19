@@ -12,7 +12,7 @@
         label="Title"
       >
         <b-form-input
-          v-model="feed.title"
+          v-model="feeditem.title"
           type="text"
         />
       </b-form-group>
@@ -22,7 +22,7 @@
       >
         <b-form-select
           v-if="categoryItems.length > 0"
-          v-model="feed.category"
+          v-model="feeditem.category"
           :options="categoryItems"
           class="mb-3"
         >
@@ -82,6 +82,7 @@ export default {
   },
   data () {
     return {
+      feeditem: null,
       newcategory: null,
       showAddCat: false
     }
@@ -91,6 +92,11 @@ export default {
       return this.$store.state.Category.categories.map((item) => {
         return { value: item.title, text: item.title }
       })
+    }
+  },
+  watch: {
+    feed () {
+      this.feeditem = JSON.parse(JSON.stringify(this.feed))
     }
   },
   methods: {
