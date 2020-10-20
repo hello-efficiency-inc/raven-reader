@@ -54,6 +54,8 @@ module.exports = {
             provider: 'github',
             releaseType: 'prerelease'
           }],
+          certificateFile: 'windows2020.pfx',
+          certificatePassword: 'hello!@#$%^',
           icon: 'build/icons/icon.ico'
         },
         linux: {
