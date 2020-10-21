@@ -57,6 +57,7 @@ export default {
         type: 'category'
       } : null
       const feeditem = await parseFeed(url, categoryItem)
+      console.log(feeditem)
       return {
         feed: feeditem.meta,
         posts: feeditem.posts,
@@ -96,8 +97,6 @@ export default {
       } else {
         this.addArticles(articles).then(() => store.dispatch('loadArticles'))
       }
-    }).catch((e) => {
-      window.log.info(e)
     })
   }
 }

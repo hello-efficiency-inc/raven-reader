@@ -2,6 +2,9 @@ import dayjs from 'dayjs'
 
 const RssParser = window.rssParser
 const parser = new RssParser({
+  requestOptions: {
+    rejectUnauthorized: false
+  },
   defaultRSS: 2.0,
   headers: {
     'User-Agent': 'Raven Reader'
@@ -23,6 +26,9 @@ export async function parseFeed (feedUrl, category = null) {
     feed = await parser.parseURL(feedUrl)
   } catch (e) {
     const stream = await window.got.stream(feedUrl, {
+      https: {
+        rejectUnauthorized: false
+      },
       retries: 0,
       headers: {
         'user-agent': 'Raven Reader'
@@ -42,6 +48,7 @@ export async function parseFeed (feedUrl, category = null) {
     title: feed.title
   }
   feeditem.posts = feed.items
+  console.log(feeditem)
   const response = await ParseFeedPost(feeditem)
   return response
 }
