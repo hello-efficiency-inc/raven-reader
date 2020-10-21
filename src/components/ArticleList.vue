@@ -149,7 +149,9 @@ export default {
       return !!article && article.articles.id !== undefined && article.articles.id === this.activeArticleId
     },
     itemsChange () {
-      this.$refs.statusMsg.innerText = `${this.filteredArticles.length} items`
+      if (this.filteredArticles) {
+        this.$refs.statusMsg.innerText = `${this.filteredArticles.length} items`
+      }
     },
     sync () {
       this.syncState = true
