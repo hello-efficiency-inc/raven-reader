@@ -36,7 +36,7 @@
           >
             <feather-icon
               name="star"
-              :filled="article.favourite"
+              :filled="articleItem.favourite"
             />
           </button>
         </div>
@@ -49,7 +49,7 @@
           >
             <feather-icon
               name="circle"
-              :filled="article.read"
+              :filled="articleItem.read"
             />
           </button>
         </div>
@@ -83,7 +83,7 @@
           >
             <feather-icon
               name="wifi-off"
-              :success="article.offline"
+              :success="articleItem.offline"
             />
           </button>
         </div>
@@ -154,12 +154,22 @@
             </b-dropdown-item>
           </b-dropdown>
         </div>
+        <div class="wrap" v-if="!articleItem.podcast">
+          <button
+            v-b-tooltip.hover
+            class="btn btn-toolbar"
+            title="Full Content"
+            @click="loadFullArticle"
+          >
+            <feather-icon :success="fullArticle" name="align-justify" />
+          </button>
+        </div>
       </div>
     </div>
     <div
       tabindex="0"
       class="article-setting"
-      :class="{ hidden: !settingspanel || !this.$store.state.Article.fontSettingOn }"
+      :class="{ hidden: !settingspanel }"
     >
       <div class="settings-wrap dropdown-setting">
         <b-form-select
@@ -199,6 +209,8 @@
   </div>
 </template>
 <script>
+import cheerio from 'cheerio'
+import { parseArticle } from '../parsers/article'
 import cacheService from '../services/cacheArticle'
 import axios from 'axios'
 import vClickOutside from 'v-click-outside'
@@ -227,7 +239,8 @@ export default {
   },
   data () {
     return {
-      articleItem: JSON.parse(this.article),
+      articleItem: null,
+      fullArticle: false,
       pocket_connected: false,
       instapaper_connected: false,
       settingspanel: false,
@@ -249,10 +262,10 @@ export default {
   },
   computed: {
     markFavouriteButton () {
-      return this.article.favourite ? 'Mark as unfavourite' : 'Mark as favourite'
+      return this.articleItem.favourite ? 'Mark as unfavourite' : 'Mark as favourite'
     },
     markReadButton () {
-      return this.article.read ? 'Mark as unread' : 'Mark as read'
+      return this.articleItem.read ? 'Mark as unread' : 'Mark as read'
     },
     instapaperConnected () {
       return this.$store.state.Setting.instapaper_connected
@@ -267,6 +280,9 @@ export default {
       handler () {
         this.resetData()
       }
+    },
+    article () {
+      this.articleItem = JSON.parse(JSON.stringify(this.article))
     }
   },
   mounted () {
@@ -277,6 +293,7 @@ export default {
     resetData () {
       this.original = false
       this.settingspanel = false
+      this.fullArticle = false
       this.$store.dispatch('turnOnFontSetting', false)
     },
     openOriginal (url) {
@@ -297,7 +314,7 @@ export default {
       this.$store.dispatch('increaseFont')
     },
     markFavourite () {
-      if (this.article.favourite) {
+      if (this.articleItem.favourite) {
         this.$store.dispatch('markAction', {
           type: markTypes.unfavourite,
           id: this.$route.params.id
@@ -314,16 +331,16 @@ export default {
           this.$store.dispatch('loadArticles')
         })
       }
-      this.articleitem.favourite = !this.articleitem.favourite
+      this.articleItem.favourite = !this.articleItem.favourite
     },
     saveArticle () {
       const self = this
-      if (this.article.offline && !this.$store.state.Setting.offline) {
-        cacheService.uncache(`raven-${this.article._id}`).then(() => {
-          self.articleitem.offline = false
+      if (this.articleItem.offline && !this.$store.state.Setting.offline) {
+        cacheService.uncache(`raven-${this.articleItem._id}`).then(() => {
+          self.articleItem.offline = false
           self.$store.dispatch('saveArticle', {
             type: markTypes.uncache,
-            article: self.article
+            article: self.articleItem
           }).then(() => {
             self.$store.dispatch('loadFeeds')
             self.$store.dispatch('loadArticles')
@@ -331,10 +348,10 @@ export default {
         })
       } else {
         cacheService.cacheArticleData(self.article).then(() => {
-          self.articleitem.offline = true
+          self.articleItem.offline = true
           self.$store.dispatch('saveArticle', {
             type: markTypes.cache,
-            article: self.article
+            article: self.articleItem
           }).then(() => {
             self.$store.dispatch('loadFeeds')
             self.$store.dispatch('loadArticles')
@@ -380,20 +397,20 @@ export default {
       this.$store.dispatch('turnOnFontSetting', this.settingspanel)
     },
     markRead () {
-      if (this.article.read) {
+      if (this.articleItem.read) {
         this.$store.dispatch('markAction', {
           type: markTypes.unread,
           id: this.$route.params.id,
-          podcast: this.article.podcast
+          podcast: this.articleItem.podcast
         })
       } else {
         this.$store.dispatch('markAction', {
           type: markTypes.read,
           id: this.$route.params.id,
-          podcast: this.article.podcast
+          podcast: this.articleItem.podcast
         })
       }
-      this.articleitem.read = !this.articleitem.read
+      this.articleItem.read = !this.articleItem.read
     },
     handleSetting (event, el) {
       if (this.settingspanel) {
@@ -406,6 +423,23 @@ export default {
         return false
       }
       return true
+    },
+    async loadFullArticle () {
+      const fullArticle = await parseArticle(this.articleItem.link)
+      if (!fullArticle.error) {
+        const $ = cheerio.load(fullArticle.content)
+        $('a').addClass('js-external-link')
+        $('img').addClass('img-fluid')
+        $('iframe')
+          .parent()
+          .addClass('embed-responsive embed-responsive-16by9')
+        this.articleItem.fullContent = $.text().trim() === '' ? null : $.html()
+        this.$emit('load-full-content', this.articleItem)
+        this.fullArticle = !this.fullArticle
+      } else {
+        this.articleItem.fullContent = null
+        this.fullArticle = !this.fullArticle
+      }
     }
   }
 }
@@ -467,19 +501,24 @@ export default {
   }
 }
 
-.site-info,
 .article-buttons {
   display: block;
   position: absolute;
   top: 0;
-  width: 270px;
+  width: 60%;
   height: 40px;
   z-index: 1;
   background-image: linear-gradient(to right, rgba(255,255,255,0) 0%, #fff 10%);
 }
 
 .site-info {
-  width: 340px;
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 40%;
+  height: 40px;
+  z-index: 1;
+  background-image: linear-gradient(to right, rgba(255,255,255,0) 0%, #fff 10%);
   left: 0;
 
   .btn-toolbar {

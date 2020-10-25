@@ -144,7 +144,6 @@ const mutations = {
     state.search = type.search
   },
   SAVE_ARTICLE (state, data) {
-    console.log(data.article)
     const index = state.articles.findIndex(item => item.articles.uuid === data.article._id)
     state.articles[index].offline = data.type === 'CACHE'
   },

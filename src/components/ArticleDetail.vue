@@ -5,6 +5,7 @@
       ref="articleToolbar"
       :article.sync="article"
       @open-original-article="openWebArticle"
+      @load-full-content="loadFullContent"
     />
     <div class="content-wrapper">
       <perfect-scrollbar
@@ -24,14 +25,14 @@
             <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
           </h2>
           <section
-            v-if="article.content"
+            v-if="!full && articleItem.content"
             class="article-detail"
-            v-html="article.content"
+            v-html="articleItem.content"
           />
           <section
-            v-if="!article.content"
+            v-if="full && articleItem.fullContent"
             class="article-detail"
-            v-html="article.contentAlt"
+            v-html="articleItem.fullContent"
           />
           <section
             v-if="article.podcast"
@@ -52,13 +53,13 @@
         :style="{ fontFamily: currentFontStyle }"
       >
         <div
-          v-if="article !== null && article.content !== null && !emptyState && originalArticle"
+          v-if="articleItem !== null && articleItem.content !== null && !emptyState && originalArticle"
           class="web-wrap"
           :style="{ fontSize: `${currentFontSize}% !important` }"
         >
           <webview
             id="foo"
-            :src="articleUrl"
+            :src="articleItem.link"
             style="height: 100vh"
             enableremotemodule="false"
           />
@@ -114,7 +115,9 @@ export default {
   },
   data () {
     return {
+      articleItem: null,
       originalArticle: false,
+      full: false,
       articleUrl: null
     }
   },
@@ -135,16 +138,24 @@ export default {
       handler () {
         this.resetData()
       }
+    },
+    article () {
+      this.articleItem = JSON.parse(JSON.stringify(this.article))
     }
   },
   methods: {
     resetData () {
       this.originalArticle = false
+      this.full = false
       this.articleUrl = null
     },
     openWebArticle (original, data) {
       this.originalArticle = original
       this.articleUrl = data
+    },
+    loadFullContent (data) {
+      this.articleItem = data
+      this.full = !this.full
     }
   }
 }

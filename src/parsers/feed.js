@@ -48,7 +48,6 @@ export async function parseFeed (feedUrl, category = null) {
     title: feed.title
   }
   feeditem.posts = feed.items
-  console.log(feeditem)
   const response = await ParseFeedPost(feeditem)
   return response
 }

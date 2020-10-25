@@ -107,7 +107,7 @@ export default {
   },
   data () {
     return {
-      articlesToShow: 9,
+      articlesToShow: 24,
       search: null,
       featherIcon: 'chevron-left',
       ariaLabelFoldSidebar: 'Hide Sidebar',
@@ -116,7 +116,7 @@ export default {
   },
   mounted () {
     bus.$on('reset-articlelist-count', () => {
-      this.articlesToShow = 9
+      this.articlesToShow = 24
     })
     bus.$on('sync-complete', () => {
       this.itemsChange()

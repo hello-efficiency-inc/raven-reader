@@ -57,7 +57,6 @@ export default {
         type: 'category'
       } : null
       const feeditem = await parseFeed(url, categoryItem)
-      console.log(feeditem)
       return {
         feed: feeditem.meta,
         posts: feeditem.posts,

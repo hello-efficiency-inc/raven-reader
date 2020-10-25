@@ -39,8 +39,6 @@
 <script>
 /* global __static */
 import db from '../services/db'
-import { parseArticle } from '../parsers/article'
-import cheerio from 'cheerio'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
 import helper from '../services/helpers'
@@ -252,16 +250,6 @@ export default {
     prepareArticleData (data, article) {
       const self = this
       self.empty = false
-      if (!article.articles.podcast) {
-        const $ = cheerio.load(data.content)
-        $('a').addClass('js-external-link')
-        $('img').addClass('img-fluid')
-        $('iframe')
-          .parent()
-          .addClass('embed-responsive embed-responsive-16by9')
-        data.content = $.text().trim() === '' ? article.articles.description : $.html()
-        data.contentAlt = article.articles.content
-      }
       if (article.articles.podcast) {
         data.author = article.articles.itunes.author
         data.itunes.image = article.articles.itunes.image
@@ -320,7 +308,7 @@ export default {
               data = self.$store.state.Setting.offline ? await cacheService.getCachedArticleData(
                 articleItem.articles.id,
                 articleItem.articles.link
-              ) : await parseArticle(articleItem.articles.link)
+              ) : articleItem.articles
               if (data) {
                 self.prepareArticleData(data, articleItem)
               } else {
