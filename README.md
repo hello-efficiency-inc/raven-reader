@@ -67,12 +67,11 @@ Please feel free to suggest more ideas to improve this app.
 
 ## Developer Notes
 
+For setup instructions and configuration follow https://github.com/nklayman/vue-cli-plugin-electron-builder
+
 #### Build Setup
 
 ``` bash
-
-# copy config.example.js in renderer to config.js by executing cp config.example.js config.js and set Mercury parser token
-cp src/renderer/config.example.js src/renderer/config.js
 
 # install dependencies
 yarn install
