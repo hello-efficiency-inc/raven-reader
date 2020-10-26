@@ -14,10 +14,8 @@ import { autoUpdater } from 'electron-updater'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-autoUpdater.autoDownload = false
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
-autoUpdater.allowPrerelease = true
 
 contextMenu({
   showInspectElement: false
@@ -220,25 +218,8 @@ if (isDevelopment) {
   }
 }
 
-let updater
 autoUpdater.on('checking-for-update', () => {
   log.info('Checking for update...')
-})
-autoUpdater.on('update-available', (info) => {
-  log.info('Update available.')
-  dialog.showMessageBox({
-    type: 'info',
-    title: 'Found Updates',
-    message: 'Found updates, do you want update now?',
-    buttons: ['Sure', 'No']
-  }, (buttonIndex) => {
-    if (buttonIndex === 0) {
-      autoUpdater.downloadUpdate()
-    } else {
-      updater.enabled = true
-      updater = null
-    }
-  })
 })
 autoUpdater.on('update-not-available', (info) => {
   log.info('Update not available.')
