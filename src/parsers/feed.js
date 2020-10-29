@@ -25,31 +25,39 @@ export async function parseFeed (feedUrl, category = null) {
   try {
     feed = await parser.parseURL(feedUrl)
   } catch (e) {
-    const stream = await window.got.stream(feedUrl, {
-      https: {
-        rejectUnauthorized: false
-      },
-      retries: 0,
-      headers: {
-        'user-agent': 'Raven Reader'
-      }
-    })
-    feed = await parseFeedParser(stream)
+    try {
+      const stream = await window.got.stream(feedUrl, {
+        https: {
+          rejectUnauthorized: false
+        },
+        throwHttpErrors: false,
+        retries: 0,
+        headers: {
+          'user-agent': 'Raven Reader'
+        }
+      })
+      feed = await parseFeedParser(stream)
+    } catch (e) {
+      window.log.info(e)
+    }
   }
 
-  feeditem.meta = {
-    id: window.uuidstring(feedUrl),
-    uuid: window.uuidstring(feedUrl),
-    link: feed.link,
-    category: category,
-    xmlurl: feedUrl,
-    favicon: `https://www.google.com/s2/favicons?domain=${feed.link}`,
-    description: feed.description ? feed.description : null,
-    title: feed.title
+  if (feed) {
+    feeditem.meta = {
+      id: window.uuidstring(feedUrl),
+      uuid: window.uuidstring(feedUrl),
+      link: feed.link,
+      category: category,
+      xmlurl: feedUrl,
+      favicon: `https://www.google.com/s2/favicons?domain=${feed.link}`,
+      description: feed.description ? feed.description : null,
+      title: feed.title
+    }
+    feeditem.posts = feed.items
+    const response = await ParseFeedPost(feeditem)
+    return response
   }
-  feeditem.posts = feed.items
-  const response = await ParseFeedPost(feeditem)
-  return response
+  return false
 }
 
 export async function parseFeedParser (stream) {

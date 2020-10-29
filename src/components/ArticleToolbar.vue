@@ -209,7 +209,7 @@
   </div>
 </template>
 <script>
-import cheerio from 'cheerio'
+import cheerio from '../mixins/cheerio'
 import { parseArticle } from '../parsers/article'
 import cacheService from '../services/cacheArticle'
 import axios from 'axios'
@@ -228,6 +228,9 @@ const Store = window.electronstore
 const store = new Store()
 
 export default {
+  mixins: [
+    cheerio
+  ],
   directives: {
     clickOutside: vClickOutside.directive
   },
@@ -427,13 +430,7 @@ export default {
     async loadFullArticle () {
       const fullArticle = await parseArticle(this.articleItem.link)
       if (!fullArticle.error) {
-        const $ = cheerio.load(fullArticle.content)
-        $('a').addClass('js-external-link')
-        $('img').addClass('img-fluid')
-        $('iframe')
-          .parent()
-          .addClass('embed-responsive embed-responsive-16by9')
-        this.articleItem.fullContent = $.text().trim() === '' ? null : $.html()
+        this.articleItem.fullContent = this.cleanupContent(fullArticle.content)
         this.$emit('load-full-content', this.articleItem)
         this.fullArticle = !this.fullArticle
       } else {

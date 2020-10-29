@@ -45,6 +45,7 @@ import helper from '../services/helpers'
 import truncate from 'lodash.truncate'
 import cacheService from '../services/cacheArticle'
 import articleCount from '../mixins/articleCount'
+import cheerio from '../mixins/cheerio'
 import setTheme from '../mixins/setTheme'
 import dataSets from '../mixins/dataItems'
 import bridge from '../services/bridge'
@@ -61,7 +62,8 @@ export default {
   mixins: [
     articleCount,
     setTheme,
-    dataSets
+    dataSets,
+    cheerio
   ],
   data () {
     return {
@@ -256,6 +258,7 @@ export default {
           ? article.articles.itunes.image
           : article.feeds.favicon
       }
+      data.content = this.cleanupContent(data.content)
       data.date_published = data.date_published
         ? dayjs(data.date_published).format('MMMM D, YYYY')
         : null

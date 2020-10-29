@@ -57,17 +57,21 @@ export default {
         type: 'category'
       } : null
       const feeditem = await parseFeed(url, categoryItem)
-      return {
-        feed: feeditem.meta,
-        posts: feeditem.posts,
-        category: categoryObj
+      if (feeditem) {
+        return {
+          feed: feeditem.meta,
+          posts: feeditem.posts,
+          category: categoryObj
+        }
+      } else {
+        return null
       }
     })
 
     return Promise.all(items).then((result) => {
-      const feeds = result.map((item) => item.feed)
-      const categories = result.map((item) => item.category)
-      const articles = result.map((item) => item.posts).flat()
+      const feeds = result.filter(item => item !== null).map((item) => item.feed)
+      const categories = result.filter(item => item !== null).map((item) => item.category)
+      const articles = result.filter(item => item !== null).map((item) => item.posts).flat()
       if (!refresh) {
         this.addCategories(categories.filter(item => item !== null)).then(() => store.dispatch('loadCategories'))
         this.addFeeds(feeds).then(() => store.dispatch('loadFeeds'))

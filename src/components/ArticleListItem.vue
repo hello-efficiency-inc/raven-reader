@@ -22,6 +22,7 @@
         <p class="mb-2"><small>{{ article.formatDate }}</small></p>
       </div>
       <h6><strong>{{ article.articles.title }}</strong></h6>
+      <p>{{ article.articles.contentSnippet }}</p>
       <p class="text-right mb-0" v-if="article.articles.favourite"><feather-icon
               name="star"
               size="sm"
