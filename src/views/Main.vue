@@ -326,7 +326,6 @@ export default {
             }
           } catch (e) {
             window.log.info(e)
-            console.log(articleItem)
             articleItem.content = null
             articleItem.url = articleItem.articles.link
             self.articleData = articleItem
