@@ -166,7 +166,7 @@ export default {
     window.electron.remote.powerMonitor.on('resume', () => {
       window.log.info('Power resumed')
       this.$store.dispatch('refreshFeeds')
-      this.runPruneCronJob().reschedule()
+      // this.runPruneCronJob().reschedule()
       this.runArticleCronJob().reschedule()
     })
 

@@ -25,21 +25,7 @@ export async function parseFeed (feedUrl, category = null) {
   try {
     feed = await parser.parseURL(feedUrl)
   } catch (e) {
-    try {
-      const stream = await window.got.stream(feedUrl, {
-        https: {
-          rejectUnauthorized: false
-        },
-        throwHttpErrors: false,
-        retries: 0,
-        headers: {
-          'user-agent': 'Raven Reader'
-        }
-      })
-      feed = await parseFeedParser(stream)
-    } catch (e) {
-      window.log.info(e)
-    }
+    window.log.info(e)
   }
 
   if (feed) {
@@ -58,31 +44,6 @@ export async function parseFeed (feedUrl, category = null) {
     return response
   }
   return false
-}
-
-export async function parseFeedParser (stream) {
-  const feed = {
-    items: []
-  }
-  return new Promise((resolve, reject) => {
-    const FeedParser = window.feedparser
-    stream.pipe(new FeedParser())
-      .on('error', reject)
-      .on('end', () => {
-        resolve(feed)
-      })
-      .on('readable', function () {
-        const streamFeed = this
-        feed.link = this.meta.link
-        feed.feedUrl = this.meta.xmlurl
-        feed.description = this.meta.description
-        feed.title = this.meta.title
-        let item
-        while ((item = streamFeed.read())) {
-          feed.items.push(item)
-        }
-      })
-  })
 }
 
 /**
