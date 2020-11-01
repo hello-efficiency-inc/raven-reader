@@ -14,8 +14,7 @@ const mutations = {
     }))
   },
   RENAME_CATEGORY (state, category) {
-    const index = state.categories.findIndex(item => item.id === category.id)
-    state.categories[index].title = category.title
+    console.log(category)
     db.updateCategory(category.id, category.title)
   }
 }

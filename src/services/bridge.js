@@ -13,14 +13,14 @@ function execTask (eventName, instance, args) {
     case 'Next item':
       if (instance.$route.params.id) {
         const index = instance.$store.getters.filteredArticles.findIndex(
-          item => item._id === instance.$route.params.id
+          item => item.articles.id === instance.$route.params.id
         )
         if (index !== instance.$store.getters.filteredArticles.length - 1) {
           const nextArticle = instance.$store.getters.filteredArticles[index + 1]
           instance.$router.push({
             name: 'article-page',
             params: {
-              id: nextArticle._id
+              id: nextArticle.articles.id
             }
           })
         }
@@ -28,7 +28,7 @@ function execTask (eventName, instance, args) {
         instance.$router.push({
           name: 'article-page',
           params: {
-            id: instance.$store.getters.filteredArticles[0]._id
+            id: instance.$store.getters.filteredArticles[0].articles.id
           }
         })
       }
@@ -36,14 +36,14 @@ function execTask (eventName, instance, args) {
     case 'Previous item':
       if (instance.$route.params.id) {
         const index = instance.$store.getters.filteredArticles.findIndex(
-          item => item._id === instance.$route.params.id
+          item => item.articles.id === instance.$route.params.id
         )
         if (index > 0) {
           const prevArticle = instance.$store.getters.filteredArticles[index - 1]
           instance.$router.push({
             name: 'article-page',
             params: {
-              id: prevArticle._id
+              id: prevArticle.articles.id
             }
           })
         }
@@ -52,7 +52,7 @@ function execTask (eventName, instance, args) {
         instance.$router.push({
           name: 'article-page',
           params: {
-            id: instance.$store.getters.filteredArticles[articleLength - 1]._id
+            id: instance.$store.getters.filteredArticles[articleLength - 1].articles.id
           }
         })
       }
