@@ -50,7 +50,7 @@
     "v-click-outside": "^3.0.1",
     "v8-compile-cache": "^2.1.1",
     "vue": "^2.6.11",
-    "vue-plyr": "^6.0.4",
+    "vue-plyr": "^7.0.0-beta.1",
     "vue-router": "^3.2.0",
     "vue-social-sharing": "2.4.7",
     "vue-toasted": "^1.1.28",
@@ -78,7 +78,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^7.1.0",
     "sass": "^1.26.5",
-    "sass-loader": "^10.0.2",
+    "sass-loader": "^10.0.5",
     "vue-cli-plugin-electron-builder": "^2.0.0-rc.4",
     "vue-template-compiler": "^2.6.11"
   }

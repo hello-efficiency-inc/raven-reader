@@ -113,16 +113,16 @@ export default {
             this.$store.dispatch('loadCategories')
           })
       } else {
-        this.newcategory = this.feed.category
+        this.newcategory = this.feeditem.category
       }
       this.$store.dispatch('updateFeedTitle', {
-        title: this.feed.title,
+        title: this.feeditem.title,
         category: this.newcategory,
-        id: this.feed.uuid
+        id: this.feeditem.uuid
       }).then(() => {
         this.$store.dispatch('updateArticleFeedTitle', {
           category: this.newcategory,
-          id: this.feed.uuid
+          id: this.feeditem.uuid
         }).then(() => {
           this.$store.dispatch('loadFeeds')
           this.$store.dispatch('loadArticles')
