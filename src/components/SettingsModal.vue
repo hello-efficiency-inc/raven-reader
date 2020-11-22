@@ -95,6 +95,8 @@ export default {
       ],
       cron_options: [
         { value: null, text: 'Please select an option' },
+        { value: '*/1 * * * *', text: 'Every 1 minutes' },
+        { value: '*/2 * * * *', text: 'Every 2 minutes' },
         { value: '*/5 * * * *', text: 'Every 5 minutes' },
         { value: '*/10 * * * *', text: 'Every 10 minutes' },
         { value: '*/15 * * * *', text: 'Every 15 minutes' },
