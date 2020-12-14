@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "author": "Hello Efficiency Inc. <welcome@helloefficiency.com>",
   "description": "Simple desktop RSS Reader",
   "license": "MIT",
@@ -66,7 +66,7 @@
     "@vue/cli-service": "^4.4.0",
     "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.1.0",
-    "electron": "^11.0.2",
+    "electron": "^11.1.0",
     "electron-builder-notarize": "^1.2.0",
     "electron-devtools-installer": "^3.1.0",
     "electron-icon-builder": "^1.0.2",
