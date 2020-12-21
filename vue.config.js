@@ -47,8 +47,6 @@ module.exports = {
             region: 'sfo2',
             path: '/ravenreader'
           }],
-          certificateFile: 'windows2020.pfx',
-          certificatePassword: 'hello!@#$%^',
           icon: 'build/icons/icon.ico'
         },
         linux: {
