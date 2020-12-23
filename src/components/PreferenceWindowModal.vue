@@ -177,6 +177,14 @@
                 </button>
                 <button
                   v-if="feedbin_connected"
+                  aria-label="Edit Feedbin"
+                  class="btn-primary float-right ml-2"
+                  @click="editFeedbin"
+                >
+                  Edit
+                </button>
+                <button
+                  v-if="feedbin_connected"
                   aria-label="Disconnect Feedbin"
                   class="btn-danger float-right"
                   @click="disconnectFeedbin"
@@ -650,6 +658,10 @@ export default {
         this.$store.dispatch('setInstapaper', JSON.stringify(this.instapaper))
         this.instapaper_connected = true
       })
+    },
+    editFeedbin () {
+      this.feedbin = JSON.parse(this.$electronstore.get('feedbin_creds'))
+      this.$refs.feedbinLogin.show()
     },
     async loginFeedbin () {
       this.feedbin_error = false

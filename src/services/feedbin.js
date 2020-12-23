@@ -5,7 +5,9 @@ import advancedformat from 'dayjs/plugin/advancedFormat'
 import db from './db.js'
 import * as database from '../db'
 const Store = window.electronstore
-const store = new Store()
+const store = new Store({
+  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
+})
 
 dayjs.extend(timezone)
 dayjs.extend(advancedformat)

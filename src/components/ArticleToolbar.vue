@@ -231,7 +231,9 @@ const markTypes = {
 }
 
 const Store = window.electronstore
-const store = new Store()
+const store = new Store({
+  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
+})
 
 export default {
   directives: {

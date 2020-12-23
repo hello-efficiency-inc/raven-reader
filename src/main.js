@@ -21,7 +21,9 @@ Vue.config.productionTip = false
 
 // nodejs global proxy
 const SettingsStore = window.electronstore
-const settingsStore = new SettingsStore()
+const settingsStore = new SettingsStore({
+  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
+})
 const proxy = settingsStore.get('settings.proxy') ? settingsStore.get('settings.proxy') : null
 if (proxy) {
   if (proxy.http) {

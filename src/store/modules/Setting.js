@@ -15,7 +15,9 @@ const state = {
 }
 
 const Store = window.electronstore
-const store = new Store()
+const store = new Store({
+  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
+})
 
 const mutations = {
   LOAD_SETTINGS (state) {

@@ -21,7 +21,9 @@ const state = {
 }
 
 const Store = window.electronstore
-const store = new Store()
+const store = new Store({
+  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
+})
 
 const filters = {
   search: (articles, search) => articles.filter(article => article.articles.title.match(search)),
