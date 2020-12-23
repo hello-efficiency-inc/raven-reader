@@ -1,6 +1,9 @@
 <template>
   <div class="app-wrapper">
-    <vue-topprogress ref="topProgress" color="#22e3ff"></vue-topprogress>
+    <vue-topprogress
+      ref="topProgress"
+      color="#22e3ff"
+    />
     <nav
       v-if="true"
       ref="sidebar"
@@ -33,11 +36,10 @@
     <import-modal />
     <settings-modal />
     <markallread-modal />
-    <sync-settings />
+    <preference-window />
   </div>
 </template>
 <script>
-/* global __static */
 import db from '../services/db'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
@@ -50,6 +52,7 @@ import setTheme from '../mixins/setTheme'
 import dataSets from '../mixins/dataItems'
 import bridge from '../services/bridge'
 import bus from '../services/bus'
+import syncFeedbin from '../mixins/feedbinSync'
 
 const sortBy = (key, pref) => {
   if (pref === 'asc') {
@@ -63,8 +66,16 @@ export default {
     articleCount,
     setTheme,
     dataSets,
-    cheerio
+    cheerio,
+    syncFeedbin
   ],
+  beforeRouteUpdate (to, from, next) {
+    if (to.params.id) {
+      this.$electron.ipcRenderer.send('article-selected')
+    }
+    bus.$emit('reset-articlelist-count')
+    next()
+  },
   data () {
     return {
       feed: null,
@@ -73,13 +84,6 @@ export default {
       empty: null,
       loading: false
     }
-  },
-  beforeRouteUpdate (to, from, next) {
-    if (to.params.id) {
-      this.$electron.ipcRenderer.send('article-selected')
-    }
-    bus.$emit('reset-articlelist-count')
-    next()
   },
   watch: {
     $route (to, from) {
@@ -133,13 +137,13 @@ export default {
     allUnread: 'unreadChange'
   },
   mounted () {
-    this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
+    // this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
+    this.syncFeedbin()
     this.$store.dispatch('initializeDB').then(async () => {
       await this.$store.dispatch('refreshFeeds')
       await this.$store.dispatch('loadCategories')
       await this.$store.dispatch('loadFeeds')
       await this.$store.dispatch('loadArticles')
-      // this.$store.dispatch('removeOldReadItems')
     })
     this.$store.dispatch('checkOffline')
 
@@ -160,39 +164,20 @@ export default {
       'Settings'
     ], this)
 
-    this.runPruneCronJob()
     this.runArticleCronJob()
+    this.runServiceCronJob()
 
     window.electron.remote.powerMonitor.on('resume', () => {
       window.log.info('Power resumed')
       this.$store.dispatch('refreshFeeds')
-      // this.runPruneCronJob().reschedule()
       this.runArticleCronJob().reschedule()
-    })
-
-    if (this.$store.state.Setting.offline) {
-      this.runPruneCronJob().reschedule()
-    }
-    // On delete stop Crawler Job
-    this.$on('delete', msg => {
-      if (msg === 'yes') {
-        window.log.info('Job is cancelled')
-        this.runPruneCronJob().reschedule()
-      }
+      this.runServiceCronJob().reschedule()
     })
   },
   destroyed () {
     window.electron.ipcRenderer.removeAllListeners()
   },
   methods: {
-    runPruneCronJob () {
-      // const self = this
-      const schedule = window.nodescheduler
-      return schedule.scheduleJob('*/5 * * * *', () => {
-        window.log.info('Pruning old read items')
-        // self.$store.dispatch('removeOldReadItems')
-      })
-    },
     runArticleCronJob () {
       const self = this
       // Feed Crawling
@@ -200,16 +185,26 @@ export default {
       return schedule.scheduleJob(
         self.$store.state.Setting.cronSettings,
         () => {
-          const feeds = self.$store.state.Feed.feeds
+          const feeds = self.$store.state.Feed.feeds.filter(item => item.source === 'local')
           if (feeds.length === 0) {
             window.log.info('No feeds to process')
           } else {
-            this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
+            // this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
             window.log.info(`Processing ${feeds.length} feeds`)
             helper.subscribe(feeds, null, true).then(() => {
               bus.$emit('sync-complete')
             })
           }
+        }
+      )
+    },
+    runServiceCronJob () {
+      // Service crawling
+      const schedule = window.nodescheduler
+      return schedule.scheduleJob(
+        '*/2 * * * *',
+        () => {
+          this.syncFeedbin()
         }
       )
     },
@@ -239,12 +234,6 @@ export default {
           )
         }
       )
-      window.notifier.notify({
-        icon: window.path.join(__static, '/logo_icon.png'),
-        title: 'Feeds exported',
-        message: 'All feeds are exported as opml in downloads folder.',
-        sound: true
-      })
     },
     updateType (newVal) {
       this.articleType = newVal
@@ -252,12 +241,6 @@ export default {
     prepareArticleData (data, article) {
       const self = this
       self.empty = false
-      if (article.articles.podcast) {
-        data.author = article.articles.itunes.author
-        data.itunes.image = article.articles.itunes.image
-          ? article.articles.itunes.image
-          : article.feeds.favicon
-      }
       data.content = this.cleanupContent(data.content)
       data.date_published = data.date_published
         ? dayjs(data.date_published).format('MMMM D, YYYY')
@@ -308,10 +291,13 @@ export default {
           }).then(() => self.$store.dispatch('loadArticles'))
           try {
             if (!articleItem.articles.podcast) {
-              data = self.$store.state.Setting.offline ? await cacheService.getCachedArticleData(
-                articleItem.articles.id,
-                articleItem.articles.link
-              ) : articleItem.articles
+              data = self.$store.state.Setting.offline
+                ? await cacheService
+                    .getCachedArticleData(
+                      articleItem.articles.id,
+                      articleItem.articles.link
+                    )
+                : articleItem.articles
               if (data) {
                 self.prepareArticleData(data, articleItem)
               } else {

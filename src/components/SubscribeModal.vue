@@ -61,8 +61,8 @@
         </div>
       </template>
       <b-form-select
-        v-model="selectedCat"
         v-if="categoryItems.length > 0"
+        v-model="selectedCat"
         :options="categoryItems"
         class="mb-3"
       >
@@ -87,6 +87,12 @@
           placeholder="Enter new category"
         />
       </p>
+      <b-alert
+        :show="feedbinConnected"
+        variant="info"
+      >
+        Note: Subscriptions added from here would not be synced with your service.
+      </b-alert>
     </div>
     <div slot="modal-footer">
       <button
@@ -127,6 +133,9 @@ export default {
     }
   },
   computed: {
+    feedbinConnected () {
+      return this.$store.state.Setting.feedbin_connected
+    },
     categoryItems () {
       return this.$store.state.Category.categories.map((item) => {
         return { value: item.title, text: item.title }
@@ -235,7 +244,11 @@ export default {
       if (this.newcategory === null) {
         this.newcategory = this.selectedCat
       }
-      helper.subscribe(this.selected_feed, this.newcategory, false)
+      const urls = JSON.parse(JSON.stringify(this.selected_feed)).map(item => item.url)
+      const currentUrls = JSON.parse(JSON.stringify(this.$store.state.Feed.feeds)).map(item => item.xmlurl)
+      if (currentUrls.filter(item => urls.includes(item)).length === 0) {
+        helper.subscribe(this.selected_feed, this.newcategory, false)
+      }
       this.hideModal()
     },
     onHidden () {

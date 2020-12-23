@@ -7,12 +7,12 @@
       <div class="site-info position-relative">
         <div class="wrap h-100 d-flex align-items-center">
           <img
-                :src="article.favicon"
-                width="16"
-                height="16"
-                class="mb-0 mx-3 d-inline-flex"
-              >
-            <span>{{ article.sitetitle }}</span>
+            :src="article.favicon"
+            width="16"
+            height="16"
+            class="mb-0 mx-3 d-inline-flex"
+          >
+          <span>{{ article.sitetitle }}</span>
         </div>
       </div>
       <div class="article-buttons">
@@ -154,14 +154,20 @@
             </b-dropdown-item>
           </b-dropdown>
         </div>
-        <div class="wrap" v-if="!articleItem.podcast">
+        <div
+          v-if="!articleItem.podcast"
+          class="wrap"
+        >
           <button
             v-b-tooltip.hover
             class="btn btn-toolbar"
             title="Full Content"
             @click="loadFullArticle"
           >
-            <feather-icon :success="fullArticle" name="align-justify" />
+            <feather-icon
+              :success="fullArticle"
+              name="align-justify"
+            />
           </button>
         </div>
       </div>
@@ -228,12 +234,12 @@ const Store = window.electronstore
 const store = new Store()
 
 export default {
-  mixins: [
-    cheerio
-  ],
   directives: {
     clickOutside: vClickOutside.directive
   },
+  mixins: [
+    cheerio
+  ],
   props: {
     article: {
       type: Object,
@@ -363,7 +369,7 @@ export default {
       }
     },
     async saveToInstapaper (url) {
-      var creds = JSON.parse(store.get('instapaper_creds'))
+      const creds = JSON.parse(store.get('instapaper_creds'))
       const res = await axios.post(`https://www.instapaper.com/api/add?url=${url}`, {
       }, {
         auth: {
@@ -381,7 +387,7 @@ export default {
       }
     },
     saveToPocket (url) {
-      var credentials = JSON.parse(store.get('pocket_token'))
+      const credentials = JSON.parse(store.get('pocket_token'))
       axios.post('https://getpocket.com/v3/add', {
         url: url,
         access_token: credentials.access_token,

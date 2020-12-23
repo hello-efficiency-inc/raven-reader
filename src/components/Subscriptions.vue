@@ -107,6 +107,7 @@
 import cacheService from '../services/cacheArticle'
 import db from '../services/db'
 import helper from '../services/helpers'
+import feedbin from '../services/feedbin'
 import articleCount from '../mixins/articleCount'
 import dataSets from '../mixins/dataItems'
 import feedMix from '../mixins/feedMix'
@@ -130,13 +131,13 @@ export default {
       this.feedMenuData = null
     },
     categoryFeeds (feeds, category) {
-      var items = feeds
+      const items = feeds
         .filter(item => item.category === category)
         .map(feed => ({
           ...feed,
           isActive: this.isFeedActive(feed)
         }))
-      var sorted = items.sort((a, b) => {
+      const sorted = items.sort((a, b) => {
         if (a.title.toLowerCase() < b.title.toLowerCase()) {
           return -1
         }
@@ -152,15 +153,19 @@ export default {
       this.$router.push({
         name: 'category-page',
         params: { category: feed.title }
-      }).catch((err) => { if (err) {} })
+      }).catch((err) => {
+        if (err) {
+          window.log.info(err)
+        }
+      })
     },
     mapFeeds (feeds, category) {
-      var mixed = feeds.concat(category)
-      var items = mixed.map(feed => ({
+      const mixed = feeds.concat(category)
+      const items = mixed.map(feed => ({
         ...feed,
         isActive: this.isFeedActive(feed)
       }))
-      var sorted = items.sort((a, b) => {
+      const sorted = items.sort((a, b) => {
         if (a.title.toLowerCase() < b.title.toLowerCase()) {
           return -1
         }
@@ -176,6 +181,12 @@ export default {
         return item.articles.feed_uuid === id
       }).map(item => item.articles.uuid)
       db.markAllRead(articles).then(() => {
+        const feedBinArticles = this.$store.state.Article.articles.filter((item) => {
+          return item.articles.feed_uuid === id
+        })
+          .map(item => item.articles.source_id)
+          .filter(item => item !== null)
+        feedbin.markItem('MARK_READ', feedBinArticles)
         this.$store.dispatch('loadArticles')
       })
     },
@@ -265,14 +276,26 @@ export default {
         })
       )
 
-      menu.append(
-        new MenuItem({
-          label: `Refresh ${feed.feed.title} feed`,
-          click () {
-            helper.subscribe([feed.feed], null, true)
-          }
-        })
-      )
+      if (feed.feed.source === 'local') {
+        menu.append(
+          new MenuItem({
+            label: `Refresh ${feed.feed.title} feed`,
+            click () {
+              helper.subscribe([feed.feed], null, true)
+            }
+          })
+        )
+
+        menu.append(
+          new MenuItem({
+            label: 'Edit feed',
+            click () {
+              self.openEditModal(feed.feed)
+              self.$bvModal.show('editFeed')
+            }
+          })
+        )
+      }
 
       menu.append(
         new MenuItem({
@@ -285,28 +308,20 @@ export default {
 
       menu.append(
         new MenuItem({
-          label: 'Edit feed',
-          click () {
-            self.openEditModal(feed.feed)
-            self.$bvModal.show('editFeed')
-          }
-        })
-      )
-
-      menu.append(
-        new MenuItem({
           type: 'separator'
         })
       )
 
-      menu.append(
-        new MenuItem({
-          label: 'Unsubscribe',
-          click () {
-            self.unsubscribeFeed(feed.feed.uuid)
-          }
-        })
-      )
+      if (feed.feed.source === 'local') {
+        menu.append(
+          new MenuItem({
+            label: 'Unsubscribe',
+            click () {
+              self.unsubscribeFeed(feed.feed.uuid)
+            }
+          })
+        )
+      }
       menu.popup({ window: window.electron.remote.getCurrentWindow() })
     }
   }

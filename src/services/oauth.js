@@ -15,7 +15,7 @@ export default {
     return s4(buf[0]) + s4(buf[1]) + '-' + s4(buf[2]) + '-' + s4(buf[3]) + '-' + s4(buf[4]) + '-' + s4(buf[5]) + s4(buf[6]) + s4(buf[7])
   },
   buildPocketAuthUrl () {
-    var consumerKey
+    let consumerKey
 
     if (window.os.platform() === 'darwin') {
       consumerKey = process.env.VUE_APP_POCKET_MAC_KEY

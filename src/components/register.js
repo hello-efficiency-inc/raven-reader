@@ -10,31 +10,31 @@ import BouncingLoader from './BouncingLoader'
 import ImportModal from './ImportModal'
 import SettingsModal from './SettingsModal'
 import MarkReadModal from './MarkReadModal'
-import SyncSettingsModal from './SyncSettingsModal'
 import EditFeedModal from './EditFeed'
 import EditCategoryModal from './EditCategory'
 import FeedMix from './FeedMix'
 import MenuItems from './MenuItems'
 import Subscriptions from './Subscriptions'
+import PreferenceWindow from './PreferenceWindowModal'
 
 export default {
   registerComponents () {
-    Vue.component('subscribe-toolbar', SubscribeToolbar)
-    Vue.component('subscribe-modal', SubscribeModal)
-    Vue.component('feather-icon', AppIcon)
-    Vue.component('article-list', ArticleList)
-    Vue.component('article-item', ArticleListItem)
-    Vue.component('article-toolbar', ArticleToolbar)
-    Vue.component('article-detail', ArticleDetail)
-    Vue.component('loader', BouncingLoader)
-    Vue.component('import-modal', ImportModal)
-    Vue.component('settings-modal', SettingsModal)
-    Vue.component('markallread-modal', MarkReadModal)
-    Vue.component('sync-settings', SyncSettingsModal)
-    Vue.component('feed-mix', FeedMix)
-    Vue.component('edit-feed', EditFeedModal)
-    Vue.component('edit-category', EditCategoryModal)
-    Vue.component('menu-items', MenuItems)
-    Vue.component('subscriptions', Subscriptions)
+    Vue.component('SubscribeToolbar', SubscribeToolbar)
+    Vue.component('SubscribeModal', SubscribeModal)
+    Vue.component('FeatherIcon', AppIcon)
+    Vue.component('ArticleList', ArticleList)
+    Vue.component('ArticleItem', ArticleListItem)
+    Vue.component('ArticleToolbar', ArticleToolbar)
+    Vue.component('ArticleDetail', ArticleDetail)
+    Vue.component('Loader', BouncingLoader)
+    Vue.component('ImportModal', ImportModal)
+    Vue.component('SettingsModal', SettingsModal)
+    Vue.component('MarkallreadModal', MarkReadModal)
+    Vue.component('FeedMix', FeedMix)
+    Vue.component('EditFeed', EditFeedModal)
+    Vue.component('EditCategory', EditCategoryModal)
+    Vue.component('MenuItems', MenuItems)
+    Vue.component('Subscriptions', Subscriptions)
+    Vue.component('PreferenceWindow', PreferenceWindow)
   }
 }

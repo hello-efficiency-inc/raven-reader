@@ -40,7 +40,7 @@
           >
             <vue-plyr>
               <audio autoplay>
-                <source :src="article.enclosure.url"/>
+                <source :src="article.enclosure.url">
               </audio>
             </vue-plyr>
           </section>

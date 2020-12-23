@@ -73,7 +73,8 @@ function execTask (eventName, instance, args) {
       }
       break
     case 'Settings':
-      instance.$bvModal.show('settings')
+      // instance.$bvModal.show('settings')
+      instance.$bvModal.show('preference')
       break
     case 'Import subscriptions':
       instance.$bvModal.show('importfeed')

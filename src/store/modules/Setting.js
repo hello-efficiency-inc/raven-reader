@@ -1,6 +1,7 @@
 const state = {
   pocket_connected: false,
   instapaper_connected: false,
+  feedbin_connected: false,
   keepRead: 1,
   cronSettings: '*/5 * * * *',
   themeOption: 'system',
@@ -28,6 +29,9 @@ const mutations = {
     }
     if (store.has('instapaper_creds')) {
       state.instapaper_connected = true
+    }
+    if (store.has('feedbin_creds')) {
+      state.feedbin_connected = true
     }
   },
   CHECK_OFFLINE (state) {
@@ -60,6 +64,12 @@ const mutations = {
   SET_INSTAPAPER_CONNECTED (state) {
     state.instapaper_connected = true
   },
+  SET_FEEDBIN_CONNECTED (state) {
+    state.feedbin_connected = true
+  },
+  UNSET_FEEDBIN (state) {
+    state.feedbin_connected = false
+  },
   UNSET_INSTAPAPER (state) {
     state.instapaper_connected = false
   }
@@ -84,6 +94,10 @@ const actions = {
     store.set('settings.theme_option', data)
     commit('SET_THEME_OPTION', data)
   },
+  setFeedbin ({ commit }, data) {
+    store.set('feedbin_creds', data)
+    commit('SET_FEEDBIN_CONNECTED')
+  },
   setInstapaper ({ commit }, data) {
     store.set('instapaper_creds', data)
     commit('SET_INSTAPAPER_CONNECTED')
@@ -95,6 +109,10 @@ const actions = {
   unsetInstapaper ({ commit }) {
     store.delete('instapaper_creds')
     commit('UNSET_INSTAPAPER')
+  },
+  unsetFeedbin ({ commit }) {
+    store.delete('feedbin_creds')
+    commit('UNSET_FEEDBIN')
   },
   unsetPocket ({ commit }) {
     store.delete('pocket_token')

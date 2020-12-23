@@ -62,6 +62,7 @@ brew cask install raven-reader
 - [x] Integration with read it later apps: Pocket, Instapaper
 - [x] Podcast support. Subscribe to podcast rss feed and listen within app.
 - [x] Accessibility Friendly
+- [x] Feedbin integration
 
 Please feel free to suggest more ideas to improve this app.
 
