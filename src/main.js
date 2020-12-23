@@ -15,6 +15,7 @@ import Register from './components/register'
 import './external_links.js'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
+import 'vue-plyr/dist/vue-plyr.css'
 
 Vue.config.productionTip = false
 

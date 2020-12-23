@@ -51,11 +51,13 @@ export default {
       }
 
       const categoryItem = category ?? feed.category ?? null
-      const categoryObj = categoryItem ? {
-        id: window.uuidstring(categoryItem),
-        title: categoryItem,
-        type: 'category'
-      } : null
+      const categoryObj = categoryItem
+        ? {
+            id: window.uuidstring(categoryItem),
+            title: categoryItem,
+            type: 'category'
+          }
+        : null
       const feeditem = await parseFeed(url, categoryItem)
       if (feeditem) {
         return {

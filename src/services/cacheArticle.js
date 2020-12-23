@@ -23,8 +23,8 @@ export default {
     const cacheName = `raven-${responseData._id}`
     const cache = await caches.open(cacheName)
     const previouslyCached = await this.isCached(cacheName)
-    var imgRe = /<img[^>]*src=(['"])(.*?)\1[^>]*>/ig
-    var imgSrcs = new Set()
+    const imgRe = /<img[^>]*src=(['"])(.*?)\1[^>]*>/ig
+    const imgSrcs = new Set()
     let regexResult
     if (!previouslyCached) {
       this.uncache(cacheName)
@@ -48,7 +48,7 @@ export default {
     }
 
     imgSrcs.forEach(url => {
-      var request = new Request(url, { mode: 'no-cors' })
+      const request = new Request(url, { mode: 'no-cors' })
       caches.match(request).then(response => response || fetch(request)).then(response => cache.put(request, response))
     })
 

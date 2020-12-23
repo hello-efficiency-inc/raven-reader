@@ -12,9 +12,9 @@
             v-model.lazy="search"
             type="text"
             class="form-control"
-            @change="searchList"
             placeholder="Search"
             aria-label="Search"
+            @change="searchList"
           >
           <div class="toolsbar">
             <div class="tool">
@@ -57,7 +57,12 @@
                 :article="article"
               />
             </template>
-            <button v-if="articlesToShow <= mapArticles(filteredArticles).length" @click="articlesToShow += 10" class="btn btn-primary rounded-0" type="button">
+            <button
+              v-if="articlesToShow <= mapArticles(filteredArticles).length"
+              class="btn btn-primary rounded-0"
+              type="button"
+              @click="articlesToShow += 10"
+            >
               Load more
             </button>
           </template>
@@ -93,8 +98,12 @@
 import { mapGetters } from 'vuex'
 import helper from '../services/helpers'
 import bus from '../services/bus'
+import feedbinSync from '../mixins/feedbinSync'
 
 export default {
+  mixins: [
+    feedbinSync
+  ],
   props: {
     type: {
       type: String,
@@ -114,14 +123,6 @@ export default {
       syncState: false
     }
   },
-  mounted () {
-    bus.$on('reset-articlelist-count', () => {
-      this.articlesToShow = 24
-    })
-    bus.$on('sync-complete', () => {
-      this.itemsChange()
-    })
-  },
   computed: {
     ...mapGetters([
       'filteredArticles'
@@ -132,6 +133,14 @@ export default {
   },
   watch: {
     filteredArticles: 'itemsChange'
+  },
+  mounted () {
+    bus.$on('reset-articlelist-count', () => {
+      this.articlesToShow = 24
+    })
+    bus.$on('sync-complete', () => {
+      this.itemsChange()
+    })
   },
   methods: {
     searchList () {
@@ -149,7 +158,7 @@ export default {
       return !!article && article.articles.id !== undefined && article.articles.id === this.activeArticleId
     },
     itemsChange () {
-      if (this.filteredArticles) {
+      if (this.filteredArticles && this.$refs.statusMsg) {
         this.$refs.statusMsg.innerText = `${this.filteredArticles.length} items`
       }
     },
@@ -157,13 +166,16 @@ export default {
       this.syncState = true
       if (this.$store.state.Feed.feeds.length > 0) {
         this.$parent.$refs.topProgress.start()
-        window.log.info(`Processing ${this.$store.state.Feed.feeds.length} feeds`)
+        window.log.info(`Processing ${this.$store.state.Feed.feeds.filter(item => item.source === 'local').length} feeds`)
         this.$refs.statusMsg.innerText = 'Syncing...'
-        helper.subscribe(this.$store.state.Feed.feeds, null, true, false).then(() => {
+        helper.subscribe(this.$store.state.Feed.feeds.filter(item => item.source === 'local'), null, true, false).then(() => {
           this.itemsChange()
           this.$parent.$refs.topProgress.done()
           this.syncState = false
         })
+        if (this.$electronstore.has('feedbin_creds')) {
+          this.syncFeedbin()
+        }
       }
     },
     fold () {

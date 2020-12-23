@@ -5,6 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import truncate from 'lodash.truncate'
 import Fuse from 'fuse.js'
 import cacheService from '../../services/cacheArticle'
+import feedbin from '../../services/feedbin'
 
 dayjs.extend(relativeTime)
 
@@ -103,16 +104,19 @@ const mutations = {
     const index = state.articles.findIndex(item => item.articles.uuid === data.id)
     if (data.type === 'FAVOURITE') {
       state.articles[index].articles.favourite = true
+      feedbin.markItem('MARK_FAVOURITE', state.articles[index].articles.source_id)
     }
 
     if (data.type === 'UNFAVOURITE') {
       state.articles[index].articles.favourite = false
+      feedbin.markItem('MARK_UNFAVOURITE', state.articles[index].articles.source_id)
     }
     if (data.type === 'READ') {
       state.articles[index].articles.read = true
       if (state.articles[index].articles.podcast) {
         state.articles[index].articles.played = true
       }
+      feedbin.markItem('MARK_READ', state.articles[index].articles.source_id)
     }
 
     if (data.type === 'UNREAD') {
@@ -120,10 +124,13 @@ const mutations = {
       if (state.articles[index].articles.podcast) {
         state.articles[index].articles.played = false
       }
+      feedbin.markItem('MARK_UNREAD', state.articles[index].articles.source_id)
     }
   },
   MARK_ALL_READ (state) {
     db.markAllRead(state.articles.map(item => item.articles.uuid))
+    const ids = JSON.parse(JSON.stringify(state.articles)).map(item => item.articles.source_id)
+    feedbin.markItem('MARK_READ', ids.filter(item => item !== null))
   },
   DELETE_ARTICLES (state, id) {
     const articles = state.articles.filter(item => item.feed_id === id)
@@ -134,7 +141,7 @@ const mutations = {
   },
   REFRESH_FEEDS (state, feeds) {
     if (feeds.length > 0) {
-      helper.subscribe(feeds, null, true)
+      helper.subscribe(feeds.filter(item => item.source === 'local'), null, true)
     }
   },
   CHANGE_TYPE (state, type) {

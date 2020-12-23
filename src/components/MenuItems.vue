@@ -121,18 +121,6 @@
         </feed-mix>
       </router-link>
     </li>
-    <li
-      class="nav-item"
-      :class="{ 'd-none': showLess }"
-    >
-      <a
-        v-b-modal.integrations
-        class="nav-link"
-        href="#"
-      >
-        <feather-icon name="package" />Integrations
-      </a>
-    </li>
     <li class="nav-item">
       <a
         class="nav-link"

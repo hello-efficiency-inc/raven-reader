@@ -11,6 +11,14 @@ const parser = new RssParser({
   }
 })
 
+const omit = (obj, props) => {
+  obj = {
+    ...obj
+  }
+  props.forEach(prop => delete obj[prop])
+  return obj
+}
+
 /**
  * Parse feed
  * @param  string feedUrl
@@ -37,7 +45,8 @@ export async function parseFeed (feedUrl, category = null) {
       xmlurl: feedUrl,
       favicon: `https://www.google.com/s2/favicons?domain=${feed.link}`,
       description: feed.description ? feed.description : null,
-      title: feed.title
+      title: feed.title,
+      source: 'local'
     }
     feeditem.posts = feed.items
     const response = await ParseFeedPost(feeditem)
@@ -53,7 +62,7 @@ export async function parseFeed (feedUrl, category = null) {
  */
 export function ParseFeedPost (feed) {
   const feeditems = JSON.parse(JSON.stringify(feed))
-  feeditems.posts.map((item) => {
+  const posts = feeditems.posts.map((item) => {
     const podcast = checkIsPodCast(item)
     const articleLink = item.link ?? feed.meta.xmlurl ?? Math.random().toString(36).substring(7)
     if (podcast) {
@@ -72,13 +81,12 @@ export function ParseFeedPost (feed) {
     item.category = feed.meta.category
     item.pubDate = item.isoDate
     item.publishUnix = dayjs(item.isoDate).unix()
-    const {
-      creator,
-      ...postItem
-    } = item
-    delete postItem['dc:creator']
+    item.source = 'local'
+    item.source_id = null
+    const postItem = omit(item, ['guid', 'isoDate', 'creator', 'dc:creator', 'content:encoded', 'content:encodedSnippet'])
     return postItem
   })
+  feeditems.posts = posts
   return feeditems
 }
 

@@ -13,8 +13,9 @@ schemaBuilder.createTable('feeds')
   .addColumn('description', lf.Type.STRING)
   .addColumn('title', lf.Type.STRING)
   .addColumn('category', lf.Type.STRING)
+  .addColumn('source', lf.Type.STRING)
   .addPrimaryKey(['id'], true)
-  .addNullable(['description', 'category', 'link'])
+  .addNullable(['description', 'category', 'link', 'source'])
 
 schemaBuilder.createTable('articles')
   .addColumn('id', lf.Type.INTEGER)
@@ -35,14 +36,18 @@ schemaBuilder.createTable('articles')
   .addColumn('enclosure', lf.Type.OBJECT)
   .addColumn('itunes', lf.Type.OBJECT)
   .addColumn('publishUnix', lf.Type.INTEGER)
+  .addColumn('source', lf.Type.STRING)
+  .addColumn('source_id', lf.Type.INTEGER)
   .addPrimaryKey(['id'], true)
-  .addNullable(['content', 'contentSnippet', 'author', 'category', 'pubDate', 'link', 'itunes', 'enclosure'])
+  .addNullable(['source', 'source_id', 'content', 'contentSnippet', 'author', 'category', 'pubDate', 'link', 'itunes', 'enclosure'])
 
 schemaBuilder.createTable('categories')
   .addColumn('id', lf.Type.INTEGER)
   .addColumn('title', lf.Type.STRING)
   .addColumn('type', lf.Type.STRING)
+  .addColumn('source', lf.Type.STRING)
   .addPrimaryKey(['id'], true)
+  .addNullable(['source'])
 
 schemaBuilder.createTable('pruned')
   .addColumn('id', lf.Type.INTEGER)
@@ -56,7 +61,25 @@ export let categoryTable
 export let pruneTable
 
 export async function init () {
-  database = await schemaBuilder.connect()
+  database = await schemaBuilder.connect({
+    onUpgrade: function (rawDb) {
+      const ver = rawDb.getVersion()
+      console.log(`updating to database v${ver}`)
+      return Promise.resolve().then(() => {
+        return rawDb.addTableColumn('feeds', 'source', 'local')
+          .then(() => {
+            return rawDb.addTableColumn('articles', 'source', 'local')
+          }).then(() => {
+            return rawDb.addTableColumn('categories', 'source', 'local')
+          }).then(() => {
+            return rawDb.addTableColumn('articles', 'source_id', null)
+          })
+      }).then(() => {
+        // have it as the last element of the promise chain
+        return rawDb.dump()
+      })
+    }
+  })
   feedTable = database.getSchema().table('feeds')
   articleTable = database.getSchema().table('articles')
   categoryTable = database.getSchema().table('categories')

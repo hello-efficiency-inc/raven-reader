@@ -12,22 +12,31 @@
       class="list-group-item list-group-item-action flex-column align-items-start"
     >
       <div class="d-flex flex-column w-100">
-        <p class="mb-1"><small><img
-          v-if="article.feeds.favicon"
-          :src="article.feeds.favicon"
-          width="16"
-          height="16"
-          class="mr-2"
-        > {{ article.feeds.title }}</small></p>
-        <p class="mb-2"><small>{{ article.formatDate }}</small></p>
+        <p class="mb-1">
+          <small><img
+            v-if="article.feeds.favicon"
+            :src="article.feeds.favicon"
+            width="16"
+            height="16"
+            class="mr-2"
+          > {{ article.feeds.title }}</small>
+        </p>
+        <p class="mb-2">
+          <small>{{ article.formatDate }}</small>
+        </p>
       </div>
       <h6><strong>{{ article.articles.title }}</strong></h6>
       <p>{{ article.articles.contentSnippet }}</p>
-      <p class="text-right mb-0" v-if="article.articles.favourite"><feather-icon
-              name="star"
-              size="sm"
-              :filled="article.articles.favourite"
-            /></p>
+      <p
+        v-if="article.articles.favourite"
+        class="text-right mb-0"
+      >
+        <feather-icon
+          name="star"
+          size="sm"
+          :filled="article.articles.favourite"
+        />
+      </p>
     </router-link>
   </div>
 </template>
@@ -61,8 +70,8 @@ export default {
       this.$electron.clipboard.writeText(url)
     },
     openArticleContextMenu (e, article) {
-      this.$router.push({ path: `/article/${article.article.uuid}` }).then((err) => {
-        if (err) {}
+      this.$router.push({ path: `/article/${article.article.uuid}` }).catch((err) => {
+        window.log.info(err)
       })
 
       const self = this

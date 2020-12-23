@@ -2,7 +2,7 @@ import {
   app,
   Menu
 } from 'electron'
-var articleSelected = false
+const articleSelected = false
 
 export default function createMenu (mainWindow) {
   // Create the Application's main menu
