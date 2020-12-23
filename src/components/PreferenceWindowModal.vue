@@ -9,178 +9,185 @@
       centered
       hide-footer
     >
-      <b-tabs
-        pills
-        card
-        vertical
-        content-class="preference-content"
+      <b-overlay
+        :show="showSync"
+        variant="dark"
+        spinner-variant="primary"
+        rounded="sm"
       >
-        <b-tab
-          title="Settings"
-          active
+        <b-tabs
+          pills
+          card
+          vertical
+          content-class="preference-content"
         >
-          <template #title>
-            <feather-icon name="settings" /> <span class="ml-3">Settings</span>
-          </template>
-          <b-form-group label="Keep read RSS items">
-            <b-form-select
-              v-model="keepread"
-              :options="keepread_options"
-              size="sm"
-              @change="saveKeepRead"
-            />
-          </b-form-group>
-          <b-form-group label="Set refresh interval for news feed">
-            <b-form-select
-              v-model="cronjob"
-              :options="cron_options"
-              size="sm"
-              @change="saveCronjob"
-            />
-          </b-form-group>
-          <b-form-group label="Choose appearance">
-            <b-form-select
-              v-model="theme_option"
-              :options="themeOptions"
-              size="sm"
-              @change="saveAppearance"
-            />
-          </b-form-group>
-          <b-form-group label="Oldest articles first">
-            <b-form-radio-group
-              id="btnradios1"
-              v-model="oldestArticles"
-              buttons
-              button-variant="outline-primary"
-              size="sm"
-              :options="options"
-              name="sortPref"
-              @input="saveSortPreference"
-            />
-          </b-form-group>
-          <h4 class="mt-5">
-            Proxy Settings
-          </h4>
-          <b-form-group label="Web Server (HTTP):">
-            <b-form-input
-              v-model="proxy.http"
-              type="text"
-            />
-          </b-form-group>
-          <b-form-group label="Secure Web Server (HTTPS):">
-            <b-form-input
-              v-model="proxy.https"
-              type="text"
-            />
-          </b-form-group>
-          <b-form-group label="Bypass proxy settings for these hosts & domains:">
-            <b-form-textarea
-              v-model="proxy.bypass"
-              :rows="3"
-              :max-rows="6"
-            />
-          </b-form-group>
-          <b-button @click="applyProxy">
-            Set proxy & restart
-          </b-button>
-        </b-tab>
-        <b-tab>
-          <template #title>
-            <feather-icon name="package" /> <span class="ml-3">Integrations</span>
-          </template>
-          <div class="row">
-            <div class="col">
-              <h4 class="mb-4 mt-4">
-                <strong>Read it later services</strong><br>
-                <small style="font-size: 14px;">Save articles to read it later services</small>
-              </h4>
+          <b-tab
+            title="Settings"
+            active
+          >
+            <template #title>
+              <feather-icon name="settings" /> <span class="ml-3">Settings</span>
+            </template>
+            <b-form-group label="Keep read RSS items">
+              <b-form-select
+                v-model="keepread"
+                :options="keepread_options"
+                size="sm"
+                @change="saveKeepRead"
+              />
+            </b-form-group>
+            <b-form-group label="Set refresh interval for news feed">
+              <b-form-select
+                v-model="cronjob"
+                :options="cron_options"
+                size="sm"
+                @change="saveCronjob"
+              />
+            </b-form-group>
+            <b-form-group label="Choose appearance">
+              <b-form-select
+                v-model="theme_option"
+                :options="themeOptions"
+                size="sm"
+                @change="saveAppearance"
+              />
+            </b-form-group>
+            <b-form-group label="Oldest articles first">
+              <b-form-radio-group
+                id="btnradios1"
+                v-model="oldestArticles"
+                buttons
+                button-variant="outline-primary"
+                size="sm"
+                :options="options"
+                name="sortPref"
+                @input="saveSortPreference"
+              />
+            </b-form-group>
+            <h4 class="mt-5">
+              Proxy Settings
+            </h4>
+            <b-form-group label="Web Server (HTTP):">
+              <b-form-input
+                v-model="proxy.http"
+                type="text"
+              />
+            </b-form-group>
+            <b-form-group label="Secure Web Server (HTTPS):">
+              <b-form-input
+                v-model="proxy.https"
+                type="text"
+              />
+            </b-form-group>
+            <b-form-group label="Bypass proxy settings for these hosts & domains:">
+              <b-form-textarea
+                v-model="proxy.bypass"
+                :rows="3"
+                :max-rows="6"
+              />
+            </b-form-group>
+            <b-button @click="applyProxy">
+              Set proxy & restart
+            </b-button>
+          </b-tab>
+          <b-tab>
+            <template #title>
+              <feather-icon name="package" /> <span class="ml-3">Integrations</span>
+            </template>
+            <div class="row">
+              <div class="col">
+                <h4 class="mb-4 mt-4">
+                  <strong>Read it later services</strong><br>
+                  <small style="font-size: 14px;">Save articles to read it later services</small>
+                </h4>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <p class="text-left font-bold">
-                Instapaper
-              </p>
+            <div class="row">
+              <div class="col">
+                <p class="text-left font-bold">
+                  Instapaper
+                </p>
+              </div>
+              <div class="col">
+                <button
+                  v-if="!instapaper_connected"
+                  v-b-modal.instapaper
+                  aria-label="Connect Instapaper"
+                  class="btn-primary float-right"
+                >
+                  Connect
+                </button>
+                <button
+                  v-if="instapaper_connected"
+                  aria-label="Disconnect Instapaper"
+                  class="btn-danger float-right"
+                  @click="disconnectInstapaper"
+                >
+                  Disconnect
+                </button>
+              </div>
             </div>
-            <div class="col">
-              <button
-                v-if="!instapaper_connected"
-                v-b-modal.instapaper
-                aria-label="Connect Instapaper"
-                class="btn-primary float-right"
-              >
-                Connect
-              </button>
-              <button
-                v-if="instapaper_connected"
-                aria-label="Disconnect Instapaper"
-                class="btn-danger float-right"
-                @click="disconnectInstapaper"
-              >
-                Disconnect
-              </button>
+            <div class="row">
+              <div class="col">
+                <p class="text-left font-bold">
+                  Pocket
+                </p>
+              </div>
+              <div class="col">
+                <button
+                  v-if="!pocket_connected"
+                  class="btn-primary float-right"
+                  aria-label="Connect pocket"
+                  @click="signInPocket"
+                >
+                  Connect
+                </button>
+                <button
+                  v-if="pocket_connected"
+                  class="btn-danger float-right"
+                  aria-label="Disconnect pocket"
+                  @click="disconnectPocket"
+                >
+                  Disconnect
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <p class="text-left font-bold">
-                Pocket
-              </p>
+            <div class="row">
+              <div class="col">
+                <h4 class="mb-4 mt-4">
+                  <strong>RSS Services</strong><br>
+                  <small style="font-size: 14px;">Sync across device with RSS services.</small>
+                </h4>
+              </div>
             </div>
-            <div class="col">
-              <button
-                v-if="!pocket_connected"
-                class="btn-primary float-right"
-                aria-label="Connect pocket"
-                @click="signInPocket"
-              >
-                Connect
-              </button>
-              <button
-                v-if="pocket_connected"
-                class="btn-danger float-right"
-                aria-label="Disconnect pocket"
-                @click="disconnectPocket"
-              >
-                Disconnect
-              </button>
+            <div class="row">
+              <div class="col">
+                <p class="text-left font-bold">
+                  Feedbin
+                </p>
+              </div>
+              <div class="col">
+                <button
+                  v-if="!feedbin_connected"
+                  v-b-modal.feedbin
+                  aria-label="Connect Feedbin"
+                  class="btn-primary float-right"
+                >
+                  Connect
+                </button>
+                <button
+                  v-if="feedbin_connected"
+                  aria-label="Disconnect Feedbin"
+                  class="btn-danger float-right"
+                  @click="disconnectFeedbin"
+                >
+                  Disconnect
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <h4 class="mb-4 mt-4">
-                <strong>RSS Services</strong><br>
-                <small style="font-size: 14px;">Sync across device with RSS services.</small>
-              </h4>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <p class="text-left font-bold">
-                Feedbin
-              </p>
-            </div>
-            <div class="col">
-              <button
-                v-if="!feedbin_connected"
-                v-b-modal.feedbin
-                aria-label="Connect Feedbin"
-                class="btn-primary float-right"
-              >
-                Connect
-              </button>
-              <button
-                v-if="feedbin_connected"
-                aria-label="Disconnect Feedbin"
-                class="btn-danger float-right"
-                @click="disconnectFeedbin"
-              >
-                Disconnect
-              </button>
-            </div>
-          </div>
-        </b-tab>
-      </b-tabs>
+          </b-tab>
+        </b-tabs>
+      </b-overlay>
     </b-modal>
     <b-modal
       id="instapaper"
@@ -298,6 +305,7 @@ export default {
   ],
   data () {
     return {
+      showSync: false,
       feedbin_error: false,
       feedbin_connected: false,
       pocket_connected: false,
@@ -654,6 +662,7 @@ export default {
         this.hideFeedbinModal()
         this.$store.dispatch('setFeedbin', JSON.stringify(this.feedbin)).then(() => {
           this.feedbin_connected = true
+          this.showSync = true
           const promise = Promise.all([
             feedbin.getUnreadEntries(),
             feedbin.getStarredEntries(),
@@ -665,9 +674,10 @@ export default {
             feedbin.syncItems(mapped).then(() => {
               this.$store.dispatch('loadFeeds')
               this.$store.dispatch('loadArticles')
+              this.showSync = false
+              this.hideModal()
             })
           })
-          this.hideModal()
         })
       }).catch(() => {
         this.feedbin_error = true

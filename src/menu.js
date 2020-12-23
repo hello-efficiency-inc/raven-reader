@@ -162,7 +162,7 @@ export default function createMenu (mainWindow) {
         enabled: false
       },
       {
-        label: 'Settings',
+        label: 'Preferences',
         id: 'settings',
         type: 'normal',
         accelerator: 'CmdOrCtrl+,',
@@ -203,7 +203,7 @@ export default function createMenu (mainWindow) {
         type: 'separator'
       },
       {
-        label: 'Settings',
+        label: 'Preferences',
         id: 'settings',
         accelerator: 'CmdOrCtrl+,',
         type: 'normal',
