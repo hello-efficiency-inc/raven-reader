@@ -122,24 +122,24 @@ export default {
     }
   },
   mounted () {
-    window.api.ipcRendReceiveOnce('refresh-feed', (arg) => {
+    window.api.ipcRendReceive('refresh-feed', (arg) => {
       helper.subscribe([arg.feed], null, true)
     })
 
-    window.api.ipcRendReceiveOnce('edit-feed', (arg) => {
+    window.api.ipcRendReceive('edit-feed', (arg) => {
       this.openEditModal(arg.feed)
       this.$bvModal.show('editFeed')
     })
 
-    window.api.ipcRendReceiveOnce('mark-feed-read', (arg) => {
+    window.api.ipcRendReceive('mark-feed-read', (arg) => {
       this.markFeedRead(arg)
     })
 
-    window.api.ipcRendReceiveOnce('unsubscribe-feed', (arg) => {
-      self.unsubscribeFeed(arg)
+    window.api.ipcRendReceive('unsubscribe-feed', (arg) => {
+      this.unsubscribeFeed(arg)
     })
 
-    window.api.ipcRendReceiveOnce('category-read', (arg) => {
+    window.api.ipcRendReceive('category-read', (arg) => {
       const articles = this.$store.state.Article.articles.filter((item) => {
         return item.articles.category === arg.category.title
       }).map(item => item.articles.uuid)
@@ -157,7 +157,7 @@ export default {
       this.$bvModal.show('editCategory')
     })
 
-    window.api.ipcRendReceiveOnce('category-delete', (arg) => {
+    window.api.ipcRendReceive('category-delete', (arg) => {
       const feeds = this.$store.state.Feed.feeds.filter((item) => {
         return item.category === arg.category.title
       }).map(item => item.uuid)

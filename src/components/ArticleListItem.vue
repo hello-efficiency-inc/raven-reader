@@ -65,7 +65,7 @@ export default {
     }
   },
   mounted () {
-    window.api.ipcRendReceiveOnce('mark-read', (arg) => {
+    window.api.ipcRendReceive('mark-read', (arg) => {
       this.$store.dispatch('markAction', {
         type: !arg.article.read ? markTypes.read : markTypes.unread,
         podcast: arg.article.podcast,
@@ -75,7 +75,7 @@ export default {
       })
     })
 
-    window.api.ipcRendReceiveOnce('mark-favourite', (arg) => {
+    window.api.ipcRendReceive('mark-favourite', (arg) => {
       this.$store.dispatch('markAction', {
         type: arg.article.favourite ? markTypes.unfavourite : markTypes.favourite,
         id: arg.article.uuid
@@ -84,7 +84,7 @@ export default {
       })
     })
 
-    window.api.ipcRendReceiveOnce('save-article', (arg) => {
+    window.api.ipcRendReceive('save-article', (arg) => {
       if (arg.article.offline && !this.$store.state.Setting.offline) {
         cacheService.uncache(`raven-${arg.article.uuid}`).then(() => {
           this.$store.dispatch('saveArticle', {

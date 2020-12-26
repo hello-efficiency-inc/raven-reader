@@ -87,7 +87,6 @@ export default {
   },
   watch: {
     $route (to, from) {
-      this.$refs.topProgress.start()
       switch (to.name) {
         case 'feed-page':
           this.articleData = null
@@ -98,8 +97,6 @@ export default {
               category: null,
               search: null,
               feed: this.$route.params.feedid
-            }).then(() => {
-              this.$refs.topProgress.done()
             })
           }
           break
@@ -111,8 +108,6 @@ export default {
             category: this.$route.params.category,
             feed: null,
             search: null
-          }).then(() => {
-            this.$refs.topProgress.done()
           })
           break
         case 'type-page':
@@ -124,8 +119,6 @@ export default {
               category: null,
               feed: null,
               search: null
-            }).then(() => {
-              this.$refs.topProgress.done()
             })
           }
           break
@@ -214,6 +207,7 @@ export default {
       return nodescheduler.scheduleJob(
         '*/5 * * * *',
         () => {
+          window.log.info('Deleting read articles')
           db.deleteArticleByKeepRead()
         }
       )

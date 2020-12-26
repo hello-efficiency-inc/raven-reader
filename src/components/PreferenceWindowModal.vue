@@ -484,8 +484,7 @@ export default {
     },
     applyProxy () {
       this.$store.dispatch('setProxy', this.proxy)
-      this.$electron.remote.app.relaunch()
-      this.$electron.remote.app.exit(0)
+      window.electron.restartApp()
     },
     signInPocket () {
       window.electron.loginPocket()

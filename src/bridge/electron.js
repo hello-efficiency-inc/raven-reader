@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron'
+import { app, ipcRenderer } from 'electron'
 
 export default {
   removeListeners: () => {
@@ -10,11 +10,15 @@ export default {
   exportOpml: (xmlData) => {
     ipcRenderer.invoke('export-opml', xmlData)
   },
+  restartApp: () => {
+    app.relaunch()
+    app.exit(0)
+  },
   loginPocket: () => {
     return ipcRenderer.send('login-pocket')
   },
   createContextMenu: (type, data) => {
-    return ipcRenderer.send('context-menu', {
+    return ipcRenderer.invoke('context-menu', {
       type: type,
       data: data
     })

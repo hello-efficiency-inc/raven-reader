@@ -38,7 +38,7 @@ const searchOption = {
   shouldSort: true,
   findAllMatches: true,
   includeScore: true,
-  threshold: 0.3,
+  threshold: 0.4,
   keys: ['articles.title', 'articles.content']
 }
 
@@ -50,7 +50,7 @@ const sortBy = (key, pref) => {
 }
 const getters = {
   filteredArticles: (state, getters, rootState) => {
-    const sortPref = rootState.Setting.oldestArticles === 'off' ? 'desc' : 'asc'
+    const sortPref = rootState.Setting.oldestArticles === 'off' ? 'asc' : 'desc'
     const orderedArticles = state.articles.concat().sort(sortBy('publishUnix', sortPref))
     if (state.type !== 'feed' && state.type !== 'search') {
       return filters[state.type](orderedArticles)
@@ -124,10 +124,10 @@ const mutations = {
       feedbin.markItem(data.rootState.Setting.feedbin, 'MARK_UNREAD', state.articles[index].articles.source_id)
     }
   },
-  MARK_ALL_READ (state) {
+  MARK_ALL_READ (state, rootState) {
     db.markAllRead(state.articles.map(item => item.articles.uuid))
     const ids = JSON.parse(JSON.stringify(state.articles)).map(item => item.articles.source_id)
-    feedbin.markItem('MARK_READ', ids.filter(item => item !== null))
+    feedbin.markItem(rootState.Setting.feedbin, 'MARK_READ', ids.filter(item => item !== null))
   },
   DELETE_ARTICLES (state, id) {
     const articles = state.articles.filter(item => item.feed_id === id)
@@ -211,8 +211,8 @@ const actions = {
     db.markOffline(data.article._id, data.type === 'CACHE')
     commit('SAVE_ARTICLE', data)
   },
-  markAllRead ({ commit }) {
-    commit('MARK_ALL_READ')
+  markAllRead ({ commit, rootState }) {
+    commit('MARK_ALL_READ', rootState)
   },
   async deleteArticle ({ dispatch, commit }, id) {
     commit('DELETE_ARTICLES', id)

@@ -6,6 +6,8 @@ import rssService from './bridge/rss'
 import electronStore from './bridge/electronstore'
 import electronService from './bridge/electron'
 
+ipcRenderer.setMaxListeners(0)
+
 const validChannels = [
   'Add subscription',
   'Dark mode',

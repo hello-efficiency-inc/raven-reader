@@ -425,7 +425,7 @@ ipcMain.on('login-pocket', (event) => {
   event.returnValue = signInPocketWithPopUp()
 })
 
-ipcMain.on('context-menu', (event, arg) => {
+ipcMain.handle('context-menu', (event, arg) => {
   if (arg.type === 'feed') {
     createFeedMenu(arg.data, win)
   }
@@ -440,7 +440,7 @@ ipcMain.on('context-menu', (event, arg) => {
 })
 
 powerMonitor.on('resume', () => {
-  window.webContents.send('power-resume')
+  win.webContents.send('power-resume')
 })
 
 autoUpdater.on('checking-for-update', () => {
