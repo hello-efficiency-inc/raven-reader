@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "author": "Hello Efficiency Inc. <welcome@helloefficiency.com>",
   "description": "Simple desktop RSS Reader",
   "license": "MIT",
@@ -50,8 +50,6 @@
     "v-click-outside": "^3.0.1",
     "v8-compile-cache": "^2.1.1",
     "vue": "^2.6.11",
-    "vue-context": "^6.0.0",
-    "vue-context-menu": "^2.0.6",
     "vue-plyr": "^7.0.0-beta.1",
     "vue-router": "^3.2.0",
     "vue-social-sharing": "2.4.7",

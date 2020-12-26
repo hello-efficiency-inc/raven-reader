@@ -1,6 +1,6 @@
 'use strict'
 import 'v8-compile-cache'
-import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog, Notification, shell } from 'electron'
+import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog, Notification, shell, powerMonitor } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { enforceMacOSAppLocation } from 'electron-util'
@@ -437,6 +437,10 @@ ipcMain.on('context-menu', (event, arg) => {
   if (arg.type === 'article') {
     createArticleItemMenu(arg.data, win)
   }
+})
+
+powerMonitor.on('resume', () => {
+  window.webContents.send('power-resume')
 })
 
 autoUpdater.on('checking-for-update', () => {

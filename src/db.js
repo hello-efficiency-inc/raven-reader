@@ -2,7 +2,7 @@ import lf from 'lovefield'
 import db from './services/db'
 import DataStore from 'nedb'
 
-const schemaBuilder = lf.schema.create('raven', 1)
+const schemaBuilder = lf.schema.create('raven', 3)
 
 schemaBuilder.createTable('feeds')
   .addColumn('id', lf.Type.INTEGER)
@@ -38,8 +38,9 @@ schemaBuilder.createTable('articles')
   .addColumn('publishUnix', lf.Type.INTEGER)
   .addColumn('source', lf.Type.STRING)
   .addColumn('source_id', lf.Type.INTEGER)
+  .addColumn('keep_read', lf.Type.INTEGER)
   .addPrimaryKey(['id'], true)
-  .addNullable(['source', 'source_id', 'content', 'contentSnippet', 'author', 'category', 'pubDate', 'link', 'itunes', 'enclosure'])
+  .addNullable(['source', 'source_id', 'content', 'contentSnippet', 'author', 'category', 'pubDate', 'link', 'itunes', 'enclosure', 'keep_read'])
 
 schemaBuilder.createTable('categories')
   .addColumn('id', lf.Type.INTEGER)
@@ -73,6 +74,8 @@ export async function init () {
             return rawDb.addTableColumn('categories', 'source', 'local')
           }).then(() => {
             return rawDb.addTableColumn('articles', 'source_id', null)
+          }).then(() => {
+            return rawDb.addTableColumn('articles', 'keep_read', null)
           })
       }).then(() => {
         // have it as the last element of the promise chain

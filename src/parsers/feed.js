@@ -64,6 +64,7 @@ export function ParseFeedPost (feed) {
     }
     item.favourite = false
     item.read = false
+    item.keep_read = null
     item.offline = false
     item.podcast = podcast ?? false
     item.played = false

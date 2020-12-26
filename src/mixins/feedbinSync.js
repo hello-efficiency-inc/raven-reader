@@ -9,7 +9,7 @@ export default {
         const promise = Promise.all([
           feedbin.getUnreadEntries(this.$store.state.Setting.feedbin),
           feedbin.getStarredEntries(this.$store.state.Setting.feedbin),
-          feedbin.getEntries(this.$store.state.Setting.feedbin, dayjs(date).subtract(7, 'day').toISOString())
+          feedbin.getEntries(this.$store.state.Setting.feedbin, dayjs(date).subtract(1, 'month').toISOString())
         ])
         promise.then((res) => {
           const [unread, starred, entries] = res

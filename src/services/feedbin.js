@@ -107,7 +107,6 @@ export default {
     })
   },
   async syncItems (feedbinCreds, mappedEntries) {
-    console.log(feedbinCreds)
     let subscriptions = await this.getSubscriptions(feedbinCreds)
     if (subscriptions) {
       const currentSubscriptions = await db.fetchServicesFeeds('feedbin')
@@ -156,6 +155,7 @@ export default {
             contentSnippet: item.summary,
             favourite: item.favourite,
             read: item.read,
+            keep_read: null,
             pubDate: item.published,
             offline: false,
             podcast: !!item.enclosure,

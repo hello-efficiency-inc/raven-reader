@@ -330,7 +330,7 @@ export function createFeedMenu (feeddata, window) {
     })
   )
 
-  if (feeddata.feed.source === 'local') {
+  if (feeddata.feed.source === 'local' || typeof feeddata.feed.source === 'undefined') {
     menu.append(
       new MenuItem({
         label: `Refresh ${feeddata.feed.title} feed`,
@@ -408,22 +408,6 @@ export function createArticleItemMenu (article, window) {
     label: !article.article.offline ? 'Save article' : 'Remove saved article',
     click () {
       window.webContents.send('save-article', article)
-      // if (article.article.offline && !self.$store.state.Setting.offline) {
-      //   cacheService.uncache(`raven-${article.article.uuid}`).then(() => {
-      //     self.$store.dispatch('saveArticle', {
-      //       type: markTypes.uncache,
-      //       article: article.article
-      //     })
-      //   })
-      // } else {
-      //   cacheService.cacheArticleData(article.article).then(() => {
-      //     self.$store.dispatch('saveArticle', {
-      //       type: markTypes.cache,
-      //       article: article.article
-      //     })
-      //   })
-      // }
-      // self.$store.dispatch('loadArticles')
     }
   }))
   menu.popup({ window: window })

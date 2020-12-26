@@ -122,38 +122,42 @@ export default {
     }
   },
   mounted () {
-    window.api.ipcRendReceive('refresh-feed', (arg) => {
+    window.api.ipcRendReceiveOnce('refresh-feed', (arg) => {
       helper.subscribe([arg.feed], null, true)
     })
 
-    window.api.ipcRendReceive('edit-feed', (arg) => {
+    window.api.ipcRendReceiveOnce('edit-feed', (arg) => {
       this.openEditModal(arg.feed)
       this.$bvModal.show('editFeed')
     })
 
-    window.api.ipcRendReceive('mark-feed-read', (arg) => {
+    window.api.ipcRendReceiveOnce('mark-feed-read', (arg) => {
       this.markFeedRead(arg)
     })
 
-    window.api.ipcRendReceive('unsubscribe-feed', (arg) => {
+    window.api.ipcRendReceiveOnce('unsubscribe-feed', (arg) => {
       self.unsubscribeFeed(arg)
     })
 
-    window.api.ipcRendReceive('category-read', (arg) => {
+    window.api.ipcRendReceiveOnce('category-read', (arg) => {
       const articles = this.$store.state.Article.articles.filter((item) => {
         return item.articles.category === arg.category.title
       }).map(item => item.articles.uuid)
       db.markAllRead(articles).then(() => {
         this.$store.dispatch('loadArticles')
       })
+      const feedBinArticles = this.$store.state.Article.articles.filter((item) => {
+        return item.articles.category === arg.category.title
+      }).map(item => item.articles.source_id)
+      this.feedBinArticleRead(feedBinArticles)
     })
 
-    window.api.ipcRendReceive('category-rename', (arg) => {
+    window.api.ipcRendReceiveOnce('category-rename', (arg) => {
       this.openCategoryEditModal(arg.category)
       this.$bvModal.show('editCategory')
     })
 
-    window.api.ipcRendReceive('category-delete', (arg) => {
+    window.api.ipcRendReceiveOnce('category-delete', (arg) => {
       const feeds = this.$store.state.Feed.feeds.filter((item) => {
         return item.category === arg.category.title
       }).map(item => item.uuid)
@@ -236,7 +240,7 @@ export default {
         })
           .map(item => item.articles.source_id)
           .filter(item => item !== null)
-        feedbin.markItem('MARK_READ', feedBinArticles)
+        this.feedBinArticleRead(feedBinArticles)
         this.$store.dispatch('loadArticles')
       })
     },
@@ -256,6 +260,11 @@ export default {
     },
     openFeedMenu (e, feed) {
       window.electron.createContextMenu('feed', feed)
+    },
+    feedBinArticleRead (ids) {
+      if (this.$store.state.Setting.feedbin_connected) {
+        feedbin.markItem(this.$store.state.Setting.feedbin, 'MARK_READ', ids)
+      }
     }
   }
 }

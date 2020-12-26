@@ -26,7 +26,7 @@
             active
           >
             <template #title>
-              <feather-icon name="settings" /> <span class="ml-3">Settings</span>
+              <feather-icon name="sliders" /> <span class="ml-3">Settings</span>
             </template>
             <b-form-group label="Keep read RSS items">
               <b-form-select
@@ -64,7 +64,21 @@
                 @input="saveSortPreference"
               />
             </b-form-group>
-            <h4 class="mt-5">
+            <b-form-group label="Delete all feed, category and article data">
+              <b-button
+                variant="danger"
+                squared
+                @click="deleteAllData"
+              >
+                Clear all data
+              </b-button>
+            </b-form-group>
+          </b-tab>
+          <b-tab>
+            <template #title>
+              <feather-icon name="wifi" /> <span class="ml-3">Proxy Setting</span>
+            </template>
+            <h4>
               Proxy Settings
             </h4>
             <b-form-group label="Web Server (HTTP):">
@@ -222,6 +236,12 @@
       centered
       @hidden="onHiddenInstapaper"
     >
+      <b-alert
+        :show="instapaper_error"
+        variant="danger"
+      >
+        Invalid credentials
+      </b-alert>
       <b-form-group id="input-group-1">
         <b-form-input
           id="input-1"
@@ -334,7 +354,7 @@ export default {
       feedbin_connected: false,
       pocket_connected: false,
       instapaper_connected: false,
-      instapaper_error: null,
+      instapaper_error: false,
       feedbin: {
         endpoint: 'https://api.feedbin.com/v2/',
         email: null,
@@ -505,6 +525,7 @@ export default {
       this.$refs.feedbinLogin.hide()
     },
     loginInstapaper () {
+      this.instapaper_error = false
       axios.post('https://www.instapaper.com/api/authenticate', {}, {
         auth: {
           username: this.instapaper.username,
@@ -514,6 +535,8 @@ export default {
         this.$refs.instapaperLogin.hide()
         this.$store.dispatch('setInstapaper', JSON.stringify(this.instapaper))
         this.instapaper_connected = true
+      }).catch(() => {
+        this.instapaper_error = true
       })
     },
     editFeedbin () {
@@ -553,6 +576,13 @@ export default {
         })
       }).catch(() => {
         this.feedbin_error = true
+      })
+    },
+    deleteAllData () {
+      db.deleteAllData().then(() => {
+        this.$store.dispatch('loadFeeds')
+        this.$store.dispatch('loadArticles')
+        this.hideModal()
       })
     }
   }

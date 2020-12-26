@@ -137,13 +137,13 @@ export default {
     allUnread: 'unreadChange'
   },
   mounted () {
-    // this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
     this.syncFeedbin()
     this.$store.dispatch('initializeDB').then(async () => {
       await this.$store.dispatch('refreshFeeds')
       await this.$store.dispatch('loadCategories')
       await this.$store.dispatch('loadFeeds')
       await this.$store.dispatch('loadArticles')
+      db.deleteArticleByKeepRead()
     })
     this.$store.dispatch('checkOffline')
 
@@ -166,13 +166,16 @@ export default {
 
     this.runArticleCronJob()
     this.runServiceCronJob()
+    this.runKeepReadJob()
 
-    // window.electron.remote.powerMonitor.on('resume', () => {
-    //   window.log.info('Power resumed')
-    //   this.$store.dispatch('refreshFeeds')
-    //   this.runArticleCronJob().reschedule()
-    //   this.runServiceCronJob().reschedule()
-    // })
+    window.api.ipcRendReceive('power-resume', () => {
+      window.log.info('Power resumed')
+      this.$store.dispatch('refreshFeeds')
+      this.runArticleCronJob().reschedule()
+      this.runServiceCronJob().reschedule()
+      this.runKeepReadJob().reschedule()
+      db.deleteArticleByKeepRead()
+    })
   },
   destroyed () {
     window.electron.removeListeners()
@@ -203,6 +206,15 @@ export default {
         '*/2 * * * *',
         () => {
           this.syncFeedbin()
+        }
+      )
+    },
+    runKeepReadJob () {
+      // Service crawling
+      return nodescheduler.scheduleJob(
+        '*/5 * * * *',
+        () => {
+          db.deleteArticleByKeepRead()
         }
       )
     },

@@ -365,26 +365,24 @@ export default {
         })
       }
     },
-    async saveToInstapaper (url) {
-      const creds = JSON.parse(window.electronstore.getInstapaperCredentials())
-      const res = await axios.post(`https://www.instapaper.com/api/add?url=${url}`, {
+    saveToInstapaper (url) {
+      const creds = JSON.parse(this.$store.state.Setting.instapaper)
+      axios.post(`https://www.instapaper.com/api/add?url=${url}`, {
       }, {
         auth: {
           username: creds.username,
           password: creds.password
         }
-      })
-      if (res.status === 201) {
+      }).then(() => {
         this.$toasted.show('Saved to Instapaper.', {
           theme: 'outline',
           position: 'top-center',
           duration: 3000
         })
         this.$refs.socialshare.hide(true)
-      }
+      })
     },
     saveToPocket (url) {
-      console.log(url)
       const credentials = JSON.parse(this.$store.state.Setting.pocket)
       axios.post('https://getpocket.com/v3/add', {
         url: url,

@@ -138,7 +138,7 @@ const mutations = {
   },
   REFRESH_FEEDS (state, feeds) {
     if (feeds.length > 0) {
-      helper.subscribe(feeds.filter(item => item.source === 'local'), null, true)
+      helper.subscribe(feeds.filter(item => item.source === 'local' || typeof item.source === 'undefined'), null, true)
     }
   },
   CHANGE_TYPE (state, type) {
