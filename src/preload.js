@@ -34,7 +34,10 @@ contextBridge.exposeInMainWorld('api', {
       'unsubscribe-feed',
       'category-read',
       'category-delete',
-      'category-rename'
+      'category-rename',
+      'mark-read',
+      'mark-favourite',
+      'save-article'
     ]
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`

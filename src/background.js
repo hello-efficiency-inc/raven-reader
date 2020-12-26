@@ -8,7 +8,8 @@ import { touchBar } from './main/touchbar'
 import {
   createMenu,
   createFeedMenu,
-  createCategoryMenu
+  createCategoryMenu,
+  createArticleItemMenu
 } from './main/menu'
 import createTray from './main/tray'
 import RssParser from 'rss-parser'
@@ -431,6 +432,10 @@ ipcMain.on('context-menu', (event, arg) => {
 
   if (arg.type === 'category') {
     createCategoryMenu(arg.data, win)
+  }
+
+  if (arg.type === 'article') {
+    createArticleItemMenu(arg.data, win)
   }
 })
 

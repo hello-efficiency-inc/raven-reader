@@ -377,3 +377,54 @@ export function createFeedMenu (feeddata, window) {
   }
   menu.popup({ window: window })
 }
+
+export function createArticleItemMenu (article, window) {
+  const menu = new Menu()
+  menu.append(new MenuItem({
+    label: 'Copy link',
+    click () {
+      clipboard.writeText(article.article.link, 'selection')
+    }
+  }))
+  menu.append(new MenuItem({
+    type: 'separator'
+  }))
+  menu.append(new MenuItem({
+    label: !article.article.read ? 'Mark as read' : 'Mark as unread',
+    click () {
+      window.webContents.send('mark-read', article)
+    }
+  }))
+  menu.append(new MenuItem({
+    label: !article.article.favourite ? 'Mark as favourite' : 'Remove from favourite',
+    click () {
+      window.webContents.send('mark-favourite', article)
+    }
+  }))
+  menu.append(new MenuItem({
+    type: 'separator'
+  }))
+  menu.append(new MenuItem({
+    label: !article.article.offline ? 'Save article' : 'Remove saved article',
+    click () {
+      window.webContents.send('save-article', article)
+      // if (article.article.offline && !self.$store.state.Setting.offline) {
+      //   cacheService.uncache(`raven-${article.article.uuid}`).then(() => {
+      //     self.$store.dispatch('saveArticle', {
+      //       type: markTypes.uncache,
+      //       article: article.article
+      //     })
+      //   })
+      // } else {
+      //   cacheService.cacheArticleData(article.article).then(() => {
+      //     self.$store.dispatch('saveArticle', {
+      //       type: markTypes.cache,
+      //       article: article.article
+      //     })
+      //   })
+      // }
+      // self.$store.dispatch('loadArticles')
+    }
+  }))
+  menu.popup({ window: window })
+}
