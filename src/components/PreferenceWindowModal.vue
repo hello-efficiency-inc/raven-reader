@@ -92,7 +92,7 @@
           </b-tab>
           <b-tab>
             <template #title>
-              <feather-icon name="package" /> <span class="ml-3">Integrations</span>
+              <feather-icon name="share-2" /> <span class="ml-3">Sharing</span>
             </template>
             <div class="row">
               <div class="col">
@@ -102,29 +102,33 @@
                 </h4>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col">
                 <p class="text-left font-bold">
                   Instapaper
                 </p>
               </div>
               <div class="col">
-                <button
+                <b-button
                   v-if="!instapaper_connected"
                   v-b-modal.instapaper
                   aria-label="Connect Instapaper"
-                  class="btn-primary float-right"
+                  class="float-right"
+                  variant="primary"
+                  squared
                 >
                   Connect
-                </button>
-                <button
+                </b-button>
+                <b-button
                   v-if="instapaper_connected"
                   aria-label="Disconnect Instapaper"
                   class="btn-danger float-right"
+                  variant="danger"
+                  squared
                   @click="disconnectInstapaper"
                 >
                   Disconnect
-                </button>
+                </b-button>
               </div>
             </div>
             <div class="row">
@@ -134,25 +138,34 @@
                 </p>
               </div>
               <div class="col">
-                <button
+                <b-button
                   v-if="!pocket_connected"
-                  class="btn-primary float-right"
+                  class="float-right"
                   aria-label="Connect pocket"
+                  variant="primary"
+                  squared
                   @click="signInPocket"
                 >
                   Connect
-                </button>
-                <button
+                </b-button>
+                <b-button
                   v-if="pocket_connected"
-                  class="btn-danger float-right"
+                  class="float-right"
                   aria-label="Disconnect pocket"
+                  variant="danger"
+                  squared
                   @click="disconnectPocket"
                 >
                   Disconnect
-                </button>
+                </b-button>
               </div>
             </div>
-            <div class="row">
+          </b-tab>
+          <b-tab>
+            <template #title>
+              <feather-icon name="package" /> <span class="ml-3">Sync Account</span>
+            </template>
+            <div class="row mb-3">
               <div class="col">
                 <h4 class="mb-4 mt-4">
                   <strong>RSS Services</strong><br>
@@ -167,30 +180,35 @@
                 </p>
               </div>
               <div class="col">
-                <button
+                <b-button
                   v-if="!feedbin_connected"
                   v-b-modal.feedbin
+                  variant="primary"
                   aria-label="Connect Feedbin"
-                  class="btn-primary float-right"
+                  class="float-right"
+                  squared
                 >
                   Connect
-                </button>
-                <button
+                </b-button>
+                <b-button
                   v-if="feedbin_connected"
                   aria-label="Edit Feedbin"
-                  class="btn-primary float-right ml-2"
+                  variant="primary"
+                  class="float-right ml-2"
+                  squared
                   @click="editFeedbin"
                 >
                   Edit
-                </button>
-                <button
+                </b-button>
+                <b-button
                   v-if="feedbin_connected"
                   aria-label="Disconnect Feedbin"
-                  class="btn-danger float-right"
+                  class="float-right"
+                  variant="danger"
                   @click="disconnectFeedbin"
                 >
                   Disconnect
-                </button>
+                </b-button>
               </div>
             </div>
           </b-tab>
@@ -299,9 +317,7 @@
   </div>
 </template>
 <script>
-import oauth from '../services/oauth'
 import db from '../services/db'
-import { URL } from 'url'
 import axios from 'axios'
 import setTheme from '../mixins/setTheme'
 import feedbin from '../services/feedbin'
@@ -381,26 +397,29 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('loadSettings')
-    this.keepread = this.$store.state.Setting.keepRead
-    this.cronjob = this.$store.state.Setting.cronSettings
-    this.theme_option = this.$store.state.Setting.themeOption
-    this.setTheme(this.$store.state.Setting.themeOption)
-    this.oldestArticles = this.$store.state.Setting.oldestArticles
-    if (this.$store.state.Setting.proxy) {
-      this.proxy.http = this.$store.state.Setting.proxy.http
-      this.proxy.https = this.$store.state.Setting.proxy.https
-      this.proxy.bypass = this.$store.state.Setting.proxy.bypass
-    }
-    if (this.$electronstore.has('instapaper_creds')) {
-      this.instapaper_connected = true
-    }
-    if (this.$electronstore.get('pocket_token')) {
-      this.pocket_connected = true
-    }
-    if (this.$electronstore.has('feedbin_creds')) {
-      this.feedbin_connected = true
-    }
+    this.$store.dispatch('loadSettings').then(() => {
+      this.keepread = this.$store.state.Setting.keepRead
+      this.cronjob = this.$store.state.Setting.cronSettings
+      this.theme_option = this.$store.state.Setting.themeOption
+      this.setTheme(this.$store.state.Setting.themeOption)
+      this.oldestArticles = this.$store.state.Setting.oldestArticles
+      if (this.$store.state.Setting.proxy) {
+        this.proxy.http = this.$store.state.Setting.proxy.http
+        this.proxy.https = this.$store.state.Setting.proxy.https
+        this.proxy.bypass = this.$store.state.Setting.proxy.bypass
+      }
+      this.instapaper_connected = JSON.parse(JSON.stringify(this.$store.state.Setting.instapaper_connected))
+      this.instapaper = JSON.parse(JSON.stringify(this.$store.state.Setting.instapaper))
+      this.feedbin_connected = this.$store.state.Setting.feedbin_connected
+      this.feedbin = JSON.parse(JSON.stringify(this.$store.state.Setting.feedbin))
+      this.pocket_connected = JSON.parse(JSON.stringify(this.$store.state.Setting.pocket_connected))
+    })
+    window.api.ipcRendReceive('pocket-authenticated', (args) => {
+      this.$store.dispatch('setPocket', JSON.stringify(args))
+      if (args) {
+        this.pocket_connected = true
+      }
+    })
   },
   methods: {
     saveKeepRead (keepread) {
@@ -448,170 +467,8 @@ export default {
       this.$electron.remote.app.relaunch()
       this.$electron.remote.app.exit(0)
     },
-    async signInPocketWithPopUp () {
-      const self = this
-      return new Promise((resolve, reject) => {
-        let consumerKey
-        let code
-        const authWindow = new this.$electron.remote.BrowserWindow({
-          width: 1024,
-          height: 720,
-          show: true
-        })
-        const ses = authWindow.webContents.session
-        ses.clearStorageData({
-          storages: ['localStorage', 'cookies']
-        })
-
-        function handleNavigation (url) {
-          const urlItem = new URL(url)
-          const params = urlItem.searchParams
-          const hostname = urlItem.hostname
-          if (params) {
-            if (params.get('error')) {
-              authWindow.removeAllListeners('closed')
-              setImmediate(() => authWindow.close())
-              resolve(false)
-            } else if (hostname === '127.0.0.1') {
-              axios
-                .post(
-                  'https://getpocket.com/v3/oauth/authorize',
-                  {
-                    consumer_key: consumerKey,
-                    code: code
-                  },
-                  {
-                    withCredentials: true,
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'X-Accept': 'application/json'
-                    }
-                  }
-                )
-                .then(data => {
-                  data.data.consumer_key = consumerKey
-                  self.$store.dispatch('setPocket', JSON.stringify(data.data))
-                  resolve(data.data)
-                })
-              authWindow.removeAllListeners('closed')
-              authWindow.close()
-            }
-          }
-        }
-
-        authWindow.on('closed', () => {
-          resolve(false)
-          throw new Error('Auth window was closed by user')
-        })
-
-        authWindow.webContents.on('will-navigate', (event, url) => {
-          handleNavigation(url)
-        })
-
-        authWindow.webContents.on('will-redirect', (event, url) => {
-          handleNavigation(url)
-        })
-
-        authWindow.webContents.on(
-          'did-get-redirect-request',
-          (event, oldUrl, newUrl) => {
-            handleNavigation(newUrl)
-          }
-        )
-
-        if (window.os.platform() === 'darwin') {
-          consumerKey = process.env.VUE_APP_POCKET_MAC_KEY
-        }
-
-        if (window.os.platform() === 'win32') {
-          consumerKey = process.env.VUE_APP_POCKET_WINDOWS_KEY
-        }
-
-        if (window.os.platform() === 'linux') {
-          consumerKey = process.env.VUE_APP_POCKET_LINUX_KEY
-        }
-
-        axios
-          .post(
-            'https://getpocket.com/v3/oauth/request',
-            {
-              consumer_key: consumerKey,
-              redirect_uri: 'http://127.0.0.1'
-            },
-            {
-              withCredentials: true,
-              headers: {
-                'Content-Type': 'application/json',
-                'X-Accept': 'application/json'
-              }
-            }
-          )
-          .then(data => {
-            code = data.data.code
-            authWindow.loadURL(
-              `https://getpocket.com/auth/authorize?request_token=${data.data.code}&redirect_uri=http://127.0.0.1`
-            )
-          })
-      })
-    },
-    async signInPocket () {
-      const token = await this.signInPocketWithPopUp()
-      if (token) {
-        this.pocket_connected = true
-      }
-    },
-    signInWithPopUp () {
-      return new Promise((resolve, reject) => {
-        const authWindow = new this.$electron.remote.BrowserWindow({
-          width: 1024,
-          height: 720,
-          show: true
-        })
-        const ses = authWindow.webContents.session
-        ses.clearStorageData({
-          storages: ['localStorage', 'cookies']
-        })
-        const authUrl = oauth.buildAuthUrl()
-
-        function handleNavigation (url) {
-          const urlItem = new URL(url)
-          const params = urlItem.searchParams
-          const hostname = urlItem.hostname
-          if (params) {
-            if (params.get('error')) {
-              authWindow.removeAllListeners('closed')
-              setImmediate(() => authWindow.close())
-              resolve(false)
-            } else if (hostname === '127.0.0.1' && params.get('code')) {
-              authWindow.removeAllListeners('closed')
-              authWindow.close()
-              resolve(params.get('code'))
-            }
-          }
-        }
-
-        authWindow.on('closed', () => {
-          resolve(false)
-          throw new Error('Auth window was closed by user')
-        })
-
-        authWindow.webContents.on('will-navigate', (event, url) => {
-          handleNavigation(url)
-        })
-
-        authWindow.webContents.on('will-redirect', (event, url) => {
-          handleNavigation(url)
-        })
-
-        authWindow.webContents.on(
-          'did-get-redirect-request',
-          (event, oldUrl, newUrl) => {
-            handleNavigation(newUrl)
-          }
-        )
-
-        authWindow.loadURL(authUrl)
-      })
+    signInPocket () {
+      window.electron.loginPocket()
     },
     disconnectPocket () {
       this.$store.dispatch('unsetPocket')
@@ -660,36 +517,39 @@ export default {
       })
     },
     editFeedbin () {
-      this.feedbin = JSON.parse(this.$electronstore.get('feedbin_creds'))
+      this.feedbin = this.$store.state.Setting.feedbin
       this.$refs.feedbinLogin.show()
     },
-    async loginFeedbin () {
+    loginFeedbin () {
       this.feedbin_error = false
-      axios.get(`${this.feedbin.endpoint}authentication.json`, {
-        auth: {
-          username: this.feedbin.email,
-          password: this.feedbin.password
-        }
+      const creds = `${this.feedbin.email}:${this.feedbin.password}`
+      const headers = new Headers()
+      headers.set('Authorization', `Basic ${btoa(creds)}`)
+      headers.set('Content-Type', 'application/json; charset=utf-8')
+      fetch(`${this.feedbin.endpoint}authentication.json`, {
+        method: 'GET',
+        headers: headers
       }).then(() => {
         this.hideFeedbinModal()
         this.$store.dispatch('setFeedbin', JSON.stringify(this.feedbin)).then(() => {
           this.feedbin_connected = true
           this.showSync = true
           const promise = Promise.all([
-            feedbin.getUnreadEntries(),
-            feedbin.getStarredEntries(),
-            feedbin.getEntries()
+            feedbin.getUnreadEntries(this.feedbin),
+            feedbin.getStarredEntries(this.feedbin),
+            feedbin.getEntries(this.feedbin)
           ])
           promise.then((res) => {
             const [unread, starred, entries] = res
             const mapped = feedbin.transformEntriesAndFeed(unread, starred, entries)
-            feedbin.syncItems(mapped).then(() => {
+            feedbin.syncItems(this.$store.state.Setting.feedbin, mapped).then(() => {
               this.$store.dispatch('loadFeeds')
               this.$store.dispatch('loadArticles')
               this.showSync = false
               this.hideModal()
             })
           })
+          this.$store.dispatch('loadSettings')
         })
       }).catch(() => {
         this.feedbin_error = true

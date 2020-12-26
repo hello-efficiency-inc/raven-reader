@@ -173,7 +173,7 @@ export default {
           this.$parent.$refs.topProgress.done()
           this.syncState = false
         })
-        if (this.$electronstore.has('feedbin_creds')) {
+        if (this.$store.state.Setting.feedbin) {
           this.syncFeedbin()
         }
       }

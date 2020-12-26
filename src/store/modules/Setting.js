@@ -1,7 +1,17 @@
 const state = {
   pocket_connected: false,
+  pocket: null,
   instapaper_connected: false,
+  instapaper: {
+    username: null,
+    password: null
+  },
   feedbin_connected: false,
+  feedbin: {
+    endpoint: 'https://api.feedbin.com/v2/',
+    email: null,
+    password: null
+  },
   keepRead: 1,
   cronSettings: '*/5 * * * *',
   themeOption: 'system',
@@ -14,27 +24,18 @@ const state = {
   }
 }
 
-const Store = window.electronstore
-const store = new Store({
-  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
-})
+const electronstore = window.electronstore
 
 const mutations = {
   LOAD_SETTINGS (state) {
-    state.cronSettings = store.get('settings.cronjob', '*/5 * * * *')
-    state.themeOption = store.get('settings.theme_option', 'system')
-    state.oldestArticles = store.get('settings.oldestArticles', false)
-    state.proxy = store.get('settings.proxy', { http: '', https: '', bypass: '' })
-    state.keepRead = store.get('settings.keepread', 1)
-    if (store.has('pocket_token')) {
-      state.pocket_connected = true
+    const settings = JSON.parse(JSON.stringify(electronstore.getSettings()))
+    if (typeof settings.feedbin !== 'undefined') {
+      settings.feedbin = JSON.parse(settings.feedbin)
+      if (settings.pocket_creds) {
+        settings.pocket = JSON.parse(settings.pocket_creds)
+      }
     }
-    if (store.has('instapaper_creds')) {
-      state.instapaper_connected = true
-    }
-    if (store.has('feedbin_creds')) {
-      state.feedbin_connected = true
-    }
+    Object.assign(state, settings)
   },
   CHECK_OFFLINE (state) {
     state.offline = !navigator.onLine
@@ -57,23 +58,36 @@ const mutations = {
   SET_PROXY (state, data) {
     state.proxy = data
   },
-  SET_POCKET_CONNECTED (state) {
+  SET_POCKET_CONNECTED (state, data) {
     state.pocket_connected = true
+    state.pocket = data
   },
   UNSET_POCKET (state) {
     state.pocket_connected = false
+    state.pocket = null
   },
-  SET_INSTAPAPER_CONNECTED (state) {
+  SET_INSTAPAPER_CONNECTED (state, data) {
     state.instapaper_connected = true
+    state.instapaper = data
   },
-  SET_FEEDBIN_CONNECTED (state) {
+  SET_FEEDBIN_CONNECTED (state, data) {
     state.feedbin_connected = true
+    state.feedbin = data
   },
   UNSET_FEEDBIN (state) {
     state.feedbin_connected = false
+    state.feedbin = {
+      endpoint: 'https://api.feedbin.com/v2/',
+      email: null,
+      password: null
+    }
   },
   UNSET_INSTAPAPER (state) {
     state.instapaper_connected = false
+    state.instapaper = {
+      username: null,
+      password: null
+    }
   }
 }
 
@@ -82,46 +96,46 @@ const actions = {
     commit('LOAD_SETTINGS')
   },
   setKeepRead ({ commit }, data) {
-    store.set('settings.keepread', data)
+    electronstore.storeSetSettingItem('set', 'settings.keepread', data)
     commit('SET_KEEP_READ', data)
   },
   setCronJob ({ commit }, data) {
-    store.set('settings.cronjob', data)
+    electronstore.storeSetSettingItem('set', 'settings.cronjob', data)
     commit('SET_CRONJOB', data)
   },
   setOffline ({ commit }, data) {
     commit('SET_OFFLINE', data)
   },
   setThemeOption ({ commit }, data) {
-    store.set('settings.theme_option', data)
+    electronstore.storeSetSettingItem('set', 'settings.theme_option', data)
     commit('SET_THEME_OPTION', data)
   },
   setFeedbin ({ commit }, data) {
-    store.set('feedbin_creds', data)
-    commit('SET_FEEDBIN_CONNECTED')
+    electronstore.storeSetSettingItem('set', 'feedbin_creds', data)
+    commit('SET_FEEDBIN_CONNECTED', data)
   },
   setInstapaper ({ commit }, data) {
-    store.set('instapaper_creds', data)
-    commit('SET_INSTAPAPER_CONNECTED')
+    electronstore.storeSetSettingItem('set', 'instapaper_creds', data)
+    commit('SET_INSTAPAPER_CONNECTED', data)
   },
   setPocket ({ commit }, data) {
-    store.set('pocket_token', data)
-    commit('SET_POCKET_CONNECTED')
+    electronstore.storeSetSettingItem('set', 'pocket_creds', data)
+    commit('SET_POCKET_CONNECTED', data)
   },
   unsetInstapaper ({ commit }) {
-    store.delete('instapaper_creds')
+    electronstore.storeSetSettingItem('delete', 'instapaper_creds')
     commit('UNSET_INSTAPAPER')
   },
   unsetFeedbin ({ commit }) {
-    store.delete('feedbin_creds')
+    electronstore.storeSetSettingItem('delete', 'feedbin_creds')
     commit('UNSET_FEEDBIN')
   },
   unsetPocket ({ commit }) {
-    store.delete('pocket_token')
+    electronstore.storeSetSettingItem('delete', 'pocket_creds')
     commit('UNSET_POCKET')
   },
   async setSortPreference ({ dispatch, commit }, data) {
-    store.set('settings.oldestArticles', data)
+    electronstore.storeSetSettingItem('set', 'settings.oldestArticles', data)
     commit('SET_SORT_PREFERENCE', data)
     await dispatch('loadArticles')
   },
@@ -129,7 +143,7 @@ const actions = {
     commit('CHECK_OFFLINE')
   },
   setProxy ({ commit }, data) {
-    store.set('settings.proxy', data)
+    electronstore.storeSetSettingItem('set', 'settings.proxy', data)
     commit('SET_PROXY')
   }
 }

@@ -4,6 +4,7 @@
       <router-link
         class="nav-link feed-mix-link"
         to="/all"
+        tag="div"
         active-class="active"
       >
         <feed-mix
@@ -23,6 +24,7 @@
       <router-link
         class="nav-link feed-mix-link"
         to="/favourites"
+        tag="div"
         active-class="active"
       >
         <feed-mix
@@ -41,6 +43,7 @@
       <router-link
         class="nav-link feed-mix-link"
         to="/unread"
+        tag="div"
         active-class="active"
       >
         <feed-mix
@@ -62,6 +65,7 @@
       <router-link
         class="nav-link feed-mix-link"
         to="/read"
+        tag="div"
         active-class="active"
       >
         <feed-mix
@@ -86,6 +90,7 @@
       <router-link
         class="nav-link feed-mix-link"
         to="/played"
+        tag="div"
         active-class="active"
       >
         <feed-mix
@@ -107,6 +112,7 @@
       <router-link
         class="nav-link feed-mix-link"
         to="/saved"
+        tag="div"
         active-class="active"
       >
         <feed-mix

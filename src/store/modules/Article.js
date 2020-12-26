@@ -20,11 +20,6 @@ const state = {
   feed: ''
 }
 
-const Store = window.electronstore
-const store = new Store({
-  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
-})
-
 const filters = {
   search: (articles, search) => articles.filter(article => article.articles.title.match(search)),
   unread: articles => articles.filter(article => !article.articles.read),
@@ -54,8 +49,8 @@ const sortBy = (key, pref) => {
   return (a, b) => (a.articles[key] < b.articles[key]) ? 1 : ((b.articles[key] < a.articles[key]) ? -1 : 0)
 }
 const getters = {
-  filteredArticles: state => {
-    const sortPref = store.get('settings.oldestArticles') === 'off' ? 'desc' : 'asc'
+  filteredArticles: (state, getters, rootState) => {
+    const sortPref = rootState.Setting.oldestArticles === 'off' ? 'desc' : 'asc'
     const orderedArticles = state.articles.concat().sort(sortBy('publishUnix', sortPref))
     if (state.type !== 'feed' && state.type !== 'search') {
       return filters[state.type](orderedArticles)
@@ -103,22 +98,22 @@ const mutations = {
     }
   },
   MARK_ACTION (state, data) {
-    const index = state.articles.findIndex(item => item.articles.uuid === data.id)
+    const index = state.articles.findIndex(item => item.articles.uuid === data.data.id)
     if (data.type === 'FAVOURITE') {
       state.articles[index].articles.favourite = true
-      feedbin.markItem('MARK_FAVOURITE', state.articles[index].articles.source_id)
+      feedbin.markItem(data.rootState.Setting.feedbin, 'MARK_FAVOURITE', state.articles[index].articles.source_id)
     }
 
     if (data.type === 'UNFAVOURITE') {
       state.articles[index].articles.favourite = false
-      feedbin.markItem('MARK_UNFAVOURITE', state.articles[index].articles.source_id)
+      feedbin.markItem(data.rootState.Setting.feedbin, 'MARK_UNFAVOURITE', state.articles[index].articles.source_id)
     }
     if (data.type === 'READ') {
       state.articles[index].articles.read = true
       if (state.articles[index].articles.podcast) {
         state.articles[index].articles.played = true
       }
-      feedbin.markItem('MARK_READ', state.articles[index].articles.source_id)
+      feedbin.markItem(data.rootState.Setting.feedbin, 'MARK_READ', state.articles[index].articles.source_id)
     }
 
     if (data.type === 'UNREAD') {
@@ -126,7 +121,7 @@ const mutations = {
       if (state.articles[index].articles.podcast) {
         state.articles[index].articles.played = false
       }
-      feedbin.markItem('MARK_UNREAD', state.articles[index].articles.source_id)
+      feedbin.markItem(data.rootState.Setting.feedbin, 'MARK_UNREAD', state.articles[index].articles.source_id)
     }
   },
   MARK_ALL_READ (state) {
@@ -185,10 +180,6 @@ const mutations = {
       state.articles[index].read = true
       db.markRead(state.articles[index]._id)
     }
-  },
-  REMOVE_OLD_READ (state) {
-    const week = store.get('settings.keepread', 1)
-    db.removeOldReadItems(dayjs().subtract(week, 'week').unix())
   }
 }
 
@@ -199,7 +190,7 @@ const actions = {
   async addArticle ({ commit }, article) {
     commit('ADD_ARTICLES', await db.addArticles(article))
   },
-  markAction ({ commit }, data) {
+  markAction ({ commit, rootState }, data) {
     switch (data.type) {
       case 'FAVOURITE':
         db.markFavourite(data.id, true)
@@ -214,7 +205,7 @@ const actions = {
         db.markRead(data.id, data.podcast, false)
         break
     }
-    commit('MARK_ACTION', data)
+    commit('MARK_ACTION', { rootState: rootState, data: data })
   },
   saveArticle ({ commit }, data) {
     db.markOffline(data.article._id, data.type === 'CACHE')
@@ -255,10 +246,6 @@ const actions = {
     commit
   }, id) {
     commit('MARK_CATEGORY_READ', id)
-  },
-  async removeOldReadItems ({ dispatch, commit }) {
-    commit('REMOVE_OLD_READ')
-    await dispatch('loadArticles')
   }
 }
 

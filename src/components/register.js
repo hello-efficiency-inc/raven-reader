@@ -8,7 +8,6 @@ import ArticleList from './ArticleList'
 import ArticleListItem from './ArticleListItem'
 import BouncingLoader from './BouncingLoader'
 import ImportModal from './ImportModal'
-import SettingsModal from './SettingsModal'
 import MarkReadModal from './MarkReadModal'
 import EditFeedModal from './EditFeed'
 import EditCategoryModal from './EditCategory'
@@ -28,7 +27,6 @@ export default {
     Vue.component('ArticleDetail', ArticleDetail)
     Vue.component('Loader', BouncingLoader)
     Vue.component('ImportModal', ImportModal)
-    Vue.component('SettingsModal', SettingsModal)
     Vue.component('MarkallreadModal', MarkReadModal)
     Vue.component('FeedMix', FeedMix)
     Vue.component('EditFeed', EditFeedModal)

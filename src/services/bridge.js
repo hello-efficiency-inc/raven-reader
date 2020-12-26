@@ -98,7 +98,7 @@ function execTask (eventName, instance, args) {
 
 export default function (eventNames, instance) {
   eventNames.forEach(eventName => {
-    window.electron.ipcRenderer.on(eventName, (event, args) => {
+    window.api.ipcRendReceive(eventName, (event, args) => {
       execTask(eventName, instance, args)
     })
   })

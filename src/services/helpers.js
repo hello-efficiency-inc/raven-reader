@@ -5,6 +5,7 @@ import {
 import opmlGenerator from 'opml-generator'
 import db from './db.js'
 import * as database from '../db'
+import uuidstring from 'uuid-by-string'
 
 export default {
   exportOpml () {
@@ -53,7 +54,7 @@ export default {
       const categoryItem = category ?? feed.category ?? null
       const categoryObj = categoryItem
         ? {
-            id: window.uuidstring(categoryItem),
+            id: uuidstring(categoryItem),
             title: categoryItem,
             type: 'category'
           }

@@ -61,7 +61,6 @@
             id="foo"
             :src="articleItem.link"
             style="height: 100vh"
-            enableremotemodule="false"
           />
         </div>
       </div>

@@ -34,7 +34,6 @@
       :loading="loading"
     />
     <import-modal />
-    <settings-modal />
     <markallread-modal />
     <preference-window />
   </div>
@@ -53,6 +52,7 @@ import dataSets from '../mixins/dataItems'
 import bridge from '../services/bridge'
 import bus from '../services/bus'
 import syncFeedbin from '../mixins/feedbinSync'
+import nodescheduler from 'node-schedule'
 
 const sortBy = (key, pref) => {
   if (pref === 'asc') {
@@ -71,7 +71,7 @@ export default {
   ],
   beforeRouteUpdate (to, from, next) {
     if (to.params.id) {
-      this.$electron.ipcRenderer.send('article-selected')
+      window.electron.articleSelected()
     }
     bus.$emit('reset-articlelist-count')
     next()
@@ -167,22 +167,21 @@ export default {
     this.runArticleCronJob()
     this.runServiceCronJob()
 
-    window.electron.remote.powerMonitor.on('resume', () => {
-      window.log.info('Power resumed')
-      this.$store.dispatch('refreshFeeds')
-      this.runArticleCronJob().reschedule()
-      this.runServiceCronJob().reschedule()
-    })
+    // window.electron.remote.powerMonitor.on('resume', () => {
+    //   window.log.info('Power resumed')
+    //   this.$store.dispatch('refreshFeeds')
+    //   this.runArticleCronJob().reschedule()
+    //   this.runServiceCronJob().reschedule()
+    // })
   },
   destroyed () {
-    window.electron.ipcRenderer.removeAllListeners()
+    window.electron.removeListeners()
   },
   methods: {
     runArticleCronJob () {
       const self = this
       // Feed Crawling
-      const schedule = window.nodescheduler
-      return schedule.scheduleJob(
+      return nodescheduler.scheduleJob(
         self.$store.state.Setting.cronSettings,
         () => {
           const feeds = self.$store.state.Feed.feeds.filter(item => item.source === 'local')
@@ -200,8 +199,7 @@ export default {
     },
     runServiceCronJob () {
       // Service crawling
-      const schedule = window.nodescheduler
-      return schedule.scheduleJob(
+      return nodescheduler.scheduleJob(
         '*/2 * * * *',
         () => {
           this.syncFeedbin()
@@ -210,30 +208,7 @@ export default {
     },
     exportOpml () {
       const xmlData = helper.exportOpml()
-      const self = this
-      window.fs.unlink(
-        `${self.$electron.remote.app.getPath('downloads')}/subscriptions.opml`,
-        err => {
-          if (err && err.code !== 'ENOENT') throw err
-          window.fs.writeFile(
-            `${self.$electron.remote.app.getPath(
-              'downloads'
-            )}/subscriptions.opml`,
-            xmlData,
-            { flag: 'w', encoding: 'utf8' },
-            err => {
-              if (err) throw err
-              window.log.info('XML Saved')
-              const notification = new Notification('Raven Reader', {
-                body: 'Exported all feeds successfully to downloads folder.'
-              })
-              notification.onclick = () => {
-                window.log.info('Export notification clicked')
-              }
-            }
-          )
-        }
-      )
+      window.electron.exportOpml(xmlData)
     },
     updateType (newVal) {
       this.articleType = newVal

@@ -1,16 +1,26 @@
 'use strict'
 import 'v8-compile-cache'
-import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog } from 'electron'
+import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog, Notification, shell } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { enforceMacOSAppLocation } from 'electron-util'
-import { touchBar } from './touchbar'
-import createMenu from './menu'
-import createTray from './tray'
+import { touchBar } from './main/touchbar'
+import {
+  createMenu,
+  createFeedMenu,
+  createCategoryMenu
+} from './main/menu'
+import createTray from './main/tray'
+import RssParser from 'rss-parser'
+import axios from 'axios'
+import rssFinder from 'rss-finder'
+import os from 'os'
 import Store from 'electron-store'
 import log from 'electron-log'
 import contextMenu from 'electron-context-menu'
+import normalizeUrl from 'normalize-url'
 import { autoUpdater } from 'electron-updater'
+import fs from 'fs'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -25,12 +35,24 @@ const store = new Store({
   encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
 })
 
+const parser = new RssParser({
+  requestOptions: {
+    rejectUnauthorized: false
+  },
+  defaultRSS: 2.0,
+  headers: {
+    'User-Agent': 'Raven Reader'
+  }
+})
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 let tray
 let menu
 let winUrl
+let consumerKey
+let code
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -51,8 +73,8 @@ function createWindow () {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       webviewTag: true,
       webSecurity: false,
-      enableRemoteModule: true,
-      allowRunningInsecureContent: isDevelopment,
+      contextIsolation: true,
+      worldSafeExecuteJavaScript: true,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, 'preload.js')
     }
@@ -123,6 +145,53 @@ function createWindow () {
   }
 }
 
+function signInPocketWithPopUp () {
+  if (os.platform() === 'darwin') {
+    consumerKey = process.env.VUE_APP_POCKET_MAC_KEY
+  }
+
+  if (os.platform() === 'win32') {
+    consumerKey = process.env.VUE_APP_POCKET_WINDOWS_KEY
+  }
+
+  if (os.platform() === 'linux') {
+    consumerKey = process.env.VUE_APP_POCKET_LINUX_KEY
+  }
+
+  axios
+    .post(
+      'https://getpocket.com/v3/oauth/request', {
+        consumer_key: consumerKey,
+        redirect_uri: 'http://127.0.0.1'
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Accept': 'application/json'
+        }
+      }
+    )
+    .then(data => {
+      code = data.data.code
+      shell.openExternal(`https://getpocket.com/auth/authorize?request_token=${code}&redirect_uri=ravenreader://pocket/auth`)
+    })
+}
+
+function registerLocalResourceProtocol () {
+  protocol.registerFileProtocol('local-resource', (request, callback) => {
+    const url = request.url.replace(/^local-resource:\/\//, '')
+    // Decode URL to prevent errors when loading filenames with UTF-8 chars or chars like "#"
+    const decodedUrl = decodeURI(url) // Needed in case URL contains spaces
+    try {
+      return callback(decodedUrl)
+    } catch (error) {
+      console.error('ERROR: registerLocalResourceProtocol: Could not get file path:', error)
+    }
+  })
+}
+
+app.setAsDefaultProtocolClient('ravenreader')
+
 app.requestSingleInstanceLock()
 app.on('second-instance', (event, argv, cmd) => {
   app.quit()
@@ -139,6 +208,28 @@ app.on('window-all-closed', () => {
   }
 })
 
+app.on('open-url', (event, url) => {
+  if (url === 'ravenreader://pocket/auth') {
+    axios
+      .post(
+        'https://getpocket.com/v3/oauth/authorize', {
+          consumer_key: consumerKey,
+          code: code
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Accept': 'application/json'
+          }
+        }
+      )
+      .then(data => {
+        data.data.consumer_key = consumerKey
+        win.webContents.send('pocket-authenticated', data.data)
+      })
+  }
+})
+
 nativeTheme.on('updated', () => {
   store.set('isDarkMode', nativeTheme.shouldUseDarkColors)
   win.webContents.send('Dark mode', {
@@ -146,7 +237,7 @@ nativeTheme.on('updated', () => {
   })
 })
 
-ipcMain.on('article-selected', (event, status) => {
+ipcMain.handle('article-selected', (event, status) => {
   const menuItemViewBrowser = menu.getMenuItemById('view-browser')
   const menuItemToggleFavourite = menu.getMenuItemById('toggle-favourite')
   const menuItemSaveOffline = menu.getMenuItemById('save-offline')
@@ -188,6 +279,8 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
+  // Modify the origin for all requests to the following urls.
+  registerLocalResourceProtocol()
   createWindow()
 })
 
@@ -219,6 +312,127 @@ if (isDevelopment) {
     })
   }
 }
+
+ipcMain.handle('set-feedbin-last-fetched', (event, arg) => {
+  if (arg) {
+    store.set('feedbin_fetched_lastime', arg)
+  }
+})
+
+ipcMain.on('get-feedbin-last', (event, arg) => {
+  event.returnValue = store.get('feedbin_fetched_lastime')
+})
+
+ipcMain.on('sort-preference', (event, arg) => {
+  event.returnValue = store.get('settings.oldestArticles', 'on')
+})
+
+ipcMain.on('get-settings', (event, arg) => {
+  const state = {}
+  state.cronSettings = store.get('settings.cronjob', '*/5 * * * *')
+  state.themeOption = store.get('settings.theme_option', 'system')
+  state.oldestArticles = store.get('settings.oldestArticles', false)
+  state.proxy = store.get('settings.proxy', {
+    http: '',
+    https: '',
+    bypass: ''
+  })
+  state.keepRead = store.get('settings.keepread', 1)
+  if (store.has('pocket_creds')) {
+    state.pocket_connected = true
+    state.pocket = store.get('pocket_creds')
+  }
+  if (store.has('instapaper_creds')) {
+    state.instapaper_connected = true
+    state.instapaper = store.get('instapaper_creds')
+  }
+  if (store.has('feedbin_creds')) {
+    state.feedbin_connected = true
+    state.feedbin = store.get('feedbin_creds', JSON.stringify({
+      endpoint: 'https://api.feedbin.com/v2/',
+      email: null,
+      password: null
+    }))
+  }
+  event.returnValue = state
+})
+
+ipcMain.handle('set-settings-item', (event, arg) => {
+  switch (arg.type) {
+    case 'set':
+      store.set(arg.key, arg.data)
+      break
+    case 'delete':
+      store.delete(arg.key, arg.data)
+      break
+  }
+})
+
+ipcMain.on('get-dark', (event) => {
+  event.returnValue = store.get('isDarkMode')
+})
+
+ipcMain.on('proxy-settings-get', (event) => {
+  event.returnValue = store.get('settings.proxy', null)
+})
+
+ipcMain.handle('rss-parse', async (event, arg) => {
+  const result = await parser.parseURL(arg)
+  return result
+})
+
+ipcMain.handle('find-rss', async (event, arg) => {
+  const result = await rssFinder(normalizeUrl(arg, {
+    stripWWW: false,
+    removeTrailingSlash: false
+  }), {
+    feedParserOptions: {
+      feedurl: arg
+    }
+  })
+  return result
+})
+
+ipcMain.handle('export-opml', (event, arg) => {
+  fs.unlink(
+          `${app.getPath('downloads')}/subscriptions.opml`,
+          err => {
+            if (err && err.code !== 'ENOENT') throw err
+            fs.writeFile(
+              `${app.getPath(
+              'downloads'
+            )}/subscriptions.opml`,
+              arg, {
+                flag: 'w',
+                encoding: 'utf8'
+              },
+              err => {
+                if (err) throw err
+                log.info('XML Saved')
+                const notification = new Notification({
+                  title: 'Raven Reader',
+                  body: 'Exported all feeds successfully to downloads folder.'
+                })
+                notification.show()
+              }
+            )
+          }
+  )
+})
+
+ipcMain.on('login-pocket', (event) => {
+  event.returnValue = signInPocketWithPopUp()
+})
+
+ipcMain.on('context-menu', (event, arg) => {
+  if (arg.type === 'feed') {
+    createFeedMenu(arg.data, win)
+  }
+
+  if (arg.type === 'category') {
+    createCategoryMenu(arg.data, win)
+  }
+})
 
 autoUpdater.on('checking-for-update', () => {
   log.info('Checking for update...')

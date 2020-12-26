@@ -1,10 +1,12 @@
 import {
   app,
-  Menu
+  Menu,
+  MenuItem,
+  clipboard
 } from 'electron'
 const articleSelected = false
 
-export default function createMenu (mainWindow) {
+export function createMenu (mainWindow) {
   // Create the Application's main menu
   const template = [{
     label: 'Edit',
@@ -277,4 +279,101 @@ export default function createMenu (mainWindow) {
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
   return menu
+}
+
+export function createCategoryMenu (categorydata, window) {
+  const menu = new Menu()
+
+  menu.append(
+    new MenuItem({
+      label: `Mark ${categorydata.category.title} as read`,
+      click () {
+        window.webContents.send('category-read', categorydata)
+      }
+    })
+  )
+  menu.append(
+    new MenuItem({
+      label: 'Rename folder',
+      click () {
+        window.webContents.send('category-rename', categorydata)
+      }
+    })
+  )
+
+  menu.append(
+    new MenuItem({
+      type: 'separator'
+    })
+  )
+
+  menu.append(
+    new MenuItem({
+      label: 'Delete',
+      click () {
+        window.webContents.send('category-delete', categorydata)
+      }
+    })
+  )
+
+  menu.popup({ window: window })
+}
+
+export function createFeedMenu (feeddata, window) {
+  const menu = new Menu()
+  menu.append(
+    new MenuItem({
+      label: 'Copy feed link',
+      click () {
+        clipboard.writeText(feeddata.feed.xmlurl, 'selection')
+      }
+    })
+  )
+
+  if (feeddata.feed.source === 'local') {
+    menu.append(
+      new MenuItem({
+        label: `Refresh ${feeddata.feed.title} feed`,
+        click () {
+          window.webContents.send('refresh-feed', feeddata)
+        }
+      })
+    )
+
+    menu.append(
+      new MenuItem({
+        label: 'Edit feed',
+        click () {
+          window.webContents.send('edit-feed', feeddata)
+        }
+      })
+    )
+  }
+
+  menu.append(
+    new MenuItem({
+      label: 'Mark as read',
+      click () {
+        window.webContents.send('mark-feed-read', feeddata.feed.id)
+      }
+    })
+  )
+
+  menu.append(
+    new MenuItem({
+      type: 'separator'
+    })
+  )
+
+  if (feeddata.feed.source === 'local') {
+    menu.append(
+      new MenuItem({
+        label: 'Unsubscribe',
+        click () {
+          window.webContents.send('unsubscribe-feed', feeddata.feed.uuid)
+        }
+      })
+    )
+  }
+  menu.popup({ window: window })
 }

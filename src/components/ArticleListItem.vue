@@ -41,17 +41,17 @@
   </div>
 </template>
 <script>
-import cacheService from '../services/cacheArticle'
-const { Menu, MenuItem } = window.electron.remote
+// import cacheService from '../services/cacheArticle'
+// const { Menu, MenuItem } = window.api.electron
 
-const markTypes = {
-  favourite: 'FAVOURITE',
-  unfavourite: 'UNFAVOURITE',
-  read: 'READ',
-  unread: 'UNREAD',
-  cache: 'CACHE',
-  uncache: 'UNCACHE'
-}
+// const markTypes = {
+//   favourite: 'FAVOURITE',
+//   unfavourite: 'UNFAVOURITE',
+//   read: 'READ',
+//   unread: 'UNREAD',
+//   cache: 'CACHE',
+//   uncache: 'UNCACHE'
+// }
 
 export default {
   props: {
@@ -74,65 +74,65 @@ export default {
         window.log.info(err)
       })
 
-      const self = this
-      const menu = new Menu()
-      menu.append(new MenuItem({
-        label: 'Copy link',
-        click () {
-          self.copyArticleLink(article.article.link)
-        }
-      }))
-      menu.append(new MenuItem({
-        type: 'separator'
-      }))
-      menu.append(new MenuItem({
-        label: !article.article.read ? 'Mark as read' : 'Mark as unread',
-        click () {
-          self.$store.dispatch('markAction', {
-            type: !article.article.read ? markTypes.read : markTypes.unread,
-            podcast: article.article.podcast,
-            id: article.article.uuid
-          }).then(() => {
-            self.$store.dispatch('loadArticles')
-          })
-        }
-      }))
-      menu.append(new MenuItem({
-        label: !article.article.favourite ? 'Mark as favourite' : 'Remove from favourite',
-        click () {
-          self.$store.dispatch('markAction', {
-            type: article.article.favourite ? markTypes.unfavourite : markTypes.favourite,
-            id: article.article.uuid
-          }).then(() => {
-            self.$store.dispatch('loadArticles')
-          })
-        }
-      }))
-      menu.append(new MenuItem({
-        type: 'separator'
-      }))
-      menu.append(new MenuItem({
-        label: !article.article.offline ? 'Save article' : 'Remove saved article',
-        click () {
-          if (article.article.offline && !self.$store.state.Setting.offline) {
-            cacheService.uncache(`raven-${article.article.uuid}`).then(() => {
-              self.$store.dispatch('saveArticle', {
-                type: markTypes.uncache,
-                article: article.article
-              })
-            })
-          } else {
-            cacheService.cacheArticleData(article.article).then(() => {
-              self.$store.dispatch('saveArticle', {
-                type: markTypes.cache,
-                article: article.article
-              })
-            })
-          }
-          self.$store.dispatch('loadArticles')
-        }
-      }))
-      menu.popup({ window: window.electron.remote.getCurrentWindow() })
+      // const self = this
+      // const menu = new Menu()
+      // menu.append(new MenuItem({
+      //   label: 'Copy link',
+      //   click () {
+      //     self.copyArticleLink(article.article.link)
+      //   }
+      // }))
+      // menu.append(new MenuItem({
+      //   type: 'separator'
+      // }))
+      // menu.append(new MenuItem({
+      //   label: !article.article.read ? 'Mark as read' : 'Mark as unread',
+      //   click () {
+      //     self.$store.dispatch('markAction', {
+      //       type: !article.article.read ? markTypes.read : markTypes.unread,
+      //       podcast: article.article.podcast,
+      //       id: article.article.uuid
+      //     }).then(() => {
+      //       self.$store.dispatch('loadArticles')
+      //     })
+      //   }
+      // }))
+      // menu.append(new MenuItem({
+      //   label: !article.article.favourite ? 'Mark as favourite' : 'Remove from favourite',
+      //   click () {
+      //     self.$store.dispatch('markAction', {
+      //       type: article.article.favourite ? markTypes.unfavourite : markTypes.favourite,
+      //       id: article.article.uuid
+      //     }).then(() => {
+      //       self.$store.dispatch('loadArticles')
+      //     })
+      //   }
+      // }))
+      // menu.append(new MenuItem({
+      //   type: 'separator'
+      // }))
+      // menu.append(new MenuItem({
+      //   label: !article.article.offline ? 'Save article' : 'Remove saved article',
+      //   click () {
+      //     if (article.article.offline && !self.$store.state.Setting.offline) {
+      //       cacheService.uncache(`raven-${article.article.uuid}`).then(() => {
+      //         self.$store.dispatch('saveArticle', {
+      //           type: markTypes.uncache,
+      //           article: article.article
+      //         })
+      //       })
+      //     } else {
+      //       cacheService.cacheArticleData(article.article).then(() => {
+      //         self.$store.dispatch('saveArticle', {
+      //           type: markTypes.cache,
+      //           article: article.article
+      //         })
+      //       })
+      //     }
+      //     self.$store.dispatch('loadArticles')
+      //   }
+      // }))
+      // menu.popup({ window: window.electron.remote.getCurrentWindow() })
     },
     setActiveArticleId (article) {
       return this.$store.dispatch('setActiveArticleId', article)

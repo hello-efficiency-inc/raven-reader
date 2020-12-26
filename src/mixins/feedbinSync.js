@@ -4,19 +4,18 @@ import dayjs from 'dayjs'
 export default {
   methods: {
     syncFeedbin () {
-      const feedbinConnected = this.$electronstore.has('feedbin_creds')
-      const date = this.$electronstore.get('feedbin_fetched_lastime')
-      if (feedbinConnected) {
+      const date = window.electronstore.getFeedbinLastFetched()
+      if (this.$store.state.Setting.feedbin_connected) {
         const promise = Promise.all([
-          feedbin.getUnreadEntries(),
-          feedbin.getStarredEntries(),
-          feedbin.getEntries(dayjs(date).subtract(7, 'day').toISOString())
+          feedbin.getUnreadEntries(this.$store.state.Setting.feedbin),
+          feedbin.getStarredEntries(this.$store.state.Setting.feedbin),
+          feedbin.getEntries(this.$store.state.Setting.feedbin, dayjs(date).subtract(7, 'day').toISOString())
         ])
         promise.then((res) => {
           const [unread, starred, entries] = res
           window.log.info('Processing Feedbin feeds')
           const mapped = feedbin.transformEntriesAndFeed(unread, starred, entries)
-          feedbin.syncItems(mapped).then(() => {
+          feedbin.syncItems(this.$store.state.Setting.feedbin, mapped).then(() => {
             this.$store.dispatch('loadFeeds')
             this.$store.dispatch('loadArticles')
           })
