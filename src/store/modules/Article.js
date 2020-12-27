@@ -50,7 +50,7 @@ const sortBy = (key, pref) => {
 }
 const getters = {
   filteredArticles: (state, getters, rootState) => {
-    const sortPref = rootState.Setting.oldestArticles === 'off' ? 'asc' : 'desc'
+    const sortPref = rootState.Setting.oldestArticles === 'off' ? 'desc' : 'asc'
     const orderedArticles = state.articles.concat().sort(sortBy('publishUnix', sortPref))
     if (state.type !== 'feed' && state.type !== 'search') {
       return filters[state.type](orderedArticles)
