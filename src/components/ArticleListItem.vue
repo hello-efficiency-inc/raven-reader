@@ -42,7 +42,6 @@
 </template>
 <script>
 import cacheService from '../services/cacheArticle'
-const { Menu, MenuItem } = window.electron.remote
 
 const markTypes = {
   favourite: 'FAVOURITE',
@@ -65,74 +64,49 @@ export default {
       return this.$store.getters.activeArticleId
     }
   },
-  methods: {
-    copyArticleLink (url) {
-      this.$electron.clipboard.writeText(url)
-    },
-    openArticleContextMenu (e, article) {
-      this.$router.push({ path: `/article/${article.article.uuid}` }).catch((err) => {
-        window.log.info(err)
+  mounted () {
+    window.api.ipcRendReceive('mark-read', (arg) => {
+      this.$store.dispatch('markAction', {
+        type: !arg.article.read ? markTypes.read : markTypes.unread,
+        podcast: arg.article.podcast,
+        id: arg.article.uuid
+      }).then(() => {
+        this.$store.dispatch('loadArticles')
       })
+    })
 
-      const self = this
-      const menu = new Menu()
-      menu.append(new MenuItem({
-        label: 'Copy link',
-        click () {
-          self.copyArticleLink(article.article.link)
-        }
-      }))
-      menu.append(new MenuItem({
-        type: 'separator'
-      }))
-      menu.append(new MenuItem({
-        label: !article.article.read ? 'Mark as read' : 'Mark as unread',
-        click () {
-          self.$store.dispatch('markAction', {
-            type: !article.article.read ? markTypes.read : markTypes.unread,
-            podcast: article.article.podcast,
-            id: article.article.uuid
-          }).then(() => {
-            self.$store.dispatch('loadArticles')
+    window.api.ipcRendReceive('mark-favourite', (arg) => {
+      this.$store.dispatch('markAction', {
+        type: arg.article.favourite ? markTypes.unfavourite : markTypes.favourite,
+        id: arg.article.uuid
+      }).then(() => {
+        this.$store.dispatch('loadArticles')
+      })
+    })
+
+    window.api.ipcRendReceive('save-article', (arg) => {
+      if (arg.article.offline && !this.$store.state.Setting.offline) {
+        cacheService.uncache(`raven-${arg.article.uuid}`).then(() => {
+          this.$store.dispatch('saveArticle', {
+            type: markTypes.uncache,
+            article: arg.article
           })
-        }
-      }))
-      menu.append(new MenuItem({
-        label: !article.article.favourite ? 'Mark as favourite' : 'Remove from favourite',
-        click () {
-          self.$store.dispatch('markAction', {
-            type: article.article.favourite ? markTypes.unfavourite : markTypes.favourite,
-            id: article.article.uuid
-          }).then(() => {
-            self.$store.dispatch('loadArticles')
+        })
+      } else {
+        cacheService.cacheArticleData(arg.article).then(() => {
+          this.$store.dispatch('saveArticle', {
+            type: markTypes.cache,
+            article: arg.article
           })
-        }
-      }))
-      menu.append(new MenuItem({
-        type: 'separator'
-      }))
-      menu.append(new MenuItem({
-        label: !article.article.offline ? 'Save article' : 'Remove saved article',
-        click () {
-          if (article.article.offline && !self.$store.state.Setting.offline) {
-            cacheService.uncache(`raven-${article.article.uuid}`).then(() => {
-              self.$store.dispatch('saveArticle', {
-                type: markTypes.uncache,
-                article: article.article
-              })
-            })
-          } else {
-            cacheService.cacheArticleData(article.article).then(() => {
-              self.$store.dispatch('saveArticle', {
-                type: markTypes.cache,
-                article: article.article
-              })
-            })
-          }
-          self.$store.dispatch('loadArticles')
-        }
-      }))
-      menu.popup({ window: window.electron.remote.getCurrentWindow() })
+        })
+      }
+      this.$store.dispatch('loadArticles')
+    })
+  },
+  methods: {
+    openArticleContextMenu (e, article) {
+      e.preventDefault()
+      window.electron.createContextMenu('article', article)
     },
     setActiveArticleId (article) {
       return this.$store.dispatch('setActiveArticleId', article)

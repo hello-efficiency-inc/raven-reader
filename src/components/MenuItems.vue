@@ -2,8 +2,11 @@
   <ul class="nav flex-column">
     <li class="nav-item">
       <router-link
-        class="nav-link feed-mix-link"
+        class="nav-link feed-mix-link menu-link-clickable"
         to="/all"
+        tag="div"
+        tabindex="0"
+        role="link"
         active-class="active"
       >
         <feed-mix
@@ -21,8 +24,10 @@
     </li>
     <li class="nav-item">
       <router-link
-        class="nav-link feed-mix-link"
+        class="nav-link feed-mix-link menu-link-clickable"
         to="/favourites"
+        tag="div"
+        tabindex="0"
         active-class="active"
       >
         <feed-mix
@@ -39,8 +44,10 @@
     </li>
     <li class="nav-item">
       <router-link
-        class="nav-link feed-mix-link"
+        class="nav-link feed-mix-link menu-link-clickable"
         to="/unread"
+        tag="div"
+        tabindex="0"
         active-class="active"
       >
         <feed-mix
@@ -60,8 +67,10 @@
       :class="{ 'd-none': showLess }"
     >
       <router-link
-        class="nav-link feed-mix-link"
+        class="nav-link feed-mix-link menu-link-clickable"
         to="/read"
+        tag="div"
+        tabindex="0"
         active-class="active"
       >
         <feed-mix
@@ -84,8 +93,10 @@
       :class="{ 'd-none': showLess }"
     >
       <router-link
-        class="nav-link feed-mix-link"
+        class="nav-link feed-mix-link menu-link-clickable"
         to="/played"
+        tag="div"
+        tabindex="0"
         active-class="active"
       >
         <feed-mix
@@ -105,8 +116,10 @@
       :class="{ 'd-none': showLess }"
     >
       <router-link
-        class="nav-link feed-mix-link"
+        class="nav-link feed-mix-link menu-link-clickable"
         to="/saved"
+        tag="div"
+        tabindex="0"
         active-class="active"
       >
         <feed-mix
@@ -156,3 +169,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.menu-link-clickable {
+  cursor: pointer;
+}
+</style>

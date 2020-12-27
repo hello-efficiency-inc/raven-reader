@@ -163,7 +163,9 @@ export default {
         'application/rdf+xml',
         'application/atom+xml'
       ]
-      const content = await window.got(link)
+      const content = await fetch(link, {
+        mode: 'no-cors'
+      })
       return validHeaders.includes(content.headers['content-type'])
     },
     async fetchFeed () {
@@ -173,7 +175,7 @@ export default {
         if (this.feed_url) {
           try {
             const isXML = await this.isContentXML(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }))
-            window.rssFinder(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }), { feedParserOptions: { feedurl: this.feed_url } }).then(
+            window.rss.findRss(this.feed_url).then(
               res => {
                 this.loading = false
                 res.feedUrls.map(item => {

@@ -1,5 +1,7 @@
 import lf from 'lovefield'
 import * as db from '../db'
+import store from '../store'
+import dayjs from 'dayjs'
 
 export default {
   fetchFeeds () {
@@ -104,12 +106,14 @@ export default {
     if (podcast) {
       return db.database.update(db.articleTable)
         .set(db.articleTable.read, verdict)
-        .set(db.articleTable.podcast, verdict)
+        .set(db.articleTable.played, verdict)
+        .set(db.articleTable.keep_read, dayjs().add(store.state.Setting.keepRead, 'week').valueOf())
         .where(db.articleTable.uuid.eq(uuid))
         .exec()
     }
     return db.database.update(db.articleTable)
       .set(db.articleTable.read, verdict)
+      .set(db.articleTable.keep_read, dayjs().add(store.state.Setting.keepRead, 'week').valueOf())
       .where(db.articleTable.uuid.eq(uuid))
       .exec()
   },
@@ -117,6 +121,7 @@ export default {
     // Non-podcast
     return db.database.update(db.articleTable)
       .set(db.articleTable.read, true)
+      .set(db.articleTable.keep_read, dayjs().add(store.state.Setting.keepRead, 'week').valueOf())
       .where(db.articleTable.uuid.in(uuids))
       .exec()
   },
@@ -139,5 +144,25 @@ export default {
         db.articleTable.read.eq(true),
         db.articleTable.publishUnix.lt(week)
       )).exec()
+  },
+  deleteAllData () {
+    return new Promise((resolve, reject) => {
+      db.database.delete()
+        .from(db.articleTable).exec()
+      db.database.delete()
+        .from(db.feedTable).exec()
+      db.database.delete()
+        .from(db.categoryTable).exec()
+      resolve(true)
+    })
+  },
+  deleteArticleByKeepRead () {
+    return db.database.delete()
+      .from(db.articleTable)
+      .where(lf.op.or(
+        db.articleTable.keep_read.lt(dayjs().valueOf()),
+        db.articleTable.keep_read.eq(dayjs().valueOf())
+      ))
+      .exec()
   }
 }

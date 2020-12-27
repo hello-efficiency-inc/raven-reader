@@ -6,6 +6,7 @@ import SocialSharing from 'vue-social-sharing'
 import Toasted from 'vue-toasted'
 import vClickOutside from 'v-click-outside'
 import vueTopprogress from 'vue-top-progress'
+import VueContext from 'vue-context'
 import VuePlyr from 'vue-plyr'
 import App from './App.vue'
 import router from './router'
@@ -19,12 +20,8 @@ import 'vue-plyr/dist/vue-plyr.css'
 
 Vue.config.productionTip = false
 
-// nodejs global proxy
-const SettingsStore = window.electronstore
-const settingsStore = new SettingsStore({
-  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
-})
-const proxy = settingsStore.get('settings.proxy') ? settingsStore.get('settings.proxy') : null
+// // nodejs global proxy
+const proxy = window.electronstore.getProxySettings()
 if (proxy) {
   if (proxy.http) {
     process.env.http_proxy = proxy.http
@@ -48,12 +45,11 @@ Vue.use(SocialSharing)
 Vue.use(vClickOutside)
 Vue.use(VuePlyr)
 Vue.use(vueTopprogress)
+Vue.use(VueContext)
 
 Register.registerComponents()
 
 Vue.http = Vue.prototype.$http = axios
-Vue.prototype.$electronstore = settingsStore
-Vue.prototype.$electron = window.electron
 
 new Vue({
   router,

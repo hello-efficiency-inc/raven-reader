@@ -62,7 +62,7 @@
             v-b-tooltip.hover
             class="btn btn-toolbar js-external-link"
             title="View original"
-            @click="openOriginal(article.url)"
+            @click="openOriginal(article.link)"
           >
             <feather-icon
               name="globe"
@@ -102,13 +102,13 @@
             </template>
             <b-dropdown-item
               v-if="instapaperConnected"
-              @click="saveToInstapaper(article.url)"
+              @click="saveToInstapaper(article.link)"
             >
               Instapaper
             </b-dropdown-item>
             <b-dropdown-item
               v-if="pocketConnected"
-              @click="saveToPocket(article.url)"
+              @click="saveToPocket(article.link)"
             >
               Pocket
             </b-dropdown-item>
@@ -229,11 +229,6 @@ const markTypes = {
   cache: 'CACHE',
   uncache: 'UNCACHE'
 }
-
-const Store = window.electronstore
-const store = new Store({
-  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
-})
 
 export default {
   directives: {
@@ -370,26 +365,25 @@ export default {
         })
       }
     },
-    async saveToInstapaper (url) {
-      const creds = JSON.parse(store.get('instapaper_creds'))
-      const res = await axios.post(`https://www.instapaper.com/api/add?url=${url}`, {
+    saveToInstapaper (url) {
+      const creds = JSON.parse(this.$store.state.Setting.instapaper)
+      axios.post(`https://www.instapaper.com/api/add?url=${url}`, {
       }, {
         auth: {
           username: creds.username,
           password: creds.password
         }
-      })
-      if (res.status === 201) {
+      }).then(() => {
         this.$toasted.show('Saved to Instapaper.', {
           theme: 'outline',
           position: 'top-center',
           duration: 3000
         })
         this.$refs.socialshare.hide(true)
-      }
+      })
     },
     saveToPocket (url) {
-      const credentials = JSON.parse(store.get('pocket_token'))
+      const credentials = JSON.parse(this.$store.state.Setting.pocket)
       axios.post('https://getpocket.com/v3/add', {
         url: url,
         access_token: credentials.access_token,

@@ -39,7 +39,7 @@
             class="mt-5 mb-5"
           >
             <vue-plyr>
-              <audio autoplay>
+              <audio>
                 <source :src="article.enclosure.url">
               </audio>
             </vue-plyr>
@@ -61,7 +61,6 @@
             id="foo"
             :src="articleItem.link"
             style="height: 100vh"
-            enableremotemodule="false"
           />
         </div>
       </div>

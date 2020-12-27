@@ -68,6 +68,7 @@
   </b-modal>
 </template>
 <script>
+import uuidstring from 'uuid-by-string'
 export default {
   props: {
     feed: {
@@ -108,7 +109,7 @@ export default {
     },
     updateSubscriptionTitle () {
       if (this.newcategory) {
-        this.$store.dispatch('addCategory', { id: window.uuidstring(this.newcategory), title: this.newcategory, type: 'category' })
+        this.$store.dispatch('addCategory', { id: uuidstring(this.newcategory), title: this.newcategory, type: 'category' })
           .then(() => {
             this.$store.dispatch('loadCategories')
           })

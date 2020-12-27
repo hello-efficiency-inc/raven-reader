@@ -27,7 +27,7 @@ export default {
           break
         case 'system':
           this.toggleBodyClass(false, 'app-nightmode')
-          this.toggleBodyClass(this.$electronstore.get('isDarkMode'), 'app-darkmode')
+          this.toggleBodyClass(window.electronstore.getIsDarkMode('isDarkMode'), 'app-darkmode')
           this.toggleBodyClass(false, 'app-sunsetmode')
           break
         case null:

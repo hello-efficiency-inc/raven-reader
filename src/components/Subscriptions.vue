@@ -112,8 +112,6 @@ import articleCount from '../mixins/articleCount'
 import dataSets from '../mixins/dataItems'
 import feedMix from '../mixins/feedMix'
 
-const { Menu, MenuItem } = window.electron.remote
-
 export default {
   mixins: [articleCount, dataSets, feedMix],
   data () {
@@ -122,6 +120,62 @@ export default {
       feedMenuData: null,
       activeFeed: null
     }
+  },
+  mounted () {
+    window.api.ipcRendReceive('refresh-feed', (arg) => {
+      helper.subscribe([arg.feed], null, true)
+    })
+
+    window.api.ipcRendReceive('edit-feed', (arg) => {
+      this.openEditModal(arg.feed)
+      this.$bvModal.show('editFeed')
+    })
+
+    window.api.ipcRendReceive('mark-feed-read', (arg) => {
+      this.markFeedRead(arg)
+    })
+
+    window.api.ipcRendReceive('unsubscribe-feed', (arg) => {
+      this.unsubscribeFeed(arg)
+    })
+
+    window.api.ipcRendReceive('category-read', (arg) => {
+      const articles = this.$store.state.Article.articles.filter((item) => {
+        return item.articles.category === arg.category.title
+      }).map(item => item.articles.uuid)
+      db.markAllRead(articles).then(() => {
+        this.$store.dispatch('loadArticles')
+      })
+      const feedBinArticles = this.$store.state.Article.articles.filter((item) => {
+        return item.articles.category === arg.category.title
+      }).map(item => item.articles.source_id)
+      this.feedBinArticleRead(feedBinArticles)
+    })
+
+    window.api.ipcRendReceiveOnce('category-rename', (arg) => {
+      this.openCategoryEditModal(arg.category)
+      this.$bvModal.show('editCategory')
+    })
+
+    window.api.ipcRendReceive('category-delete', (arg) => {
+      const feeds = this.$store.state.Feed.feeds.filter((item) => {
+        return item.category === arg.category.title
+      }).map(item => item.uuid)
+      const articles = this.$store.state.Article.articles.filter((item) => {
+        return item.articles.category === arg.category.title
+      }).map(item => item.articles.uuid)
+      db.deleteCategory(arg.category.title)
+      db.deleteFeedMulti(feeds).then(() => {
+        articles.forEach(async (article) => {
+          await cacheService.uncache(`raven-${article}`)
+        })
+        db.deleteArticlesMulti(articles)
+      }).then(() => {
+        this.$store.dispatch('loadCategories')
+        this.$store.dispatch('loadFeeds')
+        this.$store.dispatch('loadArticles')
+      })
+    })
   },
   methods: {
     onCtxOpen (locals) {
@@ -186,12 +240,9 @@ export default {
         })
           .map(item => item.articles.source_id)
           .filter(item => item !== null)
-        feedbin.markItem('MARK_READ', feedBinArticles)
+        this.feedBinArticleRead(feedBinArticles)
         this.$store.dispatch('loadArticles')
       })
-    },
-    copyFeedLink (xml) {
-      this.$electron.clipboard.writeText(xml)
     },
     async unsubscribeFeed (id, category = null) {
       await this.$emit('delete', 'yes')
@@ -205,124 +256,15 @@ export default {
       this.activeFeed = feed
     },
     openCategoryMenu (e, feed) {
-      const self = this
-      const menu = new Menu()
-
-      menu.append(
-        new MenuItem({
-          label: `Mark ${feed.category.title} as read`,
-          click () {
-            const articles = self.$store.state.Article.articles.filter((item) => {
-              return item.articles.category === feed.category.title
-            }).map(item => item.articles.uuid)
-            db.markAllRead(articles).then(() => {
-              self.$store.dispatch('loadArticles')
-            })
-          }
-        })
-      )
-      menu.append(
-        new MenuItem({
-          label: 'Rename folder',
-          click () {
-            self.openCategoryEditModal(feed.category)
-            self.$bvModal.show('editCategory')
-          }
-        })
-      )
-
-      menu.append(
-        new MenuItem({
-          type: 'separator'
-        })
-      )
-
-      menu.append(
-        new MenuItem({
-          label: 'Delete',
-          click () {
-            const feeds = self.$store.state.Feed.feeds.filter((item) => {
-              return item.category === feed.category.title
-            }).map(item => item.uuid)
-            const articles = self.$store.state.Article.articles.filter((item) => {
-              return item.articles.category === feed.category.title
-            }).map(item => item.articles.uuid)
-            db.deleteCategory(feed.category.title)
-            db.deleteFeedMulti(feeds).then(() => {
-              articles.forEach(async (article) => {
-                await cacheService.uncache(`raven-${article}`)
-              })
-              db.deleteArticlesMulti(articles)
-            }).then(() => {
-              self.$store.dispatch('loadCategories')
-              self.$store.dispatch('loadFeeds')
-              self.$store.dispatch('loadArticles')
-            })
-          }
-        })
-      )
-
-      menu.popup({ window: window.electron.remote.getCurrentWindow() })
+      window.electron.createContextMenu('category', feed)
     },
     openFeedMenu (e, feed) {
-      const self = this
-      const menu = new Menu()
-      menu.append(
-        new MenuItem({
-          label: 'Copy feed link',
-          click () {
-            self.copyFeedLink(feed.feed.xmlurl)
-          }
-        })
-      )
-
-      if (feed.feed.source === 'local') {
-        menu.append(
-          new MenuItem({
-            label: `Refresh ${feed.feed.title} feed`,
-            click () {
-              helper.subscribe([feed.feed], null, true)
-            }
-          })
-        )
-
-        menu.append(
-          new MenuItem({
-            label: 'Edit feed',
-            click () {
-              self.openEditModal(feed.feed)
-              self.$bvModal.show('editFeed')
-            }
-          })
-        )
+      window.electron.createContextMenu('feed', feed)
+    },
+    feedBinArticleRead (ids) {
+      if (this.$store.state.Setting.feedbin_connected) {
+        feedbin.markItem(this.$store.state.Setting.feedbin, 'MARK_READ', ids)
       }
-
-      menu.append(
-        new MenuItem({
-          label: 'Mark as read',
-          click () {
-            self.markFeedRead(feed.feed.id)
-          }
-        })
-      )
-
-      menu.append(
-        new MenuItem({
-          type: 'separator'
-        })
-      )
-
-      if (feed.feed.source === 'local') {
-        menu.append(
-          new MenuItem({
-            label: 'Unsubscribe',
-            click () {
-              self.unsubscribeFeed(feed.feed.uuid)
-            }
-          })
-        )
-      }
-      menu.popup({ window: window.electron.remote.getCurrentWindow() })
     }
   }
 }

@@ -34,7 +34,6 @@
       :loading="loading"
     />
     <import-modal />
-    <settings-modal />
     <markallread-modal />
     <preference-window />
   </div>
@@ -53,6 +52,7 @@ import dataSets from '../mixins/dataItems'
 import bridge from '../services/bridge'
 import bus from '../services/bus'
 import syncFeedbin from '../mixins/feedbinSync'
+import nodescheduler from 'node-schedule'
 
 const sortBy = (key, pref) => {
   if (pref === 'asc') {
@@ -71,7 +71,7 @@ export default {
   ],
   beforeRouteUpdate (to, from, next) {
     if (to.params.id) {
-      this.$electron.ipcRenderer.send('article-selected')
+      window.electron.articleSelected()
     }
     bus.$emit('reset-articlelist-count')
     next()
@@ -87,7 +87,6 @@ export default {
   },
   watch: {
     $route (to, from) {
-      this.$refs.topProgress.start()
       switch (to.name) {
         case 'feed-page':
           this.articleData = null
@@ -98,8 +97,6 @@ export default {
               category: null,
               search: null,
               feed: this.$route.params.feedid
-            }).then(() => {
-              this.$refs.topProgress.done()
             })
           }
           break
@@ -111,8 +108,6 @@ export default {
             category: this.$route.params.category,
             feed: null,
             search: null
-          }).then(() => {
-            this.$refs.topProgress.done()
           })
           break
         case 'type-page':
@@ -124,8 +119,6 @@ export default {
               category: null,
               feed: null,
               search: null
-            }).then(() => {
-              this.$refs.topProgress.done()
             })
           }
           break
@@ -137,13 +130,13 @@ export default {
     allUnread: 'unreadChange'
   },
   mounted () {
-    // this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
     this.syncFeedbin()
     this.$store.dispatch('initializeDB').then(async () => {
       await this.$store.dispatch('refreshFeeds')
       await this.$store.dispatch('loadCategories')
       await this.$store.dispatch('loadFeeds')
       await this.$store.dispatch('loadArticles')
+      db.deleteArticleByKeepRead()
     })
     this.$store.dispatch('checkOffline')
 
@@ -166,23 +159,25 @@ export default {
 
     this.runArticleCronJob()
     this.runServiceCronJob()
+    this.runKeepReadJob()
 
-    window.electron.remote.powerMonitor.on('resume', () => {
+    window.api.ipcRendReceive('power-resume', () => {
       window.log.info('Power resumed')
       this.$store.dispatch('refreshFeeds')
       this.runArticleCronJob().reschedule()
       this.runServiceCronJob().reschedule()
+      this.runKeepReadJob().reschedule()
+      db.deleteArticleByKeepRead()
     })
   },
   destroyed () {
-    window.electron.ipcRenderer.removeAllListeners()
+    window.electron.removeListeners()
   },
   methods: {
     runArticleCronJob () {
       const self = this
       // Feed Crawling
-      const schedule = window.nodescheduler
-      return schedule.scheduleJob(
+      return nodescheduler.scheduleJob(
         self.$store.state.Setting.cronSettings,
         () => {
           const feeds = self.$store.state.Feed.feeds.filter(item => item.source === 'local')
@@ -200,40 +195,26 @@ export default {
     },
     runServiceCronJob () {
       // Service crawling
-      const schedule = window.nodescheduler
-      return schedule.scheduleJob(
+      return nodescheduler.scheduleJob(
         '*/2 * * * *',
         () => {
           this.syncFeedbin()
         }
       )
     },
-    exportOpml () {
-      const xmlData = helper.exportOpml()
-      const self = this
-      window.fs.unlink(
-        `${self.$electron.remote.app.getPath('downloads')}/subscriptions.opml`,
-        err => {
-          if (err && err.code !== 'ENOENT') throw err
-          window.fs.writeFile(
-            `${self.$electron.remote.app.getPath(
-              'downloads'
-            )}/subscriptions.opml`,
-            xmlData,
-            { flag: 'w', encoding: 'utf8' },
-            err => {
-              if (err) throw err
-              window.log.info('XML Saved')
-              const notification = new Notification('Raven Reader', {
-                body: 'Exported all feeds successfully to downloads folder.'
-              })
-              notification.onclick = () => {
-                window.log.info('Export notification clicked')
-              }
-            }
-          )
+    runKeepReadJob () {
+      // Service crawling
+      return nodescheduler.scheduleJob(
+        '*/5 * * * *',
+        () => {
+          window.log.info('Deleting read articles')
+          db.deleteArticleByKeepRead()
         }
       )
+    },
+    exportOpml () {
+      const xmlData = helper.exportOpml()
+      window.electron.exportOpml(xmlData)
     },
     updateType (newVal) {
       this.articleType = newVal

@@ -1,10 +1,11 @@
+import crypto from 'crypto'
+import os from 'os'
 const POCKET_AUTHORIZATION_URL = 'https://getpocket.com/v3/oauth/request'
-const cryptObj = window.crypto
 
 export default {
   guid () {
     const buf = new Uint16Array(8)
-    cryptObj.getRandomValues(buf)
+    crypto.getRandomValues(buf)
     function s4 (num) {
       let ret = num.toString(16)
       while (ret.length < 4) {
@@ -17,15 +18,15 @@ export default {
   buildPocketAuthUrl () {
     let consumerKey
 
-    if (window.os.platform() === 'darwin') {
+    if (os.platform() === 'darwin') {
       consumerKey = process.env.VUE_APP_POCKET_MAC_KEY
     }
 
-    if (window.os.platform() === 'win32') {
+    if (os.platform() === 'win32') {
       consumerKey = process.env.VUE_APP_POCKET_WINDOWS_KEY
     }
 
-    if (window.os.platform() === 'linux') {
+    if (os.platform() === 'linux') {
       consumerKey = process.env.VUE_APP_POCKET_LINUX_KEY
     }
 

@@ -1,27 +1,16 @@
 import axios from 'axios'
+import uuidstring from 'uuid-by-string'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import advancedformat from 'dayjs/plugin/advancedFormat'
 import db from './db.js'
 import * as database from '../db'
-const Store = window.electronstore
-const store = new Store({
-  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
-})
 
 dayjs.extend(timezone)
 dayjs.extend(advancedformat)
 
 export default {
-  getConfig () {
-    return JSON.parse(store.get('feedbin_creds', {
-      endpoint: 'https://api.feedbin.com/v2/',
-      email: null,
-      password: null
-    }))
-  },
-  async getSubscriptions () {
-    const feedbinCreds = this.getConfig()
+  async getSubscriptions (feedbinCreds) {
     try {
       const subscriptions = await axios.get(`${feedbinCreds.endpoint}subscriptions.json?mode=extended`, {
         auth: {
@@ -34,8 +23,7 @@ export default {
       window.log.info(e)
     }
   },
-  async getEntries (datetime = null) {
-    const feedbinCreds = this.getConfig()
+  async getEntries (feedbinCreds, datetime = null) {
     const timestamp = datetime || dayjs().subtract(1, 'month').toISOString()
     const number = Number.MAX_SAFE_INTEGER
     try {
@@ -50,8 +38,7 @@ export default {
       window.log.info(e)
     }
   },
-  async getUnreadEntries () {
-    const feedbinCreds = this.getConfig()
+  async getUnreadEntries (feedbinCreds) {
     const unreads = await axios.get(`${feedbinCreds.endpoint}unread_entries.json`, {
       auth: {
         username: feedbinCreds.email,
@@ -60,8 +47,7 @@ export default {
     })
     return unreads.data
   },
-  async getStarredEntries () {
-    const feedbinCreds = this.getConfig()
+  async getStarredEntries (feedbinCreds) {
     const starred = await axios.get(`${feedbinCreds.endpoint}starred_entries.json`, {
       auth: {
         username: feedbinCreds.email,
@@ -78,9 +64,8 @@ export default {
     })
     return mapped
   },
-  async markItem (type, ids) {
+  async markItem (feedbinCreds, type, ids) {
     let method, data, url
-    const feedbinCreds = this.getConfig()
     switch (type) {
       case 'MARK_READ':
         url = 'unread_entries/delete'
@@ -121,8 +106,8 @@ export default {
       }
     })
   },
-  async syncItems (mappedEntries) {
-    let subscriptions = await this.getSubscriptions()
+  async syncItems (feedbinCreds, mappedEntries) {
+    let subscriptions = await this.getSubscriptions(feedbinCreds)
     if (subscriptions) {
       const currentSubscriptions = await db.fetchServicesFeeds('feedbin')
       const currentFeedUrls = JSON.parse(JSON.stringify(currentSubscriptions)).map((item) => {
@@ -141,8 +126,8 @@ export default {
       }
       const transformedSubscriptions = JSON.parse(JSON.stringify(subscriptions)).map((item) => {
         return {
-          id: window.uuidstring(item.feed_url),
-          uuid: window.uuidstring(item.feed_url),
+          id: uuidstring(item.feed_url),
+          uuid: uuidstring(item.feed_url),
           link: item.site_url,
           xmlurl: item.feed_url,
           title: item.title,
@@ -161,8 +146,8 @@ export default {
         })
         const transformedEntries = JSON.parse(JSON.stringify(mappedEntries)).map((item) => {
           return {
-            id: item.enclosure ? window.uuidstring(item.enclosure.enclosure_url) : window.uuidstring(item.url),
-            uuid: item.enclosure ? window.uuidstring(item.enclosure.enclosure_url) : window.uuidstring(item.url),
+            id: item.enclosure ? uuidstring(item.enclosure.enclosure_url) : uuidstring(item.url),
+            uuid: item.enclosure ? uuidstring(item.enclosure.enclosure_url) : uuidstring(item.url),
             title: item.title,
             author: item.author,
             link: item.url,
@@ -170,6 +155,7 @@ export default {
             contentSnippet: item.summary,
             favourite: item.favourite,
             read: item.read,
+            keep_read: null,
             pubDate: item.published,
             offline: false,
             podcast: !!item.enclosure,
@@ -189,7 +175,7 @@ export default {
             source_id: item.id
           }
         })
-        store.set('feedbin_fetched_lastime', dayjs().toISOString())
+        window.electronstore.setFeedbinLastFetched(dayjs().toISOString())
         return db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
       })
     }

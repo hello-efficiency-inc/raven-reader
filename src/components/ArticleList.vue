@@ -168,12 +168,12 @@ export default {
         this.$parent.$refs.topProgress.start()
         window.log.info(`Processing ${this.$store.state.Feed.feeds.filter(item => item.source === 'local').length} feeds`)
         this.$refs.statusMsg.innerText = 'Syncing...'
-        helper.subscribe(this.$store.state.Feed.feeds.filter(item => item.source === 'local'), null, true, false).then(() => {
+        helper.subscribe(this.$store.state.Feed.feeds.filter(item => item.source === 'local' || typeof item.source === 'undefined'), null, true, false).then(() => {
           this.itemsChange()
           this.$parent.$refs.topProgress.done()
           this.syncState = false
         })
-        if (this.$electronstore.has('feedbin_creds')) {
+        if (this.$store.state.Setting.feedbin) {
           this.syncFeedbin()
         }
       }

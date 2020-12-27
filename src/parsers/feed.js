@@ -1,15 +1,5 @@
 import dayjs from 'dayjs'
-
-const RssParser = window.rssParser
-const parser = new RssParser({
-  requestOptions: {
-    rejectUnauthorized: false
-  },
-  defaultRSS: 2.0,
-  headers: {
-    'User-Agent': 'Raven Reader'
-  }
-})
+import uuidstring from 'uuid-by-string'
 
 const omit = (obj, props) => {
   obj = {
@@ -31,15 +21,15 @@ export async function parseFeed (feedUrl, category = null) {
     posts: []
   }
   try {
-    feed = await parser.parseURL(feedUrl)
+    feed = await window.rss.parseRssUrl(feedUrl)
   } catch (e) {
     window.log.info(e)
   }
 
   if (feed) {
     feeditem.meta = {
-      id: window.uuidstring(feedUrl),
-      uuid: window.uuidstring(feedUrl),
+      id: uuidstring(feedUrl),
+      uuid: uuidstring(feedUrl),
       link: feed.link,
       category: category,
       xmlurl: feedUrl,
@@ -66,14 +56,15 @@ export function ParseFeedPost (feed) {
     const podcast = checkIsPodCast(item)
     const articleLink = item.link ?? feed.meta.xmlurl ?? Math.random().toString(36).substring(7)
     if (podcast) {
-      item.id = window.uuidstring(item.enclosure.url)
-      item.uuid = window.uuidstring(item.enclosure.url)
+      item.id = uuidstring(item.enclosure.url)
+      item.uuid = uuidstring(item.enclosure.url)
     } else {
-      item.id = window.uuidstring(articleLink)
-      item.uuid = window.uuidstring(articleLink)
+      item.id = uuidstring(articleLink)
+      item.uuid = uuidstring(articleLink)
     }
     item.favourite = false
     item.read = false
+    item.keep_read = null
     item.offline = false
     item.podcast = podcast ?? false
     item.played = false
