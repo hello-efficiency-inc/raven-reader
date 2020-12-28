@@ -70,10 +70,9 @@ export default {
     } else {
       tokenData = credsData
     }
-    const timestamp = datetime || dayjs().subtract(1, 'month').unix()
     try {
       do {
-        const data = await axios.get(`https://www.inoreader.com/reader/api/0/stream/contents?n=1000&ot=${timestamp}&c=${continuation}`, {
+        const data = await axios.get(`https://www.inoreader.com/reader/api/0/stream/contents?n=1000&xt=${TAGS.READ_TAG}&c=${continuation}`, {
           headers: {
             Authorization: `Bearer ${tokenData.access_token}`
           }
@@ -98,7 +97,6 @@ export default {
     for (let i = 0; i < ids.length; i++) {
       postData.append('i', ids[i])
     }
-    console.log(type)
     switch (type) {
       case 'READ':
         postData.append('a', TAGS.READ_TAG)
@@ -121,7 +119,6 @@ export default {
   },
   async syncItems (credsData, mappedEntries) {
     let subscriptions = await this.getSubscriptions(credsData)
-    console.log(subscriptions)
     if (subscriptions) {
       const currentSubscriptions = await db.fetchServicesFeeds('inoreader')
       const currentFeedUrls = JSON.parse(JSON.stringify(currentSubscriptions)).map((item) => {
@@ -148,14 +145,15 @@ export default {
           favicon: `https://www.google.com/s2/favicons?domain=${item.htmlUrl}`,
           description: null,
           category: null,
-          source: 'inoreader'
+          source: 'inoreader',
+          source_id: item.id
         }
       })
       const addedFeeds = db.addFeed(transformedSubscriptions.map(item => database.feedTable.createRow(item)))
       return addedFeeds.then((res) => {
         const subscriptAdded = res
         subscriptions = subscriptions.map((item) => {
-          item.feed_uuid = subscriptAdded.filter(feed => feed.xmlurl === item.url)[0].uuid
+          item.feed_uuid = subscriptAdded.filter(feed => feed.source_id === item.id)[0].uuid
           return item
         })
         const readTag = `user/${credsData.user.userId}/state/com.google/read`
@@ -187,7 +185,7 @@ export default {
             itunes: item.itunes || null,
             played: false,
             publishUnix: dayjs(item.published).unix(),
-            feed_uuid: subscriptions.filter(feed => feed.feed_id === item.feed_id)[0].feed_uuid,
+            feed_uuid: subscriptions.filter(feed => feed.id === item.origin.streamId)[0].feed_uuid,
             category: null,
             source: 'inoreader',
             source_id: id

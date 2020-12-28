@@ -178,7 +178,6 @@ const mutations = {
     state.fontStyle = data
   },
   UPDATE_ARTICLE_CATEGORY (state, data) {
-    console.log(data)
     const articles = state.articles.filter(item => item.articles.category === data.old.title)
       .map(item => item.articles.uuid)
     db.updateArticleCategory(articles, data.new.title)

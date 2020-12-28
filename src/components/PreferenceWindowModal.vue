@@ -552,6 +552,7 @@ export default {
       db.deleteAllSyncAccountSubscriptions('inoreader').then(() => {
         db.deleteArticlesSyncAccount('inoreader').then(() => {
           this.$store.dispatch('unsetInstapaper').then(() => {
+            this.$store.dispatch('loadSettings')
             this.$store.dispatch('loadFeeds')
             this.$store.dispatch('loadArticles')
             this.inoreader_connected = false
@@ -572,6 +573,7 @@ export default {
       db.deleteAllSyncAccountSubscriptions('feedbin').then(() => {
         db.deleteArticlesSyncAccount('feedbin').then(() => {
           this.$store.dispatch('unsetFeedbin').then(() => {
+            this.$store.dispatch('loadSettings')
             this.$store.dispatch('loadFeeds')
             this.$store.dispatch('loadArticles')
             this.feedbin_connected = false

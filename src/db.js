@@ -2,7 +2,7 @@ import lf from 'lovefield'
 import db from './services/db'
 import DataStore from 'nedb'
 
-const schemaBuilder = lf.schema.create('raven', 3)
+const schemaBuilder = lf.schema.create('raven', 4)
 
 schemaBuilder.createTable('feeds')
   .addColumn('id', lf.Type.INTEGER)
@@ -14,8 +14,9 @@ schemaBuilder.createTable('feeds')
   .addColumn('title', lf.Type.STRING)
   .addColumn('category', lf.Type.STRING)
   .addColumn('source', lf.Type.STRING)
+  .addColumn('source_id', lf.Type.STRING)
   .addPrimaryKey(['id'], true)
-  .addNullable(['description', 'category', 'link', 'source'])
+  .addNullable(['description', 'category', 'link', 'source', 'source_id'])
 
 schemaBuilder.createTable('articles')
   .addColumn('id', lf.Type.INTEGER)
@@ -76,6 +77,8 @@ export async function init () {
             return rawDb.addTableColumn('articles', 'source_id', null)
           }).then(() => {
             return rawDb.addTableColumn('articles', 'keep_read', null)
+          }).then(() => {
+            return rawDb.addTableColumn('feeds', 'source_id', null)
           })
       }).then(() => {
         // have it as the last element of the promise chain
