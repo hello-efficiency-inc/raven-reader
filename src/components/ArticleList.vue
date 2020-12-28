@@ -98,11 +98,11 @@
 import { mapGetters } from 'vuex'
 import helper from '../services/helpers'
 import bus from '../services/bus'
-import feedbinSync from '../mixins/feedbinSync'
+import serviceSync from '../mixins/serviceSync'
 
 export default {
   mixins: [
-    feedbinSync
+    serviceSync
   ],
   props: {
     type: {
@@ -173,9 +173,9 @@ export default {
           this.$parent.$refs.topProgress.done()
           this.syncState = false
         })
-        if (this.$store.state.Setting.feedbin) {
-          this.syncFeedbin()
-        }
+        this.syncFeedbin()
+        this.syncInoreader()
+        this.syncState = false
       }
     },
     fold () {

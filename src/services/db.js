@@ -37,8 +37,8 @@ export default {
   deleteFeed (feedId) {
     return db.database.delete().from(db.feedTable).where(db.feedTable.uuid.eq(feedId)).exec()
   },
-  deleteAllFeedBinSubscriptions () {
-    return db.database.delete().from(db.feedTable).where(db.feedTable.source.eq('feedbin')).exec()
+  deleteAllSyncAccountSubscriptions (subscription) {
+    return db.database.delete().from(db.feedTable).where(db.feedTable.source.eq(subscription)).exec()
   },
   deleteFeedMulti (feedIds) {
     return db.database.delete().from(db.feedTable).where(db.feedTable.uuid.in(feedIds)).exec()
@@ -62,8 +62,8 @@ export default {
   deleteArticles (feedId) {
     return db.database.delete().from(db.articleTable).where(db.articleTable.feed_uuid.eq(feedId)).exec()
   },
-  deleteArticlesFeedbin () {
-    return db.database.delete().from(db.articleTable).where(db.articleTable.source.eq('feedbin')).exec()
+  deleteArticlesSyncAccount (subscription) {
+    return db.database.delete().from(db.articleTable).where(db.articleTable.source.eq(subscription)).exec()
   },
   deleteArticlesMulti (articles) {
     return db.database.delete().from(db.articleTable).where(db.articleTable.uuid.in(articles)).exec()

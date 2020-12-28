@@ -6,7 +6,6 @@ import SocialSharing from 'vue-social-sharing'
 import Toasted from 'vue-toasted'
 import vClickOutside from 'v-click-outside'
 import vueTopprogress from 'vue-top-progress'
-import VueContext from 'vue-context'
 import VuePlyr from 'vue-plyr'
 import App from './App.vue'
 import router from './router'
@@ -45,7 +44,6 @@ Vue.use(SocialSharing)
 Vue.use(vClickOutside)
 Vue.use(VuePlyr)
 Vue.use(vueTopprogress)
-Vue.use(VueContext)
 
 Register.registerComponents()
 

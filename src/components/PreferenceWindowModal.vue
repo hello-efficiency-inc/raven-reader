@@ -185,9 +185,10 @@
                   <strong>RSS Services</strong><br>
                   <small style="font-size: 14px;">Sync across device with RSS services.</small>
                 </h4>
+                <p><strong>Note</strong>: Only one service can be connected. If you have local sources prior to connecting sync accounts that share same feed URLs, local articles will be removed.</p>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-4">
               <div class="col">
                 <p class="text-left font-bold">
                   Feedbin
@@ -197,6 +198,7 @@
                 <b-button
                   v-if="!feedbin_connected"
                   v-b-modal.feedbin
+                  :disabled="servicesConnected"
                   variant="primary"
                   aria-label="Connect Feedbin"
                   class="float-right"
@@ -220,6 +222,35 @@
                   class="float-right"
                   variant="danger"
                   @click="disconnectFeedbin"
+                >
+                  Disconnect
+                </b-button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <p class="text-left font-bold">
+                  Inoreader
+                </p>
+              </div>
+              <div class="col">
+                <b-button
+                  v-if="!inoreader_connected"
+                  variant="primary"
+                  aria-label="Connect Inoreader"
+                  class="float-right"
+                  squared
+                  :disabled="servicesConnected"
+                  @click="signInInoreader"
+                >
+                  Connect
+                </b-button>
+                <b-button
+                  v-if="inoreader_connected"
+                  aria-label="Disconnect Inoreader"
+                  class="float-right"
+                  variant="danger"
+                  @click="disconnectInoreader"
                 >
                   Disconnect
                 </b-button>
@@ -341,6 +372,7 @@ import db from '../services/db'
 import axios from 'axios'
 import setTheme from '../mixins/setTheme'
 import feedbin from '../services/feedbin'
+import inoreader from '../services/inoreader'
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:9080'
 
 export default {
@@ -352,6 +384,7 @@ export default {
       showSync: false,
       feedbin_error: false,
       feedbin_connected: false,
+      inoreader_connected: false,
       pocket_connected: false,
       instapaper_connected: false,
       instapaper_error: false,
@@ -416,6 +449,11 @@ export default {
       }
     }
   },
+  computed: {
+    servicesConnected () {
+      return this.inoreader_connected || this.feedbin_connected
+    }
+  },
   mounted () {
     this.$store.dispatch('loadSettings').then(() => {
       this.keepread = this.$store.state.Setting.keepRead
@@ -428,6 +466,7 @@ export default {
         this.proxy.https = this.$store.state.Setting.proxy.https
         this.proxy.bypass = this.$store.state.Setting.proxy.bypass
       }
+      this.inoreader_connected = this.$store.state.Setting.inoreader_connected
       this.instapaper_connected = JSON.parse(JSON.stringify(this.$store.state.Setting.instapaper_connected))
       this.instapaper = JSON.parse(JSON.stringify(this.$store.state.Setting.instapaper))
       this.feedbin_connected = this.$store.state.Setting.feedbin_connected
@@ -439,6 +478,23 @@ export default {
       if (args) {
         this.pocket_connected = true
       }
+    })
+
+    window.api.ipcRendReceive('inoreader-authenticated', async (args) => {
+      const userInfo = await inoreader.getUserInfo(args)
+      args.user = userInfo
+      this.$store.dispatch('setInoreader', JSON.stringify(args)).then(() => {
+        this.inoreader_connected = true
+        this.showSync = true
+        inoreader.getEntries(args).then((res) => {
+          inoreader.syncItems(args, res).then(() => {
+            this.$store.dispatch('loadFeeds')
+            this.$store.dispatch('loadArticles')
+            this.showSync = false
+            this.hideModal()
+          })
+        })
+      })
     })
   },
   methods: {
@@ -489,6 +545,21 @@ export default {
     signInPocket () {
       window.electron.loginPocket()
     },
+    signInInoreader () {
+      window.electron.loginInoreader()
+    },
+    disconnectInoreader () {
+      db.deleteAllSyncAccountSubscriptions('inoreader').then(() => {
+        db.deleteArticlesSyncAccount('inoreader').then(() => {
+          this.$store.dispatch('unsetInstapaper').then(() => {
+            this.$store.dispatch('loadFeeds')
+            this.$store.dispatch('loadArticles')
+            this.inoreader_connected = false
+            this.hideModal()
+          })
+        })
+      })
+    },
     disconnectPocket () {
       this.$store.dispatch('unsetPocket')
       this.pocket_connected = false
@@ -498,8 +569,8 @@ export default {
       this.instapaper_connected = false
     },
     disconnectFeedbin () {
-      db.deleteAllFeedBinSubscriptions().then(() => {
-        db.deleteArticlesFeedbin().then(() => {
+      db.deleteAllSyncAccountSubscriptions('feedbin').then(() => {
+        db.deleteArticlesSyncAccount('feedbin').then(() => {
           this.$store.dispatch('unsetFeedbin').then(() => {
             this.$store.dispatch('loadFeeds')
             this.$store.dispatch('loadArticles')

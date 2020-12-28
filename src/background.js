@@ -23,6 +23,9 @@ import normalizeUrl from 'normalize-url'
 import { autoUpdater } from 'electron-updater'
 import fs from 'fs'
 import path from 'path'
+import { URL } from 'url'
+import dayjs from 'dayjs'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 autoUpdater.logger = log
@@ -146,6 +149,10 @@ function createWindow () {
   }
 }
 
+function signInInoreader () {
+  shell.openExternal(`https://www.inoreader.com/oauth2/auth?client_id=${process.env.VUE_APP_INOREADER_CLIENT_ID}&redirect_uri=ravenreader://inoreader/auth&response_type=code&scope=read%20write&state=ravenreader`)
+}
+
 function signInPocketWithPopUp () {
   if (os.platform() === 'darwin') {
     consumerKey = process.env.VUE_APP_POCKET_MAC_KEY
@@ -210,6 +217,22 @@ app.on('window-all-closed', () => {
 })
 
 app.on('open-url', (event, url) => {
+  if (url.includes('ravenreader://inoreader/auth')) {
+    const q = new URL(url).searchParams
+    if (q.has('code')) {
+      axios.post('https://www.inoreader.com/oauth2/token', {
+        code: q.get('code'),
+        client_id: process.env.VUE_APP_INOREADER_CLIENT_ID,
+        client_secret: process.env.VUE_APP_INOREADER_CLIENT_SECRET,
+        redirect_uri: 'ravenreader://inoreader/auth',
+        scope: null,
+        grant_type: 'authorization_code'
+      }).then((data) => {
+        data.data.expires_in = dayjs().add(data.data.expires_in, 'second').valueOf()
+        win.webContents.send('inoreader-authenticated', data.data)
+      })
+    }
+  }
   if (url === 'ravenreader://pocket/auth') {
     axios
       .post(
@@ -320,6 +343,10 @@ ipcMain.handle('set-feedbin-last-fetched', (event, arg) => {
   }
 })
 
+ipcMain.on('get-inoreader-last', (event, arg) => {
+  event.returnValue = store.get('inoreader_fetched_lastime')
+})
+
 ipcMain.on('get-feedbin-last', (event, arg) => {
   event.returnValue = store.get('feedbin_fetched_lastime')
 })
@@ -339,6 +366,10 @@ ipcMain.on('get-settings', (event, arg) => {
     bypass: ''
   })
   state.keepRead = store.get('settings.keepread', 1)
+  if (store.has('inoreader_creds')) {
+    state.inoreader_connected = true
+    state.inoreader = store.get('inoreader_creds')
+  }
   if (store.has('pocket_creds')) {
     state.pocket_connected = true
     state.pocket = store.get('pocket_creds')
@@ -423,6 +454,10 @@ ipcMain.handle('export-opml', (event, arg) => {
 
 ipcMain.on('login-pocket', (event) => {
   event.returnValue = signInPocketWithPopUp()
+})
+
+ipcMain.on('login-inoreader', (event) => {
+  event.returnValue = signInInoreader()
 })
 
 ipcMain.handle('context-menu', (event, arg) => {

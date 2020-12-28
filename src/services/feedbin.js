@@ -67,28 +67,28 @@ export default {
   async markItem (feedbinCreds, type, ids) {
     let method, data, url
     switch (type) {
-      case 'MARK_READ':
+      case 'READ':
         url = 'unread_entries/delete'
         method = 'POST'
         data = {
           unread_entries: ids
         }
         break
-      case 'MARK_UNREAD':
+      case 'UNREAD':
         url = 'unread_entries'
         method = 'POST'
         data = {
           unread_entries: ids
         }
         break
-      case 'MARK_FAVOURITE':
+      case 'FAVOURITE':
         url = 'starred_entries'
         method = 'POST'
         data = {
           starred_entries: ids
         }
         break
-      case 'MARK_UNFAVOURITE':
+      case 'UNFAVOURITE':
         url = 'starred_entries/delete'
         method = 'POST'
         data = {

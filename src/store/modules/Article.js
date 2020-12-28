@@ -6,6 +6,7 @@ import truncate from 'lodash.truncate'
 import Fuse from 'fuse.js'
 import cacheService from '../../services/cacheArticle'
 import feedbin from '../../services/feedbin'
+import inoreader from '../../services/inoreader'
 
 dayjs.extend(relativeTime)
 
@@ -99,35 +100,44 @@ const mutations = {
   },
   MARK_ACTION (state, data) {
     const index = state.articles.findIndex(item => item.articles.uuid === data.data.id)
-    if (data.type === 'FAVOURITE') {
+    if (data.data.type === 'FAVOURITE') {
       state.articles[index].articles.favourite = true
-      feedbin.markItem(data.rootState.Setting.feedbin, 'MARK_FAVOURITE', state.articles[index].articles.source_id)
     }
 
-    if (data.type === 'UNFAVOURITE') {
+    if (data.data.type === 'UNFAVOURITE') {
       state.articles[index].articles.favourite = false
-      feedbin.markItem(data.rootState.Setting.feedbin, 'MARK_UNFAVOURITE', state.articles[index].articles.source_id)
     }
-    if (data.type === 'READ') {
+    if (data.data.type === 'READ') {
       state.articles[index].articles.read = true
       if (state.articles[index].articles.podcast) {
         state.articles[index].articles.played = true
       }
-      feedbin.markItem(data.rootState.Setting.feedbin, 'MARK_READ', state.articles[index].articles.source_id)
     }
 
-    if (data.type === 'UNREAD') {
+    if (data.data.type === 'UNREAD') {
       state.articles[index].articles.read = false
       if (state.articles[index].articles.podcast) {
         state.articles[index].articles.played = false
       }
-      feedbin.markItem(data.rootState.Setting.feedbin, 'MARK_UNREAD', state.articles[index].articles.source_id)
+    }
+    if (data.rootState.Setting.feedbin_connected) {
+      feedbin.markItem(data.rootState.Setting.feedbin, data.data.type, [state.articles[index].articles.source_id])
+    }
+    if (data.rootState.Setting.inoreader_connected) {
+      console.log(data.rootState.Setting)
+      inoreader.markItem(data.rootState.Setting.inoreader, data.data.type, [state.articles[index].articles.source_id])
     }
   },
   MARK_ALL_READ (state, rootState) {
     db.markAllRead(state.articles.map(item => item.articles.uuid))
     const ids = JSON.parse(JSON.stringify(state.articles)).map(item => item.articles.source_id)
-    feedbin.markItem(rootState.Setting.feedbin, 'MARK_READ', ids.filter(item => item !== null))
+    if (rootState.Setting.feedbin_connected) {
+      feedbin.markItem(rootState.Setting.feedbin, 'READ', ids.filter(item => item !== null))
+    }
+
+    if (rootState.Setting.inoreader_connected) {
+      inoreader.markItem(rootState.Setting.inoreader, 'READ', ids.filter(item => item !== null))
+    }
   },
   DELETE_ARTICLES (state, id) {
     const articles = state.articles.filter(item => item.feed_id === id)

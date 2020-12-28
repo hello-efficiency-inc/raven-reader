@@ -1,7 +1,9 @@
 const state = {
   pocket_connected: false,
   pocket: null,
+  inoreader: null,
   instapaper_connected: false,
+  inoreader_connected: false,
   instapaper: {
     username: null,
     password: null
@@ -31,9 +33,12 @@ const mutations = {
     const settings = JSON.parse(JSON.stringify(electronstore.getSettings()))
     if (typeof settings.feedbin !== 'undefined') {
       settings.feedbin = JSON.parse(settings.feedbin)
-      if (settings.pocket_creds) {
-        settings.pocket = JSON.parse(settings.pocket_creds)
-      }
+    }
+    if (typeof settings.inoreader !== 'undefined') {
+      settings.inoreader = JSON.parse(settings.inoreader)
+    }
+    if (settings.pocket_creds) {
+      settings.pocket = JSON.parse(settings.pocket_creds)
     }
     Object.assign(state, settings)
   },
@@ -58,6 +63,10 @@ const mutations = {
   SET_PROXY (state, data) {
     state.proxy = data
   },
+  SET_INOREADER_CONNECTED (state, data) {
+    state.inoreader_connected = true
+    state.inoreader = JSON.parse(data)
+  },
   SET_POCKET_CONNECTED (state, data) {
     state.pocket_connected = true
     state.pocket = data
@@ -73,6 +82,10 @@ const mutations = {
   SET_FEEDBIN_CONNECTED (state, data) {
     state.feedbin_connected = true
     state.feedbin = data
+  },
+  UNSET_INOREADER (state) {
+    state.inoreader_connected = false
+    state.inoreader = null
   },
   UNSET_FEEDBIN (state) {
     state.feedbin_connected = false
@@ -110,6 +123,10 @@ const actions = {
     electronstore.storeSetSettingItem('set', 'settings.theme_option', data)
     commit('SET_THEME_OPTION', data)
   },
+  setInoreader ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'inoreader_creds', data)
+    commit('SET_INOREADER_CONNECTED', data)
+  },
   setFeedbin ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'feedbin_creds', data)
     commit('SET_FEEDBIN_CONNECTED', data)
@@ -121,6 +138,10 @@ const actions = {
   setPocket ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'pocket_creds', data)
     commit('SET_POCKET_CONNECTED', data)
+  },
+  unsetInoreader ({ commit }) {
+    electronstore.storeSetSettingItem('delete', 'inoreader_creds')
+    commit('UNSET_INOREADER')
   },
   unsetInstapaper ({ commit }) {
     electronstore.storeSetSettingItem('delete', 'instapaper_creds')

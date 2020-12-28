@@ -17,6 +17,9 @@ export default {
   loginPocket: () => {
     return ipcRenderer.send('login-pocket')
   },
+  loginInoreader: () => {
+    return ipcRenderer.send('login-inoreader')
+  },
   createContextMenu: (type, data) => {
     return ipcRenderer.invoke('context-menu', {
       type: type,

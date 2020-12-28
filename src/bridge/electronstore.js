@@ -7,6 +7,9 @@ const electronStoreBridge = {
   setFeedbinLastFetched: (timestamp) => {
     ipcRenderer.invoke('set-feedbin-last-fetched', timestamp)
   },
+  inoreaderLastFetched: () => {
+    return ipcRenderer.sendSync('get-inoreader-last')
+  },
   getFeedbinLastFetched: () => {
     return ipcRenderer.sendSync('get-feedbin-last')
   },

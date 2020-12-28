@@ -51,8 +51,17 @@ import setTheme from '../mixins/setTheme'
 import dataSets from '../mixins/dataItems'
 import bridge from '../services/bridge'
 import bus from '../services/bus'
-import syncFeedbin from '../mixins/feedbinSync'
+import serviceSync from '../mixins/serviceSync'
 import nodescheduler from 'node-schedule'
+
+const markTypes = {
+  favourite: 'FAVOURITE',
+  unfavourite: 'UNFAVOURITE',
+  read: 'READ',
+  unread: 'UNREAD',
+  cache: 'CACHE',
+  uncache: 'UNCACHE'
+}
 
 const sortBy = (key, pref) => {
   if (pref === 'asc') {
@@ -67,7 +76,7 @@ export default {
     setTheme,
     dataSets,
     cheerio,
-    syncFeedbin
+    serviceSync
   ],
   beforeRouteUpdate (to, from, next) {
     if (to.params.id) {
@@ -131,6 +140,7 @@ export default {
   },
   mounted () {
     this.syncFeedbin()
+    this.syncInoreader()
     this.$store.dispatch('initializeDB').then(async () => {
       await this.$store.dispatch('refreshFeeds')
       await this.$store.dispatch('loadCategories')
@@ -169,6 +179,44 @@ export default {
       this.runKeepReadJob().reschedule()
       db.deleteArticleByKeepRead()
     })
+
+    window.api.ipcRendReceive('mark-read', (arg) => {
+      this.$store.dispatch('markAction', {
+        type: !arg.article.read ? markTypes.read : markTypes.unread,
+        podcast: arg.article.podcast,
+        id: arg.article.uuid
+      }).then(() => {
+        this.$store.dispatch('loadArticles')
+      })
+    })
+
+    window.api.ipcRendReceive('mark-favourite', (arg) => {
+      this.$store.dispatch('markAction', {
+        type: arg.article.favourite ? markTypes.unfavourite : markTypes.favourite,
+        id: arg.article.uuid
+      }).then(() => {
+        this.$store.dispatch('loadArticles')
+      })
+    })
+
+    window.api.ipcRendReceive('save-article', (arg) => {
+      if (arg.article.offline && !this.$store.state.Setting.offline) {
+        cacheService.uncache(`raven-${arg.article.uuid}`).then(() => {
+          this.$store.dispatch('saveArticle', {
+            type: markTypes.uncache,
+            article: arg.article
+          })
+        })
+      } else {
+        cacheService.cacheArticleData(arg.article).then(() => {
+          this.$store.dispatch('saveArticle', {
+            type: markTypes.cache,
+            article: arg.article
+          })
+        })
+      }
+      this.$store.dispatch('loadArticles')
+    })
   },
   destroyed () {
     window.electron.removeListeners()
@@ -199,6 +247,7 @@ export default {
         '*/2 * * * *',
         () => {
           this.syncFeedbin()
+          this.syncInoreader()
         }
       )
     },

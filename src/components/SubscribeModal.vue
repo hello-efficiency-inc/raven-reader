@@ -88,7 +88,7 @@
         />
       </p>
       <b-alert
-        :show="feedbinConnected"
+        :show="serviceConnected"
         variant="info"
       >
         Note: Subscriptions added from here would not be synced with your service.
@@ -133,8 +133,8 @@ export default {
     }
   },
   computed: {
-    feedbinConnected () {
-      return this.$store.state.Setting.feedbin_connected
+    serviceConnected () {
+      return this.$store.state.Setting.feedbin_connected || this.$store.state.Setting.inoreader_connected
     },
     categoryItems () {
       return this.$store.state.Category.categories.map((item) => {

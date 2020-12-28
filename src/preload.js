@@ -22,6 +22,7 @@ const validChannels = [
   'Toggle favourite',
   'onlinestatus',
   'Settings',
+  'inoreader-authenticated',
   'pocket-authenticated',
   'refresh-feed',
   'edit-feed',

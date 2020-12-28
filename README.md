@@ -63,6 +63,7 @@ brew cask install raven-reader
 - [x] Podcast support. Subscribe to podcast rss feed and listen within app.
 - [x] Accessibility Friendly
 - [x] Feedbin integration
+- [x] Inoreader integration
 
 Please feel free to suggest more ideas to improve this app.
 

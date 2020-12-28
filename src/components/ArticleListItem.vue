@@ -41,17 +41,6 @@
   </div>
 </template>
 <script>
-import cacheService from '../services/cacheArticle'
-
-const markTypes = {
-  favourite: 'FAVOURITE',
-  unfavourite: 'UNFAVOURITE',
-  read: 'READ',
-  unread: 'UNREAD',
-  cache: 'CACHE',
-  uncache: 'UNCACHE'
-}
-
 export default {
   props: {
     article: {
@@ -64,48 +53,8 @@ export default {
       return this.$store.getters.activeArticleId
     }
   },
-  mounted () {
-    window.api.ipcRendReceive('mark-read', (arg) => {
-      this.$store.dispatch('markAction', {
-        type: !arg.article.read ? markTypes.read : markTypes.unread,
-        podcast: arg.article.podcast,
-        id: arg.article.uuid
-      }).then(() => {
-        this.$store.dispatch('loadArticles')
-      })
-    })
-
-    window.api.ipcRendReceive('mark-favourite', (arg) => {
-      this.$store.dispatch('markAction', {
-        type: arg.article.favourite ? markTypes.unfavourite : markTypes.favourite,
-        id: arg.article.uuid
-      }).then(() => {
-        this.$store.dispatch('loadArticles')
-      })
-    })
-
-    window.api.ipcRendReceive('save-article', (arg) => {
-      if (arg.article.offline && !this.$store.state.Setting.offline) {
-        cacheService.uncache(`raven-${arg.article.uuid}`).then(() => {
-          this.$store.dispatch('saveArticle', {
-            type: markTypes.uncache,
-            article: arg.article
-          })
-        })
-      } else {
-        cacheService.cacheArticleData(arg.article).then(() => {
-          this.$store.dispatch('saveArticle', {
-            type: markTypes.cache,
-            article: arg.article
-          })
-        })
-      }
-      this.$store.dispatch('loadArticles')
-    })
-  },
   methods: {
     openArticleContextMenu (e, article) {
-      e.preventDefault()
       window.electron.createContextMenu('article', article)
     },
     setActiveArticleId (article) {
