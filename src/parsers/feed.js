@@ -36,7 +36,8 @@ export async function parseFeed (feedUrl, category = null) {
       favicon: `https://www.google.com/s2/favicons?domain=${feed.link}`,
       description: feed.description ? feed.description : null,
       title: feed.title,
-      source: 'local'
+      source: 'local',
+      source_id: null
     }
     feeditem.posts = feed.items
     const response = await ParseFeedPost(feeditem)
@@ -68,6 +69,8 @@ export function ParseFeedPost (feed) {
         description: item['media:group']['media:description'][0] || null,
         title: item['media:group']['media:title'][0]
       }
+    } else {
+      item.media = null
     }
     item.favourite = false
     item.read = false
