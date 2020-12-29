@@ -20,6 +20,9 @@
 <a href="https://david-dm.org/hello-efficiency-inc/raven-reader?type=dev" title="devDependencies status">
 <img src="https://david-dm.org/hello-efficiency-inc/raven-reader/dev-status.svg"/></a>
 <a title="MadeWithVueJs.com Shield" href="https://madewithvuejs.com/p/rss-reader-v2-0/shield-link"> <img src="https://madewithvuejs.com/storage/repo-shields/12-shield.svg"/></a>
+<a href="https://snapcraft.io/raven-reader">
+<img alt="raven-reader" src="https://snapcraft.io/raven-reader/badge.svg" />
+</a>
 </p>
 
 ## Download
