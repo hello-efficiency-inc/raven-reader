@@ -191,6 +191,8 @@ export default {
       this.runArticleCronJob().reschedule()
       this.runServiceCronJob().reschedule()
       this.runKeepReadJob().reschedule()
+      this.syncFeedbin()
+      this.syncInoreader()
       db.deleteArticleByKeepRead()
     })
 
@@ -230,6 +232,14 @@ export default {
         })
       }
       this.$store.dispatch('loadArticles')
+    })
+
+    bus.$on('progress', (data) => {
+      if (data === 'start') {
+        this.$refs.topProgress.start()
+      } else {
+        this.$refs.topProgress.done()
+      }
     })
   },
   destroyed () {
@@ -285,7 +295,9 @@ export default {
     prepareArticleData (data, article) {
       const self = this
       self.empty = false
-      data.content = this.cleanupContent(data.content)
+      if (data.media === null) {
+        data.content = this.cleanupContent(data.content)
+      }
       data.date_published = data.date_published
         ? dayjs(data.date_published).format('MMMM D, YYYY')
         : null
@@ -295,6 +307,7 @@ export default {
       data.feed_uuid = article.feeds.uuid
       data.category = article.articles.category
       data.podcast = article.articles.podcast
+      data.media = article.articles.media
       data.feed_url = article.feeds.xmlurl
       data.feed_link = article.feeds.link
       data._id = article.articles.uuid
@@ -322,6 +335,7 @@ export default {
     },
     fetchData () {
       const self = this
+      self.$refs.topProgress.start()
       if (this.$route.params.id) {
         self.articleData = null
         self.loading = true

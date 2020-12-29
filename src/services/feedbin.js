@@ -145,6 +145,7 @@ export default {
           return item
         })
         const transformedEntries = JSON.parse(JSON.stringify(mappedEntries)).map((item) => {
+          const isMedia = item.url.includes('youtube') || item.url.includes('vimeo')
           return {
             id: item.enclosure ? uuidstring(item.enclosure.enclosure_url) : uuidstring(item.url),
             uuid: item.enclosure ? uuidstring(item.enclosure.enclosure_url) : uuidstring(item.url),
@@ -158,6 +159,13 @@ export default {
             keep_read: null,
             pubDate: item.published,
             offline: false,
+            media: isMedia
+              ? {
+                  url: item.url,
+                  description: item.summary,
+                  title: item.title
+                }
+              : null,
             podcast: !!item.enclosure,
             enclosure: item.enclosure
               ? {

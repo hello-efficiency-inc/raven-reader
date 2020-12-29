@@ -46,6 +46,14 @@ const parser = new RssParser({
   defaultRSS: 2.0,
   headers: {
     'User-Agent': 'Raven Reader'
+  },
+  customFields: {
+    item: [
+      'media:group',
+      'media:title',
+      'media:content',
+      'media:description'
+    ]
   }
 })
 

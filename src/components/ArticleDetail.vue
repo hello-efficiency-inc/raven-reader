@@ -25,7 +25,7 @@
             <small><span v-if="article.date_published">{{ article.date_published }} </span> <span v-if="article.author">by {{ article.author }}</span>  <strong v-if="article.date_published || article.date_published">&#183;</strong> {{ article.readtime }}</small>
           </h2>
           <section
-            v-if="!full && articleItem.content"
+            v-if="!full && articleItem.content && articleItem.media === null"
             class="article-detail"
             v-html="articleItem.content"
           />
@@ -34,6 +34,22 @@
             class="article-detail"
             v-html="articleItem.fullContent"
           />
+          <section
+            v-if="article.media !== null"
+            class="mt-5 mb-5"
+          >
+            <vue-plyr>
+              <div class="plyr__video-embed">
+                <iframe
+                  :src="article.media.url"
+                  allowtransparency
+                />
+              </div>
+            </vue-plyr>
+            <p class="mt-5">
+              {{ article.media.description }}
+            </p>
+          </section>
           <section
             v-if="article.podcast"
             class="mt-5 mb-5"

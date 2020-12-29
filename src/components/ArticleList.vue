@@ -165,23 +165,34 @@ export default {
     sync () {
       this.syncState = true
       if (this.$store.state.Feed.feeds.length > 0) {
-        this.$parent.$refs.topProgress.start()
+        bus.$emit('progress', 'start')
         window.log.info(`Processing ${this.$store.state.Feed.feeds.filter(item => item.source === 'local').length} feeds`)
         this.$refs.statusMsg.innerText = 'Syncing...'
         helper.subscribe(this.$store.state.Feed.feeds.filter(item => item.source === 'local' || typeof item.source === 'undefined'), null, true, false).then(() => {
           this.itemsChange()
-          this.$parent.$refs.topProgress.done()
+          bus.$emit('progress', 'stop')
           this.syncState = false
         })
         this.syncFeedbin()
         this.syncInoreader()
+        bus.$emit('progress', 'stop')
+        this.syncState = false
+      } else {
+        bus.$emit('progress', 'stop')
         this.syncState = false
       }
     },
     fold () {
-      this.$parent.$refs.sidebar.hidden = !this.$parent.$refs.sidebar.hidden
-      this.featherIcon = this.$parent.$refs.sidebar.hidden ? 'chevron-right' : 'chevron-left'
-      this.ariaLabelFoldSidebar = this.$parent.$refs.sidebar.hidden ? 'Show Sidebar' : 'Hide Sidebar'
+      const hasHiddenAttr = this.$parent.$el.querySelector('.sidebar').hasAttribute('hidden')
+      if (!hasHiddenAttr) {
+        this.featherIcon = 'chevron-right'
+        this.ariaLabelFoldSidebar = 'Show Sidebar'
+        this.$parent.$el.querySelector('.sidebar').setAttribute('hidden', true)
+      } else {
+        this.featherIcon = 'chevron-left'
+        this.ariaLabelFoldSidebar = 'Hide Sidebar'
+        this.$parent.$el.querySelector('.sidebar').removeAttribute('hidden')
+      }
     }
   }
 }

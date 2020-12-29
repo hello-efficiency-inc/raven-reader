@@ -155,7 +155,7 @@
           </b-dropdown>
         </div>
         <div
-          v-if="!articleItem.podcast"
+          v-if="!articleItem.podcast && articleItem.media === null"
           class="wrap"
         >
           <button

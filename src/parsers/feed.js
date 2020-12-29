@@ -62,6 +62,13 @@ export function ParseFeedPost (feed) {
       item.id = uuidstring(articleLink)
       item.uuid = uuidstring(articleLink)
     }
+    if (item['media:group']) {
+      item.media = {
+        url: item['media:group']['media:content'][0].$.url,
+        description: item['media:group']['media:description'][0] || null,
+        title: item['media:group']['media:title'][0]
+      }
+    }
     item.favourite = false
     item.read = false
     item.keep_read = null
@@ -74,7 +81,7 @@ export function ParseFeedPost (feed) {
     item.publishUnix = dayjs(item.isoDate).unix()
     item.source = 'local'
     item.source_id = null
-    const postItem = omit(item, ['guid', 'isoDate', 'creator', 'dc:creator', 'content:encoded', 'content:encodedSnippet'])
+    const postItem = omit(item, ['media:group', 'guid', 'isoDate', 'creator', 'dc:creator', 'content:encoded', 'content:encodedSnippet'])
     return postItem
   })
   feeditems.posts = posts

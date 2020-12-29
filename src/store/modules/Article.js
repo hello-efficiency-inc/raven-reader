@@ -124,7 +124,6 @@ const mutations = {
       feedbin.markItem(data.rootState.Setting.feedbin, data.data.type, [state.articles[index].articles.source_id])
     }
     if (data.rootState.Setting.inoreader_connected) {
-      console.log(data.rootState.Setting)
       inoreader.markItem(data.rootState.Setting.inoreader, data.data.type, [state.articles[index].articles.source_id])
     }
   },

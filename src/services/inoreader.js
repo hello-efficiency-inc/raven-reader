@@ -161,6 +161,7 @@ export default {
         const transformedEntries = JSON.parse(JSON.stringify(mappedEntries)).map((item) => {
           const itemId = item.id.split('/')
           const id = parseInt(itemId[itemId.length - 1], 16)
+          const isMedia = item.canonical[0].href.includes('youtube') || item.canonical[0].href.includes('vimeo')
           return {
             id: item.enclosure ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
             uuid: item.enclosure ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
@@ -174,6 +175,13 @@ export default {
             keep_read: null,
             pubDate: item.published,
             offline: false,
+            media: isMedia
+              ? {
+                  url: item.canonical[0].href,
+                  description: item.summary.content.replace(/(<([^>]+)>)/gi, ''),
+                  title: item.title
+                }
+              : null,
             podcast: !!item.enclosure,
             enclosure: item.enclosure
               ? {
