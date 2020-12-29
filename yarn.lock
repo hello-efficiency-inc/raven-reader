@@ -11863,6 +11863,11 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-multipane@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/vue-multipane/-/vue-multipane-0.9.5.tgz#10ddaf9092e0a9e761edfd0d1f1db8bbb54b3e9c"
+  integrity sha512-4sr6POXY82VMzprQWGNMzTIBGGYEi7nG0uGQb6AYr8o0ngIsYCDPh/gmgms8NVsZzG28b7kn3tQhKP27cbbLdw==
+
 vue-plyr@^7.0.0-beta.1:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/vue-plyr/-/vue-plyr-7.0.0.tgz#938257e2a4def4582b5803a16087371a8e96209e"

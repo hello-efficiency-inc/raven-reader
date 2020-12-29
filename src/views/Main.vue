@@ -1,44 +1,54 @@
 <template>
   <div class="app-wrapper">
-    <vue-topprogress
-      ref="topProgress"
-      color="#22e3ff"
-    />
-    <nav
-      v-if="true"
-      ref="sidebar"
-      class="sidebar"
+    <multipane
+      class="vertical-panes"
+      layout="vertical"
     >
-      <subscribe-toolbar ref="subscribetoolbar" />
-      <perfect-scrollbar class="sidebar-sticky">
-        <menu-items />
-        <h6
-          class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
-        >
-          <span>Subscriptions</span>
-        </h6>
-        <subscriptions />
-      </perfect-scrollbar>
-    </nav>
-    <article-list
-      ref="articleList"
-      :type="articleType"
-      :feed="feed"
-      @type-change="updateType"
-    />
-    <article-detail
-      :id="$route.params.id"
-      ref="articleDetail"
-      :article="articleData"
-      :empty-state="empty"
-      :loading="loading"
-    />
+      <vue-topprogress
+        ref="topProgress"
+        color="#22e3ff"
+      />
+      <nav
+        v-if="true"
+        ref="sidebar"
+        class="sidebar"
+        :style="{ minWidth: '230px', width: '260px', maxWidth: '360px' }"
+      >
+        <subscribe-toolbar ref="subscribetoolbar" />
+        <perfect-scrollbar class="sidebar-sticky">
+          <menu-items />
+          <h6
+            class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+          >
+            <span>Subscriptions</span>
+          </h6>
+          <subscriptions />
+        </perfect-scrollbar>
+      </nav>
+      <multipane-resizer />
+      <article-list
+        ref="articleList"
+        :type="articleType"
+        :feed="feed"
+        :style="{ minWidth: '350px', width: '350px', maxWidth: '450px' }"
+        @type-change="updateType"
+      />
+      <multipane-resizer />
+      <article-detail
+        :id="$route.params.id"
+        ref="articleDetail"
+        :article="articleData"
+        :empty-state="empty"
+        :loading="loading"
+      />
+    </multipane>
     <import-modal />
     <markallread-modal />
     <preference-window />
   </div>
 </template>
 <script>
+import { Multipane, MultipaneResizer } from 'vue-multipane'
 import db from '../services/db'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
@@ -71,6 +81,10 @@ const sortBy = (key, pref) => {
 }
 
 export default {
+  components: {
+    Multipane,
+    MultipaneResizer
+  },
   mixins: [
     articleCount,
     setTheme,
@@ -680,5 +694,10 @@ export default {
     color: #000;
     transition: transform 0.15s linear;
   }
+}
+
+.vertical-panes {
+  width: 100%;
+  height: 100%;
 }
 </style>

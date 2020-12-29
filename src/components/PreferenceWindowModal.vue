@@ -551,7 +551,7 @@ export default {
     disconnectInoreader () {
       db.deleteAllSyncAccountSubscriptions('inoreader').then(() => {
         db.deleteArticlesSyncAccount('inoreader').then(() => {
-          this.$store.dispatch('unsetInstapaper').then(() => {
+          this.$store.dispatch('unsetInoreader').then(() => {
             this.$store.dispatch('loadSettings')
             this.$store.dispatch('loadFeeds')
             this.$store.dispatch('loadArticles')
