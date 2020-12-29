@@ -1,6 +1,9 @@
 /* eslint-disable vue/no-v-html */
 <template>
-  <div class="article-detail">
+  <pane
+    class="article-detail"
+    min-size="45"
+  >
     <article-toolbar
       ref="articleToolbar"
       :article.sync="article"
@@ -106,10 +109,15 @@
         <loader v-if="loading" />
       </div>
     </div>
-  </div>
+  </pane>
 </template>
 <script>
+import { Pane } from 'splitpanes'
+
 export default {
+  components: {
+    Pane
+  },
   props: {
     id: {
       type: String,

@@ -67,6 +67,8 @@ brew cask install raven-reader
 - [x] Accessibility Friendly
 - [x] Feedbin integration
 - [x] Inoreader integration
+- [x] Support for subscribing Youtube channels and viewing within app.
+- [x] Flexible resizing of columns/panes
 
 Please feel free to suggest more ideas to improve this app.
 

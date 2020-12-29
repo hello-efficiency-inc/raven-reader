@@ -1,18 +1,20 @@
 <template>
   <div class="app-wrapper">
-    <multipane
+    <vue-topprogress
+      ref="topProgress"
+      color="#22e3ff"
+    />
+    <splitpanes
       class="vertical-panes"
-      layout="vertical"
+      vertical
     >
-      <vue-topprogress
-        ref="topProgress"
-        color="#22e3ff"
-      />
-      <nav
-        v-if="true"
+      <pane
+        v-if="!sideBarHidden"
         ref="sidebar"
+        min-size="18"
+        size="18"
+        max-size="25"
         class="sidebar"
-        :style="{ minWidth: '230px', width: '260px', maxWidth: '360px' }"
       >
         <subscribe-toolbar ref="subscribetoolbar" />
         <perfect-scrollbar class="sidebar-sticky">
@@ -24,16 +26,13 @@
           </h6>
           <subscriptions />
         </perfect-scrollbar>
-      </nav>
-      <multipane-resizer />
+      </pane>
       <article-list
         ref="articleList"
         :type="articleType"
         :feed="feed"
-        :style="{ minWidth: '350px', width: '350px', maxWidth: '450px' }"
         @type-change="updateType"
       />
-      <multipane-resizer />
       <article-detail
         :id="$route.params.id"
         ref="articleDetail"
@@ -41,14 +40,13 @@
         :empty-state="empty"
         :loading="loading"
       />
-    </multipane>
+    </splitpanes>
     <import-modal />
     <markallread-modal />
     <preference-window />
   </div>
 </template>
 <script>
-import { Multipane, MultipaneResizer } from 'vue-multipane'
 import db from '../services/db'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
@@ -63,6 +61,7 @@ import bridge from '../services/bridge'
 import bus from '../services/bus'
 import serviceSync from '../mixins/serviceSync'
 import nodescheduler from 'node-schedule'
+import { Splitpanes, Pane } from 'splitpanes'
 
 const markTypes = {
   favourite: 'FAVOURITE',
@@ -82,8 +81,8 @@ const sortBy = (key, pref) => {
 
 export default {
   components: {
-    Multipane,
-    MultipaneResizer
+    Splitpanes,
+    Pane
   },
   mixins: [
     articleCount,
@@ -105,7 +104,8 @@ export default {
       articleData: null,
       articleType: 'all',
       empty: null,
-      loading: false
+      loading: false,
+      sideBarHidden: false
     }
   },
   watch: {
@@ -240,6 +240,10 @@ export default {
       } else {
         this.$refs.topProgress.done()
       }
+    })
+
+    bus.$on('sidebar-hidden', (data) => {
+      this.sideBarHidden = data
     })
   },
   destroyed () {
@@ -711,7 +715,14 @@ export default {
 }
 
 .vertical-panes {
+  display: flex;
   width: 100%;
   height: 100%;
+}
+
+.splitpanes--vertical > .splitpanes__splitter {
+  min-width: 3px;
+  background:var(--background-color);
+  cursor: col-resize;
 }
 </style>

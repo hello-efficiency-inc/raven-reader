@@ -1,5 +1,9 @@
 <template>
-  <div class="articles-list">
+  <pane
+    class="articles-list"
+    min-size="20"
+    size="25"
+  >
     <div class="articles-inner">
       <form class="search-form">
         <div class="search-input input-group mb-0">
@@ -92,15 +96,19 @@
         />
       </div>
     </div>
-  </div>
+  </pane>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import helper from '../services/helpers'
 import bus from '../services/bus'
 import serviceSync from '../mixins/serviceSync'
+import { Pane } from 'splitpanes'
 
 export default {
+  components: {
+    Pane
+  },
   mixins: [
     serviceSync
   ],
@@ -120,7 +128,8 @@ export default {
       search: null,
       featherIcon: 'chevron-left',
       ariaLabelFoldSidebar: 'Hide Sidebar',
-      syncState: false
+      syncState: false,
+      sideBarHidden: false
     }
   },
   computed: {
@@ -183,15 +192,16 @@ export default {
       }
     },
     fold () {
-      const hasHiddenAttr = this.$parent.$el.querySelector('.sidebar').hasAttribute('hidden')
-      if (!hasHiddenAttr) {
+      if (!this.sideBarHidden) {
+        this.sideBarHidden = true
         this.featherIcon = 'chevron-right'
         this.ariaLabelFoldSidebar = 'Show Sidebar'
-        this.$parent.$el.querySelector('.sidebar').setAttribute('hidden', true)
+        bus.$emit('sidebar-hidden', true)
       } else {
+        this.sideBarHidden = false
         this.featherIcon = 'chevron-left'
         this.ariaLabelFoldSidebar = 'Hide Sidebar'
-        this.$parent.$el.querySelector('.sidebar').removeAttribute('hidden')
+        bus.$emit('sidebar-hidden', false)
       }
     }
   }
