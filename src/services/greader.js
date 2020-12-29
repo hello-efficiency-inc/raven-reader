@@ -10,49 +10,11 @@ const TAGS = {
 }
 
 export default {
-  async getUserInfo (credsData) {
-    let tokenData
-    const currentTime = dayjs().valueOf()
-    if (currentTime >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
-    const data = await axios.get('https://www.inoreader.com/reader/api/0/user-info', {
-      headers: {
-        Authorization: `Bearer ${tokenData.access_token}`
-      }
-    })
-    return data.data
-  },
-  async refreshToken (credsData) {
-    try {
-      window.log('Refreshing Inoreader token')
-      const data = await axios.post('https://www.inoreader.com/oauth2/token', {
-        client_id: process.env.VUE_APP_INOREADER_CLIENT_ID,
-        client_secret: process.env.VUE_APP_INOREADER_CLIENT_SECRET,
-        grant_type: 'refresh_token',
-        refresh_token: credsData.refresh_token
-      })
-      data.data.expires_in = dayjs().add(data.data.expires_in).valueOf()
-      window.electronstore.storeSetSettingItem('set', 'inoreader_creds', data.data)
-      return data.data
-    } catch (e) {
-      window.log.info(e)
-    }
-  },
   async getSubscriptions (credsData) {
-    let tokenData
-    const currentTime = dayjs().valueOf()
-    if (currentTime >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
     try {
-      const subscriptions = await axios.get('https://www.inoreader.com/reader/api/0/subscription/list', {
+      const subscriptions = await axios.get(`${credsData.endpoint}/reader/api/0/subscription/list?output=json`, {
         headers: {
-          Authorization: `Bearer ${tokenData.access_token}`
+          Authorization: `GoogleLogin auth=${credsData.auth}`
         }
       })
       return subscriptions.data.subscriptions
@@ -60,21 +22,14 @@ export default {
       window.log.info(e)
     }
   },
-  async getEntries (credsData, datetime = null) {
-    let tokenData
+  async getEntries (credsData) {
     const entries = []
     let continuation = null
-    const currentTime = dayjs().valueOf()
-    if (currentTime >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
     try {
       do {
-        const data = await axios.get(`https://www.inoreader.com/reader/api/0/stream/contents?n=1000&xt=${TAGS.READ_TAG}&c=${continuation}`, {
+        const data = await axios.get(`${credsData.endpoint}/reader/api/0/stream/contents/?output=json&n=1000&xt=${TAGS.READ_TAG}&c=${continuation}`, {
           headers: {
-            Authorization: `Bearer ${tokenData.access_token}`
+            Authorization: `GoogleLogin auth=${credsData.auth}`
           }
         })
         entries.push(...data.data.items)
@@ -87,13 +42,6 @@ export default {
   },
   async markItem (credsData, type, ids) {
     const postData = new URLSearchParams()
-    let tokenData
-    const currentTime = dayjs().valueOf()
-    if (currentTime >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
     for (let i = 0; i < ids.length; i++) {
       postData.append('i', ids[i])
     }
@@ -111,23 +59,23 @@ export default {
         postData.append('r', TAGS.FAVOURITE_TAG)
         break
     }
-    return await axios.post('https://www.inoreader.com/reader/api/0/edit-tag', postData, {
+    return await axios.post(`${credsData.endpoint}/reader/api/0/edit-tag`, postData, {
       headers: {
-        Authorization: `Bearer ${tokenData.access_token}`
+        Authorization: `GoogleLogin auth=${credsData.auth}`
       }
     })
   },
   async syncItems (credsData, mappedEntries) {
     let subscriptions = await this.getSubscriptions(credsData)
     if (subscriptions) {
-      const currentSubscriptions = await db.fetchServicesFeeds('inoreader')
+      const currentSubscriptions = await db.fetchServicesFeeds('greader')
       const currentFeedUrls = JSON.parse(JSON.stringify(currentSubscriptions)).map((item) => {
         return item.xmlurl
       })
-      const inoreaderSubscriptions = subscriptions.map((item) => {
+      const greaderSubscriptions = subscriptions.map((item) => {
         return item.url
       })
-      const diff = currentFeedUrls.filter(item => !inoreaderSubscriptions.includes(item))
+      const diff = currentFeedUrls.filter(item => !greaderSubscriptions.includes(item))
       if (diff.length > 0) {
         const deleteFeed = currentSubscriptions.filter((x) => diff.includes(x.xmlurl))
         deleteFeed.forEach(async (item) => {
@@ -145,7 +93,7 @@ export default {
           favicon: `https://www.google.com/s2/favicons?domain=${item.htmlUrl}`,
           description: null,
           category: null,
-          source: 'inoreader',
+          source: 'greader',
           source_id: item.id
         }
       })
@@ -156,28 +104,26 @@ export default {
           item.feed_uuid = subscriptAdded.filter(feed => feed.source_id === item.id)[0].uuid
           return item
         })
-        const readTag = `user/${credsData.user.userId}/state/com.google/read`
-        const favouriteTag = `user/${credsData.user.userId}/state/com.google/starred`
         const transformedEntries = JSON.parse(JSON.stringify(mappedEntries)).map((item) => {
           const itemId = item.id.split('/')
           const id = parseInt(itemId[itemId.length - 1], 16)
-          const isMedia = item.alternate && (item.canonical[0].href.includes('youtube') || item.canonical[0].href.includes('vimeo'))
+          const isMedia = item.canonical && (item.alternate[0].href.includes('youtube') || item.alternate[0].href.includes('vimeo'))
           return {
-            id: item.enclosure ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
-            uuid: item.enclosure ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
+            id: item.enclosure ? uuidstring(item.enclosure[0].href) : uuidstring(item.alternate[0].href),
+            uuid: item.enclosure ? uuidstring(item.enclosure[0].href) : uuidstring(item.alternate[0].href),
             title: item.title,
             author: item.author,
-            link: item.canonical[0].href,
+            link: item.alternate[0].href,
             content: item.summary.content,
             contentSnippet: item.summary.content.replace(/(<([^>]+)>)/gi, ''),
-            favourite: item.categories.includes(favouriteTag),
-            read: item.categories.includes(readTag),
+            favourite: item.categories.includes(TAGS.FAVOURITE_TAG),
+            read: item.categories.includes(TAGS.READ_TAG),
             keep_read: null,
             pubDate: item.published,
             offline: false,
             media: isMedia
               ? {
-                  url: item.canonical[0].href,
+                  url: item.alternate[0].href,
                   description: item.summary.content.replace(/(<([^>]+)>)/gi, ''),
                   title: item.title
                 }
@@ -195,11 +141,11 @@ export default {
             publishUnix: dayjs(item.published).unix(),
             feed_uuid: subscriptions.filter(feed => feed.id === item.origin.streamId)[0].feed_uuid,
             category: null,
-            source: 'inoreader',
+            source: 'greader',
             source_id: id
           }
         })
-        window.electronstore.storeSetSettingItem('set', 'inoreader_fetched_lastime', dayjs().toISOString())
+        window.electronstore.storeSetSettingItem('set', 'greader_fetched_lastime', dayjs().toISOString())
         return db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
       })
     }

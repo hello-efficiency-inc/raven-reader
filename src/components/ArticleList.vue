@@ -184,6 +184,7 @@ export default {
         })
         this.syncFeedbin()
         this.syncInoreader()
+        this.syncGreader()
         bus.$emit('progress', 'stop')
         this.syncState = false
       } else {

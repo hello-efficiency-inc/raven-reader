@@ -14,6 +14,13 @@ const state = {
     email: null,
     password: null
   },
+  selfhost_connected: false,
+  selfhost: {
+    endpoint: null,
+    username: null,
+    password: null,
+    auth: null
+  },
   keepRead: 1,
   cronSettings: '*/5 * * * *',
   themeOption: 'system',
@@ -40,6 +47,9 @@ const mutations = {
     if (settings.pocket_creds) {
       settings.pocket = JSON.parse(settings.pocket_creds)
     }
+    if (settings.selfhost_creds) {
+      settings.selfhost = JSON.parse(settings.selfhost_creds)
+    }
     Object.assign(state, settings)
   },
   CHECK_OFFLINE (state) {
@@ -62,6 +72,10 @@ const mutations = {
   },
   SET_PROXY (state, data) {
     state.proxy = data
+  },
+  SET_SELFHOST_CONNECTED (state, data) {
+    state.selfhost_connected = true
+    state.selfhost = data
   },
   SET_INOREADER_CONNECTED (state, data) {
     state.inoreader_connected = true
@@ -86,6 +100,15 @@ const mutations = {
   UNSET_INOREADER (state) {
     state.inoreader_connected = false
     state.inoreader = null
+  },
+  UNSET_SELFHOST (state) {
+    state.selfhost_connected = false
+    state.selfhost = {
+      endpoint: null,
+      username: null,
+      password: null,
+      auth: null
+    }
   },
   UNSET_FEEDBIN (state) {
     state.feedbin_connected = false
@@ -131,6 +154,10 @@ const actions = {
     electronstore.storeSetSettingItem('set', 'feedbin_creds', data)
     commit('SET_FEEDBIN_CONNECTED', data)
   },
+  setSelfhost ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'selfhost_creds', data)
+    commit('SET_SELFHOST_CONNECTED', data)
+  },
   setInstapaper ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'instapaper_creds', data)
     commit('SET_INSTAPAPER_CONNECTED', data)
@@ -150,6 +177,10 @@ const actions = {
   unsetFeedbin ({ commit }) {
     electronstore.storeSetSettingItem('delete', 'feedbin_creds')
     commit('UNSET_FEEDBIN')
+  },
+  unsetSelfhost ({ commit }) {
+    electronstore.storeSetSettingItem('delete', 'selfhost_creds')
+    commit('UNSET_SELFHOST')
   },
   unsetPocket ({ commit }) {
     electronstore.storeSetSettingItem('delete', 'pocket_creds')

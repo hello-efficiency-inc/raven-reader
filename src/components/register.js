@@ -15,6 +15,9 @@ import FeedMix from './FeedMix'
 import MenuItems from './MenuItems'
 import Subscriptions from './Subscriptions'
 import PreferenceWindow from './PreferenceWindowModal'
+import SelfHostedGreader from './SelfHostedGreader'
+import Feedbin from './Feedbin'
+import Inoreader from './Inoreader'
 
 export default {
   registerComponents () {
@@ -34,5 +37,8 @@ export default {
     Vue.component('MenuItems', MenuItems)
     Vue.component('Subscriptions', Subscriptions)
     Vue.component('PreferenceWindow', PreferenceWindow)
+    Vue.component('SelfHostedGreader', SelfHostedGreader)
+    Vue.component('Feedbin', Feedbin)
+    Vue.component('Inoreader', Inoreader)
   }
 }

@@ -4,6 +4,8 @@ export default {
   methods: {
     cleanupContent (content) {
       const $ = cheerio.load(content)
+      $('.enclosure').remove()
+      $('audio').remove()
       $('a').addClass('js-external-link')
       $('img').addClass('img-fluid')
       $('iframe')

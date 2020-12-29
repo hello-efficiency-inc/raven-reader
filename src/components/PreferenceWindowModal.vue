@@ -181,81 +181,31 @@
             </template>
             <div class="row mb-3">
               <div class="col">
-                <h4 class="mb-4 mt-4">
+                <h4 class="mb-4">
                   <strong>RSS Services</strong><br>
                   <small style="font-size: 14px;">Sync across device with RSS services.</small>
                 </h4>
                 <p><strong>Note</strong>: Only one service can be connected. If you have local sources prior to connecting sync accounts that share same feed URLs, local articles will be removed.</p>
               </div>
             </div>
-            <div class="row mb-4">
-              <div class="col">
-                <p class="text-left font-bold">
-                  Feedbin
-                </p>
-              </div>
-              <div class="col">
-                <b-button
-                  v-if="!feedbin_connected"
-                  v-b-modal.feedbin
-                  :disabled="servicesConnected"
-                  variant="primary"
-                  aria-label="Connect Feedbin"
-                  class="float-right"
-                  squared
-                >
-                  Connect
-                </b-button>
-                <b-button
-                  v-if="feedbin_connected"
-                  aria-label="Edit Feedbin"
-                  variant="primary"
-                  class="float-right ml-2"
-                  squared
-                  @click="editFeedbin"
-                >
-                  Edit
-                </b-button>
-                <b-button
-                  v-if="feedbin_connected"
-                  aria-label="Disconnect Feedbin"
-                  class="float-right"
-                  variant="danger"
-                  @click="disconnectFeedbin"
-                >
-                  Disconnect
-                </b-button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <p class="text-left font-bold">
-                  Inoreader
-                </p>
-              </div>
-              <div class="col">
-                <b-button
-                  v-if="!inoreader_connected"
-                  variant="primary"
-                  aria-label="Connect Inoreader"
-                  class="float-right"
-                  squared
-                  :disabled="servicesConnected"
-                  @click="signInInoreader"
-                >
-                  Connect
-                </b-button>
-                <b-button
-                  v-if="inoreader_connected"
-                  aria-label="Disconnect Inoreader"
-                  class="float-right"
-                  variant="danger"
-                  @click="disconnectInoreader"
-                >
-                  Disconnect
-                </b-button>
-              </div>
-            </div>
+            <feedbin
+              :connected="feedbin_connected"
+              :service-connected="servicesConnected"
+              @feedbin-sync="handleSync"
+              @feedbin-connected="handleFeedbinConnect"
+            />
+            <inoreader
+              :connected="inoreader_connected"
+              :service-connected="servicesConnected"
+              @inoreader-connect="handleInoreaderConnect"
+            />
+            <self-hosted-greader
+              :connected="selfhost_connected"
+              :service-connected="servicesConnected"
+              @selfhost-connected="handleSelfHostConnect"
+              @selfhost-sync="handleSync"
+              @preference-modal-hide="hideModal"
+            />
           </b-tab>
         </b-tabs>
       </b-overlay>
@@ -308,70 +258,12 @@
         </button>
       </div>
     </b-modal>
-    <b-modal
-      id="feedbin"
-      ref="feedbinLogin"
-      title="Log into Feedbin"
-      centered
-      @hidden="onHiddenFeedbin"
-    >
-      <b-alert
-        :show="feedbin_error"
-        variant="danger"
-      >
-        Invalid credentials
-      </b-alert>
-      <b-form-group id="input-group-1">
-        <b-form-input
-          id="input-1"
-          v-model="feedbin.endpoint"
-          type="email"
-          required
-          placeholder="Enter email"
-        />
-      </b-form-group>
-      <b-form-group id="input-group-1">
-        <b-form-input
-          id="input-1"
-          v-model="feedbin.email"
-          type="email"
-          required
-          placeholder="Enter email"
-        />
-      </b-form-group>
-      <b-form-group id="input-group-1">
-        <b-form-input
-          id="input-1"
-          v-model="feedbin.password"
-          type="password"
-          required
-          placeholder="Enter password"
-        />
-      </b-form-group>
-      <div slot="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary mr-2"
-          @click="hideFeedbinModal"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          @click="loginFeedbin"
-        >
-          Login
-        </button>
-      </div>
-    </b-modal>
   </div>
 </template>
 <script>
 import db from '../services/db'
 import axios from 'axios'
 import setTheme from '../mixins/setTheme'
-import feedbin from '../services/feedbin'
 import inoreader from '../services/inoreader'
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:9080'
 
@@ -382,17 +274,12 @@ export default {
   data () {
     return {
       showSync: false,
-      feedbin_error: false,
+      selfhost_connected: false,
       feedbin_connected: false,
       inoreader_connected: false,
       pocket_connected: false,
       instapaper_connected: false,
       instapaper_error: false,
-      feedbin: {
-        endpoint: 'https://api.feedbin.com/v2/',
-        email: null,
-        password: null
-      },
       instapaper: {
         username: null,
         password: null
@@ -451,7 +338,7 @@ export default {
   },
   computed: {
     servicesConnected () {
-      return this.inoreader_connected || this.feedbin_connected
+      return this.inoreader_connected || this.feedbin_connected || this.selfhost_connected
     }
   },
   mounted () {
@@ -466,11 +353,11 @@ export default {
         this.proxy.https = this.$store.state.Setting.proxy.https
         this.proxy.bypass = this.$store.state.Setting.proxy.bypass
       }
+      this.selfhost_connected = this.$store.state.Setting.selfhost_connected
       this.inoreader_connected = this.$store.state.Setting.inoreader_connected
       this.instapaper_connected = JSON.parse(JSON.stringify(this.$store.state.Setting.instapaper_connected))
       this.instapaper = JSON.parse(JSON.stringify(this.$store.state.Setting.instapaper))
       this.feedbin_connected = this.$store.state.Setting.feedbin_connected
-      this.feedbin = JSON.parse(JSON.stringify(this.$store.state.Setting.feedbin))
       this.pocket_connected = JSON.parse(JSON.stringify(this.$store.state.Setting.pocket_connected))
     })
     window.api.ipcRendReceive('pocket-authenticated', (args) => {
@@ -545,22 +432,6 @@ export default {
     signInPocket () {
       window.electron.loginPocket()
     },
-    signInInoreader () {
-      window.electron.loginInoreader()
-    },
-    disconnectInoreader () {
-      db.deleteAllSyncAccountSubscriptions('inoreader').then(() => {
-        db.deleteArticlesSyncAccount('inoreader').then(() => {
-          this.$store.dispatch('unsetInoreader').then(() => {
-            this.$store.dispatch('loadSettings')
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-            this.inoreader_connected = false
-            this.hideModal()
-          })
-        })
-      })
-    },
     disconnectPocket () {
       this.$store.dispatch('unsetPocket')
       this.pocket_connected = false
@@ -569,32 +440,12 @@ export default {
       this.$store.dispatch('unsetInstapaper')
       this.instapaper_connected = false
     },
-    disconnectFeedbin () {
-      db.deleteAllSyncAccountSubscriptions('feedbin').then(() => {
-        db.deleteArticlesSyncAccount('feedbin').then(() => {
-          this.$store.dispatch('unsetFeedbin').then(() => {
-            this.$store.dispatch('loadSettings')
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-            this.feedbin_connected = false
-            this.hideModal()
-          })
-        })
-      })
-    },
     onHiddenInstapaper () {
       this.instapaper.username = null
       this.instapaper.password = null
     },
-    onHiddenFeedbin () {
-      this.feedbin.email = null
-      this.feedbin.password = null
-    },
     hideModalInstapaper () {
       this.$refs.instapaperLogin.hide()
-    },
-    hideFeedbinModal () {
-      this.$refs.feedbinLogin.hide()
     },
     loginInstapaper () {
       this.instapaper_error = false
@@ -611,51 +462,24 @@ export default {
         this.instapaper_error = true
       })
     },
-    editFeedbin () {
-      this.feedbin = this.$store.state.Setting.feedbin
-      this.$refs.feedbinLogin.show()
-    },
-    loginFeedbin () {
-      this.feedbin_error = false
-      const creds = `${this.feedbin.email}:${this.feedbin.password}`
-      const headers = new Headers()
-      headers.set('Authorization', `Basic ${btoa(creds)}`)
-      headers.set('Content-Type', 'application/json; charset=utf-8')
-      fetch(`${this.feedbin.endpoint}authentication.json`, {
-        method: 'GET',
-        headers: headers
-      }).then(() => {
-        this.hideFeedbinModal()
-        this.$store.dispatch('setFeedbin', JSON.stringify(this.feedbin)).then(() => {
-          this.feedbin_connected = true
-          this.showSync = true
-          const promise = Promise.all([
-            feedbin.getUnreadEntries(this.feedbin),
-            feedbin.getStarredEntries(this.feedbin),
-            feedbin.getEntries(this.feedbin)
-          ])
-          promise.then((res) => {
-            const [unread, starred, entries] = res
-            const mapped = feedbin.transformEntriesAndFeed(unread, starred, entries)
-            feedbin.syncItems(this.$store.state.Setting.feedbin, mapped).then(() => {
-              this.$store.dispatch('loadFeeds')
-              this.$store.dispatch('loadArticles')
-              this.showSync = false
-              this.hideModal()
-            })
-          })
-          this.$store.dispatch('loadSettings')
-        })
-      }).catch(() => {
-        this.feedbin_error = true
-      })
-    },
     deleteAllData () {
       db.deleteAllData().then(() => {
         this.$store.dispatch('loadFeeds')
         this.$store.dispatch('loadArticles')
         this.hideModal()
       })
+    },
+    handleInoreaderConnect (data) {
+      this.inoreader_connected = data
+    },
+    handleFeedbinConnect (data) {
+      this.feedbin_connected = data
+    },
+    handleSync (data) {
+      this.showSync = data
+    },
+    handleSelfHostConnect (data) {
+      this.selfhost_connected = data
     }
   }
 }

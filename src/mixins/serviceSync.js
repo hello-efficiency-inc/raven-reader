@@ -1,9 +1,21 @@
 import feedbin from '../services/feedbin'
 import inoreader from '../services/inoreader'
+import greader from '../services/greader'
 import dayjs from 'dayjs'
 
 export default {
   methods: {
+    syncGreader () {
+      if (this.$store.state.Setting.selfhost_connected) {
+        greader.getEntries(this.$store.state.Setting.selfhost).then((res) => {
+          window.log.info('Processing Greader feeds')
+          greader.syncItems(this.$store.state.Setting.selfhost, res).then(() => {
+            this.$store.dispatch('loadFeeds')
+            this.$store.dispatch('loadArticles')
+          })
+        })
+      }
+    },
     syncInoreader () {
       if (this.$store.state.Setting.inoreader_connected) {
         inoreader.getEntries(this.$store.state.Setting.inoreader).then((res) => {

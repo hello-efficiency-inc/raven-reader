@@ -1,13 +1,13 @@
 <template>
   <div class="app-wrapper">
-    <vue-topprogress
-      ref="topProgress"
-      color="#22e3ff"
-    />
     <splitpanes
       class="vertical-panes"
       vertical
     >
+      <vue-topprogress
+        ref="topProgress"
+        color="#22e3ff"
+      />
       <pane
         v-if="!sideBarHidden"
         ref="sidebar"
@@ -155,6 +155,7 @@ export default {
   mounted () {
     this.syncFeedbin()
     this.syncInoreader()
+    this.syncGreader()
     this.$store.dispatch('initializeDB').then(async () => {
       await this.$store.dispatch('refreshFeeds')
       await this.$store.dispatch('loadCategories')
@@ -193,6 +194,7 @@ export default {
       this.runKeepReadJob().reschedule()
       this.syncFeedbin()
       this.syncInoreader()
+      this.syncGreader()
       db.deleteArticleByKeepRead()
     })
 
@@ -276,6 +278,7 @@ export default {
         () => {
           this.syncFeedbin()
           this.syncInoreader()
+          this.syncGreader()
         }
       )
     },

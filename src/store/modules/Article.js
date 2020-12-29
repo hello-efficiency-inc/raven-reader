@@ -7,6 +7,7 @@ import Fuse from 'fuse.js'
 import cacheService from '../../services/cacheArticle'
 import feedbin from '../../services/feedbin'
 import inoreader from '../../services/inoreader'
+import greader from '../../services/greader'
 
 dayjs.extend(relativeTime)
 
@@ -123,6 +124,9 @@ const mutations = {
     if (data.rootState.Setting.feedbin_connected) {
       feedbin.markItem(data.rootState.Setting.feedbin, data.data.type, [state.articles[index].articles.source_id])
     }
+    if (data.rootState.Setting.selfhost_connected) {
+      greader.markItem(data.rootState.Setting.selfhost, data.data.type, [state.articles[index].articles.source_id])
+    }
     if (data.rootState.Setting.inoreader_connected) {
       inoreader.markItem(data.rootState.Setting.inoreader, data.data.type, [state.articles[index].articles.source_id])
     }
@@ -132,6 +136,10 @@ const mutations = {
     const ids = JSON.parse(JSON.stringify(state.articles)).map(item => item.articles.source_id)
     if (rootState.Setting.feedbin_connected) {
       feedbin.markItem(rootState.Setting.feedbin, 'READ', ids.filter(item => item !== null))
+    }
+
+    if (rootState.Setting.selfhost_connected) {
+      greader.markItem(rootState.Setting.selfhost, 'READ', ids.filter(item => item !== null))
     }
 
     if (rootState.Setting.inoreader_connected) {
