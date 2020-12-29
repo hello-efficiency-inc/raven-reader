@@ -5,9 +5,8 @@ import dayjs from 'dayjs'
 export default {
   methods: {
     syncInoreader () {
-      const date = window.electronstore.inoreaderLastFetched()
       if (this.$store.state.Setting.inoreader_connected) {
-        inoreader.getEntries(this.$store.state.Setting.inoreader, dayjs(date).subtract(1, 'month').unix()).then((res) => {
+        inoreader.getEntries(this.$store.state.Setting.inoreader).then((res) => {
           window.log.info('Processing Inoreader feeds')
           inoreader.syncItems(this.$store.state.Setting.inoreader, res).then(() => {
             this.$store.dispatch('loadFeeds')
