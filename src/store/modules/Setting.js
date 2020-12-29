@@ -4,6 +4,8 @@ const state = {
   inoreader: null,
   instapaper_connected: false,
   inoreader_connected: false,
+  inoreader_last_fetched: null,
+  greader_fetched_lastime: null,
   instapaper: {
     username: null,
     password: null
@@ -99,6 +101,7 @@ const mutations = {
   },
   UNSET_INOREADER (state) {
     state.inoreader_connected = false
+    state.inoreader_last_fetched = null
     state.inoreader = null
   },
   UNSET_SELFHOST (state) {
@@ -124,6 +127,12 @@ const mutations = {
       username: null,
       password: null
     }
+  },
+  SET_INOREADER_LAST_FETCHED (state, data) {
+    state.inoreader_last_fetched = data
+  },
+  SET_GREADER_LAST_FETCHED (state, data) {
+    state.greader_fetched_lastime = data
   }
 }
 
@@ -197,6 +206,14 @@ const actions = {
   setProxy ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'settings.proxy', data)
     commit('SET_PROXY')
+  },
+  setInoreaderLastFetched ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'inoreader_fetched_lasttime', data)
+    commit('SET_INOREADER_LAST_FETCHED', data)
+  },
+  setGreaderLastFetched ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'greader_fetched_lastime', data)
+    commit('SET_GREADER_LAST_FETCHED', data)
   }
 }
 

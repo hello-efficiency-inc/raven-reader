@@ -1,6 +1,7 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
 import db from './db.js'
+import store from '../store'
 import uuidstring from 'uuid-by-string'
 import * as database from '../db'
 
@@ -64,6 +65,7 @@ export default {
     let tokenData
     const entries = []
     let continuation = null
+    const fetchTime = datetime || dayjs().subtract(7, 'day').unix()
     const currentTime = dayjs().valueOf()
     if (currentTime >= credsData.expires_in) {
       tokenData = await this.refreshToken(credsData)
@@ -72,7 +74,7 @@ export default {
     }
     try {
       do {
-        const data = await axios.get(`https://www.inoreader.com/reader/api/0/stream/contents?n=1000&xt=${TAGS.READ_TAG}&c=${continuation}`, {
+        const data = await axios.get(`https://www.inoreader.com/reader/api/0/stream/contents?n=1000&c=${continuation}&ot=${fetchTime}`, {
           headers: {
             Authorization: `Bearer ${tokenData.access_token}`
           }
@@ -199,7 +201,7 @@ export default {
             source_id: id
           }
         })
-        window.electronstore.storeSetSettingItem('set', 'inoreader_fetched_lastime', dayjs().toISOString())
+        store.dispatch('setInoreaderLastFetched', dayjs().toISOString())
         return db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
       })
     }

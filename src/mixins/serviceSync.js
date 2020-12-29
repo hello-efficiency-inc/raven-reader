@@ -7,7 +7,8 @@ export default {
   methods: {
     syncGreader () {
       if (this.$store.state.Setting.selfhost_connected) {
-        greader.getEntries(this.$store.state.Setting.selfhost).then((res) => {
+        const dateitem = this.$store.state.Setting.greader_fetched_lastime
+        greader.getEntries(this.$store.state.Setting.selfhost, dayjs(dateitem).subtract(1, 'day').unix()).then((res) => {
           window.log.info('Processing Greader feeds')
           greader.syncItems(this.$store.state.Setting.selfhost, res).then(() => {
             this.$store.dispatch('loadFeeds')
@@ -18,7 +19,8 @@ export default {
     },
     syncInoreader () {
       if (this.$store.state.Setting.inoreader_connected) {
-        inoreader.getEntries(this.$store.state.Setting.inoreader).then((res) => {
+        const datetime = this.$store.state.Setting.inoreader_last_fetched
+        inoreader.getEntries(this.$store.state.Setting.inoreader, dayjs(datetime).subtract(1, 'day').unix()).then((res) => {
           window.log.info('Processing Inoreader feeds')
           inoreader.syncItems(this.$store.state.Setting.inoreader, res).then(() => {
             this.$store.dispatch('loadFeeds')

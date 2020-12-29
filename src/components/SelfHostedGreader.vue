@@ -71,6 +71,7 @@
         <button
           type="button"
           class="btn btn-secondary mr-2"
+          @click="hideSelfhostModal"
         >
           Cancel
         </button>

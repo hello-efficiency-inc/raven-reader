@@ -193,11 +193,13 @@
               :service-connected="servicesConnected"
               @feedbin-sync="handleSync"
               @feedbin-connected="handleFeedbinConnect"
+              @preference-modal-hide="hideModal"
             />
             <inoreader
               :connected="inoreader_connected"
               :service-connected="servicesConnected"
               @inoreader-connect="handleInoreaderConnect"
+              @preference-modal-hide="hideModal"
             />
             <self-hosted-greader
               :connected="selfhost_connected"

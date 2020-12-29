@@ -52,7 +52,7 @@ export default {
             this.$store.dispatch('loadFeeds')
             this.$store.dispatch('loadArticles')
             this.$emit('inoreader-connect', false)
-            this.$refs.preference.hide()
+            this.$emit('preference-modal-hide')
           })
         })
       })

@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import db from './db.js'
 import uuidstring from 'uuid-by-string'
 import * as database from '../db'
+import store from '../store'
 
 const TAGS = {
   READ_TAG: 'user/-/state/com.google/read',
@@ -22,12 +23,13 @@ export default {
       window.log.info(e)
     }
   },
-  async getEntries (credsData) {
+  async getEntries (credsData, datetime = null) {
     const entries = []
     let continuation = null
+    const fetchTime = datetime || dayjs().subtract(7, 'day').unix()
     try {
       do {
-        const data = await axios.get(`${credsData.endpoint}/reader/api/0/stream/contents/?output=json&n=1000&xt=${TAGS.READ_TAG}&c=${continuation}`, {
+        const data = await axios.get(`${credsData.endpoint}/reader/api/0/stream/contents/?output=json&n=1000&ot=${fetchTime}&c=${continuation}`, {
           headers: {
             Authorization: `GoogleLogin auth=${credsData.auth}`
           }
@@ -145,7 +147,7 @@ export default {
             source_id: id
           }
         })
-        window.electronstore.storeSetSettingItem('set', 'greader_fetched_lastime', dayjs().toISOString())
+        store.dispatch('setGreaderLastFetched', dayjs().toISOString())
         return db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
       })
     }

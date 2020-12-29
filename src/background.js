@@ -378,6 +378,9 @@ ipcMain.on('get-settings', (event, arg) => {
     state.inoreader_connected = true
     state.inoreader = store.get('inoreader_creds')
   }
+  if (store.has('inoreader_fetched_lasttime')) {
+    state.inoreader_last_fetched = store.get('inoreader_fetched_lasttime')
+  }
   if (store.has('pocket_creds')) {
     state.pocket_connected = true
     state.pocket = store.get('pocket_creds')

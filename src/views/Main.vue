@@ -238,9 +238,13 @@ export default {
 
     bus.$on('progress', (data) => {
       if (data === 'start') {
-        this.$refs.topProgress.start()
+        if (typeof this.$refs.topProgress !== 'undefined') {
+          this.$refs.topProgress.start()
+        }
       } else {
-        this.$refs.topProgress.done()
+        if (typeof this.$refs.topProgress !== 'undefined') {
+          this.$refs.topProgress.done()
+        }
       }
     })
 

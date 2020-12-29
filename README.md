@@ -67,10 +67,16 @@ brew cask install raven-reader
 - [x] Accessibility Friendly
 - [x] Feedbin integration
 - [x] Inoreader integration
+- [x] Google Reader API support. Supports self hosted RSS Services like FreshRSS.org etc.
 - [x] Support for subscribing Youtube channels and viewing within app.
 - [x] Flexible resizing of columns/panes
 
 Please feel free to suggest more ideas to improve this app.
+
+## Supported Platforms
+- Feedbin
+- Inoreader
+- Self hosted RSS Services comptabile with Google Reader API
 
 
 ## Developer Notes
