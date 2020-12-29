@@ -14,7 +14,6 @@ const mutations = {
     }))
   },
   RENAME_CATEGORY (state, category) {
-    console.log(category)
     db.updateCategory(category.id, category.title)
   }
 }
