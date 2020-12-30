@@ -28,8 +28,6 @@
 ## Download
 To download, please visit https://ravenreader.app.
 
-For Alpha/Nightly builds please go to [Releases](https://github.com/hello-efficiency-inc/raven-reader/releases) page.
-
 ## Install via Homebrew (macOS)
 To use Homebrew-Cask you just need to have [Homebrew](https://brew.sh/) installed.
 
