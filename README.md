@@ -76,7 +76,7 @@ Please feel free to suggest more ideas to improve this app.
 ## Supported Platforms
 - Feedbin
 - Inoreader
-- Self hosted RSS Services comptabile with Google Reader API
+- Self hosted RSS Services compatible with Google Reader API
 
 
 ## Developer Notes
