@@ -34,7 +34,7 @@ For Alpha/Nightly builds please go to [Releases](https://github.com/hello-effici
 To use Homebrew-Cask you just need to have [Homebrew](https://brew.sh/) installed.
 
 ```bash
-brew cask install raven-reader
+brew install --cask raven-reader
 ```
 
 
