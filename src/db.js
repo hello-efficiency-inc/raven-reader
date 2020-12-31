@@ -2,7 +2,7 @@ import lf from 'lovefield'
 import db from './services/db'
 import DataStore from 'nedb'
 
-const schemaBuilder = lf.schema.create('raven', 5)
+const schemaBuilder = lf.schema.create('raven', 6)
 
 schemaBuilder.createTable('feeds')
   .addColumn('id', lf.Type.INTEGER)
@@ -16,6 +16,7 @@ schemaBuilder.createTable('feeds')
   .addColumn('source', lf.Type.STRING)
   .addColumn('source_id', lf.Type.STRING)
   .addPrimaryKey(['id'], true)
+  .addIndex('idxSource', ['source'], false)
   .addNullable(['description', 'category', 'link', 'source', 'source_id'])
 
 schemaBuilder.createTable('articles')
@@ -42,6 +43,8 @@ schemaBuilder.createTable('articles')
   .addColumn('source_id', lf.Type.STRING)
   .addColumn('keep_read', lf.Type.INTEGER)
   .addPrimaryKey(['id'], true)
+  .addIndex('idxUuid', ['uuid'], false)
+  .addIndex('idxSource', ['source'], false)
   .addNullable(['source', 'source_id', 'content', 'contentSnippet', 'author', 'category', 'pubDate', 'link', 'itunes', 'enclosure', 'media', 'keep_read'])
 
 schemaBuilder.createTable('categories')
@@ -51,6 +54,7 @@ schemaBuilder.createTable('categories')
   .addColumn('source', lf.Type.STRING)
   .addPrimaryKey(['id'], true)
   .addNullable(['source'])
+  .addIndex('idxSource', ['source'], false)
 
 schemaBuilder.createTable('pruned')
   .addColumn('id', lf.Type.INTEGER)

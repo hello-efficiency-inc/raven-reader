@@ -65,9 +65,9 @@ export function ParseFeedPost (feed) {
     }
     if (item['media:group']) {
       item.media = {
-        url: item['media:group']['media:content'][0].$.url,
-        description: item['media:group']['media:description'][0] || null,
-        title: item['media:group']['media:title'][0]
+        url: item['media:group']['media:content'] ? item['media:group']['media:content'][0].$.url : null,
+        description: item['media:group']['media:description'] ? item['media:group']['media:description'][0] : null,
+        title: item['media:group']['media:title'] ? item['media:group']['media:title'][0] : null
       }
     } else {
       item.media = null

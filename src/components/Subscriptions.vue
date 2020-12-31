@@ -11,10 +11,11 @@
           @click="setActiveFeedId(feeditem)"
           @contextmenu.prevent="openFeedMenu($event, {feed: feeditem})"
         >
-          <router-link
+          <a
             v-if="!feeditem.type && feeditem.category === null"
+            href=""
             class="nav-link"
-            :to="`/feed/${feeditem.id}`"
+            @click="navigateFeed(feeditem.id)"
           >
             <img
               v-if="feeditem.favicon"
@@ -24,7 +25,7 @@
               class="mr-1"
             >
             {{ feeditem.title }}
-          </router-link>
+          </a>
           <div
             v-if="!feeditem.type && feeditem.category === null && getArticlesCount('', feeditem.id) > 0"
             class="nav-link feed-counter"
@@ -75,9 +76,10 @@
               @click="setActiveFeedId(categoryfeed)"
               @contextmenu.prevent="openFeedMenu($event, {feed: categoryfeed})"
             >
-              <router-link
-                :to="`/feed/${categoryfeed.id}`"
+              <a
+                href=""
                 class="nav-link ml-1"
+                @click="navigateFeed(categoryfeed.id)"
               >
                 <img
                   v-if="categoryfeed.favicon"
@@ -87,7 +89,7 @@
                   class="mr-1"
                 >
                 {{ categoryfeed.title }}
-              </router-link>
+              </a>
               <div
                 v-if="getArticlesCount('', categoryfeed.id) > 0"
                 class="nav-link feed-counter"
@@ -104,6 +106,7 @@
   </div>
 </template>
 <script>
+import bus from '../services/bus'
 import cacheService from '../services/cacheArticle'
 import db from '../services/db'
 import helper from '../services/helpers'
@@ -204,13 +207,11 @@ export default {
     },
     categoryHandler (feed) {
       this.setActiveFeedId(feed)
-      this.$router.push({
-        name: 'category-page',
-        params: { category: feed.title }
-      }).catch((err) => {
-        if (err) {
-          window.log.info(err)
-        }
+      bus.$emit('change-article-list', {
+        type: 'category-page',
+        feed: null,
+        category: feed.title,
+        search: null
       })
     },
     mapFeeds (feeds, category) {
@@ -265,6 +266,14 @@ export default {
       if (this.$store.state.Setting.feedbin_connected) {
         feedbin.markItem(this.$store.state.Setting.feedbin, 'MARK_READ', ids)
       }
+    },
+    navigateFeed (id) {
+      bus.$emit('change-article-list', {
+        type: 'feed',
+        feed: id,
+        category: null,
+        search: null
+      })
     }
   }
 }

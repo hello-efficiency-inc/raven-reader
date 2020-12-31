@@ -34,7 +34,7 @@
         @type-change="updateType"
       />
       <article-detail
-        :id="$route.params.id"
+        :id="currentActiveArticle"
         ref="articleDetail"
         :article="articleData"
         :empty-state="empty"
@@ -51,7 +51,6 @@ import db from '../services/db'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
 import helper from '../services/helpers'
-import truncate from 'lodash.truncate'
 import cacheService from '../services/cacheArticle'
 import articleCount from '../mixins/articleCount'
 import cheerio from '../mixins/cheerio'
@@ -70,6 +69,12 @@ const markTypes = {
   unread: 'UNREAD',
   cache: 'CACHE',
   uncache: 'UNCACHE'
+}
+
+const truncateString = (string, maxLength = 50) => {
+  if (!string) return null
+  if (string.length <= maxLength) return string
+  return `${string.substring(0, maxLength)}...`
 }
 
 const sortBy = (key, pref) => {
@@ -91,13 +96,6 @@ export default {
     cheerio,
     serviceSync
   ],
-  beforeRouteUpdate (to, from, next) {
-    if (to.params.id) {
-      window.electron.articleSelected()
-    }
-    bus.$emit('reset-articlelist-count')
-    next()
-  },
   data () {
     return {
       feed: null,
@@ -108,48 +106,12 @@ export default {
       sideBarHidden: false
     }
   },
+  computed: {
+    currentActiveArticle () {
+      return this.$store.state.FeedManager.activeArticleId
+    }
+  },
   watch: {
-    $route (to, from) {
-      switch (to.name) {
-        case 'feed-page':
-          this.articleData = null
-          if (this.$route.params.feedid) {
-            this.articleType = 'feed'
-            this.$store.dispatch('changeType', {
-              type: 'feed',
-              category: null,
-              search: null,
-              feed: this.$route.params.feedid
-            })
-          }
-          break
-        case 'category-page':
-          this.articleData = null
-          this.articleType = 'category'
-          this.$store.dispatch('changeType', {
-            type: 'feed',
-            category: this.$route.params.category,
-            feed: null,
-            search: null
-          })
-          break
-        case 'type-page':
-          if (this.$route.params.type) {
-            this.articleData = null
-            this.articleType = this.$route.params.type
-            this.$store.dispatch('changeType', {
-              type: this.$route.params.type,
-              category: null,
-              feed: null,
-              search: null
-            })
-          }
-          break
-        case 'article-page':
-          this.fetchData()
-          break
-      }
-    },
     allUnread: 'unreadChange'
   },
   mounted () {
@@ -251,11 +213,50 @@ export default {
     bus.$on('sidebar-hidden', (data) => {
       this.sideBarHidden = data
     })
+    bus.$on('change-article-list', this.handleArticleList)
   },
   destroyed () {
     window.electron.removeListeners()
   },
   methods: {
+    handleArticleList (data) {
+      this.articleData = null
+      switch (data.type) {
+        case 'type-page':
+          this.articleType = data.item
+          this.$store.dispatch('changeType', {
+            type: data.item,
+            category: null,
+            feed: null,
+            search: null
+          })
+          bus.$emit('reset-articlelist-count')
+          break
+        case 'feed':
+          this.articleType = 'feed'
+          this.$store.dispatch('changeType', {
+            type: 'feed',
+            category: null,
+            search: null,
+            feed: data.feed
+          })
+          bus.$emit('reset-articlelist-count')
+          break
+        case 'category-page':
+          this.articleType = 'category'
+          this.$store.dispatch('changeType', {
+            type: 'feed',
+            category: data.category,
+            feed: null,
+            search: null
+          })
+          bus.$emit('reset-articlelist-count')
+          break
+        case 'article-page':
+          this.fetchData(data.id)
+          break
+      }
+    },
     runArticleCronJob () {
       const self = this
       // Feed Crawling
@@ -314,7 +315,7 @@ export default {
         : null
       data.favicon = article.feeds.favicon
       data.fulltitle = article.feeds.fulltitle
-      data.sitetitle = truncate(article.feeds.title, 20)
+      data.sitetitle = truncateString(article.feeds.title, 20)
       data.feed_uuid = article.feeds.uuid
       data.category = article.articles.category
       data.podcast = article.articles.podcast
@@ -344,52 +345,50 @@ export default {
       feedsCopy = feedsCopy.concat().sort(sortBy('unread', 'desc'))
       this.$store.dispatch('orderFeeds', feedsCopy)
     },
-    fetchData () {
+    fetchData (id) {
       const self = this
       self.$refs.topProgress.start()
-      if (this.$route.params.id) {
-        self.articleData = null
-        self.loading = true
-        db.fetchArticle(this.$route.params.id).then(async function (article) {
-          const articleItem = JSON.parse(JSON.stringify(article[0]))
-          let data
-          self.$store.dispatch('markAction', {
-            type: 'READ',
-            id: self.$route.params.id,
-            podcast: articleItem.articles.podcast
-          }).then(() => self.$store.dispatch('loadArticles'))
-          try {
-            if (!articleItem.articles.podcast) {
-              data = self.$store.state.Setting.offline
-                ? await cacheService
-                    .getCachedArticleData(
-                      articleItem.articles.id,
-                      articleItem.articles.link
-                    )
-                : articleItem.articles
-              if (data) {
-                self.prepareArticleData(data, articleItem)
-              } else {
-                articleItem.articles.content = null
-                articleItem.articles.url = articleItem.articles.link
-                self.articleData = articleItem
-                self.empty = true
-                self.loading = false
-              }
+      self.articleData = null
+      self.loading = true
+      db.fetchArticle(id).then(async function (article) {
+        const articleItem = JSON.parse(JSON.stringify(article[0]))
+        let data
+        self.$store.dispatch('markAction', {
+          type: 'READ',
+          id: id,
+          podcast: articleItem.articles.podcast
+        }).then(() => self.$store.dispatch('loadArticles'))
+        try {
+          if (!articleItem.articles.podcast) {
+            data = self.$store.state.Setting.offline
+              ? await cacheService
+                  .getCachedArticleData(
+                    articleItem.articles.id,
+                    articleItem.articles.link
+                  )
+              : articleItem.articles
+            if (data) {
+              self.prepareArticleData(data, articleItem)
             } else {
-              self.prepareArticleData(articleItem.articles, articleItem)
+              articleItem.articles.content = null
+              articleItem.articles.url = articleItem.articles.link
+              self.articleData = articleItem
+              self.empty = true
+              self.loading = false
             }
-          } catch (e) {
-            window.log.info(e)
-            articleItem.content = null
-            articleItem.url = articleItem.articles.link
-            self.articleData = articleItem
-            self.empty = true
-            self.loading = false
-            self.$refs.topProgress.done()
+          } else {
+            self.prepareArticleData(articleItem.articles, articleItem)
           }
-        })
-      }
+        } catch (e) {
+          window.log.info(e)
+          articleItem.content = null
+          articleItem.url = articleItem.articles.link
+          self.articleData = articleItem
+          self.empty = true
+          self.loading = false
+          self.$refs.topProgress.done()
+        }
+      })
     }
   }
 }

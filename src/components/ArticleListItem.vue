@@ -2,14 +2,13 @@
   <div
     class="artcle-list-item"
     mark="article"
-    :class="{ active: isArticleActive(article.articles) }"
-    @click="setActiveArticleId(article.articles)"
     @contextmenu.prevent="openArticleContextMenu($event, { article: article.articles })"
   >
-    <router-link
-      :to="`/article/${article.id}`"
+    <a
+      href=""
       :class="{ 'article-read': article.articles.read }"
       class="list-group-item list-group-item-action flex-column align-items-start"
+      @click="handleArticle(article.articles.id)"
     >
       <div class="d-flex flex-column w-100">
         <p class="mb-1">
@@ -37,10 +36,12 @@
           :filled="article.articles.favourite"
         />
       </p>
-    </router-link>
+    </a>
   </div>
 </template>
 <script>
+import bus from '../services/bus'
+
 export default {
   props: {
     article: {
@@ -48,20 +49,17 @@ export default {
       default: null
     }
   },
-  computed: {
-    activeArticleId () {
-      return this.$store.getters.activeArticleId
-    }
-  },
   methods: {
+    handleArticle (id) {
+      bus.$emit('change-article-list', {
+        type: 'article-page',
+        id: id
+      })
+      bus.$emit('change-active-article', id)
+      this.$store.dispatch('setActiveArticleId', id)
+    },
     openArticleContextMenu (e, article) {
       window.electron.createContextMenu('article', article)
-    },
-    setActiveArticleId (article) {
-      return this.$store.dispatch('setActiveArticleId', article)
-    },
-    isArticleActive (article) {
-      return !!article && article.uuid !== undefined && article.uuid === this.activeArticleId
     }
   }
 }

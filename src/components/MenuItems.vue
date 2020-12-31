@@ -1,13 +1,11 @@
 <template>
   <ul class="nav flex-column">
     <li class="nav-item">
-      <router-link
+      <a
+        href=""
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/all"
-        tag="div"
-        tabindex="0"
-        role="link"
-        active-class="active"
+        :class="{ active: isMenuItemActive('all') }"
+        @click="handleMenuItem('all')"
       >
         <feed-mix
           feed-id="allFeeds"
@@ -20,15 +18,14 @@
             class="items-counter"
           >{{ getArticlesCount('','') }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li class="nav-item">
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/favourites"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('favourites') }"
+        @click.prevent="handleMenuItem('favourites')"
       >
         <feed-mix
           feed-id="favourites"
@@ -40,15 +37,14 @@
             class="items-counter"
           >{{ getArticlesCount('favourites','') }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li class="nav-item">
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/unread"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('unread') }"
+        @click.prevent="handleMenuItem('unread')"
       >
         <feed-mix
           feed-id="unreadArticles"
@@ -60,18 +56,17 @@
             class="items-counter"
           >{{ getArticlesCount('unread', '') }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li
       class="nav-item"
       :class="{ 'd-none': showLess }"
     >
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/read"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('read') }"
+        @click.prevent="handleMenuItem('read')"
       >
         <feed-mix
           feed-id="recentlyRead"
@@ -86,18 +81,17 @@
             class="items-counter"
           >{{ getArticlesCount('read', '') }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li
       class="nav-item"
       :class="{ 'd-none': showLess }"
     >
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/played"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('played') }"
+        @click.prevent="handleMenuItem('played')"
       >
         <feed-mix
           feed-id="recentlyPlayed"
@@ -109,18 +103,17 @@
             class="items-counter"
           >{{ getArticlesCount('played', '') }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li
       class="nav-item"
       :class="{ 'd-none': showLess }"
     >
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/saved"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('saved') }"
+        @click.prevent="handleMenuItem('saved')"
       >
         <feed-mix
           feed-id="savedArticles"
@@ -132,12 +125,12 @@
             class="items-counter"
           >{{ getArticlesCount('saved', '') }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li class="nav-item">
       <a
-        class="nav-link"
-        href="#"
+        class="nav-link menu-link-clickable"
+        href=""
         @click="showLessItems"
       >
         <template v-if="showLess">
@@ -151,10 +144,13 @@
   </ul>
 </template>
 <script>
+import bus from '../services/bus'
+import feedMix from '../mixins/feedMix'
 import articleCount from '../mixins/articleCount'
 
 export default {
   mixins: [
+    feedMix,
     articleCount
   ],
   data () {
@@ -163,6 +159,12 @@ export default {
     }
   },
   methods: {
+    handleMenuItem (type) {
+      bus.$emit('change-article-list', {
+        type: 'type-page',
+        item: type
+      })
+    },
     showLessItems () {
       this.showLess = !this.showLess
     }

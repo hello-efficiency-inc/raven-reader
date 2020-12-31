@@ -1,4 +1,11 @@
 module.exports = {
+  configureWebpack: {
+    optimization: {
+      splitChunks: {
+        chunks: 'all'
+      }
+    }
+  },
   pluginOptions: {
     electronBuilder: {
       preload: 'src/preload.js',

@@ -10,6 +10,11 @@ const TAGS = {
   FAVOURITE_TAG: 'user/-/state/com.google/starred'
 }
 
+function checkIsPodCast (post) {
+  return typeof post !== 'undefined' &&
+    post.length && post.type.indexOf('audio') !== -1
+}
+
 export default {
   async getUserInfo (credsData) {
     let tokenData
@@ -164,9 +169,10 @@ export default {
           const itemId = item.id.split('/')
           const id = parseInt(itemId[itemId.length - 1], 16)
           const isMedia = item.alternate && (item.canonical[0].href.includes('youtube') || item.canonical[0].href.includes('vimeo'))
+          const isPodcast = item.enclosure ? checkIsPodCast(item.enclosure[0]) : false
           return {
-            id: item.enclosure ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
-            uuid: item.enclosure ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
+            id: isPodcast ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
+            uuid: isPodcast ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
             title: item.title,
             author: item.author,
             link: item.canonical[0].href,
@@ -184,8 +190,8 @@ export default {
                   title: item.title
                 }
               : null,
-            podcast: !!item.enclosure,
-            enclosure: item.enclosure
+            podcast: isPodcast,
+            enclosure: isPodcast
               ? {
                   type: item.enclosure[0].type,
                   url: item.enclosure[0].href,
