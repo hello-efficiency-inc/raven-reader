@@ -36,7 +36,7 @@ const actions = {
     commit('SET_ACTIVE_FEED_ID', getId(feed))
   },
   setActiveArticleId ({ commit }, article) {
-    commit('SET_ACTIVE_ARTICLE_ID', getId(article))
+    commit('SET_ACTIVE_ARTICLE_ID', article)
   },
   setActiveFeed ({ commit }, feed) {
     commit('SET_ACTIVE_FEED', feed)

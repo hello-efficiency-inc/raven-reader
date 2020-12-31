@@ -1,4 +1,4 @@
-import { app, ipcRenderer } from 'electron'
+import { app, ipcRenderer, shell } from 'electron'
 
 export default {
   removeListeners: () => {
@@ -19,6 +19,9 @@ export default {
   },
   loginInoreader: () => {
     return ipcRenderer.send('login-inoreader')
+  },
+  openExternal: (href) => {
+    shell.openExternal(href)
   },
   createContextMenu: (type, data) => {
     return ipcRenderer.invoke('context-menu', {

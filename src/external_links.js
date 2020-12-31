@@ -25,7 +25,7 @@ const supportExternalLinks = event => {
       isExternal = true
     }
     if (href && isExternal) {
-      window.shell.openExternal(href)
+      window.electron.openExternal(href)
       event.preventDefault()
     } else if (element.parentElement) {
       checkDomElement(element.parentElement)

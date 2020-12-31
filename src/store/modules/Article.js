@@ -1,8 +1,9 @@
 import db from '../../services/db'
 import helper from '../../services/helpers'
 import dayjs from 'dayjs'
+import advanced from 'dayjs/plugin/advancedFormat'
+import timezone from 'dayjs/plugin/timezone'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import truncate from 'lodash.truncate'
 import Fuse from 'fuse.js'
 import cacheService from '../../services/cacheArticle'
 import feedbin from '../../services/feedbin'
@@ -10,6 +11,8 @@ import inoreader from '../../services/inoreader'
 import greader from '../../services/greader'
 
 dayjs.extend(relativeTime)
+dayjs.extend(timezone)
+dayjs.extend(advanced)
 
 const state = {
   articles: [],
@@ -20,6 +23,12 @@ const state = {
   fontStyle: null,
   category: null,
   feed: ''
+}
+
+const truncateString = (string, maxLength = 50) => {
+  if (!string) return null
+  if (string.length <= maxLength) return string
+  return `${string.substring(0, maxLength)}...`
 }
 
 const filters = {
@@ -73,14 +82,16 @@ const getters = {
 }
 
 const mutations = {
-  LOAD_ARTICLES (state, articles) {
-    state.articles = Object.freeze(articles.map((item) => {
-      item.articles.contentSnippet = truncate(item.articles.contentSnippet, {
-        length: 100
-      })
-      item.formatDate = dayjs(item.articles.pubDate).format('DD MMMM YYYY h:mm A', {
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      })
+  LOAD_ARTICLES (state, data) {
+    state.articles = Object.freeze(data.data.map((item) => {
+      item.articles.contentSnippet = truncateString(item.articles.contentSnippet, 100)
+      dayjs.tz.setDefault(Intl.DateTimeFormat().resolvedOptions().timeZone)
+      if (data.root.Setting.inoreader_connected || data.root.Setting.selfhost_connected) {
+        item.formatDate = dayjs.unix(item.articles.pubDate).format('DD MMMM YYYY h:mm A')
+      } else {
+        item.formatDate = dayjs(item.articles.pubDate)
+          .format('DD MMMM YYYY h:mm A')
+      }
       if (!('offline' in item.articles)) {
         item.articles.offline = false
       }
@@ -90,9 +101,7 @@ const mutations = {
   ADD_ARTICLES (state, articles) {
     if (articles) {
       state.articles.unshift(...articles.map((item) => {
-        item.feed_title = truncate(item.feed_title, {
-          length: 20
-        })
+        item.feed_title = truncateString(item.feed_title, 20)
         item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
         item.pubDate = dayjs(item.pubDate).unix()
         return item
@@ -200,8 +209,12 @@ const mutations = {
 }
 
 const actions = {
-  async loadArticles ({ commit }) {
-    commit('LOAD_ARTICLES', await db.fetchArticles())
+  async loadArticles ({ commit, rootState }) {
+    const data = await db.fetchArticles()
+    commit('LOAD_ARTICLES', {
+      root: rootState,
+      data: data
+    })
   },
   async addArticle ({ commit }, article) {
     commit('ADD_ARTICLES', await db.addArticles(article))

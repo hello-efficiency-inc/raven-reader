@@ -56,5 +56,3 @@ contextBridge.exposeInMainWorld('api', {
     }
   }
 })
-
-// window.shell = require('electron').shell
