@@ -76,6 +76,18 @@ Please feel free to suggest more ideas to improve this app.
 - Inoreader
 - Self hosted RSS Services compatible with Google Reader API
 
+## Shortcut Keys
+
+Command/Ctrl + N - Add new source/Feed
+Command/Ctrl + , - For Preferences
+Command/Ctrl + J - Next Article Item
+Command/Ctrl + K - Previous Article Item
+Command/Ctrl + T - Toggle Read
+Command/Ctrl + S - Toggle Favourite
+Command/Ctrl + O - Save article offline
+Command/Ctrl + B - View it on browser
+
+
 
 ## Developer Notes
 

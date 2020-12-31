@@ -215,6 +215,7 @@
   </div>
 </template>
 <script>
+import bus from '../services/bus'
 import cheerio from '../mixins/cheerio'
 import { parseArticle } from '../parsers/article'
 import cacheService from '../services/cacheArticle'
@@ -281,12 +282,6 @@ export default {
     }
   },
   watch: {
-    '$route.fullPath': {
-      immediate: true, // Immediate option to call watch handler on first mount
-      handler () {
-        this.resetData()
-      }
-    },
     article () {
       this.articleItem = JSON.parse(JSON.stringify(this.article))
     }
@@ -294,6 +289,9 @@ export default {
   mounted () {
     this.pocket_connected = this.$store.state.Setting.pocket_connected
     this.instapaper_connected = this.$store.state.Setting.instapaper_connected
+    bus.$on('change-article-list', () => {
+      this.resetData()
+    })
   },
   methods: {
     resetData () {
@@ -323,18 +321,12 @@ export default {
       if (this.articleItem.favourite) {
         this.$store.dispatch('markAction', {
           type: markTypes.unfavourite,
-          id: this.$route.params.id
-        }).then(() => {
-          this.$store.dispatch('loadFeeds')
-          this.$store.dispatch('loadArticles')
+          id: this.$store.state.FeedManager.activeArticleId
         })
       } else {
         this.$store.dispatch('markAction', {
           type: markTypes.favourite,
-          id: this.$route.params.id
-        }).then(() => {
-          this.$store.dispatch('loadFeeds')
-          this.$store.dispatch('loadArticles')
+          id: this.$store.state.FeedManager.activeArticleId
         })
       }
       this.articleItem.favourite = !this.articleItem.favourite
@@ -347,9 +339,6 @@ export default {
           self.$store.dispatch('saveArticle', {
             type: markTypes.uncache,
             article: self.articleItem
-          }).then(() => {
-            self.$store.dispatch('loadFeeds')
-            self.$store.dispatch('loadArticles')
           })
         })
       } else {
@@ -358,9 +347,6 @@ export default {
           self.$store.dispatch('saveArticle', {
             type: markTypes.cache,
             article: self.articleItem
-          }).then(() => {
-            self.$store.dispatch('loadFeeds')
-            self.$store.dispatch('loadArticles')
           })
         })
       }
@@ -405,13 +391,13 @@ export default {
       if (this.articleItem.read) {
         this.$store.dispatch('markAction', {
           type: markTypes.unread,
-          id: this.$route.params.id,
+          id: this.$store.state.FeedManager.activeArticleId,
           podcast: this.articleItem.podcast
         })
       } else {
         this.$store.dispatch('markAction', {
           type: markTypes.read,
-          id: this.$route.params.id,
+          id: this.$store.state.FeedManager.activeArticleId,
           podcast: this.articleItem.podcast
         })
       }

@@ -1,8 +1,9 @@
 import db from '../../services/db'
 import helper from '../../services/helpers'
 import dayjs from 'dayjs'
+import advanced from 'dayjs/plugin/advancedFormat'
+import timezone from 'dayjs/plugin/timezone'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import truncate from 'lodash.truncate'
 import Fuse from 'fuse.js'
 import cacheService from '../../services/cacheArticle'
 import feedbin from '../../services/feedbin'
@@ -10,6 +11,8 @@ import inoreader from '../../services/inoreader'
 import greader from '../../services/greader'
 
 dayjs.extend(relativeTime)
+dayjs.extend(timezone)
+dayjs.extend(advanced)
 
 const state = {
   articles: [],
@@ -20,6 +23,12 @@ const state = {
   fontStyle: null,
   category: null,
   feed: ''
+}
+
+const truncateString = (string, maxLength = 50) => {
+  if (!string) return null
+  if (string.length <= maxLength) return string
+  return `${string.substring(0, maxLength)}...`
 }
 
 const filters = {
@@ -42,6 +51,18 @@ const searchOption = {
   includeScore: true,
   threshold: 0.4,
   keys: ['articles.title', 'articles.content']
+}
+
+const markItem = (type, rootState, state, index) => {
+  if (rootState.Setting.feedbin_connected) {
+    feedbin.markItem(rootState.Setting.feedbin, type, [state.articles[index].articles.source_id])
+  }
+  if (rootState.Setting.selfhost_connected) {
+    greader.markItem(rootState.Setting.selfhost, type, [state.articles[index].articles.source_id])
+  }
+  if (rootState.Setting.inoreader_connected) {
+    inoreader.markItem(rootState.Setting.inoreader, type, [state.articles[index].articles.source_id])
+  }
 }
 
 const sortBy = (key, pref) => {
@@ -73,14 +94,16 @@ const getters = {
 }
 
 const mutations = {
-  LOAD_ARTICLES (state, articles) {
-    state.articles = Object.freeze(articles.map((item) => {
-      item.articles.contentSnippet = truncate(item.articles.contentSnippet, {
-        length: 100
-      })
-      item.formatDate = dayjs(item.articles.pubDate).format('DD MMMM YYYY h:mm A', {
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      })
+  LOAD_ARTICLES (state, data) {
+    state.articles = Object.freeze(data.data.map((item) => {
+      item.articles.contentSnippet = truncateString(item.articles.contentSnippet, 100)
+      dayjs.tz.setDefault(Intl.DateTimeFormat().resolvedOptions().timeZone)
+      if (data.root.Setting.inoreader_connected || data.root.Setting.selfhost_connected) {
+        item.formatDate = dayjs.unix(item.articles.pubDate).format('DD MMMM YYYY h:mm A')
+      } else {
+        item.formatDate = dayjs(item.articles.pubDate)
+          .format('DD MMMM YYYY h:mm A')
+      }
       if (!('offline' in item.articles)) {
         item.articles.offline = false
       }
@@ -90,49 +113,56 @@ const mutations = {
   ADD_ARTICLES (state, articles) {
     if (articles) {
       state.articles.unshift(...articles.map((item) => {
-        item.feed_title = truncate(item.feed_title, {
-          length: 20
-        })
+        item.feed_title = truncateString(item.feed_title, 20)
         item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
         item.pubDate = dayjs(item.pubDate).unix()
         return item
       }))
     }
   },
-  MARK_ACTION (state, data) {
+  FAVOURITE (state, data) {
+    db.markFavourite(data.data.id, true)
+    const clone = JSON.parse(JSON.stringify(state.articles))
     const index = state.articles.findIndex(item => item.articles.uuid === data.data.id)
-    if (data.data.type === 'FAVOURITE') {
-      state.articles[index].articles.favourite = true
+    clone[index].articles.favourite = true
+    state.articles = Object.freeze(clone)
+    markItem('FAVOURITE', data.rootState, state, index)
+  },
+  UNFAVOURITE (state, data) {
+    db.markFavourite(data.data.id, false).then()
+    const clone = JSON.parse(JSON.stringify(state.articles))
+    const index = state.articles.findIndex(item => item.articles.uuid === data.data.id)
+    clone[index].articles.favourite = false
+    state.articles = Object.freeze(clone)
+    markItem('UNFAVOURITE', data.rootState, state, index)
+  },
+  READ (state, data) {
+    const clone = JSON.parse(JSON.stringify(state.articles))
+    const index = clone.findIndex(item => item.articles.uuid === data.data.id)
+    if (clone[index].articles.read) {
+      return
     }
-
-    if (data.data.type === 'UNFAVOURITE') {
-      state.articles[index].articles.favourite = false
+    clone[index].articles.read = true
+    if (clone[index].articles.podcast) {
+      clone[index].articles.played = true
     }
-    if (data.data.type === 'READ') {
-      state.articles[index].articles.read = true
-      if (state.articles[index].articles.podcast) {
-        state.articles[index].articles.played = true
-      }
+    state.articles = Object.freeze(clone)
+    db.markRead(data.data.id, data.data.podcast, true)
+    markItem('READ', data.rootState, state, index)
+  },
+  UNREAD (state, data) {
+    const clone = JSON.parse(JSON.stringify(state.articles))
+    const index = clone.findIndex(item => item.articles.uuid === data.data.id)
+    clone[index].articles.read = false
+    if (clone[index].articles.podcast) {
+      clone[index].articles.played = false
     }
-
-    if (data.data.type === 'UNREAD') {
-      state.articles[index].articles.read = false
-      if (state.articles[index].articles.podcast) {
-        state.articles[index].articles.played = false
-      }
-    }
-    if (data.rootState.Setting.feedbin_connected) {
-      feedbin.markItem(data.rootState.Setting.feedbin, data.data.type, [state.articles[index].articles.source_id])
-    }
-    if (data.rootState.Setting.selfhost_connected) {
-      greader.markItem(data.rootState.Setting.selfhost, data.data.type, [state.articles[index].articles.source_id])
-    }
-    if (data.rootState.Setting.inoreader_connected) {
-      inoreader.markItem(data.rootState.Setting.inoreader, data.data.type, [state.articles[index].articles.source_id])
-    }
+    state.articles = Object.freeze(clone)
+    db.markRead(data.data.id, data.data.podcast, false)
+    markItem('UNREAD', data.rootState, state, index)
   },
   MARK_ALL_READ (state, rootState) {
-    db.markAllRead(state.articles.map(item => item.articles.uuid))
+    db.markAllRead(state.articles.filter(item => !item.articles.read).map(item => item.articles.uuid))
     const ids = JSON.parse(JSON.stringify(state.articles)).map(item => item.articles.source_id)
     if (rootState.Setting.feedbin_connected) {
       feedbin.markItem(rootState.Setting.feedbin, 'READ', ids.filter(item => item !== null))
@@ -165,8 +195,10 @@ const mutations = {
     state.search = type.search
   },
   SAVE_ARTICLE (state, data) {
+    const clone = JSON.parse(JSON.stringify(state.articles))
     const index = state.articles.findIndex(item => item.articles.uuid === data.article._id)
-    state.articles[index].offline = data.type === 'CACHE'
+    clone[index].articles.offline = data.type === 'CACHE'
+    state.articles = Object.freeze(clone)
   },
   INCREASE_FONT (state) {
     if (state.fontSize <= 150) {
@@ -200,28 +232,21 @@ const mutations = {
 }
 
 const actions = {
-  async loadArticles ({ commit }) {
-    commit('LOAD_ARTICLES', await db.fetchArticles())
+  async loadArticles ({ commit, rootState }) {
+    const data = await db.fetchArticles()
+    commit('LOAD_ARTICLES', {
+      root: rootState,
+      data: data
+    })
   },
   async addArticle ({ commit }, article) {
     commit('ADD_ARTICLES', await db.addArticles(article))
   },
   markAction ({ commit, rootState }, data) {
-    switch (data.type) {
-      case 'FAVOURITE':
-        db.markFavourite(data.id, true)
-        break
-      case 'UNFAVOURITE':
-        db.markFavourite(data.id, false)
-        break
-      case 'READ':
-        db.markRead(data.id, data.podcast, true)
-        break
-      case 'UNREAD':
-        db.markRead(data.id, data.podcast, false)
-        break
-    }
-    commit('MARK_ACTION', { rootState: rootState, data: data })
+    commit(data.type, {
+      rootState: rootState,
+      data: data
+    })
   },
   saveArticle ({ commit }, data) {
     db.markOffline(data.article._id, data.type === 'CACHE')

@@ -54,15 +54,16 @@
       <div class="articles">
         <perfect-scrollbar class="list-group">
           <template v-if="filteredArticles.length > 0">
-            <template v-for="(article, index) in mapArticles(filteredArticles)">
+            <template v-for="(article, index) in filteredArticles">
               <article-item
                 v-if="index <= articlesToShow"
-                :key="article.uuid"
+                :key="article.articles.uuid"
+                :class="{ active: currentArticle === article.articles.uuid }"
                 :article="article"
               />
             </template>
             <button
-              v-if="articlesToShow <= mapArticles(filteredArticles).length"
+              v-if="articlesToShow <= filteredArticles.length"
               class="btn btn-primary rounded-0"
               type="button"
               @click="articlesToShow += 10"
@@ -129,16 +130,14 @@ export default {
       featherIcon: 'chevron-left',
       ariaLabelFoldSidebar: 'Hide Sidebar',
       syncState: false,
-      sideBarHidden: false
+      sideBarHidden: false,
+      currentArticle: null
     }
   },
   computed: {
     ...mapGetters([
       'filteredArticles'
-    ]),
-    activeArticleId () {
-      return this.$store.getters.activeArticleId
-    }
+    ])
   },
   watch: {
     filteredArticles: 'itemsChange'
@@ -150,6 +149,9 @@ export default {
     bus.$on('sync-complete', () => {
       this.itemsChange()
     })
+    bus.$on('change-active-article', (data) => {
+      this.currentArticle = data
+    })
   },
   methods: {
     searchList () {
@@ -159,12 +161,6 @@ export default {
         feed: null,
         category: null
       })
-    },
-    mapArticles (articles) {
-      return articles.map(article => ({ ...article, id: article.articles.id, isActive: this.isArticleActive(article) }))
-    },
-    isArticleActive (article) {
-      return !!article && article.articles.id !== undefined && article.articles.id === this.activeArticleId
     },
     itemsChange () {
       if (this.filteredArticles && this.$refs.statusMsg) {

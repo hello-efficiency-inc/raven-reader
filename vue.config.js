@@ -1,4 +1,12 @@
 module.exports = {
+  configureWebpack: {
+    devtool: 'source-map',
+    optimization: {
+      splitChunks: {
+        chunks: 'all'
+      }
+    }
+  },
   pluginOptions: {
     electronBuilder: {
       preload: 'src/preload.js',
@@ -36,7 +44,8 @@ module.exports = {
           entitlements: './node_modules/electron-builder-notarize/entitlements.mac.inherit.plist',
           gatekeeperAssess: false,
           target: [
-            'dmg'
+            'dmg',
+            'zip'
           ],
           icon: 'build/icons/icon.icns'
         },

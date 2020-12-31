@@ -1,13 +1,11 @@
 <template>
   <ul class="nav flex-column">
     <li class="nav-item">
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/all"
-        tag="div"
-        tabindex="0"
-        role="link"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('all') }"
+        @click="handleMenuItem('all')"
       >
         <feed-mix
           feed-id="allFeeds"
@@ -16,19 +14,18 @@
           <feather-icon name="list" />All Feeds
           <span class="sr-only">(current)</span>
           <span
-            v-if="getArticlesCount('','') > 0"
+            v-if="getAll > 0"
             class="items-counter"
-          >{{ getArticlesCount('','') }}</span>
+          >{{ getAll }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li class="nav-item">
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/favourites"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('favourites') }"
+        @click.prevent="handleMenuItem('favourites')"
       >
         <feed-mix
           feed-id="favourites"
@@ -36,19 +33,18 @@
         >
           <feather-icon name="star" />Favourites
           <span
-            v-if="getArticlesCount('favourites','') > 0"
+            v-if="getFavourites > 0"
             class="items-counter"
-          >{{ getArticlesCount('favourites','') }}</span>
+          >{{ getFavourites }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li class="nav-item">
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/unread"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('unread') }"
+        @click.prevent="handleMenuItem('unread')"
       >
         <feed-mix
           feed-id="unreadArticles"
@@ -56,22 +52,21 @@
         >
           <feather-icon name="circle" />Unread Articles
           <span
-            v-if="getArticlesCount('unread', '') > 0"
+            v-if="getUnreadArticles > 0"
             class="items-counter"
-          >{{ getArticlesCount('unread', '') }}</span>
+          >{{ getUnreadArticles }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li
       class="nav-item"
       :class="{ 'd-none': showLess }"
     >
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/read"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('read') }"
+        @click.prevent="handleMenuItem('read')"
       >
         <feed-mix
           feed-id="recentlyRead"
@@ -82,22 +77,21 @@
             filled
           />Recently Read
           <span
-            v-if="getArticlesCount('read', '') > 0"
+            v-if="getReadArticles > 0"
             class="items-counter"
-          >{{ getArticlesCount('read', '') }}</span>
+          >{{ getReadArticles }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li
       class="nav-item"
       :class="{ 'd-none': showLess }"
     >
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/played"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('played') }"
+        @click.prevent="handleMenuItem('played')"
       >
         <feed-mix
           feed-id="recentlyPlayed"
@@ -105,22 +99,21 @@
         >
           <feather-icon name="play-circle" />Recently Played
           <span
-            v-if="getArticlesCount('played', '') > 0"
+            v-if="getPlayed > 0"
             class="items-counter"
-          >{{ getArticlesCount('played', '') }}</span>
+          >{{ getPlayed }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li
       class="nav-item"
       :class="{ 'd-none': showLess }"
     >
-      <router-link
+      <a
         class="nav-link feed-mix-link menu-link-clickable"
-        to="/saved"
-        tag="div"
-        tabindex="0"
-        active-class="active"
+        href=""
+        :class="{ active: isMenuItemActive('saved') }"
+        @click.prevent="handleMenuItem('saved')"
       >
         <feed-mix
           feed-id="savedArticles"
@@ -128,16 +121,16 @@
         >
           <feather-icon name="wifi-off" />Saved articles
           <span
-            v-if="getArticlesCount('saved', '') > 0"
+            v-if="getSaved > 0"
             class="items-counter"
-          >{{ getArticlesCount('saved', '') }}</span>
+          >{{ getSaved }}</span>
         </feed-mix>
-      </router-link>
+      </a>
     </li>
     <li class="nav-item">
       <a
-        class="nav-link"
-        href="#"
+        class="nav-link menu-link-clickable"
+        href=""
         @click="showLessItems"
       >
         <template v-if="showLess">
@@ -151,26 +144,49 @@
   </ul>
 </template>
 <script>
-import articleCount from '../mixins/articleCount'
+import bus from '../services/bus'
+import feedMix from '../mixins/feedMix'
 
 export default {
   mixins: [
-    articleCount
+    feedMix
   ],
   data () {
     return {
       showLess: false
     }
   },
+  computed: {
+    getAll () {
+      return this.$store.state.Article.articles.length
+    },
+    getSaved () {
+      return this.$store.state.Article.articles.filter(article => article.articles.offline).length
+    },
+    getPlayed () {
+      return this.$store.state.Article.articles.filter(article => article.articles.podcast && article.articles.played)
+        .length
+    },
+    getFavourites () {
+      return this.$store.state.Article.articles.filter(article => article.articles.favourite).length
+    },
+    getUnreadArticles () {
+      return this.$store.state.Article.articles.filter(article => !article.articles.read).length
+    },
+    getReadArticles () {
+      return this.$store.state.Article.articles.filter(article => article.articles.read).length
+    }
+  },
   methods: {
+    handleMenuItem (type) {
+      bus.$emit('change-article-list', {
+        type: 'type-page',
+        item: type
+      })
+    },
     showLessItems () {
       this.showLess = !this.showLess
     }
   }
 }
 </script>
-<style lang="scss" scoped>
-.menu-link-clickable {
-  cursor: pointer;
-}
-</style>

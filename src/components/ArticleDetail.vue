@@ -112,6 +112,7 @@
   </pane>
 </template>
 <script>
+import bus from '../services/bus'
 import { Pane } from 'splitpanes'
 
 export default {
@@ -156,15 +157,14 @@ export default {
     }
   },
   watch: {
-    '$route.fullPath': {
-      immediate: true, // Immediate option to call watch handler on first mount
-      handler () {
-        this.resetData()
-      }
-    },
     article () {
       this.articleItem = JSON.parse(JSON.stringify(this.article))
     }
+  },
+  mounted () {
+    bus.$on('change-article-list', () => {
+      this.resetData()
+    })
   },
   methods: {
     resetData () {

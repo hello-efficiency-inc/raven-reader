@@ -104,14 +104,14 @@ export default {
   },
   markRead (uuid, podcast, verdict) {
     if (podcast) {
-      return db.database.update(db.articleTable)
+      db.database.update(db.articleTable)
         .set(db.articleTable.read, verdict)
         .set(db.articleTable.played, verdict)
         .set(db.articleTable.keep_read, dayjs().add(store.state.Setting.keepRead, 'week').valueOf())
         .where(db.articleTable.uuid.eq(uuid))
         .exec()
     }
-    return db.database.update(db.articleTable)
+    db.database.update(db.articleTable)
       .set(db.articleTable.read, verdict)
       .set(db.articleTable.keep_read, dayjs().add(store.state.Setting.keepRead, 'week').valueOf())
       .where(db.articleTable.uuid.eq(uuid))
@@ -119,11 +119,14 @@ export default {
   },
   markAllRead (uuids) {
     // Non-podcast
-    return db.database.update(db.articleTable)
+    const t0 = performance.now()
+    db.database.update(db.articleTable)
       .set(db.articleTable.read, true)
       .set(db.articleTable.keep_read, dayjs().add(store.state.Setting.keepRead, 'week').valueOf())
       .where(db.articleTable.uuid.in(uuids))
       .exec()
+    const t1 = performance.now()
+    console.log(`mark all read ${t1 - t0}ms`)
   },
   markFavourite (uuid, verdict) {
     return db.database.update(db.articleTable)

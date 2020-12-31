@@ -34,7 +34,7 @@
         @type-change="updateType"
       />
       <article-detail
-        :id="$route.params.id"
+        :id="currentActiveArticle"
         ref="articleDetail"
         :article="articleData"
         :empty-state="empty"
@@ -51,9 +51,7 @@ import db from '../services/db'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
 import helper from '../services/helpers'
-import truncate from 'lodash.truncate'
 import cacheService from '../services/cacheArticle'
-import articleCount from '../mixins/articleCount'
 import cheerio from '../mixins/cheerio'
 import setTheme from '../mixins/setTheme'
 import dataSets from '../mixins/dataItems'
@@ -79,25 +77,23 @@ const sortBy = (key, pref) => {
   return (a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0)
 }
 
+const truncateString = (string, maxLength = 50) => {
+  if (!string) return null
+  if (string.length <= maxLength) return string
+  return `${string.substring(0, maxLength)}...`
+}
+
 export default {
   components: {
     Splitpanes,
     Pane
   },
   mixins: [
-    articleCount,
     setTheme,
     dataSets,
     cheerio,
     serviceSync
   ],
-  beforeRouteUpdate (to, from, next) {
-    if (to.params.id) {
-      window.electron.articleSelected()
-    }
-    bus.$emit('reset-articlelist-count')
-    next()
-  },
   data () {
     return {
       feed: null,
@@ -108,60 +104,30 @@ export default {
       sideBarHidden: false
     }
   },
+  computed: {
+    currentActiveArticle () {
+      return this.$store.state.FeedManager.activeArticleId
+    }
+  },
   watch: {
-    $route (to, from) {
-      switch (to.name) {
-        case 'feed-page':
-          this.articleData = null
-          if (this.$route.params.feedid) {
-            this.articleType = 'feed'
-            this.$store.dispatch('changeType', {
-              type: 'feed',
-              category: null,
-              search: null,
-              feed: this.$route.params.feedid
-            })
-          }
-          break
-        case 'category-page':
-          this.articleData = null
-          this.articleType = 'category'
-          this.$store.dispatch('changeType', {
-            type: 'feed',
-            category: this.$route.params.category,
-            feed: null,
-            search: null
-          })
-          break
-        case 'type-page':
-          if (this.$route.params.type) {
-            this.articleData = null
-            this.articleType = this.$route.params.type
-            this.$store.dispatch('changeType', {
-              type: this.$route.params.type,
-              category: null,
-              feed: null,
-              search: null
-            })
-          }
-          break
-        case 'article-page':
-          this.fetchData()
-          break
-      }
-    },
     allUnread: 'unreadChange'
   },
   mounted () {
-    this.syncFeedbin()
-    this.syncInoreader()
-    this.syncGreader()
-    this.$store.dispatch('initializeDB').then(async () => {
-      await this.$store.dispatch('refreshFeeds')
-      await this.$store.dispatch('loadCategories')
-      await this.$store.dispatch('loadFeeds')
-      await this.$store.dispatch('loadArticles')
-      db.deleteArticleByKeepRead()
+    this.$store.dispatch('initializeDB').then(() => {
+      Promise.all([
+        this.$store.dispatch('loadArticles'),
+        this.$store.dispatch('loadFeeds'),
+        this.$store.dispatch('loadCategories'),
+        this.$store.dispatch('refreshFeeds')
+      ]).then(() => {
+        this.syncFeedbin()
+        this.syncInoreader()
+        this.syncGreader()
+        db.deleteArticleByKeepRead()
+        this.runArticleCronJob()
+        this.runServiceCronJob()
+        this.runKeepReadJob()
+      })
     })
     this.$store.dispatch('checkOffline')
 
@@ -181,10 +147,6 @@ export default {
       'onlinestatus',
       'Settings'
     ], this)
-
-    this.runArticleCronJob()
-    this.runServiceCronJob()
-    this.runKeepReadJob()
 
     window.api.ipcRendReceive('power-resume', () => {
       window.log.info('Power resumed')
@@ -251,22 +213,60 @@ export default {
     bus.$on('sidebar-hidden', (data) => {
       this.sideBarHidden = data
     })
+    bus.$on('change-article-list', this.handleArticleList)
   },
   destroyed () {
     window.electron.removeListeners()
   },
   methods: {
-    runArticleCronJob () {
+    handleArticleList (data) {
+      this.articleData = null
+      switch (data.type) {
+        case 'type-page':
+          this.articleType = data.item
+          this.$store.dispatch('changeType', {
+            type: data.item,
+            category: null,
+            feed: null,
+            search: null
+          })
+          bus.$emit('reset-articlelist-count')
+          break
+        case 'feed':
+          this.articleType = 'feed'
+          this.$store.dispatch('changeType', {
+            type: 'feed',
+            category: null,
+            search: null,
+            feed: data.feed
+          })
+          bus.$emit('reset-articlelist-count')
+          break
+        case 'category-page':
+          this.articleType = 'category'
+          this.$store.dispatch('changeType', {
+            type: 'feed',
+            category: data.category,
+            feed: null,
+            search: null
+          })
+          bus.$emit('reset-articlelist-count')
+          break
+        case 'article-page':
+          this.fetchData(data.id)
+          break
+      }
+    },
+    async runArticleCronJob () {
       const self = this
       // Feed Crawling
       return nodescheduler.scheduleJob(
         self.$store.state.Setting.cronSettings,
-        () => {
+        async () => {
           const feeds = self.$store.state.Feed.feeds.filter(item => item.source === 'local')
           if (feeds.length === 0) {
             window.log.info('No feeds to process')
           } else {
-            // this.$refs.articleList.$refs.statusMsg.innerText = 'Syncing...'
             window.log.info(`Processing ${feeds.length} feeds`)
             helper.subscribe(feeds, null, true).then(() => {
               bus.$emit('sync-complete')
@@ -278,8 +278,8 @@ export default {
     runServiceCronJob () {
       // Service crawling
       return nodescheduler.scheduleJob(
-        '*/2 * * * *',
-        () => {
+        '*/3 * * * *',
+        async () => {
           this.syncFeedbin()
           this.syncInoreader()
           this.syncGreader()
@@ -287,10 +287,9 @@ export default {
       )
     },
     runKeepReadJob () {
-      // Service crawling
       return nodescheduler.scheduleJob(
         '*/5 * * * *',
-        () => {
+        async () => {
           window.log.info('Deleting read articles')
           db.deleteArticleByKeepRead()
         }
@@ -304,6 +303,21 @@ export default {
       this.articleType = newVal
     },
     prepareArticleData (data, article) {
+      // article.articles._id = article.articles.uuid
+      // article.articles.date_published = article.articles.date_published
+      //   ? dayjs(article.articles.date_published).format('MMMM D, YYYY')
+      //   : null
+      // if (article.articles.media === null) {
+      //   article.articles.content = this.cleanupContent(article.articles.content)
+      // }
+      // article.articles.readtime = article.articles.content && !article.articles.podcast ? stat(article.articles.content).text : ''
+      // article.feeds.sitetitle = truncateString(article.feeds.title, 20)
+      // article.feeds.feed_url = article.feeds.xmlurl
+      // article.feeds.feed_link = article.feeds.link
+      // const newObj = { ...article.articles, ...article.feeds }
+      // console.log(newObj)
+      // this.articleData = newObj
+      // this.loading = false
       const self = this
       self.empty = false
       if (data.media === null) {
@@ -314,7 +328,7 @@ export default {
         : null
       data.favicon = article.feeds.favicon
       data.fulltitle = article.feeds.fulltitle
-      data.sitetitle = truncate(article.feeds.title, 20)
+      data.sitetitle = truncateString(article.feeds.title, 20)
       data.feed_uuid = article.feeds.uuid
       data.category = article.articles.category
       data.podcast = article.articles.podcast
@@ -344,23 +358,21 @@ export default {
       feedsCopy = feedsCopy.concat().sort(sortBy('unread', 'desc'))
       this.$store.dispatch('orderFeeds', feedsCopy)
     },
-    fetchData () {
-      const self = this
-      self.$refs.topProgress.start()
-      if (this.$route.params.id) {
-        self.articleData = null
-        self.loading = true
-        db.fetchArticle(this.$route.params.id).then(async function (article) {
-          const articleItem = JSON.parse(JSON.stringify(article[0]))
-          let data
-          self.$store.dispatch('markAction', {
+    fetchData (id) {
+      this.articleData = null
+      this.loading = true
+      db.fetchArticle(id).then((article) => {
+        const articleItem = JSON.parse(JSON.stringify(article[0]))
+        let data
+        try {
+          this.$store.dispatch('markAction', {
             type: 'READ',
-            id: self.$route.params.id,
+            id: id,
             podcast: articleItem.articles.podcast
-          }).then(() => self.$store.dispatch('loadArticles'))
-          try {
+          }).then(async () => {
+            // this.$store.dispatch('loadArticles')
             if (!articleItem.articles.podcast) {
-              data = self.$store.state.Setting.offline
+              data = this.$store.state.Setting.offline
                 ? await cacheService
                     .getCachedArticleData(
                       articleItem.articles.id,
@@ -368,28 +380,27 @@ export default {
                     )
                 : articleItem.articles
               if (data) {
-                self.prepareArticleData(data, articleItem)
+                this.prepareArticleData(data, articleItem)
               } else {
                 articleItem.articles.content = null
                 articleItem.articles.url = articleItem.articles.link
-                self.articleData = articleItem
-                self.empty = true
-                self.loading = false
+                this.articleData = articleItem
+                this.empty = true
+                this.loading = false
               }
             } else {
-              self.prepareArticleData(articleItem.articles, articleItem)
+              this.prepareArticleData(articleItem.articles, articleItem)
             }
-          } catch (e) {
-            window.log.info(e)
-            articleItem.content = null
-            articleItem.url = articleItem.articles.link
-            self.articleData = articleItem
-            self.empty = true
-            self.loading = false
-            self.$refs.topProgress.done()
-          }
-        })
-      }
+          })
+        } catch (e) {
+          window.log.info(e)
+          articleItem.content = null
+          articleItem.url = articleItem.articles.link
+          this.articleData = articleItem
+          this.empty = true
+          this.loading = false
+        }
+      })
     }
   }
 }

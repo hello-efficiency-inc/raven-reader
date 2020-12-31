@@ -11,10 +11,11 @@
           @click="setActiveFeedId(feeditem)"
           @contextmenu.prevent="openFeedMenu($event, {feed: feeditem})"
         >
-          <router-link
+          <a
             v-if="!feeditem.type && feeditem.category === null"
             class="nav-link"
-            :to="`/feed/${feeditem.id}`"
+            href="#"
+            @click="navigateFeed(feeditem.id)"
           >
             <img
               v-if="feeditem.favicon"
@@ -24,12 +25,12 @@
               class="mr-1"
             >
             {{ feeditem.title }}
-          </router-link>
+          </a>
           <div
-            v-if="!feeditem.type && feeditem.category === null && getArticlesCount('', feeditem.id) > 0"
+            v-if="!feeditem.type && feeditem.category === null && getFeed(feeditem.id) > 0"
             class="nav-link feed-counter"
           >
-            <span class="item-counter">{{ getArticlesCount('', feeditem.id) }}</span>
+            <span class="item-counter">{{ getFeed(feeditem.id) }}</span>
           </div>
         </li>
         <li
@@ -55,10 +56,10 @@
             replace
           >{{ feeditem.title }}</a>
           <div
-            v-if="getArticlesCount('category', feeditem.title) > 0"
+            v-if="getCategory(feeditem.title) > 0"
             class="nav-link feed-counter"
           >
-            <span class="item-counter">{{ getArticlesCount('category', feeditem.title) }}</span>
+            <span class="item-counter">{{ getCategory(feeditem.title) }}</span>
           </div>
         </li>
         <b-collapse
@@ -75,9 +76,10 @@
               @click="setActiveFeedId(categoryfeed)"
               @contextmenu.prevent="openFeedMenu($event, {feed: categoryfeed})"
             >
-              <router-link
-                :to="`/feed/${categoryfeed.id}`"
+              <a
+                href="#"
                 class="nav-link ml-1"
+                @click="navigateFeed(categoryfeed.id)"
               >
                 <img
                   v-if="categoryfeed.favicon"
@@ -87,12 +89,12 @@
                   class="mr-1"
                 >
                 {{ categoryfeed.title }}
-              </router-link>
+              </a>
               <div
-                v-if="getArticlesCount('', categoryfeed.id) > 0"
+                v-if="getFeed(categoryfeed.id) > 0"
                 class="nav-link feed-counter"
               >
-                <span class="item-counter">{{ getArticlesCount('', categoryfeed.id) }}</span>
+                <span class="item-counter">{{ getFeed(categoryfeed.id) }}</span>
               </div>
             </li>
           </template>
@@ -104,16 +106,16 @@
   </div>
 </template>
 <script>
+import bus from '../services/bus'
 import cacheService from '../services/cacheArticle'
 import db from '../services/db'
 import helper from '../services/helpers'
 import feedbin from '../services/feedbin'
-import articleCount from '../mixins/articleCount'
 import dataSets from '../mixins/dataItems'
 import feedMix from '../mixins/feedMix'
 
 export default {
-  mixins: [articleCount, dataSets, feedMix],
+  mixins: [dataSets, feedMix],
   data () {
     return {
       feed: null,
@@ -178,6 +180,22 @@ export default {
     })
   },
   methods: {
+    getFeed (id) {
+      if (this.$store.state.Feed.feeds.length > 0) {
+        return this.$store.state.Article.articles.filter(article => article.articles.feed_uuid === id).length
+      } else {
+        return 0
+      }
+      // const data = await db.fetchArticlesByFeed(id)
+      // return data.length
+    },
+    getCategory (id) {
+      // if (this.$store.state.Article.articles.length > 0) {
+      //   return this.$store.state.Article.articles.filter(article => article.articles.category === id).length
+      // } else {
+      //   return 0
+      // }
+    },
     onCtxOpen (locals) {
       this.feedMenuData = locals.feed
     },
@@ -204,13 +222,11 @@ export default {
     },
     categoryHandler (feed) {
       this.setActiveFeedId(feed)
-      this.$router.push({
-        name: 'category-page',
-        params: { category: feed.title }
-      }).catch((err) => {
-        if (err) {
-          window.log.info(err)
-        }
+      bus.$emit('change-article-list', {
+        type: 'category-page',
+        feed: null,
+        category: feed.title,
+        search: null
       })
     },
     mapFeeds (feeds, category) {
@@ -265,6 +281,14 @@ export default {
       if (this.$store.state.Setting.feedbin_connected) {
         feedbin.markItem(this.$store.state.Setting.feedbin, 'MARK_READ', ids)
       }
+    },
+    navigateFeed (id) {
+      bus.$emit('change-article-list', {
+        type: 'feed',
+        feed: id,
+        category: null,
+        search: null
+      })
     }
   }
 }

@@ -1,4 +1,4 @@
-import { app, ipcRenderer } from 'electron'
+import { app, ipcRenderer, shell } from 'electron'
 
 export default {
   removeListeners: () => {
@@ -13,6 +13,9 @@ export default {
   restartApp: () => {
     app.relaunch()
     app.exit(0)
+  },
+  openExternal: (href) => {
+    shell.openExternal(href)
   },
   loginPocket: () => {
     return ipcRenderer.send('login-pocket')

@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 <script>
@@ -357,5 +359,9 @@ select {
 .form-control,
 .modal-content {
   border-radius: 0 !important;
+}
+
+.menu-link-clickable {
+  cursor: pointer;
 }
 </style>
