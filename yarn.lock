@@ -2700,9 +2700,9 @@ boolean@^3.0.1:
   integrity sha512-RwywHlpCRc3/Wh81MiCKun4ydaIFyW5Ea6JbL6sRCVx5q5irDw7pMXBUFYF/jArQ6YrG36q0kpovc9P/Kd3I4g==
 
 bootstrap-vue@^2.16.0:
-  version "2.21.1"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.21.1.tgz#20d3ced96b735917d8be71b77717eee74bb40c6f"
-  integrity sha512-hGAfy6hwA6pH/2oxKtd4GOETDW38br+K1ICw4sDDkuARxNlMwrVgIjMQFV8hGzo9NZi/bj82NZx8wRR9221qkw==
+  version "2.21.2"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.21.2.tgz#ec38f66c3a2205becccddb6158a991d96509ed0b"
+  integrity sha512-0Exe+4MZysqhZNXIKf4TzkvXaupxh9EHsoCRez0o5Dc0J7rlafayOEwql63qXv74CgZO8E4U8ugRNJko1vMvNw==
   dependencies:
     "@nuxt/opencollective" "^0.3.2"
     bootstrap ">=4.5.3 <5.0.0"
@@ -5314,6 +5314,11 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
+
+fast-array-diff@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fast-array-diff/-/fast-array-diff-1.0.0.tgz#4ff6315e7cd9a8a9cbcf59a5c7e2ae2bdcee6763"
+  integrity sha512-ogkVOYhBglkIsl5pjxZ7dIuItFG+1Ihh1kCChVaNgPZ30gQggRcuSjm4v4lAoS8ruGu8wFnHWYMEMO8dtKNgoA==
 
 fast-deep-equal@^3.1.1:
   version "3.1.3"

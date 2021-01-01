@@ -3,18 +3,19 @@ export default {
     cleanupContent (content) {
       const dom = new DOMParser()
       const doc = dom.parseFromString(content, 'text/html')
-      const links = doc.querySelectorAll('a')
-      const enclosures = doc.querySelectorAll('.enclosure')
-      const iframes = doc.querySelectorAll('iframe')
-      const img = doc.querySelectorAll('img')
-      const audios = doc.querySelectorAll('audio')
-      enclosures.forEach(item => item.remove())
-      audios.forEach(item => item.remove())
-      links.forEach(item => item.classList.add('js-external-link'))
-      img.forEach(item => {
-        item.classList.add('img-fluid')
-      })
-      iframes.forEach(item => {
+      doc.querySelectorAll('.enclosure').forEach(item => item.remove())
+      doc.querySelectorAll('audio').forEach(item => item.remove())
+      doc.querySelectorAll('a').forEach(item => item.classList.add('js-external-link'))
+      if (this.$store.state.Setting.disableImages) {
+        doc.querySelectorAll('img').forEach(item => {
+          item.remove()
+        })
+      } else {
+        doc.querySelectorAll('img').forEach(item => {
+          item.classList.add('img-fluid')
+        })
+      }
+      doc.querySelectorAll('iframe').forEach(item => {
         item.parentElement.classList.add('embed-responsive', 'embed-responsive-16by9')
       })
       if (doc.documentElement.textContent.trim().startsWith('Ads from Inoreader')) {

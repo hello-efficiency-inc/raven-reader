@@ -292,29 +292,32 @@ export function createCategoryMenu (categorydata, window) {
       }
     })
   )
-  menu.append(
-    new MenuItem({
-      label: 'Rename folder',
-      click () {
-        window.webContents.send('category-rename', categorydata)
-      }
-    })
-  )
 
-  menu.append(
-    new MenuItem({
-      type: 'separator'
-    })
-  )
+  if (categorydata.source === 'local') {
+    menu.append(
+      new MenuItem({
+        label: 'Rename folder',
+        click () {
+          window.webContents.send('category-rename', categorydata)
+        }
+      })
+    )
 
-  menu.append(
-    new MenuItem({
-      label: 'Delete',
-      click () {
-        window.webContents.send('category-delete', categorydata)
-      }
-    })
-  )
+    menu.append(
+      new MenuItem({
+        type: 'separator'
+      })
+    )
+
+    menu.append(
+      new MenuItem({
+        label: 'Delete',
+        click () {
+          window.webContents.send('category-delete', categorydata)
+        }
+      })
+    )
+  }
 
   menu.popup({ window: window })
 }

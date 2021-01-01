@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import db from './db.js'
 import store from '../store'
 import uuidstring from 'uuid-by-string'
+import truncate from './truncate'
 import * as database from '../db'
 
 const TAGS = {
@@ -66,6 +67,25 @@ export default {
       window.log.info(e)
     }
   },
+  async getFolders (credsData) {
+    let tokenData
+    const currentTime = dayjs().valueOf()
+    if (currentTime >= credsData.expires_in) {
+      tokenData = await this.refreshToken(credsData)
+    } else {
+      tokenData = credsData
+    }
+    try {
+      const data = await axios.get('https://www.inoreader.com/reader/api/0/tag/list?types=1', {
+        headers: {
+          Authorization: `Bearer ${tokenData.access_token}`
+        }
+      })
+      return data.data.tags
+    } catch (e) {
+      window.log.info(e)
+    }
+  },
   async getEntries (credsData, datetime = null) {
     let tokenData
     const entries = []
@@ -124,7 +144,32 @@ export default {
       }
     })
   },
-  async syncItems (credsData, mappedEntries) {
+  async syncTags (credsData) {
+    const currentCategories = await db.fetchCategories()
+    const tags = await this.getFolders(credsData)
+    const formattedTags = JSON.parse(JSON.stringify(tags.filter(item => item.type === 'folder'))).map((item) => {
+      const format = item.id.split('/')
+      item.clearText = format[format.length - 1]
+      return item
+    })
+    const dbFormat = formattedTags.map((item) => {
+      return {
+        type: 'category',
+        source: 'inoreader',
+        title: item.clearText
+      }
+    })
+    const diff = currentCategories.map(item => item.title).filter(item => !dbFormat.map(item => item.title).includes(item))
+    if (diff.length > 0) {
+      const cats = currentCategories.filter((x) => diff.includes(x.title))
+      db.deleteCategoryMulti(cats.map(item => item.title))
+    }
+    const tobeAdded = dbFormat.filter(x => !currentCategories.map(item => item.title).includes(x.title))
+    if (dbFormat.length > 0) {
+      db.addCategory(tobeAdded.map(item => database.categoryTable.createRow(item)))
+    }
+  },
+  async syncArticles (credsData, mappedEntries) {
     let subscriptions = await this.getSubscriptions(credsData)
     if (subscriptions) {
       const currentSubscriptions = await db.fetchServicesFeeds('inoreader')
@@ -137,10 +182,8 @@ export default {
       const diff = currentFeedUrls.filter(item => !inoreaderSubscriptions.includes(item))
       if (diff.length > 0) {
         const deleteFeed = currentSubscriptions.filter((x) => diff.includes(x.xmlurl))
-        deleteFeed.forEach(async (item) => {
-          await db.deleteArticles(item.uuid)
-          await db.deleteFeed(item.uuid)
-        })
+        db.fetchArticlesByFeedMulti(deleteFeed.map(item => item.uuid))
+        db.deleteFeedMulti(deleteFeed.map(item => item.uuid))
       }
       const transformedSubscriptions = subscriptions.map((item) => {
         return {
@@ -151,7 +194,7 @@ export default {
           title: item.title,
           favicon: `https://www.google.com/s2/favicons?domain=${item.htmlUrl}`,
           description: null,
-          category: null,
+          category: item.categories.length > 0 ? item.categories[0].label : null,
           source: 'inoreader',
           source_id: item.id
         }
@@ -170,6 +213,7 @@ export default {
           const id = parseInt(itemId[itemId.length - 1], 16)
           const isMedia = item.alternate && (item.canonical[0].href.includes('youtube') || item.canonical[0].href.includes('vimeo'))
           const isPodcast = item.enclosure ? checkIsPodCast(item.enclosure[0]) : false
+          const feed = subscriptions.filter(feed => feed.id === item.origin.streamId)[0]
           return {
             id: isPodcast ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
             uuid: isPodcast ? uuidstring(item.enclosure[0].href) : uuidstring(item.canonical[0].href),
@@ -177,7 +221,7 @@ export default {
             author: item.author,
             link: item.canonical[0].href,
             content: item.summary.content,
-            contentSnippet: item.summary.content.replace(/(<([^>]+)>)/gi, ''),
+            contentSnippet: truncate(item.summary.content.replace(/(<([^>]+)>)/gi, ''), 100),
             favourite: item.categories.includes(favouriteTag),
             read: item.categories.includes(readTag),
             keep_read: null,
@@ -201,8 +245,8 @@ export default {
             itunes: item.itunes || null,
             played: false,
             publishUnix: dayjs(item.published).unix(),
-            feed_uuid: subscriptions.filter(feed => feed.id === item.origin.streamId)[0].feed_uuid,
-            category: null,
+            feed_uuid: feed.feed_uuid,
+            category: feed.categories.length > 0 ? feed.categories[0].label : null,
             source: 'inoreader',
             source_id: id
           }
@@ -211,5 +255,9 @@ export default {
         return db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
       })
     }
+  },
+  async syncItems (credsData, mappedEntries) {
+    await this.syncTags(credsData)
+    return await this.syncArticles(credsData, mappedEntries)
   }
 }

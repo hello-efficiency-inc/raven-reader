@@ -50,7 +50,9 @@
 import db from '../services/db'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
+import sortBy from '../services/sortBy'
 import helper from '../services/helpers'
+import truncate from '../services/truncate'
 import cacheService from '../services/cacheArticle'
 import articleCount from '../mixins/articleCount'
 import cheerio from '../mixins/cheerio'
@@ -69,19 +71,6 @@ const markTypes = {
   unread: 'UNREAD',
   cache: 'CACHE',
   uncache: 'UNCACHE'
-}
-
-const truncateString = (string, maxLength = 50) => {
-  if (!string) return null
-  if (string.length <= maxLength) return string
-  return `${string.substring(0, maxLength)}...`
-}
-
-const sortBy = (key, pref) => {
-  if (pref === 'asc') {
-    return (a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0)
-  }
-  return (a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0)
 }
 
 export default {
@@ -315,7 +304,7 @@ export default {
         : null
       data.favicon = article.feeds.favicon
       data.fulltitle = article.feeds.fulltitle
-      data.sitetitle = truncateString(article.feeds.title, 20)
+      data.sitetitle = truncate(article.feeds.title, 20)
       data.feed_uuid = article.feeds.uuid
       data.category = article.articles.category
       data.podcast = article.articles.podcast
@@ -347,17 +336,11 @@ export default {
     },
     fetchData (id) {
       const self = this
-      self.$refs.topProgress.start()
       self.articleData = null
       self.loading = true
       db.fetchArticle(id).then(async function (article) {
         const articleItem = JSON.parse(JSON.stringify(article[0]))
         let data
-        self.$store.dispatch('markAction', {
-          type: 'READ',
-          id: id,
-          podcast: articleItem.articles.podcast
-        }).then(() => self.$store.dispatch('loadArticles'))
         try {
           if (!articleItem.articles.podcast) {
             data = self.$store.state.Setting.offline
@@ -386,7 +369,15 @@ export default {
           self.articleData = articleItem
           self.empty = true
           self.loading = false
-          self.$refs.topProgress.done()
+        }
+        if (!articleItem.read) {
+          self.$store.dispatch('markAction', {
+            type: 'READ',
+            id: id,
+            podcast: articleItem.articles.podcast
+          }).then(() => {
+            self.$store.dispatch('loadArticles')
+          })
         }
       })
     }

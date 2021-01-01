@@ -9,7 +9,10 @@ import cacheService from '../../services/cacheArticle'
 import feedbin from '../../services/feedbin'
 import inoreader from '../../services/inoreader'
 import greader from '../../services/greader'
+// import truncate from '../../services/truncate'
+import sortBy from '../../services/sortBy'
 
+dayjs.tz.setDefault(Intl.DateTimeFormat().resolvedOptions().timeZone)
 dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(advanced)
@@ -23,12 +26,6 @@ const state = {
   fontStyle: null,
   category: null,
   feed: ''
-}
-
-const truncateString = (string, maxLength = 50) => {
-  if (!string) return null
-  if (string.length <= maxLength) return string
-  return `${string.substring(0, maxLength)}...`
 }
 
 const filters = {
@@ -53,12 +50,6 @@ const searchOption = {
   keys: ['articles.title', 'articles.content']
 }
 
-const sortBy = (key, pref) => {
-  if (pref === 'asc') {
-    return (a, b) => (a.articles[key] > b.articles[key]) ? 1 : ((b.articles[key] > a.articles[key]) ? -1 : 0)
-  }
-  return (a, b) => (a.articles[key] < b.articles[key]) ? 1 : ((b.articles[key] < a.articles[key]) ? -1 : 0)
-}
 const getters = {
   filteredArticles: (state, getters, rootState) => {
     const sortPref = rootState.Setting.oldestArticles === 'off' ? 'desc' : 'asc'
@@ -83,53 +74,10 @@ const getters = {
 
 const mutations = {
   LOAD_ARTICLES (state, data) {
-    state.articles = Object.freeze(data.data.map((item) => {
-      item.articles.contentSnippet = truncateString(item.articles.contentSnippet, 100)
-      dayjs.tz.setDefault(Intl.DateTimeFormat().resolvedOptions().timeZone)
-      if (data.root.Setting.inoreader_connected || data.root.Setting.selfhost_connected) {
-        item.formatDate = dayjs.unix(item.articles.pubDate).format('DD MMMM YYYY h:mm A')
-      } else {
-        item.formatDate = dayjs(item.articles.pubDate)
-          .format('DD MMMM YYYY h:mm A')
-      }
-      if (!('offline' in item.articles)) {
-        item.articles.offline = false
-      }
-      return item
-    }))
-  },
-  ADD_ARTICLES (state, articles) {
-    if (articles) {
-      state.articles.unshift(...articles.map((item) => {
-        item.feed_title = truncateString(item.feed_title, 20)
-        item.formatDate = dayjs(item.pubDate).format('DD MMMM YYYY')
-        item.pubDate = dayjs(item.pubDate).unix()
-        return item
-      }))
-    }
+    state.articles = Object.freeze(data.data)
   },
   MARK_ACTION (state, data) {
     const index = state.articles.findIndex(item => item.articles.uuid === data.data.id)
-    if (data.data.type === 'FAVOURITE') {
-      state.articles[index].articles.favourite = true
-    }
-
-    if (data.data.type === 'UNFAVOURITE') {
-      state.articles[index].articles.favourite = false
-    }
-    if (data.data.type === 'READ') {
-      state.articles[index].articles.read = true
-      if (state.articles[index].articles.podcast) {
-        state.articles[index].articles.played = true
-      }
-    }
-
-    if (data.data.type === 'UNREAD') {
-      state.articles[index].articles.read = false
-      if (state.articles[index].articles.podcast) {
-        state.articles[index].articles.played = false
-      }
-    }
     if (data.rootState.Setting.feedbin_connected) {
       feedbin.markItem(data.rootState.Setting.feedbin, data.data.type, [state.articles[index].articles.source_id])
     }
@@ -157,9 +105,9 @@ const mutations = {
   },
   DELETE_ARTICLES (state, id) {
     const articles = state.articles.filter(item => item.feed_id === id)
-    articles.forEach(async (article) => {
-      await cacheService.uncache(`raven-${article._id}`)
-    })
+    for (let i = 0; i < articles.length; i++) {
+      cacheService.uncache(`raven-${articles[i]._id}`)
+    }
     db.deleteArticles(id)
   },
   REFRESH_FEEDS (state, feeds) {
@@ -199,25 +147,16 @@ const mutations = {
     db.updateArticleCategory(articles, data.new.title)
   },
   MARK_CATEGORY_READ (state, data) {
-    const feedArticles = state.articles.filter(item => item.category === data)
-    for (let i = 0; i < feedArticles.length; i++) {
-      const index = state.articles.findIndex(item => item._id === feedArticles[i]._id)
-      state.articles[index].read = true
-      db.markRead(state.articles[index]._id)
-    }
+    db.markCategoryRead(data)
   }
 }
 
 const actions = {
   async loadArticles ({ commit, rootState }) {
-    const data = await db.fetchArticles()
     commit('LOAD_ARTICLES', {
       root: rootState,
-      data: data
+      data: await db.fetchArticles()
     })
-  },
-  async addArticle ({ commit }, article) {
-    commit('ADD_ARTICLES', await db.addArticles(article))
   },
   markAction ({ commit, rootState }, data) {
     switch (data.type) {

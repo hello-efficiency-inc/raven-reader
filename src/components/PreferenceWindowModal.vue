@@ -64,6 +64,18 @@
                 @input="saveSortPreference"
               />
             </b-form-group>
+            <b-form-group label="Disable images in Articles">
+              <b-form-radio-group
+                id="btnradios1"
+                v-model="disableImages"
+                buttons
+                button-variant="outline-primary"
+                size="sm"
+                :options="options"
+                name="imagePref"
+                @input="saveImagePreference"
+              />
+            </b-form-group>
             <b-form-group label="Delete all feed, category and article data">
               <b-button
                 variant="danger"
@@ -263,6 +275,7 @@
   </div>
 </template>
 <script>
+import bus from '../services/bus'
 import db from '../services/db'
 import axios from 'axios'
 import setTheme from '../mixins/setTheme'
@@ -291,6 +304,7 @@ export default {
       theme_option: null,
       darkMode: 'off',
       oldestArticles: 'off',
+      disableImages: 'off',
       keepread_options: [
         { value: 1, text: '1 week' },
         { value: 2, text: '2 weeks' },
@@ -324,6 +338,10 @@ export default {
         { text: 'On', value: 'on' },
         { text: 'Off', value: 'off' }
       ],
+      imageOptions: [
+        { text: 'On', value: 'on' },
+        { text: 'Off', value: 'off' }
+      ],
       themeOptions: [
         { value: 'system', text: 'Follow system' },
         { value: null, text: 'Default' },
@@ -349,7 +367,8 @@ export default {
       this.cronjob = this.$store.state.Setting.cronSettings
       this.theme_option = this.$store.state.Setting.themeOption
       this.setTheme(this.$store.state.Setting.themeOption)
-      this.oldestArticles = this.$store.state.Setting.oldestArticles
+      this.oldestArticles = this.$store.state.Setting.oldestArticles ? 'on' : 'off'
+      this.disableImages = this.$store.state.Setting.disableImages ? 'on' : 'off'
       if (this.$store.state.Setting.proxy) {
         this.proxy.http = this.$store.state.Setting.proxy.http
         this.proxy.https = this.$store.state.Setting.proxy.https
@@ -377,6 +396,7 @@ export default {
         this.showSync = true
         inoreader.getEntries(args).then((res) => {
           inoreader.syncItems(args, res).then(() => {
+            this.$store.dispatch('loadCategories')
             this.$store.dispatch('loadFeeds')
             this.$store.dispatch('loadArticles')
             this.showSync = false
@@ -405,14 +425,26 @@ export default {
       })
       this.hideModal()
     },
-    saveSortPreference (sortPreference) {
-      this.$store.dispatch('setSortPreference', sortPreference)
-      this.$toasted.show('Sorting preference changed.', {
+    saveImagePreference (preference) {
+      this.$store.dispatch('setImagePreference', preference)
+      this.$toasted.show('Image preference changed.', {
         theme: 'outline',
         position: 'top-center',
         duration: 3000
       })
+      bus.$emit('change-article-list', { type: null })
       this.hideModal()
+    },
+    saveSortPreference (sortPreference) {
+      this.$store.dispatch('setSortPreference', sortPreference).then(() => {
+        this.$store.dispatch('loadSettings')
+        this.$toasted.show('Sorting preference changed.', {
+          theme: 'outline',
+          position: 'top-center',
+          duration: 3000
+        })
+        this.hideModal()
+      })
     },
     saveAppearance (theme) {
       this.$store.dispatch('setThemeOption', theme)
@@ -425,7 +457,7 @@ export default {
       this.hideModal()
     },
     hideModal () {
-      this.$refs.preference.hide()
+      this.$bvModal.hide('preference')
     },
     applyProxy () {
       this.$store.dispatch('setProxy', this.proxy)

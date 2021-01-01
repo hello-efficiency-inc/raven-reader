@@ -12,14 +12,11 @@ import {
   createArticleItemMenu
 } from './main/menu'
 import createTray from './main/tray'
-import RssParser from 'rss-parser'
 import axios from 'axios'
-import rssFinder from 'rss-finder'
 import os from 'os'
 import Store from 'electron-store'
 import log from 'electron-log'
 import contextMenu from 'electron-context-menu'
-import normalizeUrl from 'normalize-url'
 import { autoUpdater } from 'electron-updater'
 import fs from 'fs'
 import path from 'path'
@@ -37,24 +34,6 @@ contextMenu({
 
 const store = new Store({
   encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
-})
-
-const parser = new RssParser({
-  requestOptions: {
-    rejectUnauthorized: false
-  },
-  defaultRSS: 2.0,
-  headers: {
-    'User-Agent': 'Raven Reader'
-  },
-  customFields: {
-    item: [
-      'media:group',
-      'media:title',
-      'media:content',
-      'media:description'
-    ]
-  }
 })
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -368,6 +347,7 @@ ipcMain.on('get-settings', (event, arg) => {
   state.cronSettings = store.get('settings.cronjob', '*/5 * * * *')
   state.themeOption = store.get('settings.theme_option', 'system')
   state.oldestArticles = store.get('settings.oldestArticles', false)
+  state.disableImages = store.get('settings.imagePreference', false)
   state.proxy = store.get('settings.proxy', {
     http: '',
     https: '',
@@ -421,23 +401,6 @@ ipcMain.on('get-dark', (event) => {
 
 ipcMain.on('proxy-settings-get', (event) => {
   event.returnValue = store.get('settings.proxy', null)
-})
-
-ipcMain.handle('rss-parse', async (event, arg) => {
-  const result = await parser.parseURL(arg)
-  return result
-})
-
-ipcMain.handle('find-rss', async (event, arg) => {
-  const result = await rssFinder(normalizeUrl(arg, {
-    stripWWW: false,
-    removeTrailingSlash: false
-  }), {
-    feedParserOptions: {
-      feedurl: arg
-    }
-  })
-  return result
 })
 
 ipcMain.handle('export-opml', (event, arg) => {

@@ -21,7 +21,7 @@
           > {{ article.feeds.title }}</small>
         </p>
         <p class="mb-2">
-          <small>{{ article.formatDate }}</small>
+          <small>{{ formatDate(article.articles.pubDate) }}</small>
         </p>
       </div>
       <h6><strong>{{ article.articles.title }}</strong></h6>
@@ -41,6 +41,14 @@
 </template>
 <script>
 import bus from '../services/bus'
+import dayjs from 'dayjs'
+import advanced from 'dayjs/plugin/advancedFormat'
+import timezone from 'dayjs/plugin/timezone'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.tz.setDefault(Intl.DateTimeFormat().resolvedOptions().timeZone)
+dayjs.extend(relativeTime)
+dayjs.extend(timezone)
+dayjs.extend(advanced)
 
 export default {
   props: {
@@ -50,12 +58,22 @@ export default {
     }
   },
   methods: {
+    formatDate (datetime) {
+      let formatDate
+      if (this.$store.state.Setting.inoreader_connected || this.$store.state.Setting.selfhost_connected) {
+        formatDate = dayjs.unix(datetime).format('DD MMMM YYYY h:mm A')
+      } else {
+        formatDate = dayjs(datetime)
+          .format('DD MMMM YYYY h:mm A')
+      }
+      return formatDate
+    },
     handleArticle (id) {
+      bus.$emit('change-active-article', id)
       bus.$emit('change-article-list', {
         type: 'article-page',
         id: id
       })
-      bus.$emit('change-active-article', id)
       this.$store.dispatch('setActiveArticleId', id)
     },
     openArticleContextMenu (e, article) {

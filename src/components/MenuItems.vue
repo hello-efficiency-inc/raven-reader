@@ -14,9 +14,9 @@
           <feather-icon name="list" />All Feeds
           <span class="sr-only">(current)</span>
           <span
-            v-if="getArticlesCount('','') > 0"
+            v-if="getAllCount > 0"
             class="items-counter"
-          >{{ getArticlesCount('','') }}</span>
+          >{{ getAllCount }}</span>
         </feed-mix>
       </a>
     </li>
@@ -33,9 +33,9 @@
         >
           <feather-icon name="star" />Favourites
           <span
-            v-if="getArticlesCount('favourites','') > 0"
+            v-if="getFavouriteCount > 0"
             class="items-counter"
-          >{{ getArticlesCount('favourites','') }}</span>
+          >{{ getFavouriteCount }}</span>
         </feed-mix>
       </a>
     </li>
@@ -52,9 +52,9 @@
         >
           <feather-icon name="circle" />Unread Articles
           <span
-            v-if="getArticlesCount('unread', '') > 0"
+            v-if="getUnreadCount > 0"
             class="items-counter"
-          >{{ getArticlesCount('unread', '') }}</span>
+          >{{ getUnreadCount }}</span>
         </feed-mix>
       </a>
     </li>
@@ -77,9 +77,9 @@
             filled
           />Recently Read
           <span
-            v-if="getArticlesCount('read', '') > 0"
+            v-if="getReadCount > 0"
             class="items-counter"
-          >{{ getArticlesCount('read', '') }}</span>
+          >{{ getReadCount }}</span>
         </feed-mix>
       </a>
     </li>
@@ -99,9 +99,9 @@
         >
           <feather-icon name="play-circle" />Recently Played
           <span
-            v-if="getArticlesCount('played', '') > 0"
+            v-if="getPlayedCount > 0"
             class="items-counter"
-          >{{ getArticlesCount('played', '') }}</span>
+          >{{ getPlayedCount }}</span>
         </feed-mix>
       </a>
     </li>
@@ -121,9 +121,9 @@
         >
           <feather-icon name="wifi-off" />Saved articles
           <span
-            v-if="getArticlesCount('saved', '') > 0"
+            v-if="getSavedCount > 0"
             class="items-counter"
-          >{{ getArticlesCount('saved', '') }}</span>
+          >{{ getSavedCount }}</span>
         </feed-mix>
       </a>
     </li>
@@ -146,16 +146,34 @@
 <script>
 import bus from '../services/bus'
 import feedMix from '../mixins/feedMix'
-import articleCount from '../mixins/articleCount'
 
 export default {
   mixins: [
-    feedMix,
-    articleCount
+    feedMix
   ],
   data () {
     return {
       showLess: false
+    }
+  },
+  computed: {
+    getAllCount () {
+      return this.$store.state.Article.articles.length
+    },
+    getFavouriteCount () {
+      return this.$store.state.Article.articles.filter(article => article.articles.favourite).length
+    },
+    getUnreadCount () {
+      return this.$store.state.Article.articles.filter(article => !article.articles.read).length
+    },
+    getReadCount () {
+      return this.$store.state.Article.articles.filter(article => article.articles.read).length
+    },
+    getPlayedCount () {
+      return this.$store.state.Article.articles.filter(article => article.articles.podcast && article.articles.played).length
+    },
+    getSavedCount () {
+      return this.$store.state.Article.articles.filter(article => article.articles.offline).length
     }
   },
   methods: {

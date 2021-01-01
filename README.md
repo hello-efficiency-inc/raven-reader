@@ -64,7 +64,7 @@ brew install --cask raven-reader
 - [x] Podcast support. Subscribe to podcast rss feed and listen within app.
 - [x] Accessibility Friendly
 - [x] Feedbin integration (Folders are WIP)
-- [x] Inoreader integration (Folders are WIP)
+- [x] Inoreader integration
 - [x] Google Reader API support. Supports self hosted RSS Services like FreshRSS.org etc. (Folders are WIP)
 - [x] Support for subscribing Youtube channels and viewing within app.
 - [x] Flexible resizing of columns/panes

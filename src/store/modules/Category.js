@@ -1,20 +1,15 @@
 import db from '../../services/db'
+import truncate from '../../services/truncate'
 import * as database from '../../db'
 
 const state = {
   categories: []
 }
 
-const truncateString = (string, maxLength = 50) => {
-  if (!string) return null
-  if (string.length <= maxLength) return string
-  return `${string.substring(0, maxLength)}...`
-}
-
 const mutations = {
   LOAD_CATEGORY (state, data) {
     state.categories = Object.freeze(data.map((item) => {
-      item.title = truncateString(item.title, 22)
+      item.title = truncate(item.title, 22)
       return item
     }))
   },

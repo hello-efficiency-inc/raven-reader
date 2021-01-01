@@ -75,31 +75,27 @@ export default {
       const feeds = result.filter(item => item !== null).map((item) => item.feed)
       const categories = result.filter(item => item !== null).map((item) => item.category)
       const articles = result.filter(item => item !== null).map((item) => item.posts).flat()
+      const currentArticles = new Set(store.state.Article.articles.map(item => item.articles.uuid).flat())
       if (!refresh) {
         this.addCategories(categories.filter(item => item !== null)).then(() => store.dispatch('loadCategories'))
         this.addFeeds(feeds).then(() => store.dispatch('loadFeeds'))
       }
       if (refresh) {
         window.log.info('Refreshing feeds')
-        db.fetchArticlesByFeedMulti(feeds.map(item => item.uuid)).then((currentArticles) => {
-          const filteredPosts = articles.filter((item) => {
-            return !currentArticles.map(current => current.uuid).includes(item.uuid)
-          })
-          window.log.info(`Refresh count: ${filteredPosts.length}`)
-          if (filteredPosts.length > 0) {
-            this.addArticles(filteredPosts).then(() => {
-              store.dispatch('loadArticles')
-              const notification = new Notification('Raven Reader', {
-                body: `Successfully fetched ${filteredPosts.length} new articles.`
-              })
-              notification.onclick = () => {
-                console.log('Notification clicked')
-              }
+        const postsAdded = articles.filter(item => !currentArticles.has(item.uuid))
+        if (postsAdded.length > 0) {
+          this.addArticles(postsAdded).then(() => {
+            store.dispatch('loadArticles')
+            const notification = new Notification('Raven Reader', {
+              body: `Successfully fetched ${postsAdded.length} new articles.`
             })
-          } else {
-            window.log.info('Nothing to refresh')
-          }
-        })
+            notification.onclick = () => {
+              console.log('Notification clicked')
+            }
+          })
+        } else {
+          window.log.info('Nothing to refresh')
+        }
       } else {
         this.addArticles(articles).then(() => store.dispatch('loadArticles'))
       }

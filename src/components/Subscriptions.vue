@@ -110,6 +110,8 @@ import bus from '../services/bus'
 import cacheService from '../services/cacheArticle'
 import db from '../services/db'
 import helper from '../services/helpers'
+import inoreader from '../services/inoreader'
+import greader from '../services/greader'
 import feedbin from '../services/feedbin'
 import articleCount from '../mixins/articleCount'
 import dataSets from '../mixins/dataItems'
@@ -145,14 +147,13 @@ export default {
     window.api.ipcRendReceive('category-read', (arg) => {
       const articles = this.$store.state.Article.articles.filter((item) => {
         return item.articles.category === arg.category.title
-      }).map(item => item.articles.uuid)
-      db.markAllRead(articles).then(() => {
+      })
+      const ids = articles.map(item => item.articles.source_id)
+      db.markAllRead(articles.map(item => item.articles.uuid)).then(() => {
         this.$store.dispatch('loadArticles')
       })
-      const feedBinArticles = this.$store.state.Article.articles.filter((item) => {
-        return item.articles.category === arg.category.title
-      }).map(item => item.articles.source_id)
-      this.feedBinArticleRead(feedBinArticles)
+      this.greaderArticleRead(ids)
+      this.feedBinArticleRead(ids)
     })
 
     window.api.ipcRendReceiveOnce('category-rename', (arg) => {
@@ -241,11 +242,12 @@ export default {
         })
           .map(item => item.articles.source_id)
           .filter(item => item !== null)
+        this.greaderArticleRead(feedBinArticles)
         this.feedBinArticleRead(feedBinArticles)
         this.$store.dispatch('loadArticles')
       })
     },
-    async unsubscribeFeed (id, category = null) {
+    async unsubscribeFeed (id) {
       await this.$emit('delete', 'yes')
       await this.$store.dispatch('deleteFeed', id)
       await this.$store.dispatch('loadFeeds')
@@ -261,6 +263,15 @@ export default {
     },
     openFeedMenu (e, feed) {
       window.electron.createContextMenu('feed', feed)
+    },
+    greaderArticleRead (ids) {
+      if (this.$store.state.Setting.selfhost_connected) {
+        greader.markItem(this.$store.state.Setting.selfhost, 'READ', ids.filter(item => item !== null))
+      }
+
+      if (this.$store.state.Setting.inoreader_connected) {
+        inoreader.markItem(this.$store.state.Setting.inoreader, 'READ', ids.filter(item => item !== null))
+      }
     },
     feedBinArticleRead (ids) {
       if (this.$store.state.Setting.feedbin_connected) {

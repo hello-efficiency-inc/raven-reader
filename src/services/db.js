@@ -93,13 +93,26 @@ export default {
       .where(db.categoryTable.id.eq(id))
       .exec()
   },
+  deleteCategoryBySource (source) {
+    return db.database.delete().from(db.categoryTable).where(db.categoryTable.source.eq(source)).exec()
+  },
   deleteCategory (title) {
     return db.database.delete().from(db.categoryTable).where(db.categoryTable.title.eq(title)).exec()
+  },
+  deleteCategoryMulti (titles) {
+    return db.database.delete().from(db.categoryTable).where(db.categoryTable.title.in(titles)).exec()
   },
   markOffline (uuid, verdict) {
     return db.database.update(db.articleTable)
       .set(db.articleTable.offline, verdict)
       .where(db.articleTable.uuid.eq(uuid))
+      .exec()
+  },
+  markCategoryRead (title) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.read, true)
+      .set(db.articleTable.keep_read, dayjs().add(store.state.Setting.keepRead, 'week').valueOf())
+      .where(db.articleTable.category.eq(title))
       .exec()
   },
   markRead (uuid, podcast, verdict) {

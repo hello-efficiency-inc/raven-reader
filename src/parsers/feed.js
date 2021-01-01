@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import uuidstring from 'uuid-by-string'
+import truncate from '../services/truncate'
 
 const omit = (obj, props) => {
   obj = {
@@ -72,6 +73,7 @@ export function ParseFeedPost (feed) {
     } else {
       item.media = null
     }
+    item.contentSnippet = truncate(item.contentSnippet, 100)
     item.favourite = false
     item.read = false
     item.keep_read = null

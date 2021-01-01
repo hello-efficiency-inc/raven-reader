@@ -27,6 +27,7 @@ const state = {
   cronSettings: '*/5 * * * *',
   themeOption: 'system',
   oldestArticles: false,
+  disableImages: false,
   offline: false,
   proxy: {
     http: '',
@@ -65,6 +66,9 @@ const mutations = {
   },
   SET_THEME_OPTION (state, data) {
     state.darkMode = data
+  },
+  SET_IMAGE_PREFERENCE (state, data) {
+    state.disableImages = data
   },
   SET_SORT_PREFERENCE (state, data) {
     state.oldestArticles = data
@@ -194,6 +198,10 @@ const actions = {
   unsetPocket ({ commit }) {
     electronstore.storeSetSettingItem('delete', 'pocket_creds')
     commit('UNSET_POCKET')
+  },
+  async setImagePreference ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'settings.imagePreference', data === 'on')
+    commit('SET_IMAGE_PREFERENCE', data === 'on')
   },
   async setSortPreference ({ dispatch, commit }, data) {
     electronstore.storeSetSettingItem('set', 'settings.oldestArticles', data)

@@ -2,7 +2,7 @@ import lf from 'lovefield'
 import db from './services/db'
 import DataStore from 'nedb'
 
-const schemaBuilder = lf.schema.create('raven', 6)
+const schemaBuilder = lf.schema.create('raven', 8)
 
 schemaBuilder.createTable('feeds')
   .addColumn('id', lf.Type.INTEGER)
@@ -16,6 +16,8 @@ schemaBuilder.createTable('feeds')
   .addColumn('source', lf.Type.STRING)
   .addColumn('source_id', lf.Type.STRING)
   .addPrimaryKey(['id'], true)
+  .addUnique('uniqueUuid', ['uuid'])
+  .addIndex('idxUuid', ['uuid'], false)
   .addIndex('idxSource', ['source'], false)
   .addNullable(['description', 'category', 'link', 'source', 'source_id'])
 

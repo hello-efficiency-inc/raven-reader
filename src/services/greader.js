@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import db from './db.js'
 import uuidstring from 'uuid-by-string'
 import * as database from '../db'
+import truncate from './truncate'
 import store from '../store'
 
 const TAGS = {
@@ -123,7 +124,7 @@ export default {
             author: item.author,
             link: item.alternate[0].href,
             content: item.summary.content,
-            contentSnippet: item.summary.content.replace(/(<([^>]+)>)/gi, ''),
+            contentSnippet: truncate(item.summary.content.replace(/(<([^>]+)>)/gi, ''), 100),
             favourite: item.categories.includes(TAGS.FAVOURITE_TAG),
             read: item.categories.includes(TAGS.READ_TAG),
             keep_read: null,

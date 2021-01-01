@@ -3,6 +3,7 @@ import uuidstring from 'uuid-by-string'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import advancedformat from 'dayjs/plugin/advancedFormat'
+import truncate from './truncate'
 import db from './db.js'
 import * as database from '../db'
 
@@ -153,7 +154,7 @@ export default {
             author: item.author,
             link: item.url,
             content: item.content,
-            contentSnippet: item.summary,
+            contentSnippet: truncate(item.summary, 100),
             favourite: item.favourite,
             read: item.read,
             keep_read: null,

@@ -48,11 +48,14 @@ export default {
       db.deleteAllSyncAccountSubscriptions('inoreader').then(() => {
         db.deleteArticlesSyncAccount('inoreader').then(() => {
           this.$store.dispatch('unsetInoreader').then(() => {
-            this.$store.dispatch('loadSettings')
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-            this.$emit('inoreader-connect', false)
-            this.$emit('preference-modal-hide')
+            db.deleteCategoryBySource('inoreader').then(() => {
+              this.$store.dispatch('loadCategories')
+              this.$store.dispatch('loadSettings')
+              this.$store.dispatch('loadFeeds')
+              this.$store.dispatch('loadArticles')
+              this.$emit('inoreader-connect', false)
+              this.$emit('preference-modal-hide')
+            })
           })
         })
       })
