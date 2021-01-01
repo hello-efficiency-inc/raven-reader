@@ -21,7 +21,7 @@
           > {{ article.feeds.title }}</small>
         </p>
         <p class="mb-2">
-          <small>{{ formatDate(article.articles.pubDate) }}</small>
+          <small>{{ formatDate(article.articles) }}</small>
         </p>
       </div>
       <h6><strong>{{ article.articles.title }}</strong></h6>
@@ -58,12 +58,12 @@ export default {
     }
   },
   methods: {
-    formatDate (datetime) {
+    formatDate (article) {
       let formatDate
-      if (this.$store.state.Setting.inoreader_connected || this.$store.state.Setting.selfhost_connected) {
-        formatDate = dayjs.unix(datetime).format('DD MMMM YYYY h:mm A')
+      if (article.source === 'inoreader' || article.source === 'greader') {
+        formatDate = dayjs.unix(article.pubDate).format('DD MMMM YYYY h:mm A')
       } else {
-        formatDate = dayjs(datetime)
+        formatDate = dayjs(article.pubDate)
           .format('DD MMMM YYYY h:mm A')
       }
       return formatDate

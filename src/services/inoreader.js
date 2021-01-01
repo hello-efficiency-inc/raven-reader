@@ -19,8 +19,7 @@ function checkIsPodCast (post) {
 export default {
   async getUserInfo (credsData) {
     let tokenData
-    const currentTime = dayjs().valueOf()
-    if (currentTime >= credsData.expires_in) {
+    if (dayjs().valueOf() >= credsData.expires_in) {
       tokenData = await this.refreshToken(credsData)
     } else {
       tokenData = credsData
@@ -69,8 +68,7 @@ export default {
   },
   async getFolders (credsData) {
     let tokenData
-    const currentTime = dayjs().valueOf()
-    if (currentTime >= credsData.expires_in) {
+    if (dayjs().valueOf() >= credsData.expires_in) {
       tokenData = await this.refreshToken(credsData)
     } else {
       tokenData = credsData
@@ -91,8 +89,7 @@ export default {
     const entries = []
     let continuation = null
     const fetchTime = datetime || dayjs().subtract(7, 'day').unix()
-    const currentTime = dayjs().valueOf()
-    if (currentTime >= credsData.expires_in) {
+    if (dayjs().valueOf() >= credsData.expires_in) {
       tokenData = await this.refreshToken(credsData)
     } else {
       tokenData = credsData
@@ -115,8 +112,7 @@ export default {
   async markItem (credsData, type, ids) {
     const postData = new URLSearchParams()
     let tokenData
-    const currentTime = dayjs().valueOf()
-    if (currentTime >= credsData.expires_in) {
+    if (dayjs().valueOf() >= credsData.expires_in) {
       tokenData = await this.refreshToken(credsData)
     } else {
       tokenData = credsData
@@ -145,7 +141,7 @@ export default {
     })
   },
   async syncTags (credsData) {
-    const currentCategories = await db.fetchCategories()
+    const currentCategories = await db.fetchCategoriesBySource('inoreader')
     const tags = await this.getFolders(credsData)
     const formattedTags = JSON.parse(JSON.stringify(tags.filter(item => item.type === 'folder'))).map((item) => {
       const format = item.id.split('/')
@@ -154,17 +150,18 @@ export default {
     })
     const dbFormat = formattedTags.map((item) => {
       return {
+        id: uuidstring(item.clearText),
         type: 'category',
         source: 'inoreader',
         title: item.clearText
       }
     })
-    const diff = currentCategories.map(item => item.title).filter(item => !dbFormat.map(item => item.title).includes(item))
+    const titles = new Set(dbFormat.map(item => item.title))
+    const diff = currentCategories.filter(item => !titles.has(item.title))
     if (diff.length > 0) {
-      const cats = currentCategories.filter((x) => diff.includes(x.title))
-      db.deleteCategoryMulti(cats.map(item => item.title))
+      db.deleteCategoryMulti(diff.map(item => item.title))
     }
-    const tobeAdded = dbFormat.filter(x => !currentCategories.map(item => item.title).includes(x.title))
+    const tobeAdded = dbFormat.filter(x => !new Set(currentCategories.map(item => item.title)).has(x.title))
     if (dbFormat.length > 0) {
       db.addCategory(tobeAdded.map(item => database.categoryTable.createRow(item)))
     }
@@ -176,10 +173,10 @@ export default {
       const currentFeedUrls = JSON.parse(JSON.stringify(currentSubscriptions)).map((item) => {
         return item.xmlurl
       })
-      const inoreaderSubscriptions = subscriptions.map((item) => {
+      const inoreaderSubscriptions = new Set(subscriptions.map((item) => {
         return item.url
-      })
-      const diff = currentFeedUrls.filter(item => !inoreaderSubscriptions.includes(item))
+      }))
+      const diff = currentFeedUrls.filter(item => !inoreaderSubscriptions.has(item))
       if (diff.length > 0) {
         const deleteFeed = currentSubscriptions.filter((x) => diff.includes(x.xmlurl))
         db.fetchArticlesByFeedMulti(deleteFeed.map(item => item.uuid))

@@ -114,10 +114,10 @@ export default {
       const currentFeedUrls = JSON.parse(JSON.stringify(currentSubscriptions)).map((item) => {
         return item.xmlurl
       })
-      const feedbinSubscriptions = JSON.parse(JSON.stringify(subscriptions)).map((item) => {
+      const feedbinSubscriptions = new Set(JSON.parse(JSON.stringify(subscriptions)).map((item) => {
         return item.feed_url
-      })
-      const diff = currentFeedUrls.filter(item => !feedbinSubscriptions.includes(item))
+      }))
+      const diff = currentFeedUrls.filter(item => !feedbinSubscriptions.has(item))
       if (diff.length > 0) {
         const deleteFeed = currentSubscriptions.filter((x) => diff.includes(x.xmlurl))
         deleteFeed.forEach(async (item) => {

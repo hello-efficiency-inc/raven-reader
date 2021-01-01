@@ -87,6 +87,9 @@ export default {
   fetchCategories () {
     return db.database.select().from(db.categoryTable).exec()
   },
+  fetchCategoriesBySource (source) {
+    return db.database.select().from(db.categoryTable).where(db.categoryTable.source.eq(source)).exec()
+  },
   updateCategory (id, category) {
     return db.database.update(db.categoryTable)
       .set(db.categoryTable.title, category)
