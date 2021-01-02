@@ -246,9 +246,9 @@ export default {
       if (this.newcategory === null) {
         this.newcategory = this.selectedCat
       }
-      const urls = JSON.parse(JSON.stringify(this.selected_feed)).map(item => item.url)
+      const urls = new Set(JSON.parse(JSON.stringify(this.selected_feed)).map(item => item.url))
       const currentUrls = JSON.parse(JSON.stringify(this.$store.state.Feed.feeds)).map(item => item.xmlurl)
-      if (currentUrls.filter(item => urls.includes(item)).length === 0) {
+      if (currentUrls.filter(item => urls.has(item)).length === 0) {
         helper.subscribe(this.selected_feed, this.newcategory, false)
       }
       this.hideModal()

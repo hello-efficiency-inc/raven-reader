@@ -10052,7 +10052,7 @@ rss-finder@^2.1.4:
     htmlparser2 "^6.0.0"
     pinkie-promise "^2.0.1"
 
-rss-parser@^3.9.0:
+rss-parser@^3.10.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/rss-parser/-/rss-parser-3.10.0.tgz#19a8bcc569981832180a87fe58a17f1838ca3a45"
   integrity sha512-TC6FNvEmdFeaW6r/60MSJT7cp4d95X4M9As+mvNtxRx7YXHxpV95syMnWZthZSeD1BRN7SEKdq6c3nxMLQRopw==

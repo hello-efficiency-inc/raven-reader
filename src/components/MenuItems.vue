@@ -12,7 +12,10 @@
           mark="allFeeds"
         >
           <feather-icon name="list" />All Feeds
-          <span class="sr-only">(current)</span>
+          <span
+            v-if="isMenuItemActive('all')"
+            class="sr-only"
+          >(current)</span>
           <span
             v-if="getAllCount > 0"
             class="items-counter"
@@ -33,6 +36,10 @@
         >
           <feather-icon name="star" />Favourites
           <span
+            v-if="isMenuItemActive('favourites')"
+            class="sr-only"
+          >(current)</span>
+          <span
             v-if="getFavouriteCount > 0"
             class="items-counter"
           >{{ getFavouriteCount }}</span>
@@ -51,6 +58,10 @@
           mark="unreadArticles"
         >
           <feather-icon name="circle" />Unread Articles
+          <span
+            v-if="isMenuItemActive('unread')"
+            class="sr-only"
+          >(current)</span>
           <span
             v-if="getUnreadCount > 0"
             class="items-counter"
@@ -77,6 +88,10 @@
             filled
           />Recently Read
           <span
+            v-if="isMenuItemActive('read')"
+            class="sr-only"
+          >(current)</span>
+          <span
             v-if="getReadCount > 0"
             class="items-counter"
           >{{ getReadCount }}</span>
@@ -99,6 +114,10 @@
         >
           <feather-icon name="play-circle" />Recently Played
           <span
+            v-if="isMenuItemActive('played')"
+            class="sr-only"
+          >(current)</span>
+          <span
             v-if="getPlayedCount > 0"
             class="items-counter"
           >{{ getPlayedCount }}</span>
@@ -120,6 +139,10 @@
           mark="savedArticles"
         >
           <feather-icon name="wifi-off" />Saved articles
+          <span
+            v-if="isMenuItemActive('saved')"
+            class="sr-only"
+          >(current)</span>
           <span
             v-if="getSavedCount > 0"
             class="items-counter"

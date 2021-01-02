@@ -30,7 +30,6 @@
       <article-list
         ref="articleList"
         :type="articleType"
-        :feed="feed"
         @type-change="updateType"
       />
       <article-detail
@@ -50,7 +49,6 @@
 import db from '../services/db'
 import dayjs from 'dayjs'
 import stat from 'reading-time'
-import sortBy from '../services/sortBy'
 import helper from '../services/helpers'
 import truncate from '../services/truncate'
 import cacheService from '../services/cacheArticle'
@@ -87,7 +85,6 @@ export default {
   ],
   data () {
     return {
-      feed: null,
       articleData: null,
       articleType: 'all',
       empty: null,
@@ -100,19 +97,20 @@ export default {
       return this.$store.state.FeedManager.activeArticleId
     }
   },
-  watch: {
-    allUnread: 'unreadChange'
-  },
   mounted () {
-    this.syncFeedbin()
-    this.syncInoreader()
-    this.syncGreader()
+    const self = this
     this.$store.dispatch('initializeDB').then(async () => {
       await this.$store.dispatch('refreshFeeds')
       await this.$store.dispatch('loadCategories')
       await this.$store.dispatch('loadFeeds')
       await this.$store.dispatch('loadArticles')
       db.deleteArticleByKeepRead()
+    }).then(() => {
+      setTimeout(() => {
+        self.syncFeedbin()
+        self.syncInoreader()
+        self.syncGreader()
+      }, 1000)
     })
     this.$store.dispatch('checkOffline')
 
@@ -321,18 +319,6 @@ export default {
       self.articleData = data
       self.loading = false
       this.$refs.topProgress.done()
-    },
-    unreadChange () {
-      // unread changed, sort feeds by unread count
-      if (!this.feeds) {
-        return
-      }
-      let feedsCopy = this.feeds.map(item => {
-        item.unread = this.getArticlesCount('unread', item.id)
-        return item
-      })
-      feedsCopy = feedsCopy.concat().sort(sortBy('unread', 'desc'))
-      this.$store.dispatch('orderFeeds', feedsCopy)
     },
     fetchData (id) {
       const self = this

@@ -94,18 +94,29 @@ const mutations = {
     }
   },
   MARK_ALL_READ (state, rootState) {
-    db.markAllRead(state.articles.map(item => item.articles.uuid))
-    const ids = JSON.parse(JSON.stringify(state.articles)).map(item => item.articles.source_id)
+    const unreadArticles = state.articles.reduce((arr, item) => {
+      if (!item.articles.read) {
+        arr.push(item.articles.uuid)
+      }
+      return arr
+    }, [])
+    const sourceIds = state.articles.reduce((arr, item) => {
+      if (!item.articles.read) {
+        arr.push(item.articles.source_id)
+      }
+      return arr
+    }, [])
+    db.markAllRead(unreadArticles)
     if (rootState.Setting.feedbin_connected) {
-      feedbin.markItem(rootState.Setting.feedbin, 'READ', ids.filter(item => item !== null))
+      feedbin.markItem(rootState.Setting.feedbin, 'READ', sourceIds.filter(item => item !== null))
     }
 
     if (rootState.Setting.selfhost_connected) {
-      greader.markItem(rootState.Setting.selfhost, 'READ', ids.filter(item => item !== null))
+      greader.markItem(rootState.Setting.selfhost, 'READ', sourceIds.filter(item => item !== null))
     }
 
     if (rootState.Setting.inoreader_connected) {
-      inoreader.markItem(rootState.Setting.inoreader, 'READ', ids.filter(item => item !== null))
+      inoreader.markItem(rootState.Setting.inoreader, 'READ', sourceIds.filter(item => item !== null))
     }
   },
   DELETE_ARTICLES (state, id) {
