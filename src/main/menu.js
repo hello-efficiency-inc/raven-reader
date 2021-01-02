@@ -293,7 +293,7 @@ export function createCategoryMenu (categorydata, window) {
     })
   )
 
-  if (categorydata.source === 'local') {
+  if (categorydata.category.source === 'local') {
     menu.append(
       new MenuItem({
         label: 'Rename folder',

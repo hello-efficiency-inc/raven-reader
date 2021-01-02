@@ -9,13 +9,18 @@ import cacheService from '../../services/cacheArticle'
 import feedbin from '../../services/feedbin'
 import inoreader from '../../services/inoreader'
 import greader from '../../services/greader'
-// import truncate from '../../services/truncate'
-import sortBy from '../../services/sortBy'
 
 dayjs.tz.setDefault(Intl.DateTimeFormat().resolvedOptions().timeZone)
 dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(advanced)
+
+const sortBy = (key, pref) => {
+  if (pref === 'asc') {
+    return (a, b) => (a.articles[key] > b.articles[key] ? 1 : b.articles[key] > a.articles[key] ? -1 : 0)
+  }
+  return (a, b) => (a.articles[key] < b.articles[key] ? 1 : b.articles[key] < a.articles[key] ? -1 : 0)
+}
 
 const state = {
   articles: [],

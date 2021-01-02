@@ -62,7 +62,7 @@ export default {
                 id: uuidstring(categoryItem),
                 title: categoryItem,
                 type: 'category',
-                source: null
+                source: 'local'
               }
             : null
         }
