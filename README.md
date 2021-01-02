@@ -28,6 +28,8 @@
 ## Download
 To download, please visit https://ravenreader.app.
 
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/raven-reader)
+
 ## Install via Homebrew (macOS)
 To use Homebrew-Cask you just need to have [Homebrew](https://brew.sh/) installed.
 
