@@ -20,7 +20,7 @@
   "main": "background.js",
   "dependencies": {
     "@postlight/mercury-parser": "^2.2.0",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.16.0",
     "core-js": "^3.8.1",
