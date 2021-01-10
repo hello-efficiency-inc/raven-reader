@@ -28,6 +28,7 @@ const state = {
   themeOption: 'system',
   oldestArticles: false,
   disableImages: false,
+  fullArticleDefault: false,
   offline: false,
   proxy: {
     http: '',
@@ -66,6 +67,9 @@ const mutations = {
   },
   SET_THEME_OPTION (state, data) {
     state.darkMode = data
+  },
+  SET_FULL_ARTICLE_PREFERENCE (state, data) {
+    state.fullArticleDefault = data
   },
   SET_IMAGE_PREFERENCE (state, data) {
     state.disableImages = data
@@ -198,6 +202,10 @@ const actions = {
   unsetPocket ({ commit }) {
     electronstore.storeSetSettingItem('delete', 'pocket_creds')
     commit('UNSET_POCKET')
+  },
+  setFullArticlePreference ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'settings.fullArticlePreference', data === 'on')
+    commit('SET_FULL_ARTICLE_PREFERENCE', data === 'on')
   },
   async setImagePreference ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'settings.imagePreference', data === 'on')

@@ -348,6 +348,7 @@ ipcMain.on('get-settings', (event, arg) => {
   state.themeOption = store.get('settings.theme_option', 'system')
   state.oldestArticles = store.get('settings.oldestArticles', false)
   state.disableImages = store.get('settings.imagePreference', false)
+  state.fullArticleDefault = store.get('settings.fullArticlePreference', false)
   state.proxy = store.get('settings.proxy', {
     http: '',
     https: '',

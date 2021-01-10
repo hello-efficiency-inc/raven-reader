@@ -66,7 +66,7 @@
             </b-form-group>
             <b-form-group label="Disable images in Articles">
               <b-form-radio-group
-                id="btnradios1"
+                id="disableImages"
                 v-model="disableImages"
                 buttons
                 button-variant="outline-primary"
@@ -74,6 +74,18 @@
                 :options="options"
                 name="imagePref"
                 @input="saveImagePreference"
+              />
+            </b-form-group>
+            <b-form-group label="Full article view by default">
+              <b-form-radio-group
+                id="fullArticle"
+                v-model="fullArticleDefault"
+                buttons
+                button-variant="outline-primary"
+                size="sm"
+                :options="options"
+                name="fullArticle"
+                @input="saveFullArticlePreferences"
               />
             </b-form-group>
             <b-form-group label="Delete all feed, category and article data">
@@ -305,6 +317,7 @@ export default {
       darkMode: 'off',
       oldestArticles: 'off',
       disableImages: 'off',
+      fullArticleDefault: 'off',
       keepread_options: [
         { value: 1, text: '1 week' },
         { value: 2, text: '2 weeks' },
@@ -369,6 +382,7 @@ export default {
       this.setTheme(this.$store.state.Setting.themeOption)
       this.oldestArticles = this.$store.state.Setting.oldestArticles ? 'on' : 'off'
       this.disableImages = this.$store.state.Setting.disableImages ? 'on' : 'off'
+      this.fullArticleDefault = this.$store.state.Setting.fullArticleDefault ? 'on' : 'off'
       if (this.$store.state.Setting.proxy) {
         this.proxy.http = this.$store.state.Setting.proxy.http
         this.proxy.https = this.$store.state.Setting.proxy.https
@@ -419,6 +433,15 @@ export default {
     saveCronjob (cronValue) {
       this.$store.dispatch('setCronJob', cronValue)
       this.$toasted.show('Settings for cronjob successfully saved.', {
+        theme: 'outline',
+        position: 'top-center',
+        duration: 3000
+      })
+      this.hideModal()
+    },
+    saveFullArticlePreferences (preference) {
+      this.$store.dispatch('setFullArticlePreference', preference)
+      this.$toasted.show('Full Article preference changed.', {
         theme: 'outline',
         position: 'top-center',
         duration: 3000

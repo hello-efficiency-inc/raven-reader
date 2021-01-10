@@ -162,6 +162,7 @@ export default {
     }
   },
   mounted () {
+    this.full = this.$store.state.Setting.fullArticleDefault
     bus.$on('change-article-list', () => {
       this.resetData()
     })

@@ -284,6 +284,9 @@ export default {
   watch: {
     article () {
       this.articleItem = JSON.parse(JSON.stringify(this.article))
+      if (this.$store.state.Setting.fullArticleDefault && this.articleItem && !this.articleItem.podcast && !this.articleItem.media) {
+        this.loadFullArticle()
+      }
     }
   },
   mounted () {
