@@ -11,6 +11,18 @@ const TAGS = {
   FAVOURITE_TAG: 'user/-/state/com.google/starred'
 }
 
+const chunk = (arr, chunkSize = 1, cache = []) => {
+  const tmp = [...arr]
+  if (chunkSize <= 0) return cache
+  while (tmp.length) cache.push(tmp.splice(0, chunkSize))
+  return cache
+}
+
+const flattenDeep = arr =>
+  Array.isArray(arr)
+    ? arr.reduce((a, b) => [...flattenDeep(a), ...flattenDeep(b)], [])
+    : [arr]
+
 function checkIsPodCast (post) {
   return typeof post !== 'undefined' &&
     post.length && post.type.indexOf('audio') !== -1
@@ -66,29 +78,11 @@ export default {
       window.log.info(e)
     }
   },
-  async getFolders (credsData) {
+  async getUnreadIds (credsData) {
     let tokenData
-    if (dayjs().valueOf() >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
-    try {
-      const data = await axios.get('https://www.inoreader.com/reader/api/0/tag/list?types=1', {
-        headers: {
-          Authorization: `Bearer ${tokenData.access_token}`
-        }
-      })
-      return data.data.tags
-    } catch (e) {
-      window.log.info(e)
-    }
-  },
-  async getEntries (credsData, datetime = null) {
-    let tokenData
-    const entries = []
+    const ids = []
     let continuation = null
-    const fetchTime = datetime || dayjs().subtract(7, 'day').unix()
+    let apiUrl
     if (dayjs().valueOf() >= credsData.expires_in) {
       tokenData = await this.refreshToken(credsData)
     } else {
@@ -96,14 +90,86 @@ export default {
     }
     try {
       do {
-        const data = await axios.get(`https://www.inoreader.com/reader/api/0/stream/contents?n=1000&c=${continuation}&ot=${fetchTime}`, {
+        if (continuation === null) {
+          apiUrl = 'https://www.inoreader.com/reader/api/0/stream/items/ids?output=json&s=user/-/state/com.google/reading-list&xt=user/-/state/com.google/read&n=1000'
+        } else {
+          apiUrl = `https://www.inoreader.com/reader/api/0/stream/items/ids?output=json&s=user/-/state/com.google/reading-list&xt=user/-/state/com.google/read&n=1000&c=${continuation}`
+        }
+        const data = await axios.get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${tokenData.access_token}`
+          }
+        })
+        if (data.data.itemRefs) {
+          ids.push(...data.data.itemRefs.map(item => {
+            return item.id
+          }))
+        }
+        continuation = typeof data.data.continuation !== 'undefined' ? data.data.continuation : null
+      }
+      while (continuation !== null)
+      return ids
+    } catch (e) {
+      window.log.info(e)
+    }
+  },
+  async getStarredIds (credsData) {
+    let tokenData
+    const ids = []
+    let continuation = null
+    let apiUrl
+    if (dayjs().valueOf() >= credsData.expires_in) {
+      tokenData = await this.refreshToken(credsData)
+    } else {
+      tokenData = credsData
+    }
+    try {
+      do {
+        if (continuation === null) {
+          apiUrl = 'https://www.inoreader.com/reader/api/0/stream/items/ids?output=json&s=user/-/state/com.google/starred&n=1000'
+        } else {
+          apiUrl = `https://www.inoreader.com/reader/api/0/stream/items/ids?output=json&s=user/-/state/com.google/starred&n=1000&c=${continuation}`
+        }
+        const data = await axios.get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${tokenData.access_token}`
+          }
+        })
+        if (data.data.itemRefs) {
+          ids.push(...data.data.itemRefs.map(item => {
+            return item.id
+          }))
+        }
+        continuation = typeof data.data.continuation !== 'undefined' ? data.data.continuation : null
+      }
+      while (continuation !== null)
+      return ids
+    } catch (e) {
+      window.log.info(e)
+    }
+  },
+  async getEntries (credsData, ids) {
+    let tokenData
+    const entries = []
+    const chunks = chunk(ids, 250)
+    if (dayjs().valueOf() >= credsData.expires_in) {
+      tokenData = await this.refreshToken(credsData)
+    } else {
+      tokenData = credsData
+    }
+    try {
+      for (let i = 0; i < chunks.length; i++) {
+        const postData = new URLSearchParams()
+        for (let k = 0; k < chunks[i].length; k++) {
+          postData.append('i', chunks[i][k])
+        }
+        const data = await axios.post('https://www.inoreader.com/reader/api/0/stream/contents', postData, {
           headers: {
             Authorization: `Bearer ${tokenData.access_token}`
           }
         })
         entries.push(...data.data.items)
-        continuation = typeof data.data.continuation !== 'undefined' ? data.data.continuation : null
-      } while (continuation !== null)
+      }
       return entries
     } catch (e) {
       window.log.info(e)
@@ -140,24 +206,17 @@ export default {
       }
     })
   },
-  async syncTags (credsData) {
+  async syncTags (categories) {
     const currentCategories = await db.fetchCategoriesBySource('inoreader')
-    const tags = await this.getFolders(credsData)
-    const formattedTags = JSON.parse(JSON.stringify(tags.filter(item => item.type === 'folder'))).map((item) => {
-      const format = item.id.split('/')
-      item.clearText = format[format.length - 1]
-      return item
-    })
-    const dbFormat = formattedTags.map((item) => {
+    const dbFormat = Array.from(categories).map((item) => {
       return {
-        id: uuidstring(item.clearText),
+        id: uuidstring(item),
         type: 'category',
         source: 'inoreader',
-        title: item.clearText
+        title: item
       }
     })
-    const titles = new Set(dbFormat.map(item => item.title))
-    const diff = currentCategories.filter(item => !titles.has(item.title))
+    const diff = currentCategories.filter(item => !categories.has(item.title))
     if (diff.length > 0) {
       db.deleteCategoryMulti(diff.map(item => item.title))
     }
@@ -166,8 +225,16 @@ export default {
       db.addCategory(tobeAdded.map(item => database.categoryTable.createRow(item)))
     }
   },
-  async syncArticles (credsData, mappedEntries) {
+  async syncArticles (credsData) {
     let subscriptions = await this.getSubscriptions(credsData)
+    const unreadList = await this.getUnreadIds(credsData)
+    const starredList = await this.getStarredIds(credsData)
+    const entriesId = new Set([...unreadList, ...starredList])
+    const entries = await this.getEntries(credsData, Array.from(entriesId))
+    const folders = subscriptions.map(item => {
+      return item.categories.map(cat => cat.label)
+    })
+    this.syncTags(new Set(flattenDeep(folders)))
     if (subscriptions) {
       const currentSubscriptions = await db.fetchServicesFeeds('inoreader')
       const currentFeedUrls = JSON.parse(JSON.stringify(currentSubscriptions)).map((item) => {
@@ -200,12 +267,14 @@ export default {
       return addedFeeds.then((res) => {
         const subscriptAdded = res
         subscriptions = subscriptions.map((item) => {
-          item.feed_uuid = subscriptAdded.filter(feed => feed.source_id === item.id)[0].uuid
+          const addedSubscription = subscriptAdded.filter(feed => feed.source_id === item.id)
+          db.updateArticleCategoryFeed(addedSubscription[0].uuid, addedSubscription[0].category)
+          item.feed_uuid = addedSubscription[0].uuid
           return item
         })
         const readTag = `user/${credsData.user.userId}/state/com.google/read`
         const favouriteTag = `user/${credsData.user.userId}/state/com.google/starred`
-        const transformedEntries = JSON.parse(JSON.stringify(mappedEntries)).map((item) => {
+        const transformedEntries = JSON.parse(JSON.stringify(entries)).map((item) => {
           const itemId = item.id.split('/')
           const id = parseInt(itemId[itemId.length - 1], 16)
           const isMedia = item.alternate && (item.canonical[0].href.includes('youtube') || item.canonical[0].href.includes('vimeo'))
@@ -252,9 +321,5 @@ export default {
         return db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
       })
     }
-  },
-  async syncItems (credsData, mappedEntries) {
-    await this.syncTags(credsData)
-    return await this.syncArticles(credsData, mappedEntries)
   }
 }

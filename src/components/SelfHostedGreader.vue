@@ -136,7 +136,10 @@ export default {
     },
     loginSelfHost () {
       this.selfhost_error = false
-      axios.get(`${this.selfhosted.endpoint}/accounts/ClientLogin?Email=${this.selfhosted.username}&Passwd=${this.selfhosted.password}`)
+      axios.post(`${this.selfhosted.endpoint}/accounts/ClientLogin`, {
+        Email: this.selfhosted.username,
+        Passwd: this.selfhosted.password
+      })
         .then((res) => {
           const matches = res.data.match(/Auth=(\S+)/)
           const data = JSON.parse(JSON.stringify(this.selfhosted))
