@@ -7,12 +7,11 @@ export default {
   methods: {
     syncGreader () {
       if (this.$store.state.Setting.selfhost_connected) {
-        greader.getEntries(this.$store.state.Setting.selfhost, dayjs(this.$store.state.Setting.greader_fetched_lastime).subtract(8, 'hour').unix()).then((res) => {
-          window.log.info('Processing Greader feeds')
-          greader.syncItems(this.$store.state.Setting.selfhost, res).then(() => {
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-          })
+        window.log.info('Processing Greader feeds')
+        greader.syncItems(this.$store.state.Setting.selfhost).then(() => {
+          this.$store.dispatch('loadCategories')
+          this.$store.dispatch('loadFeeds')
+          this.$store.dispatch('loadArticles')
         })
       }
     },

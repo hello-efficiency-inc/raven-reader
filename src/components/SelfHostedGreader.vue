@@ -126,6 +126,7 @@ export default {
         db.deleteArticlesSyncAccount('greader').then(() => {
           this.$store.dispatch('unsetSelfhost').then(() => {
             this.$store.dispatch('loadSettings')
+            this.$store.dispatch('loadCategories')
             this.$store.dispatch('loadFeeds')
             this.$store.dispatch('loadArticles')
             this.$emit('selfhost-connected', false)
@@ -136,25 +137,25 @@ export default {
     },
     loginSelfHost () {
       this.selfhost_error = false
-      axios.post(`${this.selfhosted.endpoint}/accounts/ClientLogin`, {
-        Email: this.selfhosted.username,
-        Passwd: this.selfhosted.password
-      })
-        .then((res) => {
+      const urlencoded = new URLSearchParams()
+      urlencoded.append('Email', this.selfhosted.username)
+      urlencoded.append('Passwd', this.selfhosted.password)
+      axios.post(`${this.selfhosted.endpoint}/accounts/ClientLogin`, urlencoded)
+        .then(async (res) => {
           const matches = res.data.match(/Auth=(\S+)/)
           const data = JSON.parse(JSON.stringify(this.selfhosted))
           data.auth = matches[1]
+          data.userinfo = await greader.getUserInfo(data)
           this.$store.dispatch('setSelfhost', data).then(() => {
             this.hideSelfhostModal()
             this.$emit('selfhost-connected', true)
             this.$emit('selfhost-sync', true)
-            greader.getEntries(data).then((res) => {
-              greader.syncItems(data, res).then(() => {
-                this.$store.dispatch('loadFeeds')
-                this.$store.dispatch('loadArticles')
-                this.$emit('selfhost-sync', false)
-                this.$emit('preference-modal-hide')
-              })
+            greader.syncItems(data).then(() => {
+              this.$store.dispatch('loadCategories')
+              this.$store.dispatch('loadFeeds')
+              this.$store.dispatch('loadArticles')
+              this.$emit('selfhost-sync', false)
+              this.$emit('preference-modal-hide')
             })
           })
         }).catch(() => {

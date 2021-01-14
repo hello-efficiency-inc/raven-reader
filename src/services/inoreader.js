@@ -163,7 +163,7 @@ export default {
         for (let k = 0; k < chunks[i].length; k++) {
           postData.append('i', chunks[i][k])
         }
-        const data = await axios.post('https://www.inoreader.com/reader/api/0/stream/contents', postData, {
+        const data = await axios.post('https://www.inoreader.com/reader/api/0/stream/items/contents?output=json', postData, {
           headers: {
             Authorization: `Bearer ${tokenData.access_token}`
           }
@@ -276,7 +276,9 @@ export default {
         const favouriteTag = `user/${credsData.user.userId}/state/com.google/starred`
         const transformedEntries = JSON.parse(JSON.stringify(entries)).map((item) => {
           const itemId = item.id.split('/')
-          const id = parseInt(itemId[itemId.length - 1], 16)
+          const last = itemId[itemId.length - 1]
+          const i = BigInt('0x' + last)
+          const id = BigInt.asIntN(64, i).toString()
           const isMedia = item.alternate && (item.canonical[0].href.includes('youtube') || item.canonical[0].href.includes('vimeo'))
           const isPodcast = item.enclosure ? checkIsPodCast(item.enclosure[0]) : false
           const feed = subscriptions.filter(feed => feed.id === item.origin.streamId)[0]
