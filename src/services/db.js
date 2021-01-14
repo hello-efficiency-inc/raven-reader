@@ -10,6 +10,14 @@ export default {
   fetchServicesFeeds (service) {
     return db.database.select().from(db.feedTable).where(db.feedTable.source.eq(service)).exec()
   },
+  fetchServicesArticles (service) {
+    return db.database
+      .select()
+      .from(db.articleTable)
+      .innerJoin(db.feedTable, db.feedTable.uuid.eq(db.articleTable.feed_uuid))
+      .where(db.feedTable.source.eq(service))
+      .exec()
+  },
   fetchArticles () {
     return db.database
       .select()
@@ -73,6 +81,12 @@ export default {
       .from(db.articleTable)
       .innerJoin(db.feedTable, db.feedTable.uuid.eq(db.articleTable.feed_uuid))
       .where(db.articleTable.uuid.eq(uuid))
+      .exec()
+  },
+  updateArticleCategoryFeed (feedid, category) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.category, category)
+      .where(db.articleTable.feed_uuid.eq(feedid))
       .exec()
   },
   updateArticleCategory (uuids, category) {

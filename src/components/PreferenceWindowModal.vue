@@ -408,14 +408,12 @@ export default {
       this.$store.dispatch('setInoreader', JSON.stringify(args)).then(() => {
         this.inoreader_connected = true
         this.showSync = true
-        inoreader.getEntries(args).then((res) => {
-          inoreader.syncItems(args, res).then(() => {
-            this.$store.dispatch('loadCategories')
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-            this.showSync = false
-            this.hideModal()
-          })
+        inoreader.syncArticles(args).then(() => {
+          this.$store.dispatch('loadCategories')
+          this.$store.dispatch('loadFeeds')
+          this.$store.dispatch('loadArticles')
+          this.showSync = false
+          this.hideModal()
         })
       })
     })

@@ -7,24 +7,21 @@ export default {
   methods: {
     syncGreader () {
       if (this.$store.state.Setting.selfhost_connected) {
-        greader.getEntries(this.$store.state.Setting.selfhost, dayjs(this.$store.state.Setting.greader_fetched_lastime).subtract(8, 'hour').unix()).then((res) => {
-          window.log.info('Processing Greader feeds')
-          greader.syncItems(this.$store.state.Setting.selfhost, res).then(() => {
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-          })
+        window.log.info('Processing Greader feeds')
+        greader.syncItems(this.$store.state.Setting.selfhost).then(() => {
+          this.$store.dispatch('loadCategories')
+          this.$store.dispatch('loadFeeds')
+          this.$store.dispatch('loadArticles')
         })
       }
     },
     syncInoreader () {
       if (this.$store.state.Setting.inoreader_connected) {
-        inoreader.getEntries(this.$store.state.Setting.inoreader, dayjs(this.$store.state.Setting.inoreader_last_fetched).subtract(8, 'hour').unix()).then((res) => {
-          window.log.info('Processing Inoreader feeds')
-          inoreader.syncItems(this.$store.state.Setting.inoreader, res).then(() => {
-            this.$store.dispatch('loadCategories')
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-          })
+        window.log.info('Processing Inoreader feeds')
+        inoreader.syncArticles(this.$store.state.Setting.inoreader).then(() => {
+          this.$store.dispatch('loadCategories')
+          this.$store.dispatch('loadFeeds')
+          this.$store.dispatch('loadArticles')
         })
       }
     },
