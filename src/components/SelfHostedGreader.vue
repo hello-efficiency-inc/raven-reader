@@ -125,12 +125,14 @@ export default {
       db.deleteAllSyncAccountSubscriptions('greader').then(() => {
         db.deleteArticlesSyncAccount('greader').then(() => {
           this.$store.dispatch('unsetSelfhost').then(() => {
-            this.$store.dispatch('loadSettings')
-            this.$store.dispatch('loadCategories')
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-            this.$emit('selfhost-connected', false)
-            this.$emit('preference-modal-hide')
+            db.deleteCategoryBySource('greader').then(() => {
+              this.$store.dispatch('loadSettings')
+              this.$store.dispatch('loadCategories')
+              this.$store.dispatch('loadFeeds')
+              this.$store.dispatch('loadArticles')
+              this.$emit('selfhost-connected', false)
+              this.$emit('preference-modal-hide')
+            })
           })
         })
       })

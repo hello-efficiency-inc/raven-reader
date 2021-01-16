@@ -180,7 +180,7 @@ export default {
     let subscriptions = await this.getSubscriptions(credsData)
     const unreadList = await this.getUnreadIds(credsData)
     const starredList = await this.getStarredIds(credsData)
-    const entriesId = new Set([...unreadList, ...starredList])
+    const entriesId = new Set([...unreadList])
     const entries = await this.getEntries(credsData, Array.from(entriesId))
     const folders = subscriptions.map(item => {
       return item.categories.map(cat => cat.label)
@@ -272,8 +272,18 @@ export default {
             source_id: id
           }
         })
+        const currentArticles = db.fetchServicesArticles('greader')
+        const articles = db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
+        currentArticles.then((res) => {
+          const markRead = res.filter(item => !unreadList.includes(item.articles.source_id)).map(item => item.articles.uuid)
+          const markUnFavourite = res.filter(item => !starredList.includes(item.articles.source_id)).map(item => item.articles.uuid)
+          const markFavourite = res.filter(item => starredList.includes(item.articles.source_id)).map(item => item.articles.uuid)
+          db.markAllRead(markRead)
+          db.markBulkFavourite(markFavourite)
+          db.markBulkUnFavourite(markUnFavourite)
+        })
         store.dispatch('setGreaderLastFetched', dayjs().toISOString())
-        return db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
+        return articles
       })
     }
   }

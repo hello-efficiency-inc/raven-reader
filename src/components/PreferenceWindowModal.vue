@@ -519,6 +519,7 @@ export default {
     },
     deleteAllData () {
       db.deleteAllData().then(() => {
+        this.$store.dispatch('loadCategories')
         this.$store.dispatch('loadFeeds')
         this.$store.dispatch('loadArticles')
         this.hideModal()

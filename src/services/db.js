@@ -155,6 +155,18 @@ export default {
       .where(db.articleTable.uuid.in(uuids))
       .exec()
   },
+  markBulkFavourite (uuids) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.favourite, true)
+      .where(db.articleTable.uuid.in(uuids))
+      .exec()
+  },
+  markBulkUnFavourite (uuids) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.favourite, false)
+      .where(db.articleTable.uuid.in(uuids))
+      .exec()
+  },
   markFavourite (uuid, verdict) {
     return db.database.update(db.articleTable)
       .set(db.articleTable.favourite, verdict)
