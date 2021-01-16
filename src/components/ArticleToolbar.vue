@@ -5,7 +5,7 @@
       class="article-toolbar"
     >
       <div class="site-info position-relative">
-        <div class="wrap h-100 d-flex align-items-center">
+        <div class="wrap w-100 h-100 d-flex align-items-center">
           <img
             :src="article.favicon"
             width="16"
@@ -100,6 +100,9 @@
             >
               <feather-icon name="share-2" />
             </template>
+            <b-dropdown-item @click="copyArticleLinkToClipboard(article.link)">
+              Copy article link
+            </b-dropdown-item>
             <b-dropdown-item
               v-if="instapaperConnected"
               @click="saveToInstapaper(article.link)"
@@ -297,6 +300,9 @@ export default {
     })
   },
   methods: {
+    copyArticleLinkToClipboard (url) {
+      window.electron.copyToClipboard(url)
+    },
     resetData () {
       this.original = false
       this.settingspanel = false
@@ -505,7 +511,7 @@ export default {
   display: block;
   position: absolute;
   top: 0;
-  width: 60%;
+  width: 40%;
   height: 40px;
   z-index: 1;
   background-image: linear-gradient(to right, rgba(255,255,255,0) 0%, #fff 10%);
@@ -515,7 +521,7 @@ export default {
   display: block;
   position: absolute;
   top: 0;
-  width: 40%;
+  width: 60%;
   height: 40px;
   z-index: 1;
   background-image: linear-gradient(to right, rgba(255,255,255,0) 0%, #fff 10%);

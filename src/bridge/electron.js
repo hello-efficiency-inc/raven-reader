@@ -1,6 +1,9 @@
-import { app, ipcRenderer, shell } from 'electron'
+import { app, ipcRenderer, shell, clipboard } from 'electron'
 
 export default {
+  copyToClipboard: (url) => {
+    clipboard.writeText(url, 'selection')
+  },
   removeListeners: () => {
     ipcRenderer.removeAllListeners()
   },

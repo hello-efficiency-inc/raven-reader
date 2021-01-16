@@ -302,7 +302,7 @@ export default {
         : null
       data.favicon = article.feeds.favicon
       data.fulltitle = article.feeds.fulltitle
-      data.sitetitle = truncate(article.feeds.title, 20)
+      data.sitetitle = truncate(article.feeds.title, 50)
       data.feed_uuid = article.feeds.uuid
       data.category = article.articles.category
       data.podcast = article.articles.podcast
