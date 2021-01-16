@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     serviceConnected () {
-      return this.$store.state.Setting.feedbin_connected || this.$store.state.Setting.inoreader_connected
+      return this.$store.state.Setting.feedbin_connected || this.$store.state.Setting.inoreader_connected || this.$store.state.Setting.selfhost_connected
     },
     categoryItems () {
       return this.$store.state.Category.categories.map((item) => {

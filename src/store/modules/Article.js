@@ -83,13 +83,14 @@ const mutations = {
   },
   MARK_ACTION (state, data) {
     const index = state.articles.findIndex(item => item.articles.uuid === data.data.id)
-    if (data.rootState.Setting.feedbin_connected) {
+    const source = state.articles[index].articles.source
+    if (data.rootState.Setting.feedbin_connected && source === 'feedbin') {
       feedbin.markItem(data.rootState.Setting.feedbin, data.data.type, [state.articles[index].articles.source_id])
     }
-    if (data.rootState.Setting.selfhost_connected) {
+    if (data.rootState.Setting.selfhost_connected && source === 'greader') {
       greader.markItem(data.rootState.Setting.selfhost, data.data.type, [state.articles[index].articles.source_id])
     }
-    if (data.rootState.Setting.inoreader_connected) {
+    if (data.rootState.Setting.inoreader_connected && source === 'inoreader') {
       inoreader.markItem(data.rootState.Setting.inoreader, data.data.type, [state.articles[index].articles.source_id])
     }
   },
