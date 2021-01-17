@@ -71,10 +71,6 @@ function createWindow () {
     }
   })
 
-  if (os.platform() === 'linux') {
-    win.setIcon(path.join(__dirname, '256x256.png'))
-  }
-
   win.setTouchBar(touchBar)
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode

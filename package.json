@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "author": "Hello Efficiency Inc. <welcome@helloefficiency.com>",
   "description": "Simple desktop RSS Reader",
   "license": "MIT",
@@ -12,6 +12,7 @@
     "electron:build": "vue-cli-service electron:build",
     "electron:release-mac": "vue-cli-service electron:build --mac -p always",
     "electron:release-other": "vue-cli-service electron:build --win --linux -p always",
+    "electron:release-linux": "vue-cli-service electron:build --linux -p always",
     "electron:serve": "vue-cli-service electron:serve",
     "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
     "postinstall": "electron-builder install-app-deps",
