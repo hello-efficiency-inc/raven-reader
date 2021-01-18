@@ -155,24 +155,15 @@ export default {
         method: 'GET',
         headers: headers
       }).then(() => {
-        this.hideFeedbinModal()
         this.$store.dispatch('setFeedbin', JSON.stringify(this.feedbin)).then(() => {
+          this.hideFeedbinModal()
           this.$emit('feedbin-connected', true)
           this.$emit('feedbin-sync', true)
-          const promise = Promise.all([
-            feedbin.getUnreadEntries(this.feedbin),
-            feedbin.getStarredEntries(this.feedbin),
-            feedbin.getEntries(this.feedbin)
-          ])
-          promise.then((res) => {
-            const [unread, starred, entries] = res
-            const mapped = feedbin.transformEntriesAndFeed(unread, starred, entries)
-            feedbin.syncItems(this.$store.state.Setting.feedbin, mapped).then(() => {
-              this.$store.dispatch('loadFeeds')
-              this.$store.dispatch('loadArticles')
-              this.$emit('feedbin-sync', false)
-              this.$emit('preference-modal-hide')
-            })
+          feedbin.syncItems(JSON.parse(this.$store.state.Setting.feedbin)).then(() => {
+            this.$store.dispatch('loadFeeds')
+            this.$store.dispatch('loadArticles')
+            this.$emit('feedbin-sync', false)
+            this.$emit('preference-modal-hide')
           })
           this.$store.dispatch('loadSettings')
         })

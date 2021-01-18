@@ -708,4 +708,22 @@ export default {
   background:var(--background-color);
   cursor: col-resize;
 }
+
+.dropdown-menu {
+  background: var(--background-color, #fff);
+  color: var(--text-color);
+}
+
+.dropdown-item {
+  color: var(--text-colo);
+
+  span {
+    color: var(--text-color) !important;
+  }
+
+  &:hover {
+    background: var(--active-item-background-color);
+    color: var(--text-color) !important;
+  }
+}
 </style>

@@ -13,12 +13,12 @@
             </span>
           </div>
           <input
-            v-model.lazy="search"
+            v-model="search"
             type="text"
             class="form-control"
             placeholder="Search"
             aria-label="Search"
-            @change="searchList"
+            @keyup="searchList"
           >
           <div class="toolsbar">
             <div class="tool">
@@ -172,24 +172,19 @@ export default {
     },
     sync () {
       this.syncState = true
-      if (this.$store.state.Feed.feeds.length > 0) {
-        bus.$emit('progress', 'start')
-        window.log.info(`Processing ${this.$store.state.Feed.feeds.filter(item => item.source === 'local').length} feeds`)
-        this.$refs.statusMsg.innerText = 'Syncing...'
-        helper.subscribe(this.$store.state.Feed.feeds.filter(item => item.source === 'local' || typeof item.source === 'undefined'), null, true, false).then(() => {
-          this.itemsChange()
-          bus.$emit('progress', 'stop')
-          this.syncState = false
-        })
-        this.syncFeedbin()
-        this.syncInoreader()
-        this.syncGreader()
+      bus.$emit('progress', 'start')
+      window.log.info(`Processing ${this.$store.state.Feed.feeds.filter(item => item.source === 'local').length} feeds`)
+      this.$refs.statusMsg.innerText = 'Syncing...'
+      helper.subscribe(this.$store.state.Feed.feeds.filter(item => item.source === 'local' || typeof item.source === 'undefined'), null, true, false).then(() => {
+        this.itemsChange()
         bus.$emit('progress', 'stop')
         this.syncState = false
-      } else {
-        bus.$emit('progress', 'stop')
-        this.syncState = false
-      }
+      })
+      this.syncFeedbin()
+      this.syncInoreader()
+      this.syncGreader()
+      bus.$emit('progress', 'stop')
+      this.syncState = false
     },
     fold () {
       if (!this.sideBarHidden) {

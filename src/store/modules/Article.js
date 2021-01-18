@@ -39,7 +39,7 @@ const filters = {
   played: articles => articles.filter(article => article.articles.played),
   read: articles => articles.filter(article => article.articles.read),
   favourites: articles => articles.filter(article => article.articles.favourite),
-  feed: (articles, feed) => articles.filter(article => article.articles.feed_uuid === feed),
+  feed: (articles, feed) => articles.filter(article => article.articles.feed_uuid === feed && !article.articles.read),
   category: (articles, category) => articles.filter(article => article.articles.category === category),
   saved: articles => articles.filter(article => article.articles.offline),
   all: articles => articles
@@ -51,8 +51,8 @@ const searchOption = {
   shouldSort: true,
   findAllMatches: true,
   includeScore: true,
-  threshold: 0.4,
-  keys: ['articles.title', 'articles.content']
+  threshold: 0.5,
+  keys: ['articles.title', 'articles.content, articles.contentSnippet']
 }
 
 const getters = {

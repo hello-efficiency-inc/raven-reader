@@ -24,11 +24,10 @@ export default {
       window.log.info(e)
     }
   },
-  async getEntries (feedbinCreds, datetime = null) {
-    const timestamp = datetime || dayjs().subtract(1, 'month').toISOString()
+  async getEntries (feedbinCreds, ids) {
     const number = Number.MAX_SAFE_INTEGER
     try {
-      const entries = await axios.get(`${feedbinCreds.endpoint}entries.json?since=${timestamp}&per_page=${number}&mode=extended`, {
+      const entries = await axios.get(`${feedbinCreds.endpoint}entries.json?ids=${ids.join()}&per_page=${number}&mode=extended`, {
         auth: {
           username: feedbinCreds.email,
           password: feedbinCreds.password
@@ -107,8 +106,11 @@ export default {
       }
     })
   },
-  async syncItems (feedbinCreds, mappedEntries) {
+  async syncItems (feedbinCreds) {
     let subscriptions = await this.getSubscriptions(feedbinCreds)
+    const unreadList = await this.getUnreadEntries(feedbinCreds)
+    const starredList = await this.getStarredEntries(feedbinCreds)
+    const entries = this.transformEntriesAndFeed(unreadList, starredList, await this.getEntries(feedbinCreds, unreadList))
     if (subscriptions) {
       const currentSubscriptions = await db.fetchServicesFeeds('feedbin')
       const currentFeedUrls = JSON.parse(JSON.stringify(currentSubscriptions)).map((item) => {
@@ -145,7 +147,7 @@ export default {
           item.feed_uuid = subscriptAdded.filter(feed => feed.xmlurl === item.feed_url)[0].uuid
           return item
         })
-        const transformedEntries = JSON.parse(JSON.stringify(mappedEntries)).map((item) => {
+        const transformedEntries = JSON.parse(JSON.stringify(entries)).map((item) => {
           const isMedia = item.url.includes('youtube') || item.url.includes('vimeo')
           return {
             id: item.enclosure ? uuidstring(item.enclosure.enclosure_url) : uuidstring(item.url),
@@ -184,8 +186,18 @@ export default {
             source_id: item.id
           }
         })
+        const currentArticles = db.fetchServicesArticles('feedbin')
+        const articles = db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
+        currentArticles.then((res) => {
+          const markRead = res.filter(item => !unreadList.includes(item.articles.source_id)).map(item => item.articles.uuid)
+          const markUnFavourite = res.filter(item => !starredList.includes(item.articles.source_id)).map(item => item.articles.uuid)
+          const markFavourite = res.filter(item => starredList.includes(item.articles.source_id)).map(item => item.articles.uuid)
+          db.markAllRead(markRead)
+          db.markBulkFavourite(markFavourite)
+          db.markBulkUnFavourite(markUnFavourite)
+        })
         window.electronstore.setFeedbinLastFetched(dayjs().toISOString())
-        return db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
+        return articles
       })
     }
   }

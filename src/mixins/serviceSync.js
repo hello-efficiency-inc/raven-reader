@@ -1,7 +1,6 @@
 import feedbin from '../services/feedbin'
 import inoreader from '../services/inoreader'
 import greader from '../services/greader'
-import dayjs from 'dayjs'
 
 export default {
   methods: {
@@ -27,18 +26,9 @@ export default {
     },
     syncFeedbin () {
       if (this.$store.state.Setting.feedbin_connected) {
-        const promise = Promise.all([
-          feedbin.getUnreadEntries(this.$store.state.Setting.feedbin),
-          feedbin.getStarredEntries(this.$store.state.Setting.feedbin),
-          feedbin.getEntries(this.$store.state.Setting.feedbin, dayjs(window.electronstore.getFeedbinLastFetched()).subtract(8, 'hour').toISOString())
-        ])
-        promise.then((res) => {
-          const [unread, starred, entries] = res
-          window.log.info('Processing Feedbin feeds')
-          feedbin.syncItems(this.$store.state.Setting.feedbin, feedbin.transformEntriesAndFeed(unread, starred, entries)).then(() => {
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-          })
+        feedbin.syncItems(this.$store.state.Setting.feedbin).then(() => {
+          this.$store.dispatch('loadFeeds')
+          this.$store.dispatch('loadArticles')
         })
       }
     }
