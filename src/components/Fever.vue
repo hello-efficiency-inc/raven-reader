@@ -156,6 +156,7 @@ export default {
               this.$emit('fever-connected', true)
               this.$emit('fever-sync', true)
               fever.syncItems(data).then(() => {
+                this.$store.dispatch('loadCategories')
                 this.$store.dispatch('loadFeeds')
                 this.$store.dispatch('loadArticles')
                 this.$emit('fever-sync', false)
