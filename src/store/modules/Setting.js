@@ -16,6 +16,13 @@ const state = {
     email: null,
     password: null
   },
+  fever_connected: false,
+  fever: {
+    endpoint: null,
+    username: null,
+    password: null,
+    hash: null
+  },
   selfhost_connected: false,
   selfhost: {
     endpoint: null,
@@ -42,6 +49,9 @@ const electronstore = window.electronstore
 const mutations = {
   LOAD_SETTINGS (state) {
     const settings = JSON.parse(JSON.stringify(electronstore.getSettings()))
+    if (settings.fever_creds) {
+      settings.fever = JSON.parse(settings.fever)
+    }
     if (typeof settings.feedbin !== 'undefined') {
       settings.feedbin = JSON.parse(settings.feedbin)
     }
@@ -87,6 +97,10 @@ const mutations = {
     state.selfhost_connected = true
     state.selfhost = data
   },
+  SET_FEVER_CONNECTED (state, data) {
+    state.fever_connected = true
+    state.fever = data
+  },
   SET_INOREADER_CONNECTED (state, data) {
     state.inoreader_connected = true
     state.inoreader = JSON.parse(data)
@@ -111,6 +125,15 @@ const mutations = {
     state.inoreader_connected = false
     state.inoreader_last_fetched = null
     state.inoreader = null
+  },
+  UNSET_FEVER (state) {
+    state.fever_connected = false
+    state.fever = {
+      endpoint: null,
+      username: null,
+      password: null,
+      hash: null
+    }
   },
   UNSET_SELFHOST (state) {
     state.selfhost_connected = false
@@ -167,6 +190,10 @@ const actions = {
     electronstore.storeSetSettingItem('set', 'inoreader_creds', data)
     commit('SET_INOREADER_CONNECTED', data)
   },
+  setFever ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'fever_creds', data)
+    commit('SET_FEVER_CONNECTED', data)
+  },
   setFeedbin ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'feedbin_creds', data)
     commit('SET_FEEDBIN_CONNECTED', data)
@@ -194,6 +221,10 @@ const actions = {
   unsetFeedbin ({ commit }) {
     electronstore.storeSetSettingItem('delete', 'feedbin_creds')
     commit('UNSET_FEEDBIN')
+  },
+  unsetFever ({ commit }) {
+    electronstore.storeSetSettingItem('delete', 'fever_creds')
+    commit('UNSET_FEVER')
   },
   unsetSelfhost ({ commit }) {
     electronstore.storeSetSettingItem('delete', 'selfhost_creds')

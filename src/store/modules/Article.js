@@ -6,6 +6,7 @@ import timezone from 'dayjs/plugin/timezone'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import Fuse from 'fuse.js'
 import cacheService from '../../services/cacheArticle'
+import fever from '../../services/fever'
 import feedbin from '../../services/feedbin'
 import inoreader from '../../services/inoreader'
 import greader from '../../services/greader'
@@ -84,6 +85,9 @@ const mutations = {
   MARK_ACTION (state, data) {
     const index = state.articles.findIndex(item => item.articles.uuid === data.data.id)
     const source = state.articles[index].articles.source
+    if (data.rootState.Setting.fever_connected && source === 'fever') {
+      fever.markItem(data.rootState.Setting.fever, data.data.type, [state.articles[index].articles.source_id])
+    }
     if (data.rootState.Setting.feedbin_connected && source === 'feedbin') {
       feedbin.markItem(data.rootState.Setting.feedbin, data.data.type, [state.articles[index].articles.source_id])
     }
@@ -108,6 +112,11 @@ const mutations = {
       return arr
     }, [])
     db.markAllRead(unreadArticles)
+    if (rootState.Setting.fever_connected) {
+      sourceIds.filter(item => item !== null).forEach((item) => {
+        fever.markItem(rootState.Setting.fever, 'READ', item)
+      })
+    }
     if (rootState.Setting.feedbin_connected) {
       feedbin.markItem(rootState.Setting.feedbin, 'READ', sourceIds.filter(item => item !== null))
     }

@@ -180,6 +180,7 @@ export default {
         bus.$emit('progress', 'stop')
         this.syncState = false
       })
+      this.syncFever()
       this.syncFeedbin()
       this.syncInoreader()
       this.syncGreader()

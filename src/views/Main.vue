@@ -107,6 +107,7 @@ export default {
       db.deleteArticleByKeepRead()
     }).then(() => {
       setTimeout(() => {
+        self.syncFever()
         self.syncFeedbin()
         self.syncInoreader()
         self.syncGreader()
@@ -141,6 +142,7 @@ export default {
       this.runArticleCronJob().reschedule()
       this.runServiceCronJob().reschedule()
       this.runKeepReadJob().reschedule()
+      this.syncFever()
       this.syncFeedbin()
       this.syncInoreader()
       this.syncGreader()
@@ -331,10 +333,10 @@ export default {
           if (!articleItem.articles.podcast) {
             data = self.$store.state.Setting.offline
               ? await cacheService
-                  .getCachedArticleData(
-                    articleItem.articles.id,
-                    articleItem.articles.link
-                  )
+                .getCachedArticleData(
+                  articleItem.articles.id,
+                  articleItem.articles.link
+                )
               : articleItem.articles
             if (data) {
               self.prepareArticleData(data, articleItem)

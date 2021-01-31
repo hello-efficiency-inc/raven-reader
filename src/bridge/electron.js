@@ -1,6 +1,10 @@
 import { app, ipcRenderer, shell, clipboard } from 'electron'
+import md5 from 'crypto-js/md5'
 
 export default {
+  convertToMD5: (text) => {
+    return md5(text)
+  },
   copyToClipboard: (url) => {
     clipboard.writeText(url, 'selection')
   },

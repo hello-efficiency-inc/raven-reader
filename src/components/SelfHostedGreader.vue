@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row mb-4">
     <div class="col">
       <p class="text-left font-bold">
         Self-hosted (Google Reader API)
@@ -10,7 +10,7 @@
         v-if="!connected"
         v-b-modal.greader
         variant="primary"
-        aria-label="Connect Inoreader"
+        aria-label="Connect Self-hosted (Google Reader API)"
         class="float-right"
         squared
         :disabled="serviceConnected"
@@ -19,7 +19,7 @@
       </b-button>
       <b-button
         v-if="connected"
-        aria-label="Disconnect Inoreader"
+        aria-label="Disconnect Self-hosted (Google Reader API)"
         class="float-right"
         variant="danger"
         @click="disconnectSelfhost"

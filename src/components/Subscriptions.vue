@@ -116,6 +116,7 @@ import feedbin from '../services/feedbin'
 import articleCount from '../mixins/articleCount'
 import dataSets from '../mixins/dataItems'
 import feedMix from '../mixins/feedMix'
+import fever from '../services/fever'
 
 export default {
   mixins: [articleCount, dataSets, feedMix],
@@ -263,6 +264,13 @@ export default {
     },
     openFeedMenu (e, feed) {
       window.electron.createContextMenu('feed', feed)
+    },
+    feverArticleRead (ids) {
+      if (this.$store.state.Setting.fever_connected) {
+        ids.filter(item => item !== null).forEach((item) => {
+          fever.markItem(this.$store.state.Setting.selfhost, 'READ', item)
+        })
+      }
     },
     greaderArticleRead (ids) {
       if (this.$store.state.Setting.selfhost_connected) {

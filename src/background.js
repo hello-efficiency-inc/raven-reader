@@ -370,6 +370,10 @@ ipcMain.on('get-settings', (event, arg) => {
     state.instapaper_connected = true
     state.instapaper = store.get('instapaper_creds')
   }
+  if (store.has('fever_creds')) {
+    state.fever_connected = true
+    state.fever = store.get('fever_creds')
+  }
   if (store.has('selfhost_creds')) {
     state.selfhost_connected = true
     state.selfhost = store.get('selfhost_creds')

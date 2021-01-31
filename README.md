@@ -77,6 +77,7 @@ Please feel free to suggest more ideas to improve this app.
 - Feedbin
 - Inoreader
 - Self hosted RSS Services compatible with Google Reader API (OldReader, Bazqux, FreshRSS)
+- Fever
 
 
 ## Developer Notes

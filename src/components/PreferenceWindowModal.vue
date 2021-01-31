@@ -232,6 +232,13 @@
               @selfhost-sync="handleSync"
               @preference-modal-hide="hideModal"
             />
+            <fever
+              :connected="fever_connected"
+              :service-connected="servicesConnected"
+              @fever-connected="handleFeverConnect"
+              @fever-sync="handleSync"
+              @preference-modal-hide="hideModal"
+            />
           </b-tab>
         </b-tabs>
       </b-overlay>
@@ -292,15 +299,18 @@ import db from '../services/db'
 import axios from 'axios'
 import setTheme from '../mixins/setTheme'
 import inoreader from '../services/inoreader'
+import Fever from './Fever.vue'
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:9080'
 
 export default {
+  components: { Fever },
   mixins: [
     setTheme
   ],
   data () {
     return {
       showSync: false,
+      fever_connected: false,
       selfhost_connected: false,
       feedbin_connected: false,
       inoreader_connected: false,
@@ -388,6 +398,7 @@ export default {
         this.proxy.https = this.$store.state.Setting.proxy.https
         this.proxy.bypass = this.$store.state.Setting.proxy.bypass
       }
+      this.fever_connected = this.$store.state.Setting.fever_connected
       this.selfhost_connected = this.$store.state.Setting.selfhost_connected
       this.inoreader_connected = this.$store.state.Setting.inoreader_connected
       this.instapaper_connected = JSON.parse(JSON.stringify(this.$store.state.Setting.instapaper_connected))
@@ -524,6 +535,9 @@ export default {
         this.$store.dispatch('loadArticles')
         this.hideModal()
       })
+    },
+    handleFeverConnect (data) {
+      this.fever_connected = data
     },
     handleInoreaderConnect (data) {
       this.inoreader_connected = data

@@ -1,9 +1,20 @@
 import feedbin from '../services/feedbin'
 import inoreader from '../services/inoreader'
 import greader from '../services/greader'
+import fever from '../services/fever'
 
 export default {
   methods: {
+    syncFever () {
+      if (this.$store.state.Setting.fever_connected) {
+        window.log.info('Processing fever feeds')
+        fever.syncItems(this.$store.state.Setting.fever).then(() => {
+          this.$store.dispatch('loadCategories')
+          this.$store.dispatch('loadFeeds')
+          this.$store.dispatch('loadArticles')
+        })
+      }
+    },
     syncGreader () {
       if (this.$store.state.Setting.selfhost_connected) {
         window.log.info('Processing Greader feeds')
