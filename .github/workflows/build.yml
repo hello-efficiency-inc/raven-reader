@@ -17,7 +17,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 15
 
       - name: Prepare for app notarization
         if: startsWith(matrix.os, 'macos')
@@ -53,5 +53,4 @@ jobs:
           # macOS notarization API key
           API_KEY_ID: ${{ secrets.api_key_id }}
           API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
-          DO_KEY_ID: ${{ secrets.do_key_id }}
-          DO_KEY_SECRET: ${{ secrets.do_secret_key }}
+          
