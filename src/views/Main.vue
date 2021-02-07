@@ -395,6 +395,16 @@ export default {
   }
 }
 
+.plyr__tooltip {
+    --plyr-tooltip-background: var(--background-color);
+    --plyr-tooltip-color: var(--text-color);
+  }
+
+  .plyr__menu__container {
+    --plyr-menu-background: var(--background-color);
+    --plyr-menu-color: var(--text-color);
+  }
+
 .app-nightmode {
   --nightmode-background: 0, 0, 0;
   --background-color: rgba(var(--nightmode-background), 1);
@@ -402,6 +412,16 @@ export default {
   --text-color: #fff;
   --input-color: 89, 91, 93;
   --active-item-background-color: #504e4e;
+
+  .plyr__tooltip {
+    --plyr-tooltip-background: var(--background-color);
+    --plyr-tooltip-color: var(--text-color);
+  }
+
+  .plyr__menu__container {
+    --plyr-menu-background: var(--background-color);
+    --plyr-menu-color: var(--text-color);
+  }
 
   .export-link,
   .category-link {
@@ -427,6 +447,16 @@ export default {
   --input-color: 89, 91, 93;
   --active-item-background-color: #504e4e;
 
+  .plyr__tooltip {
+    --plyr-tooltip-background: var(--background-color);
+    --plyr-tooltip-color: var(--text-color);
+  }
+
+  .plyr__menu__container {
+    --plyr-menu-background: var(--background-color);
+    --plyr-menu-color: var(--text-color);
+  }
+
   .export-link,
   .category-link {
     svg {
@@ -449,6 +479,16 @@ export default {
   --text-color: rgb(46, 45, 44);
   --input-color: 204, 203, 195;
   --active-item-background-color: #5b5a57;
+
+  .plyr__tooltip {
+    --plyr-tooltip-background: var(--background-color);
+    --plyr-tooltip-color: var(--text-color);
+  }
+
+  .plyr__menu__container {
+    --plyr-menu-background: var(--background-color);
+    --plyr-menu-color: var(--text-color);
+  }
 
   .category-link {
     svg {

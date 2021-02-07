@@ -33,12 +33,7 @@ module.exports = {
         },
         mac: {
           darkModeSupport: true,
-          publish: [{
-            provider: 'spaces',
-            name: 'ridereceiptspro',
-            region: 'sfo2',
-            path: '/ravenreader'
-          }],
+          publish: ['github'],
           hardenedRuntime: true,
           entitlements: './node_modules/electron-builder-notarize/entitlements.mac.inherit.plist',
           gatekeeperAssess: false,
@@ -48,21 +43,11 @@ module.exports = {
           icon: 'build/icons/icon.icns'
         },
         win: {
-          publish: [{
-            provider: 'spaces',
-            name: 'ridereceiptspro',
-            region: 'sfo2',
-            path: '/ravenreader'
-          }],
+          publish: ['github'],
           icon: 'build/icons/icon.ico'
         },
         linux: {
-          publish: [{
-            provider: 'spaces',
-            name: 'ridereceiptspro',
-            region: 'sfo2',
-            path: '/ravenreader'
-          }],
+          publish: ['github'],
           category: 'News',
           icon: 'build/icons'
         }

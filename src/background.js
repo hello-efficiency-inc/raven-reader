@@ -1,9 +1,13 @@
 'use strict'
 import 'v8-compile-cache'
-import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog, Notification, shell, powerMonitor } from 'electron'
+import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog, Notification, shell, powerMonitor, session } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { enforceMacOSAppLocation } from 'electron-util'
+import {
+  ElectronBlocker
+} from '@cliqz/adblocker-electron'
+import fetch from 'cross-fetch'
 import { touchBar } from './main/touchbar'
 import {
   createMenu,
@@ -50,7 +54,7 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-function createWindow () {
+async function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
     minWidth: 1400,
@@ -69,6 +73,10 @@ function createWindow () {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, 'preload.js')
     }
+  })
+
+  ElectronBlocker.fromPrebuiltAdsAndTracking(fetch).then((blocker) => {
+    blocker.enableBlockingInSession(session.defaultSession)
   })
 
   win.setTouchBar(touchBar)
