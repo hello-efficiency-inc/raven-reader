@@ -5,6 +5,7 @@ import {
 import rssService from './bridge/rss'
 import electronStore from './bridge/electronstore'
 import electronService from './bridge/electron'
+const backend = require('i18next-electron-fs-backend')
 
 ipcRenderer.setMaxListeners(0)
 
@@ -44,6 +45,7 @@ contextBridge.exposeInMainWorld('rss', rssService)
 contextBridge.exposeInMainWorld('electron', electronService)
 contextBridge.exposeInMainWorld('globalagent', require('global-agent'))
 contextBridge.exposeInMainWorld('api', {
+  i18nextElectronBackend: backend.preloadBindings(ipcRenderer),
   ipcRendReceiveOnce: (channel, func) => {
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args))

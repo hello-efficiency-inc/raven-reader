@@ -45,10 +45,12 @@ import dayjs from 'dayjs'
 import advanced from 'dayjs/plugin/advancedFormat'
 import timezone from 'dayjs/plugin/timezone'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
 dayjs.tz.setDefault(Intl.DateTimeFormat().resolvedOptions().timeZone)
 dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(advanced)
+dayjs.extend(localizedFormat)
 
 export default {
   props: {
@@ -61,10 +63,10 @@ export default {
     formatDate (article) {
       let formatDate
       if (article.source === 'inoreader' || article.source === 'greader') {
-        formatDate = dayjs.unix(article.pubDate).format('DD MMMM YYYY h:mm A')
+        formatDate = dayjs.unix(article.pubDate).format('LLL')
       } else {
         formatDate = dayjs(article.pubDate)
-          .format('DD MMMM YYYY h:mm A')
+          .format('LLL')
       }
       return formatDate
     },

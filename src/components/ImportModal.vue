@@ -2,17 +2,17 @@
   <b-modal
     id="importfeed"
     ref="importFeed"
-    title="Import Subscriptions from OPML file"
+    :title="getTranslatedLabel('Import Subscriptions from OPML file')"
     centered
     @hidden="onHidden"
   >
     <b-form-file
       v-model="file"
-      placeholder="Choose a file..."
+      :placeholder="getTranslatedLabel('Choose a file')"
       accept=".xml, .opml"
     />
     <b-form-text id="inputLiveHelp">
-      OPML is a standard format to import or export feed subscriptions. You can export OPML files from other readers and import it.
+      {{ $t('OPML is a standard format to import or export feed subscriptions You can export OPML files from other readers and import it') }}
     </b-form-text>
     <div slot="modal-footer">
       <button
@@ -20,7 +20,7 @@
         class="btn btn-secondary mr-3"
         @click="hideModal"
       >
-        Close
+        {{ $t('Close') }}
       </button>
       <button
         type="button"
@@ -28,7 +28,7 @@
         :disabled="disableImport"
         @click="importFeed"
       >
-        Import
+        {{ $t('Import') }}
       </button>
     </div>
   </b-modal>
@@ -49,6 +49,9 @@ export default {
     }
   },
   methods: {
+    getTranslatedLabel (val) {
+      return this.$options.filters.t(val)
+    },
     hideModal () {
       this.$refs.importFeed.hide()
     },

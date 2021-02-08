@@ -26,6 +26,7 @@ import fs from 'fs'
 import path from 'path'
 import { URL } from 'url'
 import dayjs from 'dayjs'
+const i18nextBackend = require('i18next-electron-fs-backend')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -39,6 +40,8 @@ contextMenu({
 const store = new Store({
   encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
 })
+
+const currentLocale = app.getLocale()
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -74,6 +77,8 @@ async function createWindow () {
       preload: path.join(__dirname, 'preload.js')
     }
   })
+
+  i18nextBackend.mainBindings(ipcMain, win, fs)
 
   ElectronBlocker.fromPrebuiltAdsAndTracking(fetch).then((blocker) => {
     blocker.enableBlockingInSession(session.defaultSession)
@@ -208,6 +213,8 @@ app.on('window-all-closed', () => {
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
     app.quit()
+  } else {
+    i18nextBackend.clearMainBindings(ipcMain)
   }
 })
 

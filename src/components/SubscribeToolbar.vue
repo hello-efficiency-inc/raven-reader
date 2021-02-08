@@ -73,7 +73,7 @@
         fill="#fff"
       /></g></g></svg>
       <div>
-        <feather-icon name="plus" /> Add
+        <feather-icon name="plus" /> {{ $t('Add') }}
       </div>
     </button>
     <subscribe-modal />

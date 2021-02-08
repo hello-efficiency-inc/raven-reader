@@ -21,7 +21,7 @@
             v-click-outside="vcoConfig"
             v-b-tooltip.hover
             class="btn btn-toolbar"
-            title="Format Options"
+            :title="getTranslatedLabel('Format Options')"
             @click="openSettings"
           >
             <feather-icon name="settings" />
@@ -61,7 +61,7 @@
             ref="openlink"
             v-b-tooltip.hover
             class="btn btn-toolbar js-external-link"
-            title="View original"
+            :title="getTranslatedLabel('View original')"
             @click="openOriginal(article.link)"
           >
             <feather-icon
@@ -78,7 +78,7 @@
             ref="saveoffline"
             v-b-tooltip.hover
             class="btn btn-toolbar"
-            title="Save article"
+            :title="getTranslatedLabel('Save article')"
             @click="saveArticle"
           >
             <feather-icon
@@ -164,7 +164,7 @@
           <button
             v-b-tooltip.hover
             class="btn btn-toolbar"
-            title="Full Content"
+            :title="getTranslatedLabel('Full Content')"
             @click="loadFullArticle"
           >
             <feather-icon
@@ -272,10 +272,10 @@ export default {
   },
   computed: {
     markFavouriteButton () {
-      return this.articleItem.favourite ? 'Mark as unfavourite' : 'Mark as favourite'
+      return this.articleItem.favourite ? this.getTranslatedLabel('Mark as unfavourite') : this.getTranslatedLabel('Mark as favourite')
     },
     markReadButton () {
-      return this.articleItem.read ? 'Mark as unread' : 'Mark as read'
+      return this.articleItem.read ? this.getTranslatedLabel('Mark as unread') : this.getTranslatedLabel('Mark as read')
     },
     instapaperConnected () {
       return this.$store.state.Setting.instapaper_connected
@@ -300,6 +300,9 @@ export default {
     })
   },
   methods: {
+    getTranslatedLabel (val) {
+      return this.$options.filters.t(val)
+    },
     copyArticleLinkToClipboard (url) {
       window.electron.copyToClipboard(url)
     },

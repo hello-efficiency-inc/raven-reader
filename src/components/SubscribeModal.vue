@@ -13,7 +13,7 @@
       <b-input-group size="md">
         <b-input-group-text slot="prepend">
           <strong>
-            Add
+            {{ $t('Add') }}
             <feather-icon name="plus" />
           </strong>
         </b-input-group-text>
@@ -33,7 +33,7 @@
           ref="focusThis"
           v-model="feed_url"
           class="no-border"
-          placeholder="Enter website or feed url"
+          :placeholder="enterUrlTranslate"
         />
       </b-input-group>
     </form>
@@ -68,7 +68,7 @@
       >
         <template slot="first">
           <option :value="null">
-            Please select category
+            {{ $t('Please select category') }}
           </option>
         </template>
       </b-form-select>
@@ -78,20 +78,20 @@
           type="button"
           @click="addCategory"
         >
-          Add new category
+          {{ $t('Add new category') }}
         </button>
       </p>
       <p v-if="showAddCat">
         <b-form-input
           v-model="newcategory"
-          placeholder="Enter new category"
+          :placeholder="enterCategory"
         />
       </p>
       <b-alert
         :show="serviceConnected"
         variant="info"
       >
-        Note: Subscriptions added from here would not be synced with your service.
+        {{ $t('Note: Subscriptions added from here would not be synced with your service.') }}
       </b-alert>
     </div>
     <div slot="modal-footer">
@@ -100,7 +100,7 @@
         class="btn btn-secondary mr-2"
         @click="hideModal"
       >
-        Close
+        {{ $t('Close') }}
       </button>
       <button
         type="button"
@@ -108,7 +108,7 @@
         :disabled="disableSubscribe"
         @click="subscribe"
       >
-        Subscribe
+        {{ $t('Subscribe') }}
       </button>
     </div>
   </b-modal>
@@ -133,6 +133,12 @@ export default {
     }
   },
   computed: {
+    enterCategory () {
+      return this.$options.filters.t('Enter new category')
+    },
+    enterUrlTranslate () {
+      return this.$options.filters.t('Enter website or feed url')
+    },
     serviceConnected () {
       return this.$store.state.Setting.feedbin_connected || this.$store.state.Setting.inoreader_connected || this.$store.state.Setting.selfhost_connected
     },

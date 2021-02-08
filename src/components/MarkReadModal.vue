@@ -3,25 +3,25 @@
     id="markallread"
     ref="markallread"
     size="sm"
-    title="Mark all articles as read"
+    :title="getTranslatedLabel('Mark all articles as read')"
     centered
   >
     <p>
-      Are you sure you want to mark all articles as read?
+      {{ $t('Are you sure you want to mark all articles as read?') }}
     </p><div slot="modal-footer">
       <button
         type="button"
         class="btn btn-secondary mr-3"
         @click="markAllRead"
       >
-        Yes
+        {{ $t('Yes') }}
       </button>
       <button
         type="button"
         class="btn btn-primary"
         @click="hideModal"
       >
-        No
+        {{ $t('No') }}
       </button>
     </div>
   </b-modal>
@@ -29,6 +29,9 @@
 <script>
 export default {
   methods: {
+    getTranslatedLabel (val) {
+      return this.$options.filters.t(val)
+    },
     hideModal () {
       this.$refs.markallread.hide()
     },

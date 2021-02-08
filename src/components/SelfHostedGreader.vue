@@ -10,27 +10,27 @@
         v-if="!connected"
         v-b-modal.greader
         variant="primary"
-        aria-label="Connect Self-hosted (Google Reader API)"
+        :aria-label="getTranslatedLabel('Connect Self-hosted (Google Reader API)')"
         class="float-right"
         squared
         :disabled="serviceConnected"
       >
-        Connect
+        {{ $t('Connect') }}
       </b-button>
       <b-button
         v-if="connected"
-        aria-label="Disconnect Self-hosted (Google Reader API)"
+        :aria-label="getTranslatedLabel('Disconnect Self-hosted (Google Reader API)')"
         class="float-right"
         variant="danger"
         @click="disconnectSelfhost"
       >
-        Disconnect
+        {{ $t('Disconnect') }}
       </b-button>
     </div>
     <b-modal
       id="greader"
       ref="greaderLogin"
-      title="Log into Self Hosted RSS Service"
+      :title="getTranslatedLabel('Log into Self Hosted RSS Service')"
       centered
       @hidden="onHiddenSelfhost"
     >
@@ -38,7 +38,7 @@
         :show="selfhost_error"
         variant="danger"
       >
-        Invalid credentials
+        {{ $t('Invalid credentials') }}
       </b-alert>
       <b-form-group id="input-group-1">
         <b-form-input
@@ -46,7 +46,7 @@
           v-model="selfhosted.endpoint"
           type="email"
           required
-          placeholder="Enter endpoint"
+          :placeholder="getTranslatedLabel('Enter endpoint')"
         />
       </b-form-group>
       <b-form-group id="input-group-1">
@@ -55,7 +55,7 @@
           v-model="selfhosted.username"
           type="text"
           required
-          placeholder="Enter username"
+          :placeholder="getTranslatedLabel('Enter username')"
         />
       </b-form-group>
       <b-form-group id="input-group-1">
@@ -64,7 +64,7 @@
           v-model="selfhosted.password"
           type="password"
           required
-          placeholder="Enter password"
+          :placeholder="getTranslatedLabel('Enter password')"
         />
       </b-form-group>
       <div slot="modal-footer">
@@ -73,14 +73,14 @@
           class="btn btn-secondary mr-2"
           @click="hideSelfhostModal"
         >
-          Cancel
+          {{ $t('Cancel') }}
         </button>
         <button
           type="button"
           class="btn btn-primary"
           @click="loginSelfHost"
         >
-          Login
+          {{ $t('Login') }}
         </button>
       </div>
     </b-modal>
@@ -113,6 +113,9 @@ export default {
     }
   },
   methods: {
+    getTranslatedLabel (val) {
+      return this.$options.filters.t(val)
+    },
     onHiddenSelfhost () {
       this.selfhosted.endpoint = null
       this.selfhosted.username = null

@@ -2,14 +2,14 @@
   <b-modal
     id="editFeed"
     ref="editFeed"
-    title="Edit Feed"
+    :title="getTranslatedLabel('Edit Feed')"
     centered
     @hidden="onHidden"
   >
     <div v-if="feed">
       <b-form-group
         id="subscription-group"
-        label="Title"
+        :label="getTranslatedLabel('Title')"
       >
         <b-form-input
           v-model="feeditem.title"
@@ -18,7 +18,7 @@
       </b-form-group>
       <b-form-group
         id="subscription-group"
-        :label="categoryItems.length > 0 ? 'Category' : ''"
+        :label="categoryItems.length > 0 ? getTranslatedLabel('Category') : ''"
       >
         <b-form-select
           v-if="categoryItems.length > 0"
@@ -28,7 +28,7 @@
         >
           <template slot="first">
             <option :value="null">
-              Please select category
+              {{ $t('Please select category') }}
             </option>
           </template>
         </b-form-select>
@@ -38,13 +38,13 @@
             type="button"
             @click="addCategory"
           >
-            Add new category
+            {{ $t('Add new category') }}
           </button>
         </p>
         <p v-if="showAddCat">
           <b-form-input
             v-model="newcategory"
-            placeholder="Enter new category"
+            :placeholder="getTranslatedLabel('Enter new category')"
           />
         </p>
       </b-form-group>
@@ -55,14 +55,14 @@
         class="btn btn-secondary mr-2"
         @click="hideModal"
       >
-        Cancel
+        {{ $t('Cancel') }}
       </button>
       <button
         type="button"
         class="btn btn-primary"
         @click="updateSubscriptionTitle"
       >
-        Update
+        {{ $t('Update') }}
       </button>
     </div>
   </b-modal>
@@ -101,6 +101,9 @@ export default {
     }
   },
   methods: {
+    getTranslatedLabel (val) {
+      return this.$options.filters.t(val)
+    },
     addCategory () {
       this.showAddCat = !this.showAddCat
     },
@@ -129,7 +132,7 @@ export default {
           this.$store.dispatch('loadArticles')
         })
       })
-      this.$toasted.show('Subscription title updated.', {
+      this.$toasted.show(this.getTranslatedLabel('Subscription title updated.'), {
         theme: 'outline',
         position: 'top-center',
         duration: 3000

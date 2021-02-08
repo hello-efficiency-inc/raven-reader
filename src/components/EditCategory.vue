@@ -2,7 +2,7 @@
   <b-modal
     id="editCategory"
     ref="editCategory"
-    title="Rename category"
+    :title="getTranslatedLabel('Rename category')"
     centered
     @shown="initialData"
     @hidden="onHidden"
@@ -10,7 +10,7 @@
     <div v-if="feeditem">
       <b-form-group
         id="subscription-group"
-        label="Title"
+        :label="getTranslatedLabel('Title')"
       >
         <b-form-input
           v-model="feeditem.title"
@@ -24,14 +24,14 @@
         class="btn btn-secondary mr-3"
         @click="hideModal"
       >
-        Cancel
+        {{ $t('Cancel') }}
       </button>
       <button
         type="button"
         class="btn btn-primary"
         @click="updateCategoryTitle"
       >
-        Update
+        {{ $t('Update') }}
       </button>
     </div>
   </b-modal>
@@ -61,6 +61,9 @@ export default {
     }
   },
   methods: {
+    getTranslatedLabel (val) {
+      return this.$options.filters.t(val)
+    },
     initialData () {
       Object.assign(this.$data.oldValue, this.feed)
     },
@@ -76,7 +79,7 @@ export default {
         this.$store.dispatch('loadFeeds')
         this.$store.dispatch('loadArticles')
       })
-      this.$toasted.show('Category renamed', {
+      this.$toasted.show(this.getTranslatedLabel('Category renamed'), {
         theme: 'outline',
         position: 'top-center',
         duration: 3000

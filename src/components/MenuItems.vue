@@ -11,7 +11,7 @@
           feed-id="allFeeds"
           mark="allFeeds"
         >
-          <feather-icon name="list" />All Feeds
+          <feather-icon name="list" />{{ $t('All Feeds') }}
           <span
             v-if="isMenuItemActive('all')"
             class="sr-only"
@@ -34,7 +34,7 @@
           feed-id="favourites"
           mark="favourites"
         >
-          <feather-icon name="star" />Favourites
+          <feather-icon name="star" />{{ $t('Favourites') }}
           <span
             v-if="isMenuItemActive('favourites')"
             class="sr-only"
@@ -57,7 +57,7 @@
           feed-id="unreadArticles"
           mark="unreadArticles"
         >
-          <feather-icon name="circle" />Unread Articles
+          <feather-icon name="circle" />{{ $t('Unread Articles') }}
           <span
             v-if="isMenuItemActive('unread')"
             class="sr-only"
@@ -86,7 +86,7 @@
           <feather-icon
             name="circle"
             filled
-          />Recently Read
+          />{{ $t('Recently Read') }}
           <span
             v-if="isMenuItemActive('read')"
             class="sr-only"
@@ -112,7 +112,7 @@
           feed-id="recentlyPlayed"
           mark="recentlyPlayed"
         >
-          <feather-icon name="play-circle" />Recently Played
+          <feather-icon name="play-circle" />{{ $t('Recently Played') }}
           <span
             v-if="isMenuItemActive('played')"
             class="sr-only"
@@ -138,7 +138,7 @@
           feed-id="savedArticles"
           mark="savedArticles"
         >
-          <feather-icon name="wifi-off" />Saved articles
+          <feather-icon name="wifi-off" />{{ $t('Saved articles') }}
           <span
             v-if="isMenuItemActive('saved')"
             class="sr-only"
@@ -157,10 +157,10 @@
         @click="showLessItems"
       >
         <template v-if="showLess">
-          <feather-icon name="arrow-down" /> Show more
+          <feather-icon name="arrow-down" /> {{ $t('Show more') }}
         </template>
         <template v-if="!showLess">
-          <feather-icon name="arrow-up" /> Show less
+          <feather-icon name="arrow-up" /> {{ $t('Show less') }}
         </template>
       </a>
     </li>

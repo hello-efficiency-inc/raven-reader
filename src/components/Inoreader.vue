@@ -15,7 +15,7 @@
         :disabled="serviceConnected"
         @click="signInInoreader"
       >
-        Connect
+        {{ $t('Connect') }}
       </b-button>
       <b-button
         v-if="connected"
@@ -24,7 +24,7 @@
         variant="danger"
         @click="disconnectInoreader"
       >
-        Disconnect
+        {{ $t('Disconnect') }}
       </b-button>
     </div>
   </div>

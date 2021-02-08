@@ -3,7 +3,7 @@
     <b-modal
       id="preference"
       ref="preference"
-      title="Preferences"
+      :title="getTranslatedLabel('Preferences')"
       size="lg"
       modal-class="preferencesModal"
       centered
@@ -22,13 +22,13 @@
           content-class="preference-content"
         >
           <b-tab
-            title="Settings"
+            :title="getTranslatedLabel('Settings')"
             active
           >
             <template #title>
-              <feather-icon name="sliders" /> <span class="ml-3">Settings</span>
+              <feather-icon name="sliders" /> <span class="ml-3">{{ $t('Settings') }}</span>
             </template>
-            <b-form-group label="Keep read RSS items">
+            <b-form-group :label="getTranslatedLabel('Keep read RSS items')">
               <b-form-select
                 v-model="keepread"
                 :options="keepread_options"
@@ -36,7 +36,7 @@
                 @change="saveKeepRead"
               />
             </b-form-group>
-            <b-form-group label="Set refresh interval for news feed">
+            <b-form-group :label="getTranslatedLabel('Set refresh interval for news feed')">
               <b-form-select
                 v-model="cronjob"
                 :options="cron_options"
@@ -44,7 +44,7 @@
                 @change="saveCronjob"
               />
             </b-form-group>
-            <b-form-group label="Choose appearance">
+            <b-form-group :label="getTranslatedLabel('Choose appearance')">
               <b-form-select
                 v-model="theme_option"
                 :options="themeOptions"
@@ -52,7 +52,7 @@
                 @change="saveAppearance"
               />
             </b-form-group>
-            <b-form-group label="Oldest articles first">
+            <b-form-group :label="getTranslatedLabel('Oldest articles first')">
               <b-form-radio-group
                 id="btnradios1"
                 v-model="oldestArticles"
@@ -64,7 +64,7 @@
                 @input="saveSortPreference"
               />
             </b-form-group>
-            <b-form-group label="Disable images in Articles">
+            <b-form-group :label="getTranslatedLabel('Disable images in Articles')">
               <b-form-radio-group
                 id="disableImages"
                 v-model="disableImages"
@@ -76,7 +76,7 @@
                 @input="saveImagePreference"
               />
             </b-form-group>
-            <b-form-group label="Full article view by default">
+            <b-form-group :label="getTranslatedLabel('Full article view by default')">
               <b-form-radio-group
                 id="fullArticle"
                 v-model="fullArticleDefault"
@@ -88,36 +88,36 @@
                 @input="saveFullArticlePreferences"
               />
             </b-form-group>
-            <b-form-group label="Delete all feed, category and article data">
+            <b-form-group :label="getTranslatedLabel('Delete all feed, category and article data')">
               <b-button
                 variant="danger"
                 squared
                 @click="deleteAllData"
               >
-                Clear all data
+                {{ $t('Clear all data') }}
               </b-button>
             </b-form-group>
           </b-tab>
           <b-tab>
             <template #title>
-              <feather-icon name="wifi" /> <span class="ml-3">Proxy Setting</span>
+              <feather-icon name="wifi" /> <span class="ml-3">{{ $t('Proxy Setting') }}</span>
             </template>
             <h4>
-              Proxy Settings
+              {{ $t('Proxy Setting') }}
             </h4>
-            <b-form-group label="Web Server (HTTP):">
+            <b-form-group :label="getTranslatedLabel('Web Server (HTTP)')">
               <b-form-input
                 v-model="proxy.http"
                 type="text"
               />
             </b-form-group>
-            <b-form-group label="Secure Web Server (HTTPS):">
+            <b-form-group :label="getTranslatedLabel('Secure Web Server (HTTPS)')">
               <b-form-input
                 v-model="proxy.https"
                 type="text"
               />
             </b-form-group>
-            <b-form-group label="Bypass proxy settings for these hosts & domains:">
+            <b-form-group :label="getTranslatedLabel('Bypass proxy settings for these hosts & domains')">
               <b-form-textarea
                 v-model="proxy.bypass"
                 :rows="3"
@@ -125,91 +125,91 @@
               />
             </b-form-group>
             <b-button @click="applyProxy">
-              Set proxy & restart
+              {{ $t('Set proxy & restart') }}
             </b-button>
           </b-tab>
           <b-tab>
             <template #title>
-              <feather-icon name="share-2" /> <span class="ml-3">Sharing</span>
+              <feather-icon name="share-2" /> <span class="ml-3">{{ $t('Sharing') }}</span>
             </template>
             <div class="row">
               <div class="col">
                 <h4 class="mb-4 mt-4">
-                  <strong>Read it later services</strong><br>
-                  <small style="font-size: 14px;">Save articles to read it later services</small>
+                  <strong>{{ $t('Read it later services') }}</strong><br>
+                  <small style="font-size: 14px;">{{ $t('Save articles to read it later services') }}</small>
                 </h4>
               </div>
             </div>
             <div class="row mb-3">
               <div class="col">
                 <p class="text-left font-bold">
-                  Instapaper
+                  {{ $t('Instapaper') }}
                 </p>
               </div>
               <div class="col">
                 <b-button
                   v-if="!instapaper_connected"
                   v-b-modal.instapaper
-                  aria-label="Connect Instapaper"
+                  :aria-label="getTranslatedLabel('Connect Instapaper')"
                   class="float-right"
                   variant="primary"
                   squared
                 >
-                  Connect
+                  {{ $t('Connect') }}
                 </b-button>
                 <b-button
                   v-if="instapaper_connected"
-                  aria-label="Disconnect Instapaper"
+                  :aria-label="getTranslatedLabel('Disconnect Instapaper')"
                   class="btn-danger float-right"
                   variant="danger"
                   squared
                   @click="disconnectInstapaper"
                 >
-                  Disconnect
+                  {{ $t('Disconnect') }}
                 </b-button>
               </div>
             </div>
             <div class="row">
               <div class="col">
                 <p class="text-left font-bold">
-                  Pocket
+                  {{ $t('Pocket') }}
                 </p>
               </div>
               <div class="col">
                 <b-button
                   v-if="!pocket_connected"
                   class="float-right"
-                  aria-label="Connect pocket"
+                  :aria-label="getTranslatedLabel('Connect pocket')"
                   variant="primary"
                   squared
                   @click="signInPocket"
                 >
-                  Connect
+                  {{ $t('Connect') }}
                 </b-button>
                 <b-button
                   v-if="pocket_connected"
                   class="float-right"
-                  aria-label="Disconnect pocket"
+                  :aria-label="getTranslatedLabel('Disconnect pocket')"
                   variant="danger"
                   squared
                   @click="disconnectPocket"
                 >
-                  Disconnect
+                  {{ $t('Disconnect') }}
                 </b-button>
               </div>
             </div>
           </b-tab>
           <b-tab>
             <template #title>
-              <feather-icon name="package" /> <span class="ml-3">Sync Account</span>
+              <feather-icon name="package" /> <span class="ml-3">{{ $t('Sync Account') }}</span>
             </template>
             <div class="row mb-3">
               <div class="col">
                 <h4 class="mb-4">
-                  <strong>RSS Services</strong><br>
-                  <small style="font-size: 14px;">Sync across device with RSS services.</small>
+                  <strong>{{ $t('RSS Services') }}</strong><br>
+                  <small style="font-size: 14px;">{{ $t('Sync across device with RSS services') }}</small>
                 </h4>
-                <p><strong>Note</strong>: Only one service can be connected. If you have local sources prior to connecting sync accounts that share same feed URLs, local articles will be removed.</p>
+                <p><strong>Note</strong>: {{ $t('Only one service can be connected If you have local sources prior to connecting sync accounts that share same feed URLs, local articles will be removed') }}</p>
               </div>
             </div>
             <feedbin
@@ -246,7 +246,7 @@
     <b-modal
       id="instapaper"
       ref="instapaperLogin"
-      title="Log into Instapaper"
+      :title="getTranslatedLabel('Log into Instapaper')"
       centered
       @hidden="onHiddenInstapaper"
     >
@@ -254,7 +254,7 @@
         :show="instapaper_error"
         variant="danger"
       >
-        Invalid credentials
+        {{ $t('Invalid credentials') }}
       </b-alert>
       <b-form-group id="input-group-1">
         <b-form-input
@@ -262,7 +262,7 @@
           v-model="instapaper.username"
           type="email"
           required
-          placeholder="Enter email"
+          :placeholder="getTranslatedLabel('Enter email')"
         />
       </b-form-group>
       <b-form-group id="input-group-1">
@@ -271,7 +271,7 @@
           v-model="instapaper.password"
           type="password"
           required
-          placeholder="Enter password"
+          :placeholder="getTranslatedLabel('Enter password')"
         />
       </b-form-group>
       <div slot="modal-footer">
@@ -280,14 +280,14 @@
           class="btn btn-secondary mr-2"
           @click="hideModal"
         >
-          Cancel
+          {{ $t('Cancel') }}
         </button>
         <button
           type="button"
           class="btn btn-primary"
           @click="loginInstapaper"
         >
-          Login
+          {{ $t('Login') }}
         </button>
       </div>
     </b-modal>
@@ -430,6 +430,9 @@ export default {
     })
   },
   methods: {
+    getTranslatedLabel (val) {
+      return this.$options.filters.t(val)
+    },
     saveKeepRead (keepread) {
       this.$store.dispatch('setKeepRead', keepread)
       this.$toasted.show('Settings for keeping read items successfully saved.', {

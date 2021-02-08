@@ -16,8 +16,8 @@
             v-model="search"
             type="text"
             class="form-control"
-            placeholder="Search"
-            aria-label="Search"
+            :placeholder="searchTranslate"
+            :aria-label="searchTranslate"
             @keyup="searchList"
           >
           <div class="toolsbar">
@@ -26,8 +26,8 @@
                 v-b-tooltip.hover
                 class="btn btn-toolbar"
                 type="button"
-                title="Refresh All Feeds"
-                aria-label="Refresh All Feeds"
+                :title="refreshArticle"
+                :aria-label="refreshArticle"
                 @click="sync"
               >
                 <feather-icon
@@ -43,7 +43,8 @@
                 v-b-modal.markallread
                 class="btn btn-toolbar"
                 type="button"
-                title="Mark all as read"
+                :title="markAllRead"
+                :aria-label="markAllRead"
               >
                 <feather-icon name="check-circle" />
               </button>
@@ -68,14 +69,14 @@
               type="button"
               @click="articlesToShow += 10"
             >
-              Load more
+              {{ $t('Load more') }}
             </button>
           </template>
           <div
             v-if="filteredArticles.length === 0"
             class="no-articles"
           >
-            No articles available
+            {{ $t('No articles available') }}
           </div>
         </perfect-scrollbar>
       </div>
@@ -138,6 +139,15 @@ export default {
     ...mapGetters([
       'filteredArticles'
     ]),
+    markAllRead () {
+      return this.$options.filters.t('Mark all as read')
+    },
+    refreshArticle () {
+      return this.$options.filters.t('Refresh All Feeds')
+    },
+    searchTranslate () {
+      return this.$options.filters.t('Search')
+    },
     activeArticleId () {
       return this.$store.getters.activeArticleId
     }

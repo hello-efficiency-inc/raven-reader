@@ -11,36 +11,36 @@
         v-b-modal.feedbin
         :disabled="serviceConnected"
         variant="primary"
-        aria-label="Connect Feedbin"
+        :aria-label="getTranslatedLabel('Connect Feedbin')"
         class="float-right"
         squared
       >
-        Connect
+        {{ $t('Connect') }}
       </b-button>
       <b-button
         v-if="connected"
-        aria-label="Edit Feedbin"
+        :aria-label="getTranslatedLabel('Edit Feedbin')"
         variant="primary"
         class="float-right ml-2"
         squared
         @click="editFeedbin"
       >
-        Edit
+        {{ $t('Edit') }}
       </b-button>
       <b-button
         v-if="connected"
-        aria-label="Disconnect Feedbin"
+        :aria-label="getTranslatedLabel('Disconnect Feedbin')"
         class="float-right"
         variant="danger"
         @click="disconnectFeedbin"
       >
-        Disconnect
+        {{ $t('Disconnect') }}
       </b-button>
     </div>
     <b-modal
       id="feedbin"
       ref="feedbinLogin"
-      title="Log into Feedbin"
+      :title="getTranslatedLabel('Log into Feedbin')"
       centered
       @hidden="onHiddenFeedbin"
     >
@@ -48,7 +48,7 @@
         :show="feedbin_error"
         variant="danger"
       >
-        Invalid credentials
+        {{ $t('Invalid credentials') }}
       </b-alert>
       <b-form-group id="input-group-1">
         <b-form-input
@@ -56,7 +56,7 @@
           v-model="feedbin.endpoint"
           type="email"
           required
-          placeholder="Enter endpoint"
+          :placeholder="getTranslatedLabel('Enter endpoint')"
         />
       </b-form-group>
       <b-form-group id="input-group-1">
@@ -65,7 +65,7 @@
           v-model="feedbin.email"
           type="email"
           required
-          placeholder="Enter email"
+          :placeholder="getTranslatedLabel('Enter email')"
         />
       </b-form-group>
       <b-form-group id="input-group-1">
@@ -74,7 +74,7 @@
           v-model="feedbin.password"
           type="password"
           required
-          placeholder="Enter password"
+          :placeholder="getTranslatedLabel('Enter password')"
         />
       </b-form-group>
       <div slot="modal-footer">
@@ -83,14 +83,14 @@
           class="btn btn-secondary mr-2"
           @click="hideFeedbinModal"
         >
-          Cancel
+          {{ $t('Cancel') }}
         </button>
         <button
           type="button"
           class="btn btn-primary"
           @click="loginFeedbin"
         >
-          Login
+          {{ $t('Login') }}
         </button>
       </div>
     </b-modal>
@@ -121,6 +121,9 @@ export default {
     }
   },
   methods: {
+    getTranslatedLabel (val) {
+      return this.$options.filters.t(val)
+    },
     onHiddenFeedbin () {
       this.feedbin.email = null
       this.feedbin.password = null

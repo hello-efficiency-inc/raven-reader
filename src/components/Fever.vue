@@ -10,27 +10,27 @@
         v-if="!connected"
         v-b-modal.fever
         variant="primary"
-        aria-label="Connect Fever"
+        :aria-label="getTranslatedLabel('Connect Fever')"
         class="float-right"
         squared
         :disabled="serviceConnected"
       >
-        Connect
+        {{ $t('Connect') }}
       </b-button>
       <b-button
         v-if="connected"
-        aria-label="Disconnect Fever"
+        :aria-label="getTranslatedLabel('Disconnect Fever')"
         class="float-right"
         variant="danger"
         @click="disconnectFever"
       >
-        Disconnect
+        {{ $t('Disconnect') }}
       </b-button>
     </div>
     <b-modal
       id="fever"
       ref="feverLogin"
-      title="Log into Fever"
+      :title="getTranslatedLabel('Log into Fever')"
       centered
       @hidden="onHiddenFever"
     >
@@ -46,7 +46,7 @@
           v-model="fever.endpoint"
           type="email"
           required
-          placeholder="Enter endpoint"
+          :placeholder="getTranslatedLabel('Enter endpoint')"
         />
       </b-form-group>
       <b-form-group id="input-group-1">
@@ -55,7 +55,7 @@
           v-model="fever.username"
           type="text"
           required
-          placeholder="Enter username"
+          :placeholder="getTranslatedLabel('Enter username')"
         />
       </b-form-group>
       <b-form-group id="input-group-1">
@@ -64,7 +64,7 @@
           v-model="fever.password"
           type="password"
           required
-          placeholder="Enter password"
+          :placeholder="getTranslatedLabel('Enter password')"
         />
       </b-form-group>
       <div slot="modal-footer">
@@ -115,6 +115,9 @@ export default {
     }
   },
   methods: {
+    getTranslatedLabel (val) {
+      return this.$options.filters.t(val)
+    },
     onHiddenFever () {
       this.fever.endpoint = null
       this.fever.username = null
