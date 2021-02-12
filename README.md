@@ -79,6 +79,8 @@ Please feel free to suggest more ideas to improve this app.
 - Self hosted RSS Services compatible with Google Reader API (OldReader, Bazqux, FreshRSS)
 - Fever
 
+## Supported Locale
+- French
 
 ## Developer Notes
 

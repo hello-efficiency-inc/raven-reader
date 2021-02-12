@@ -15,7 +15,7 @@
     "Subscribe": "S'abonner",
     "No articles available": "Aucun article disponible",
     "Load more": "Charger plus",
-    "Note: Subscriptions added from here would not be synced with your service.": "Note : Les abonnements ajoutés à partir d'ici ne seraient pas synchronisés avec votre service.",
+    "Subscriptions added from here would not be synced with your service": "Note : Les abonnements ajoutés à partir d'ici ne seraient pas synchronisés avec votre service.",
     "Enter website or feed url": "Entrez l'url du site web ou du flux",
     "Enter new category": "Entrez dans une nouvelle catégorie",
     "Search": "Recherchez",
@@ -72,5 +72,7 @@
     "Mark as unread": "Marquer comme non lu",
     "Mark as read": "Marquer comme lu",
     "Mark as unfavourite": "Marquer comme défavorable",
-    "Mark as favourite": "Marquer comme favori"
+    "Mark as favourite": "Marquer comme favori",
+    "Disconnect": "déconnecter",
+    "Sync Account": "Compte de synchronisation"
 }

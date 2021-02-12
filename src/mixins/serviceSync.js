@@ -38,6 +38,7 @@ export default {
     syncFeedbin () {
       if (this.$store.state.Setting.feedbin_connected) {
         feedbin.syncItems(this.$store.state.Setting.feedbin).then(() => {
+          this.$store.dispatch('loadCategories')
           this.$store.dispatch('loadFeeds')
           this.$store.dispatch('loadArticles')
         })

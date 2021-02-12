@@ -15,7 +15,7 @@
     "Subscribe": "Subscribe",
     "No articles available": "No articles available",
     "Load more": "Load more",
-    "Note: Subscriptions added from here would not be synced with your service.": "Note: Subscriptions added from here would not be synced with your service.",
+    "Subscriptions added from here would not be synced with your service": "Note: Subscriptions added from here would not be synced with your service.",
     "Enter website or feed url": "Enter website or feed url",
     "Enter new category": "Enter new category",
     "Search": "Search",
@@ -72,5 +72,7 @@
     "Mark as unread": "Mark as unread",
     "Mark as read": "Mark as read",
     "Mark as unfavourite": "Mark as unfavourite",
-    "Mark as favourite": "Mark as favourite"
+    "Mark as favourite": "Mark as favourite",
+    "Disconnect": "Disconnect",
+    "Sync Account": "Sync Account"
 }

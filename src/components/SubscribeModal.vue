@@ -91,7 +91,7 @@
         :show="serviceConnected"
         variant="info"
       >
-        {{ $t('Note: Subscriptions added from here would not be synced with your service.') }}
+        {{ $t('Subscriptions added from here would not be synced with your service') }}
       </b-alert>
     </div>
     <div slot="modal-footer">

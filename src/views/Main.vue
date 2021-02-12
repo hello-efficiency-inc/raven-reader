@@ -268,8 +268,9 @@ export default {
     runServiceCronJob () {
       // Service crawling
       return nodescheduler.scheduleJob(
-        '*/2 * * * *',
+        '*/4 * * * *',
         () => {
+          this.syncFever()
           this.syncFeedbin()
           this.syncInoreader()
           this.syncGreader()

@@ -34,13 +34,14 @@ module.exports = {
         mac: {
           darkModeSupport: true,
           publish: [
-            'github',
             {
               provider: 'spaces',
               name: 'ridereceiptspro',
               region: 'sfo2',
               path: '/ravenreader'
-            }],
+            },
+            'github'
+          ],
           hardenedRuntime: true,
           entitlements: './node_modules/electron-builder-notarize/entitlements.mac.inherit.plist',
           gatekeeperAssess: false,

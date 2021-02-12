@@ -180,7 +180,7 @@ export default {
     let subscriptions = await this.getSubscriptions(credsData)
     const unreadList = await this.getUnreadIds(credsData)
     const starredList = await this.getStarredIds(credsData)
-    const entriesId = new Set([...unreadList])
+    const entriesId = new Set([...unreadList, ...starredList])
     const entries = await this.getEntries(credsData, Array.from(entriesId))
     const folders = subscriptions.map(item => {
       return item.categories.map(cat => cat.label)
