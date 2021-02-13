@@ -30,10 +30,10 @@ export default {
       gotOptions: {
         retryCount: 0,
         https: { rejectUnauthorized: false }
-      },
-      feedParserOptions: {
-        feedUrl: url
       }
+      // feedParserOptions: {
+      //   feedUrl: url
+      // }
     })
   }
 }

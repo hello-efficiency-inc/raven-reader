@@ -116,6 +116,7 @@
 <script>
 import normalizeUrl from 'normalize-url'
 import unescape from '../services/unescape'
+import { validate } from 'fast-xml-parser'
 import helper from '../services/helpers'
 
 export default {
@@ -156,23 +157,13 @@ export default {
       this.showAddCat = !this.showAddCat
     },
     async isContentXML (link) {
-      const validHeaders = [
-        'application/xml',
-        'application/xml; charset=utf-8',
-        'application/rss+xml; charset=utf-8',
-        'text/xml;charset=UTF-8',
-        'text/rss+xml;charset=UTF-8',
-        'text/xml; charset=utf-8',
-        'text/xml',
-        'text/rss+xml',
-        'application/rss+xml',
-        'application/rdf+xml',
-        'application/atom+xml'
-      ]
       const content = await fetch(link, {
-        mode: 'no-cors'
+        mode: 'no-cors',
+        redirect: 'follow'
       })
-      return validHeaders.includes(content.headers['content-type'])
+      const data = await content.text()
+      const validateXml = validate(data)
+      return validateXml === true
     },
     async fetchFeed () {
       const self = this
@@ -181,8 +172,10 @@ export default {
         if (this.feed_url) {
           try {
             const isXML = await this.isContentXML(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }))
+            console.log(isXML)
             window.rss.findRss(this.feed_url).then(
               res => {
+                console.log(res)
                 this.loading = false
                 res.feedUrls.map(item => {
                   item.title = unescape(item.title)

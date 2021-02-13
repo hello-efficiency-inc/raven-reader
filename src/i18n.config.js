@@ -8,7 +8,7 @@ i18n
       addPath: './src/locales/{{lng}}/{{ns}}.missing.json',
       ipcRenderer: window.api.i18nextElectronBackend
     },
-    debug: true,
+    debug: process.env.NODE_ENV !== 'production',
     saveMissing: true,
     fallbackLng: 'en',
     saveMissingTo: 'current',
