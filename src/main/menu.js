@@ -6,10 +6,10 @@ import {
 } from 'electron'
 const articleSelected = false
 
-export function createMenu (mainWindow) {
+export function createMenu (mainWindow, i18nextMain) {
   // Create the Application's main menu
   const template = [{
-    label: 'Edit',
+    label: i18nextMain.t('Edit'),
     submenu: [{
       role: 'undo'
     },
@@ -40,7 +40,7 @@ export function createMenu (mainWindow) {
     ]
   },
   {
-    label: 'View',
+    label: i18nextMain.t('View'),
     submenu: [{
       role: 'togglefullscreen'
     }]
@@ -56,9 +56,9 @@ export function createMenu (mainWindow) {
     ]
   },
   {
-    label: 'Subscriptions',
+    label: i18nextMain.t('Subscriptions'),
     submenu: [{
-      label: 'Add subscription',
+      label: i18nextMain.t('Add subscription'),
       accelerator: 'CmdOrCtrl+N',
       click: function () {
         mainWindow.webContents.send('Add subscription')
@@ -66,16 +66,16 @@ export function createMenu (mainWindow) {
     }]
   },
   {
-    label: 'Item',
+    label: i18nextMain.t('Item'),
     submenu: [{
-      label: 'Next item',
+      label: i18nextMain.t('Next item'),
       accelerator: 'CmdOrCtrl+J',
       click: function () {
         mainWindow.webContents.send('Next item')
       }
     },
     {
-      label: 'Previous item',
+      label: i18nextMain.t('Previous item'),
       accelerator: 'CmdOrCtrl+K',
       click: function () {
         mainWindow.webContents.send('Previous item')
@@ -85,7 +85,7 @@ export function createMenu (mainWindow) {
       type: 'separator'
     },
     {
-      label: 'Toggle read',
+      label: i18nextMain.t('Toggle read'),
       id: 'toggle-read',
       accelerator: 'CmdOrCtrl+T',
       enabled: articleSelected,
@@ -94,7 +94,7 @@ export function createMenu (mainWindow) {
       }
     },
     {
-      label: 'Toggle favourite',
+      label: i18nextMain.t('Toggle favourite'),
       id: 'toggle-favourite',
       accelerator: 'CmdOrCtrl+S',
       enabled: articleSelected,
@@ -103,7 +103,7 @@ export function createMenu (mainWindow) {
       }
     },
     {
-      label: 'Mark all read',
+      label: i18nextMain.t('Mark all read'),
       id: 'mark-all-read',
       accelerator: 'Alt+R',
       click: function () {
@@ -114,7 +114,7 @@ export function createMenu (mainWindow) {
       type: 'separator'
     },
     {
-      label: 'Save offline',
+      label: i18nextMain.t('Save offline'),
       id: 'save-offline',
       accelerator: 'CmdOrCtrl+O',
       enabled: articleSelected,
@@ -123,7 +123,7 @@ export function createMenu (mainWindow) {
       }
     },
     {
-      label: 'View in browser',
+      label: i18nextMain.t('View in browser'),
       id: 'view-browser',
       accelerator: 'CmdOrCtrl+B',
       enabled: articleSelected,
@@ -134,9 +134,9 @@ export function createMenu (mainWindow) {
     ]
   },
   {
-    label: 'Import and Export',
+    label: i18nextMain.t('Import and Export'),
     submenu: [{
-      label: 'Import subscriptions',
+      label: i18nextMain.t('Import subscriptions'),
       click: function () {
         mainWindow.webContents.send('Import subscriptions')
       }
@@ -145,7 +145,7 @@ export function createMenu (mainWindow) {
       type: 'separator'
     },
     {
-      label: 'Export subscriptions',
+      label: i18nextMain.t('Export subscriptions'),
       click: function () {
         mainWindow.webContents.send('Export subscriptions')
       }
@@ -164,7 +164,7 @@ export function createMenu (mainWindow) {
         enabled: false
       },
       {
-        label: 'Preferences',
+        label: i18nextMain.t('Preferences'),
         id: 'settings',
         type: 'normal',
         accelerator: 'CmdOrCtrl+,',
@@ -205,7 +205,7 @@ export function createMenu (mainWindow) {
         type: 'separator'
       },
       {
-        label: 'Preferences',
+        label: i18nextMain.t('Preferences'),
         id: 'settings',
         accelerator: 'CmdOrCtrl+,',
         type: 'normal',
@@ -247,7 +247,7 @@ export function createMenu (mainWindow) {
     template[1].submenu.push({
       type: 'separator'
     }, {
-      label: 'Speech',
+      label: i18nextMain.t('Speech'),
       submenu: [{
         role: 'startspeaking'
       },
@@ -281,7 +281,7 @@ export function createMenu (mainWindow) {
   return menu
 }
 
-export function createCategoryMenu (categorydata, window) {
+export function createCategoryMenu (categorydata, window, i18nextMain) {
   const menu = new Menu()
 
   menu.append(
@@ -296,7 +296,7 @@ export function createCategoryMenu (categorydata, window) {
   if (categorydata.category.source === 'local') {
     menu.append(
       new MenuItem({
-        label: 'Rename folder',
+        label: i18nextMain.t('Rename folder'),
         click () {
           window.webContents.send('category-rename', categorydata)
         }
@@ -311,7 +311,7 @@ export function createCategoryMenu (categorydata, window) {
 
     menu.append(
       new MenuItem({
-        label: 'Delete',
+        label: i18nextMain.t('Delete'),
         click () {
           window.webContents.send('category-delete', categorydata)
         }
@@ -322,11 +322,11 @@ export function createCategoryMenu (categorydata, window) {
   menu.popup({ window: window })
 }
 
-export function createFeedMenu (feeddata, window) {
+export function createFeedMenu (feeddata, window, i18nextMain) {
   const menu = new Menu()
   menu.append(
     new MenuItem({
-      label: 'Copy feed link',
+      label: i18nextMain.t('Copy feed link'),
       click () {
         clipboard.writeText(feeddata.feed.xmlurl, 'selection')
       }
@@ -345,7 +345,7 @@ export function createFeedMenu (feeddata, window) {
 
     menu.append(
       new MenuItem({
-        label: 'Edit feed',
+        label: i18nextMain.t('Edit feed'),
         click () {
           window.webContents.send('edit-feed', feeddata)
         }
@@ -355,7 +355,7 @@ export function createFeedMenu (feeddata, window) {
 
   menu.append(
     new MenuItem({
-      label: 'Mark as read',
+      label: i18nextMain.t('Mark as read'),
       click () {
         window.webContents.send('mark-feed-read', feeddata.feed.id)
       }
@@ -371,7 +371,7 @@ export function createFeedMenu (feeddata, window) {
   if (feeddata.feed.source === 'local') {
     menu.append(
       new MenuItem({
-        label: 'Unsubscribe',
+        label: i18nextMain.t('Unsubscribe'),
         click () {
           window.webContents.send('unsubscribe-feed', feeddata.feed.uuid)
         }
@@ -381,10 +381,10 @@ export function createFeedMenu (feeddata, window) {
   menu.popup({ window: window })
 }
 
-export function createArticleItemMenu (article, window) {
+export function createArticleItemMenu (article, window, i18nextMain) {
   const menu = new Menu()
   menu.append(new MenuItem({
-    label: 'Copy link',
+    label: i18nextMain.t('Copy link'),
     click () {
       clipboard.writeText(article.article.link, 'selection')
     }
@@ -393,13 +393,13 @@ export function createArticleItemMenu (article, window) {
     type: 'separator'
   }))
   menu.append(new MenuItem({
-    label: !article.article.read ? 'Mark as read' : 'Mark as unread',
+    label: !article.article.read ? i18nextMain.t('Mark as read') : i18nextMain.t('Mark as unread'),
     click () {
       window.webContents.send('mark-read', article)
     }
   }))
   menu.append(new MenuItem({
-    label: !article.article.favourite ? 'Mark as favourite' : 'Remove from favourite',
+    label: !article.article.favourite ? i18nextMain.t('Mark as favourite') : i18nextMain.t('Remove from favourite'),
     click () {
       window.webContents.send('mark-favourite', article)
     }
@@ -408,7 +408,7 @@ export function createArticleItemMenu (article, window) {
     type: 'separator'
   }))
   menu.append(new MenuItem({
-    label: !article.article.offline ? 'Save article' : 'Remove saved article',
+    label: !article.article.offline ? i18nextMain.t('Save article') : i18nextMain.t('Remove saved article'),
     click () {
       window.webContents.send('save-article', article)
     }

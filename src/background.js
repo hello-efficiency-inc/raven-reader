@@ -26,6 +26,7 @@ import fs from 'fs'
 import path from 'path'
 import { URL } from 'url'
 import dayjs from 'dayjs'
+import i18nextMainBackend from './i18nmain.config'
 const i18nextBackend = require('i18next-electron-fs-backend')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -40,8 +41,6 @@ contextMenu({
 const store = new Store({
   encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
 })
-
-const currentLocale = app.getLocale()
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -138,8 +137,6 @@ async function createWindow () {
       return false
     }
   })
-  menu = createMenu(win)
-  tray = createTray(win)
 
   if (process.platform !== 'darwin') {
     globalShortcut.register('Alt+M', () => {
@@ -147,6 +144,20 @@ async function createWindow () {
       win.setMenuBarVisibility(visible)
     })
   }
+
+  app.commandLine.appendSwitch('lang', app.getLocale())
+
+  // Set up necessary bindings to update the menu items
+  // based on the current language selected
+  i18nextMainBackend.on('loaded', (loaded) => {
+    i18nextMainBackend.changeLanguage(app.getLocale())
+    i18nextMainBackend.off('loaded')
+  })
+
+  i18nextMainBackend.on('languageChanged', (lng) => {
+    menu = createMenu(win, i18nextMainBackend)
+    tray = createTray(win, i18nextMainBackend)
+  })
 }
 
 function signInInoreader () {
@@ -415,6 +426,10 @@ ipcMain.handle('set-settings-item', (event, arg) => {
   }
 })
 
+ipcMain.on('get-locale', (event) => {
+  event.returnValue = app.getLocale()
+})
+
 ipcMain.on('get-dark', (event) => {
   event.returnValue = store.get('isDarkMode')
 })
@@ -460,15 +475,15 @@ ipcMain.on('login-inoreader', (event) => {
 
 ipcMain.handle('context-menu', (event, arg) => {
   if (arg.type === 'feed') {
-    createFeedMenu(arg.data, win)
+    createFeedMenu(arg.data, win, i18nextMainBackend)
   }
 
   if (arg.type === 'category') {
-    createCategoryMenu(arg.data, win)
+    createCategoryMenu(arg.data, win, i18nextMainBackend)
   }
 
   if (arg.type === 'article') {
-    createArticleItemMenu(arg.data, win)
+    createArticleItemMenu(arg.data, win, i18nextMainBackend)
   }
 })
 

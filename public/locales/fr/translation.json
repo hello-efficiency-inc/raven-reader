@@ -74,5 +74,21 @@
     "Mark as unfavourite": "Marquer comme défavorable",
     "Mark as favourite": "Marquer comme favori",
     "Disconnect": "déconnecter",
-    "Sync Account": "Compte de synchronisation"
+    "Sync Account": "Compte de synchronisation",
+    "Quit": "quitter",
+    "Edit": "Éditer",
+    "View": "Voir",
+    "Add subscription": "Ajouter un abonnement",
+    "Item": "Point",
+    "Next item": "Point suivant",
+    "Previous item": "Point précédent",
+    "Toggle read": "Basculer pour lire",
+    "Toggle favourite": "Basculer le favori",
+    "Mark all read": "Marquer tout comme lu",
+    "Save offline": "Sauvegarder hors ligne",
+    "View in browser": "Afficher dans le navigateur",
+    "Import and Export": "Importation et exportation",
+    "Import subscriptions": "Abonnements à l'importation",
+    "Export subscriptions": "Abonnements à l'exportation",
+    "Speech": "Discours"
 }

@@ -1,10 +1,17 @@
+/* eslint-disable no-undef */
 import { app, ipcRenderer, shell, clipboard } from 'electron'
 import md5 from 'crypto-js/md5'
-const osLocale = require('os-locale');
+import path from 'path'
 
 export default {
+  localePath: () => {
+    return path.join(__static, './locales/{{lng}}/{{ns}}.json')
+  },
+  localeMissingPath: () => {
+    return path.join(__static, './locales/{{lng}}/{{ns}}.missing.json')
+  },
   currentLocale: () => {
-    return osLocale.sync().split(/-|_/)[0]
+    return ipcRenderer.send('get-locale')
   },
   convertToMD5: (text) => {
     return md5(text)

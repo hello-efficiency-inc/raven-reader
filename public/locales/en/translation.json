@@ -74,5 +74,21 @@
     "Mark as unfavourite": "Mark as unfavourite",
     "Mark as favourite": "Mark as favourite",
     "Disconnect": "Disconnect",
-    "Sync Account": "Sync Account"
+    "Sync Account": "Sync Account",
+    "Quit": "Quit",
+    "Edit": "Edit",
+    "View": "View",
+    "Add subscription": "Add subscription",
+    "Item": "Item",
+    "Next item": "Next item",
+    "Previous item": "Previous item",
+    "Toggle read": "Toggle read",
+    "Toggle favourite": "Toggle favourite",
+    "Mark all read": "Mark all read",
+    "Save offline": "Save offline",
+    "View in browser": "View in browser",
+    "Import and Export": "Import and Export",
+    "Import subscriptions": "Import subscriptions",
+    "Export subscriptions": "Export subscriptions",
+    "Speech": "Speech"
 }

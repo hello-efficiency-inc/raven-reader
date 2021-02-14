@@ -6,7 +6,7 @@ import {
 } from 'electron'
 import os from 'os'
 
-export default function createTray (mainWindow) {
+export default function createTray(mainWindow, i18nextMain) {
   let trayImage
 
   if (os.platform() === 'darwin') {
@@ -24,7 +24,7 @@ export default function createTray (mainWindow) {
   const tray = new Tray(trayImage)
 
   const contextMenu = Menu.buildFromTemplate([{
-    label: 'Quit',
+    label: i18nextMain.t('Quit'),
     click: () => {
       app.isQuiting = true
       app.quit()

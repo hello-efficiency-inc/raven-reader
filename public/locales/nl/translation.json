@@ -74,5 +74,21 @@
     "Mark as unfavourite": "Verwijderen uit favorieten",
     "Mark as favourite": "Toevoegen aan favorieten",
     "Disconnect": "Loskoppelen",
-    "Sync Account": "Account synchroniseren"
+    "Sync Account": "Account synchroniseren",
+    "Quit": "stoppen",
+    "Edit": "Bewerk",
+    "View": "Visie",
+    "Add subscription": "Abonnement toevoegen",
+    "Item": "Item",
+    "Next item": "Volgende item",
+    "Previous item": "Vorig item",
+    "Toggle read": "Toggle lezen",
+    "Toggle favourite": "Schakel favorieten in",
+    "Mark all read": "Markeer alles als gelezen",
+    "Save offline": "Offline opslaan",
+    "View in browser": "Bekijk in browser",
+    "Import and Export": "Importeren en exporteren",
+    "Import subscriptions": "Importeer abonnementen",
+    "Export subscriptions": "Exporteer abonnementen",
+    "Speech": "Toespraak"
 }
