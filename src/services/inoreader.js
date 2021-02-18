@@ -274,7 +274,10 @@ export default {
         })
         const readTag = `user/${credsData.user.userId}/state/com.google/read`
         const favouriteTag = `user/${credsData.user.userId}/state/com.google/starred`
-        const transformedEntries = JSON.parse(JSON.stringify(entries)).map((item) => {
+        const transformedEntries = JSON.parse(JSON.stringify(entries)).filter((item) => {
+          const feed = subscriptions.filter(feed => feed.id === item.origin.streamId)[0]
+          return typeof feed !== 'undefined'
+        }).map((item) => {
           const itemId = item.id.split('/')
           const last = itemId[itemId.length - 1]
           const i = BigInt('0x' + last)

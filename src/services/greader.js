@@ -227,13 +227,17 @@ export default {
           item.feed_uuid = addedSubscription[0].uuid
           return item
         })
-        const transformedEntries = JSON.parse(JSON.stringify(entries)).map((item) => {
+        const transformedEntries = JSON.parse(JSON.stringify(entries)).filter((item) => {
+          const feed = subscriptions.filter(feed => feed.id === item.origin.streamId)[0]
+          return typeof feed !== 'undefined'
+        }).map((item) => {
           const itemId = item.id.split('/')
           const last = itemId[itemId.length - 1]
           const i = BigInt('0x' + last)
           const id = credsData.endpoint.includes('theoldreader') ? last : BigInt.asIntN(64, i).toString()
           const isMedia = item.canonical && (item.alternate[0].href.includes('youtube') || item.alternate[0].href.includes('vimeo'))
           const isPodcast = item.enclosure ? checkIsPodCast(item.enclosure[0]) : false
+          console.log(item.origin.streamId)
           const feed = subscriptions.filter(feed => feed.id === item.origin.streamId)[0]
           return {
             id: isPodcast ? uuidstring(item.enclosure[0].href) : uuidstring(item.alternate[0].href),

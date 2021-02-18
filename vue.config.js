@@ -60,7 +60,17 @@ module.exports = {
             },
             'github'
           ],
+          target: [
+            'nsis',
+            'portable'
+          ],
           icon: 'build/icons/icon.ico'
+        },
+        nsis: {
+          oneClick: false
+        },
+        portable: {
+          artifactName: 'Raven-${version}_portable.${ext}'
         },
         linux: {
           publish: [

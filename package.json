@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "1.0.39",
+  "version": "1.0.40",
   "author": "Hello Efficiency Inc. <welcome@helloefficiency.com>",
   "description": "Simple desktop RSS Reader",
   "license": "MIT",
@@ -48,7 +48,6 @@
     "i18next-fs-backend": "^1.0.8",
     "lovefield": "^2.1.12",
     "md5": "^2.3.0",
-    "nedb": "^1.8.0",
     "node-schedule": "^2.0.0",
     "normalize-url": "^5.1.0",
     "opml-generator": "^1.1.1",
