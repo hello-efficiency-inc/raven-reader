@@ -80,9 +80,6 @@ Please feel free to suggest more ideas to improve this app.
 - Fever
 
 ## Supported Locale
-- English
-- French
-- Dutch
 
 | Language  | Contributor  |
 |-----------|--------------|
