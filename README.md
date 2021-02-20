@@ -88,8 +88,8 @@ Please feel free to suggest more ideas to improve this app.
 |-----------|--------------|
 | English   |              |
 | French    |              |
-| Dutch     | @Vistause    |
-| Russian   | @vanja-san   |
+| Dutch     | [@Vistause](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3AVistaus)    |
+| Russian   | [@vanja-san](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Avanja-san)   |
 
 
 
