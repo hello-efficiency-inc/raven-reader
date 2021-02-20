@@ -88,6 +88,8 @@ Please feel free to suggest more ideas to improve this app.
 | Dutch     | [@Vistause](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3AVistaus)    |
 | Russian   | [@vanja-san](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Avanja-san)   |
 
+## Contributions
+Help make Raven Reader better by reporting bugs, PR or opening feature requests through [GitHub issues](https://github.com/hello-efficiency-inc/raven-reader/issues).
 
 
 ## Developer Notes
