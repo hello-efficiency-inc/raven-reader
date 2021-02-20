@@ -84,6 +84,15 @@ Please feel free to suggest more ideas to improve this app.
 - French
 - Dutch
 
+| Language  | Contributor  |
+|-----------|--------------|
+| English   |              |
+| French    |              |
+| Dutch     | @Vistause    |
+| Russian   | @vanja-san   |
+
+
+
 ## Developer Notes
 
 For setup instructions and configuration follow https://github.com/nklayman/vue-cli-plugin-electron-builder
