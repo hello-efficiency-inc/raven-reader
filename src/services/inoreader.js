@@ -45,7 +45,7 @@ export default {
   },
   async refreshToken (credsData) {
     try {
-      window.log('Refreshing Inoreader token')
+      window.log.info('Refreshing Inoreader token')
       const data = await axios.post('https://www.inoreader.com/oauth2/token', {
         client_id: process.env.VUE_APP_INOREADER_CLIENT_ID,
         client_secret: process.env.VUE_APP_INOREADER_CLIENT_SECRET,
@@ -53,7 +53,7 @@ export default {
         refresh_token: credsData.refresh_token
       })
       data.data.expires_in = dayjs().add(data.data.expires_in).valueOf()
-      window.electronstore.storeSetSettingItem('set', 'inoreader_creds', data.data)
+      window.electronstore.storeSetSettingItem('set', 'inoreader_creds', JSON.stringify(data.data))
       return data.data
     } catch (e) {
       window.log.info(e)
