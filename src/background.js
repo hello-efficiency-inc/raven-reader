@@ -1,6 +1,6 @@
 'use strict'
 import 'v8-compile-cache'
-import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog, Notification, shell, powerMonitor, session, screen } from 'electron'
+import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog, Notification, shell, powerMonitor, session } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { enforceMacOSAppLocation } from 'electron-util'
