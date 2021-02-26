@@ -28,6 +28,16 @@ function checkIsPodCast (post) {
     post.length && post.type.indexOf('audio') !== -1
 }
 
+function getCoverImage (postContent) {
+  const dom = new DOMParser()
+  const doc = dom.parseFromString(postContent, 'text/html')
+  const image = doc.querySelector('img')
+  if (image !== null && typeof image.getAttribute('src') !== 'undefined' && image.getAttribute('src').startsWith('https://')) {
+    return doc.querySelector('img').getAttribute('src')
+  }
+  return null
+}
+
 export default {
   async getUserInfo (credsData) {
     let tokenData
@@ -291,6 +301,7 @@ export default {
             title: item.title,
             author: item.author,
             link: item.canonical[0].href,
+            cover: getCoverImage(item.summary.content),
             content: item.summary.content,
             contentSnippet: truncate(item.summary.content.replace(/(<([^>]+)>)/gi, ''), 100),
             favourite: item.categories.includes(favouriteTag),

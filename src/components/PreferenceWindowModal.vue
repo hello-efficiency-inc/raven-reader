@@ -390,7 +390,7 @@ export default {
       this.cronjob = this.$store.state.Setting.cronSettings
       this.theme_option = this.$store.state.Setting.themeOption
       this.setTheme(this.$store.state.Setting.themeOption)
-      this.oldestArticles = this.$store.state.Setting.oldestArticles ? 'on' : 'off'
+      this.oldestArticles = this.$store.state.Setting.oldestArticles === 'on' ? 'on' : 'off'
       this.disableImages = this.$store.state.Setting.disableImages ? 'on' : 'off'
       this.fullArticleDefault = this.$store.state.Setting.fullArticleDefault ? 'on' : 'off'
       if (this.$store.state.Setting.proxy) {

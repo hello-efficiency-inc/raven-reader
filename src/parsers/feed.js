@@ -73,6 +73,7 @@ export function ParseFeedPost (feed) {
     } else {
       item.media = null
     }
+    item.cover = item['media:content'] ? item['media:content'].$.url : getCoverImage(item.content)
     item.contentSnippet = truncate(item.contentSnippet, 100)
     item.favourite = false
     item.read = false
@@ -91,6 +92,16 @@ export function ParseFeedPost (feed) {
   })
   feeditems.posts = posts
   return feeditems
+}
+
+function getCoverImage (postContent) {
+  const dom = new DOMParser()
+  const doc = dom.parseFromString(postContent, 'text/html')
+  const image = doc.querySelector('img')
+  if (image !== null && typeof image.getAttribute('src') !== 'undefined' && image.getAttribute('src').startsWith('https://')) {
+    return doc.querySelector('img').getAttribute('src')
+  }
+  return null
 }
 
 function checkIsPodCast (post) {

@@ -10,6 +10,16 @@ import * as database from '../db'
 dayjs.extend(timezone)
 dayjs.extend(advancedformat)
 
+function getCoverImage (postContent) {
+  const dom = new DOMParser()
+  const doc = dom.parseFromString(postContent, 'text/html')
+  const image = doc.querySelector('img')
+  if (image !== null && typeof image.getAttribute('src') !== 'undefined' && image.getAttribute('src').startsWith('https://')) {
+    return doc.querySelector('img').getAttribute('src')
+  }
+  return null
+}
+
 export default {
   async getSubscriptions (feedbinCreds) {
     try {
@@ -155,6 +165,7 @@ export default {
             title: item.title,
             author: item.author,
             link: item.url,
+            cover: getCoverImage(item.content),
             content: item.content,
             contentSnippet: truncate(item.summary, 100),
             favourite: item.favourite,
