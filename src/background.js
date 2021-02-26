@@ -77,6 +77,9 @@ async function createWindow () {
     }
   })
 
+  // Maximize window on startup when not in development
+  if(!isDevelopment) win.maximize()
+
   i18nextBackend.mainBindings(ipcMain, win, fs)
 
   ElectronBlocker.fromPrebuiltAdsAndTracking(fetch).then((blocker) => {
