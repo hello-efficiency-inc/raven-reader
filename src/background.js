@@ -418,6 +418,10 @@ ipcMain.on('get-settings', (event, arg) => {
   event.returnValue = state
 })
 
+ipcMain.on('get-setting-item', (event, arg) => {
+  event.returnValue = store.get(arg)
+})
+
 ipcMain.handle('set-settings-item', (event, arg) => {
   switch (arg.type) {
     case 'set':

@@ -19,6 +19,9 @@ const electronStoreBridge = {
   getIsDarkMode: () => {
     return ipcRenderer.sendSync('get-dark')
   },
+  getSettingItem: (key) => {
+    return ipcRenderer.sendSync('get-setting-item', key)
+  },
   storeSetSettingItem: (type, key, data = null) => {
     ipcRenderer.invoke('set-settings-item', {
       type: type,

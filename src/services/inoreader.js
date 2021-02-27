@@ -40,15 +40,9 @@ function getCoverImage (postContent) {
 
 export default {
   async getUserInfo (credsData) {
-    let tokenData
-    if (dayjs().valueOf() >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
     const data = await axios.get('https://www.inoreader.com/reader/api/0/user-info', {
       headers: {
-        Authorization: `Bearer ${tokenData.access_token}`
+        Authorization: `Bearer ${credsData.access_token}`
       }
     })
     return data.data
@@ -62,25 +56,26 @@ export default {
         grant_type: 'refresh_token',
         refresh_token: credsData.refresh_token
       })
-      data.data.expires_in = dayjs().add(data.data.expires_in).valueOf()
-      window.electronstore.storeSetSettingItem('set', 'inoreader_creds', JSON.stringify(data.data))
-      return data.data
+      const currentData = Object.assign({}, JSON.parse(window.electronstore.getSettingItem('inoreader_creds')))
+      const userInfo = await this.getUserInfo(data.data)
+      currentData.user = userInfo
+      currentData.expires_in = dayjs().add(data.data.expires_in).valueOf()
+      currentData.access_token = data.data.access_token
+      store.dispatch('setInoreader', currentData)
+      return currentData
     } catch (e) {
       window.log.info(e)
     }
   },
-  async getSubscriptions (credsData) {
-    let tokenData
+  checkToken (credsData) {
     const currentTime = dayjs().valueOf()
-    if (currentTime >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
+    return currentTime >= credsData.expires_in
+  },
+  async getSubscriptions (credsData) {
     try {
       const subscriptions = await axios.get('https://www.inoreader.com/reader/api/0/subscription/list', {
         headers: {
-          Authorization: `Bearer ${tokenData.access_token}`
+          Authorization: `Bearer ${credsData.access_token}`
         }
       })
       return subscriptions.data.subscriptions
@@ -89,15 +84,9 @@ export default {
     }
   },
   async getUnreadIds (credsData) {
-    let tokenData
     const ids = []
     let continuation = null
     let apiUrl
-    if (dayjs().valueOf() >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
     try {
       do {
         if (continuation === null) {
@@ -107,7 +96,7 @@ export default {
         }
         const data = await axios.get(apiUrl, {
           headers: {
-            Authorization: `Bearer ${tokenData.access_token}`
+            Authorization: `Bearer ${credsData.access_token}`
           }
         })
         if (data.data.itemRefs) {
@@ -124,15 +113,9 @@ export default {
     }
   },
   async getStarredIds (credsData) {
-    let tokenData
     const ids = []
     let continuation = null
     let apiUrl
-    if (dayjs().valueOf() >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
     try {
       do {
         if (continuation === null) {
@@ -142,7 +125,7 @@ export default {
         }
         const data = await axios.get(apiUrl, {
           headers: {
-            Authorization: `Bearer ${tokenData.access_token}`
+            Authorization: `Bearer ${credsData.access_token}`
           }
         })
         if (data.data.itemRefs) {
@@ -159,14 +142,8 @@ export default {
     }
   },
   async getEntries (credsData, ids) {
-    let tokenData
     const entries = []
     const chunks = chunk(ids, 250)
-    if (dayjs().valueOf() >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
-    } else {
-      tokenData = credsData
-    }
     try {
       for (let i = 0; i < chunks.length; i++) {
         const postData = new URLSearchParams()
@@ -175,7 +152,7 @@ export default {
         }
         const data = await axios.post('https://www.inoreader.com/reader/api/0/stream/items/contents?output=json', postData, {
           headers: {
-            Authorization: `Bearer ${tokenData.access_token}`
+            Authorization: `Bearer ${credsData.access_token}`
           }
         })
         entries.push(...data.data.items)
@@ -236,6 +213,9 @@ export default {
     }
   },
   async syncArticles (credsData) {
+    if (this.checkToken(credsData)) {
+      credsData = await this.refreshToken(credsData)
+    }
     let subscriptions = await this.getSubscriptions(credsData)
     const unreadList = await this.getUnreadIds(credsData)
     const starredList = await this.getStarredIds(credsData)
