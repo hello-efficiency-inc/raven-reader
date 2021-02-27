@@ -25,6 +25,13 @@
         </p>
       </div>
       <h6><strong>{{ article.articles.title }}</strong></h6>
+      <img
+        v-if="article.articles.cover"
+        :src="article.articles.cover"
+        class="img-fluid ratio-16x9 my-2"
+        :alt="article.articles.title"
+        loading="lazy"
+      >
       <p>{{ article.articles.contentSnippet }}</p>
       <p
         v-if="article.articles.favourite"

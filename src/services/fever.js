@@ -4,6 +4,16 @@ import uuidstring from 'uuid-by-string'
 import * as database from '../db'
 import truncate from './truncate'
 
+function getCoverImage (postContent) {
+  const dom = new DOMParser()
+  const doc = dom.parseFromString(postContent, 'text/html')
+  const image = doc.querySelector('img')
+  if (image !== null && typeof image.getAttribute('src') !== 'undefined' && image.getAttribute('src').startsWith('https://')) {
+    return doc.querySelector('img').getAttribute('src')
+  }
+  return null
+}
+
 export default {
   async getSubscriptions (credsData) {
     try {
@@ -176,6 +186,7 @@ export default {
             title: item.title,
             author: item.author,
             link: item.url,
+            cover: getCoverImage(item.html),
             content: item.html,
             contentSnippet: truncate(item.html.replace(/(<([^>]+)>)/gi, ''), 100),
             favourite: Boolean(item.is_saved),

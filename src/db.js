@@ -1,6 +1,6 @@
 import lf from 'lovefield'
 
-const schemaBuilder = lf.schema.create('raven', 8)
+const schemaBuilder = lf.schema.create('raven', 9)
 
 schemaBuilder.createTable('feeds')
   .addColumn('id', lf.Type.INTEGER)
@@ -26,6 +26,7 @@ schemaBuilder.createTable('articles')
   .addColumn('link', lf.Type.STRING)
   .addColumn('pubDate', lf.Type.STRING)
   .addColumn('author', lf.Type.STRING)
+  .addColumn('cover', lf.Type.STRING)
   .addColumn('content', lf.Type.STRING)
   .addColumn('contentSnippet', lf.Type.STRING)
   .addColumn('favourite', lf.Type.BOOLEAN)
@@ -45,7 +46,7 @@ schemaBuilder.createTable('articles')
   .addPrimaryKey(['id'], true)
   .addIndex('idxUuid', ['uuid'], false)
   .addIndex('idxSource', ['source'], false)
-  .addNullable(['source', 'source_id', 'content', 'contentSnippet', 'author', 'category', 'pubDate', 'link', 'itunes', 'enclosure', 'media', 'keep_read'])
+  .addNullable(['cover', 'source', 'source_id', 'content', 'contentSnippet', 'author', 'category', 'pubDate', 'link', 'itunes', 'enclosure', 'media', 'keep_read'])
 
 schemaBuilder.createTable('categories')
   .addColumn('id', lf.Type.INTEGER)
