@@ -59,8 +59,8 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    minWidth: 1400,
-    minHeight: 768,
+    minWidth: 1280,
+    minHeight: 720,
     width: 1400,
     height: 768,
     title: 'Raven Reader',
