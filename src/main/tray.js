@@ -4,9 +4,14 @@ import {
   Menu,
   Tray
 } from 'electron'
+import Store from 'electron-store'
 import os from 'os'
 
 export default function createTray(mainWindow, i18nextMain) {
+  const store = new Store({
+    encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
+  })
+
   let trayImage
 
   if (os.platform() === 'darwin') {
@@ -27,9 +32,9 @@ export default function createTray(mainWindow, i18nextMain) {
     {
       label: i18nextMain.t('start in tray'),
       type: "checkbox",
-      checked: true,
+      checked: store.get('settings.start_in_trays'),
       click: () => {
-        //console.log(contextMenu.items[0].checked)
+        store.set('settings.start_in_trays', contextMenu.items[0].checked)
       }
     },
     {
