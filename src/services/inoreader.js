@@ -38,6 +38,25 @@ function getCoverImage (postContent) {
   return null
 }
 
+async function refreshToken (credsData) {
+  try {
+    window.log.info('Refreshing Inoreader token')
+    const data = await axios.post('https://www.inoreader.com/oauth2/token', {
+      client_id: process.env.VUE_APP_INOREADER_CLIENT_ID,
+      client_secret: process.env.VUE_APP_INOREADER_CLIENT_SECRET,
+      grant_type: 'refresh_token',
+      refresh_token: credsData.refresh_token
+    })
+    const currentData = JSON.parse(JSON.stringify(credsData))
+    currentData.expires_in = dayjs().add(data.data.expires_in).valueOf()
+    currentData.access_token = data.data.access_token
+    store.dispatch('setInoreader', JSON.stringify(currentData))
+    return currentData
+  } catch (e) {
+    window.log.info(e)
+  }
+}
+
 export default {
   async getUserInfo (credsData) {
     const data = await axios.get('https://www.inoreader.com/reader/api/0/user-info', {
@@ -46,26 +65,6 @@ export default {
       }
     })
     return data.data
-  },
-  async refreshToken (credsData) {
-    try {
-      window.log.info('Refreshing Inoreader token')
-      const data = await axios.post('https://www.inoreader.com/oauth2/token', {
-        client_id: process.env.VUE_APP_INOREADER_CLIENT_ID,
-        client_secret: process.env.VUE_APP_INOREADER_CLIENT_SECRET,
-        grant_type: 'refresh_token',
-        refresh_token: credsData.refresh_token
-      })
-      const currentData = Object.assign({}, JSON.parse(window.electronstore.getSettingItem('inoreader_creds')))
-      const userInfo = await this.getUserInfo(data.data)
-      currentData.user = userInfo
-      currentData.expires_in = dayjs().add(data.data.expires_in).valueOf()
-      currentData.access_token = data.data.access_token
-      store.dispatch('setInoreader', currentData)
-      return currentData
-    } catch (e) {
-      window.log.info(e)
-    }
   },
   checkToken (credsData) {
     const currentTime = dayjs().valueOf()
@@ -165,8 +164,8 @@ export default {
   async markItem (credsData, type, ids) {
     const postData = new URLSearchParams()
     let tokenData
-    if (dayjs().valueOf() >= credsData.expires_in) {
-      tokenData = await this.refreshToken(credsData)
+    if (this.checkToken(credsData)) {
+      tokenData = await refreshToken(credsData)
     } else {
       tokenData = credsData
     }
@@ -214,7 +213,7 @@ export default {
   },
   async syncArticles (credsData) {
     if (this.checkToken(credsData)) {
-      credsData = await this.refreshToken(credsData)
+      credsData = await refreshToken(credsData)
     }
     let subscriptions = await this.getSubscriptions(credsData)
     const unreadList = await this.getUnreadIds(credsData)
