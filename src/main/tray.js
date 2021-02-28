@@ -23,13 +23,23 @@ export default function createTray(mainWindow, i18nextMain) {
 
   const tray = new Tray(trayImage)
 
-  const contextMenu = Menu.buildFromTemplate([{
-    label: i18nextMain.t('Quit'),
-    click: () => {
-      app.isQuiting = true
-      app.quit()
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: i18nextMain.t('start in tray'),
+      type: "checkbox",
+      checked: true,
+      click: () => {
+        //console.log(contextMenu.items[0].checked)
+      }
+    },
+    {
+      label: i18nextMain.t('Quit'),
+      click: () => {
+        app.isQuiting = true
+        app.quit()
+      }
     }
-  }])
+  ])
 
   if (os.platform() !== 'linux') {
     tray.on('right-click', () => {

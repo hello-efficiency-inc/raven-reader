@@ -161,6 +161,8 @@ async function createWindow () {
     menu = createMenu(win, i18nextMainBackend)
     tray = createTray(win, i18nextMainBackend)
   })
+
+  win.hide()
 }
 
 function signInInoreader () {
