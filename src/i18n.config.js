@@ -24,7 +24,6 @@ i18n
   })
 
 window.api.i18nextElectronBackend.onLanguageChange((args) => {
-  console.log(args)
   i18n.changeLanguage(args.lng, (error, t) => {
     if (error) {
       window.log.info(error)

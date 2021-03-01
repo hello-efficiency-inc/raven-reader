@@ -1,1 +1,15 @@
-{"Connect Feedbin":"Connect Feedbin","Log into Feedbin":"Log into Feedbin","Connect Self-hosted (Google Reader API)":"Connect Self-hosted (Google Reader API)","Log into Self Hosted RSS Service":"Log into Self Hosted RSS Service","Enter username":"Enter username","Connect Fever":"Connect Fever","Log into Fever":"Log into Fever","Disconnect Self-hosted (Google Reader API)":"Disconnect Self-hosted (Google Reader API)","Copy link":"Copy link","Copy feed link":"Copy feed link","Edit feed":"Edit feed","Unsubscribe":"Unsubscribe"}
+{
+  "Connect Feedbin": "Connect Feedbin",
+  "Log into Feedbin": "Log into Feedbin",
+  "Connect Self-hosted (Google Reader API)": "Connect Self-hosted (Google Reader API)",
+  "Log into Self Hosted RSS Service": "Log into Self Hosted RSS Service",
+  "Enter username": "Enter username",
+  "Connect Fever": "Connect Fever",
+  "Log into Fever": "Log into Fever",
+  "Disconnect Self-hosted (Google Reader API)": "Disconnect Self-hosted (Google Reader API)",
+  "Copy link": "Copy link",
+  "Copy feed link": "Copy feed link",
+  "Edit feed": "Edit feed",
+  "Unsubscribe": "Unsubscribe",
+  "start in tray": "start in tray"
+}

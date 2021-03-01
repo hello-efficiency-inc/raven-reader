@@ -90,5 +90,6 @@
     "Import and Export": "Import and Export",
     "Import subscriptions": "Import subscriptions",
     "Export subscriptions": "Export subscriptions",
-    "Speech": "Speech"
+    "Speech": "Speech",
+    "Start in tray": "Start in tray"
 }

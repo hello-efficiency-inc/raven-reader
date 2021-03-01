@@ -7,7 +7,7 @@ import {
 import Store from 'electron-store'
 import os from 'os'
 
-export default function createTray(mainWindow, i18nextMain) {
+export default function createTray (mainWindow, i18nextMain) {
   const store = new Store({
     encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
   })
@@ -30,8 +30,8 @@ export default function createTray(mainWindow, i18nextMain) {
 
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: i18nextMain.t('start in tray'),
-      type: "checkbox",
+      label: i18nextMain.t('Start in tray'),
+      type: 'checkbox',
       checked: store.get('settings.start_in_trays'),
       click: () => {
         store.set('settings.start_in_trays', contextMenu.items[0].checked)
