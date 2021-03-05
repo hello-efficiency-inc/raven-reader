@@ -359,7 +359,7 @@ export default {
           self.empty = true
           self.loading = false
         }
-        if (!articleItem.read) {
+        if (!articleItem.read && self.$store.state.Setting.recentlyReadPreference) {
           self.$store.dispatch('markAction', {
             type: 'READ',
             id: id,

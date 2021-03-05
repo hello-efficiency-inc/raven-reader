@@ -417,12 +417,16 @@ export default {
           type: markTypes.unread,
           id: this.$store.state.FeedManager.activeArticleId,
           podcast: this.articleItem.podcast
+        }).then(() => {
+          this.$store.dispatch('loadArticles')
         })
       } else {
         this.$store.dispatch('markAction', {
           type: markTypes.read,
           id: this.$store.state.FeedManager.activeArticleId,
           podcast: this.articleItem.podcast
+        }).then(() => {
+          this.$store.dispatch('loadArticles')
         })
       }
       this.articleItem.read = !this.articleItem.read

@@ -36,6 +36,7 @@ const state = {
   oldestArticles: false,
   disableImages: false,
   fullArticleDefault: false,
+  recentlyReadPreference: false,
   offline: false,
   proxy: {
     http: '',
@@ -164,6 +165,9 @@ const mutations = {
   },
   SET_GREADER_LAST_FETCHED (state, data) {
     state.greader_fetched_lastime = data
+  },
+  SET_RECENTLY_READ_PREFERENCE (state, data) {
+    state.recentlyReadPreference = data
   }
 }
 
@@ -233,6 +237,10 @@ const actions = {
   unsetPocket ({ commit }) {
     electronstore.storeSetSettingItem('delete', 'pocket_creds')
     commit('UNSET_POCKET')
+  },
+  setRecentlyReadPreference ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'settings.recentlyReadPreference', data === 'on')
+    commit('SET_RECENTLY_READ_PREFERENCE', data === 'on')
   },
   setFullArticlePreference ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'settings.fullArticlePreference', data === 'on')

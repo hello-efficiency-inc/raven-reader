@@ -91,5 +91,6 @@
     "Import subscriptions": "Import subscriptions",
     "Export subscriptions": "Export subscriptions",
     "Speech": "Speech",
-    "Start in tray": "Start in tray"
+    "Start in tray": "Start in tray",
+    "Automatically add to Recently": "Automatically add to Recently"
 }

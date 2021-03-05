@@ -76,6 +76,18 @@
                 @input="saveImagePreference"
               />
             </b-form-group>
+            <b-form-group :label="getTranslatedLabel('Automatically add to Recently Read')">
+              <b-form-radio-group
+                id="recentlyRead"
+                v-model="recentlyRead"
+                buttons
+                button-variant="outline-primary"
+                size="sm"
+                :options="options"
+                name="recentlyRead"
+                @input="recentlyReadPreferences"
+              />
+            </b-form-group>
             <b-form-group :label="getTranslatedLabel('Full article view by default')">
               <b-form-radio-group
                 id="fullArticle"
@@ -327,6 +339,7 @@ export default {
       darkMode: 'off',
       oldestArticles: 'off',
       disableImages: 'off',
+      recentlyRead: 'off',
       fullArticleDefault: 'off',
       keepread_options: [
         { value: 1, text: '1 week' },
@@ -392,6 +405,7 @@ export default {
       this.setTheme(this.$store.state.Setting.themeOption)
       this.oldestArticles = this.$store.state.Setting.oldestArticles === 'on' ? 'on' : 'off'
       this.disableImages = this.$store.state.Setting.disableImages ? 'on' : 'off'
+      this.recentlyRead = this.$store.state.Setting.recentlyReadPreference ? 'on' : 'off'
       this.fullArticleDefault = this.$store.state.Setting.fullArticleDefault ? 'on' : 'off'
       if (this.$store.state.Setting.proxy) {
         this.proxy.http = this.$store.state.Setting.proxy.http
@@ -445,6 +459,15 @@ export default {
     saveCronjob (cronValue) {
       this.$store.dispatch('setCronJob', cronValue)
       this.$toasted.show('Settings for cronjob successfully saved.', {
+        theme: 'outline',
+        position: 'top-center',
+        duration: 3000
+      })
+      this.hideModal()
+    },
+    recentlyReadPreferences (preference) {
+      this.$store.dispatch('setRecentlyReadPreference', preference)
+      this.$toasted.show('Recently Read preference changed.', {
         theme: 'outline',
         position: 'top-center',
         duration: 3000
