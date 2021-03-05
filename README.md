@@ -39,6 +39,8 @@ brew install --cask raven-reader
 
 
 ![darkscreenshot](/darkscreenshot.png)
+![video](/video.png)
+![podcast](/podcast.png)
 
 ## Features
 
