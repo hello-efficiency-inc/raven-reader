@@ -78,7 +78,7 @@ async function createWindow () {
   })
 
   // Maximize window on startup when not in development
-  if(!isDevelopment) win.maximize()
+  if (!isDevelopment) win.maximize()
 
   i18nextBackend.mainBindings(ipcMain, win, fs)
 
@@ -162,8 +162,7 @@ async function createWindow () {
     tray = createTray(win, i18nextMainBackend)
   })
 
-  if(store.get('settings.start_in_trays'))
-    win.hide()
+  if (store.get('settings.start_in_trays')) { win.hide() }
 }
 
 function signInInoreader () {
@@ -220,17 +219,18 @@ app.setAsDefaultProtocolClient('ravenreader')
 const primaryInstance = app.requestSingleInstanceLock()
 if (!primaryInstance) {
   app.quit()
-  return
-}
-app.on('second-instance', (event, argv, cmd) => {
-  event.preventDefault()
-  if (win) {
-    if (win.isMinimized()) {
-      win.restore()
+} else {
+  app.on('second-instance', (event, argv, cmd) => {
+    console.log(argv)
+    event.preventDefault()
+    if (win) {
+      if (win.isMinimized()) {
+        win.restore()
+      }
+      win.focus()
     }
-    win.focus()
-  }
-})
+  })
+}
 
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
 
