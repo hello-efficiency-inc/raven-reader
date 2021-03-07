@@ -221,7 +221,7 @@ if (!primaryInstance) {
   app.quit()
 } else {
   app.on('second-instance', (event, argv, cmd) => {
-    console.log(argv)
+    log.info(argv)
     event.preventDefault()
     if (win) {
       if (win.isMinimized()) {
