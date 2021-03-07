@@ -219,7 +219,13 @@ app.setAsDefaultProtocolClient('ravenreader')
 
 app.requestSingleInstanceLock()
 app.on('second-instance', (event, argv, cmd) => {
-  app.quit()
+  event.preventDefault()
+  if (win) {
+    if (win.isMinimized()) {
+      win.restore()
+    }
+    win.focus()
+  }
 })
 
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
