@@ -156,7 +156,7 @@ export function createMenu (mainWindow, i18nextMain) {
 
   const version = app.getVersion()
 
-  if (process.platform === 'win32' || process.platform === 'linux') {
+  if (process.platform !== 'darwin') {
     template.unshift({
       label: 'Raven Reader',
       submenu: [{
