@@ -29,7 +29,8 @@
       <div class="col">
         <table
           v-if="feeds.length > 0"
-          class="table table-dark"
+          :class="{ 'table-dark': isDarkMode }"
+          class="table"
         >
           <thead>
             <tr>
@@ -225,10 +226,14 @@
 </template>
 <script>
 import uuidstring from 'uuid-by-string'
+import themeMixin from '../mixins/setTheme'
 import bus from '../services/bus'
 import db from '../services/db'
 
 export default {
+  mixins: [
+    themeMixin
+  ],
   data () {
     return {
       selected: [],

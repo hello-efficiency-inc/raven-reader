@@ -1,4 +1,11 @@
 export default {
+  computed: {
+    isDarkMode () {
+      const el = document.body
+      console.log(el.classList.contains('app-nightmode'))
+      return el.classList.contains('app-nightmode') || el.classList.contains('app-darkmode')
+    }
+  },
   methods: {
     toggleBodyClass (addClass, className) {
       const el = document.body
