@@ -221,13 +221,50 @@ if (!primaryInstance) {
   app.quit()
 } else {
   app.on('second-instance', (event, argv, cmd) => {
-    log.info(argv)
     event.preventDefault()
+    const url = argv[argv.length - 1]
     if (win) {
       if (win.isMinimized()) {
         win.restore()
       }
       win.focus()
+    }
+    if (process.platform !== 'darwin') {
+      if (url.includes('ravenreader://inoreader/auth')) {
+        const q = new URL(url).searchParams
+        if (q.has('code')) {
+          axios.post('https://www.inoreader.com/oauth2/token', {
+            code: q.get('code'),
+            client_id: process.env.VUE_APP_INOREADER_CLIENT_ID,
+            client_secret: process.env.VUE_APP_INOREADER_CLIENT_SECRET,
+            redirect_uri: 'ravenreader://inoreader/auth',
+            scope: null,
+            grant_type: 'authorization_code'
+          }).then((data) => {
+            data.data.expires_in = dayjs().add(data.data.expires_in, 'second').valueOf()
+            win.webContents.send('inoreader-authenticated', data.data)
+          })
+        }
+      }
+      if (url === 'ravenreader://pocket/auth') {
+        axios
+          .post(
+            'https://getpocket.com/v3/oauth/authorize', {
+              consumer_key: consumerKey,
+              code: code
+            }, {
+              withCredentials: true,
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Accept': 'application/json'
+              }
+            }
+          )
+          .then(data => {
+            data.data.consumer_key = consumerKey
+            win.webContents.send('pocket-authenticated', data.data)
+          })
+      }
     }
   })
 }
