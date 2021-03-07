@@ -217,7 +217,11 @@ function registerLocalResourceProtocol () {
 
 app.setAsDefaultProtocolClient('ravenreader')
 
-app.requestSingleInstanceLock()
+const primaryInstance = app.requestSingleInstanceLock()
+if (!primaryInstance) {
+  app.quit()
+  return
+}
 app.on('second-instance', (event, argv, cmd) => {
   event.preventDefault()
   if (win) {
