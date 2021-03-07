@@ -234,7 +234,7 @@ const actions = {
     commit('UPDATE_ARTICLE_CATEGORY', data)
   },
   updateArticleFeedTitle ({ commit }, data) {
-    db.updateArticleFeedCategory(data.id, data.category)
+    db.updateArticleCategoryFeed(data.id, data.category)
   },
   markCategoryRead ({
     commit

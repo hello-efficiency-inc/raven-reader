@@ -1,7 +1,7 @@
 <template>
   <b-modal
     id="editCategory"
-    ref="editCategory"
+    :ref="reference"
     :title="getTranslatedLabel('Rename category')"
     centered
     @shown="initialData"
@@ -39,6 +39,12 @@
 <script>
 export default {
   props: {
+    reference: {
+      type: String,
+      default () {
+        return 'editCategory'
+      }
+    },
     feed: {
       type: Object,
       default () {

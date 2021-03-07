@@ -4,7 +4,7 @@
       id="preference"
       ref="preference"
       :title="getTranslatedLabel('Preferences')"
-      size="lg"
+      size="xl"
       modal-class="preferencesModal"
       centered
       hide-footer
@@ -251,6 +251,34 @@
               @fever-sync="handleSync"
               @preference-modal-hide="hideModal"
             />
+          </b-tab>
+          <b-tab>
+            <template #title>
+              <feather-icon name="edit" /> <span class="ml-3">{{ $t('Manage Categories') }}</span>
+            </template>
+            <div class="row">
+              <div class="col">
+                <h4 class="mb-4 mt-2">
+                  <strong>{{ $t('Manage categories') }}</strong><br>
+                  <small style="font-size: 14px;"><strong>Note:</strong> RSS Services categories cannot be managed from here.</small>
+                </h4>
+              </div>
+            </div>
+            <manage-categories />
+          </b-tab>
+          <b-tab>
+            <template #title>
+              <feather-icon name="edit" /> <span class="ml-3">{{ $t('Manage Feeds') }}</span>
+            </template>
+            <div class="row">
+              <div class="col">
+                <h4 class="mb-4 mt-2">
+                  <strong>{{ $t('Manage feeds') }}</strong><br>
+                  <small style="font-size: 14px;"><strong>Note:</strong> RSS Services feeds cannot be managed from here.</small>
+                </h4>
+              </div>
+            </div>
+            <manage-feeds />
           </b-tab>
         </b-tabs>
       </b-overlay>

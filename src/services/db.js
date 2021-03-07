@@ -89,6 +89,12 @@ export default {
       .where(db.articleTable.feed_uuid.eq(feedid))
       .exec()
   },
+  updateArticleCategoryFeedMulti (feedids, category) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.category, category)
+      .where(db.articleTable.feed_uuid.in(feedids))
+      .exec()
+  },
   updateArticleCategory (uuids, category) {
     return db.database.update(db.articleTable)
       .set(db.articleTable.category, category)
@@ -173,12 +179,6 @@ export default {
       .where(db.articleTable.uuid.eq(uuid))
       .exec()
   },
-  updateArticleFeedCategory (uuid, category) {
-    return db.database.update(db.articleTable)
-      .set(db.articleTable.category, category)
-      .where(db.articleTable.feed_uuid.eq(uuid))
-      .exec()
-  },
   removeOldReadItems (week) {
     db.database.delete()
       .from(db.articleTable)
@@ -205,6 +205,18 @@ export default {
         db.articleTable.keep_read.lt(dayjs().valueOf()),
         db.articleTable.keep_read.eq(dayjs().valueOf())
       ))
+      .exec()
+  },
+  unassignFeeds (uuids) {
+    return db.database.update(db.feedTable)
+      .set(db.feedTable.category, null)
+      .where(db.feedTable.uuid.in(uuids))
+      .exec()
+  },
+  unassignCategoriesArticles (uuids) {
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.category, null)
+      .where(db.articleTable.uuid.in(uuids))
       .exec()
   }
 }

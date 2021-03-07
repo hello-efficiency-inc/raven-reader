@@ -518,7 +518,7 @@ export default {
   display: block;
   position: absolute;
   top: 0;
-  width: 41%;
+  width: 43%;
   height: 40px;
   z-index: 1;
   background-image: linear-gradient(to right, rgba(255,255,255,0) 0%, #fff 10%);
@@ -528,7 +528,7 @@ export default {
   display: block;
   position: absolute;
   top: 0;
-  width: 59%;
+  width: 57%;
   height: 40px;
   z-index: 1;
   background-image: linear-gradient(to right, rgba(255,255,255,0) 0%, #fff 10%);

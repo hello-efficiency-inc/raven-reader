@@ -162,6 +162,16 @@ export default {
       this.$bvModal.show('editCategory')
     })
 
+    bus.$on('edit-feed', (arg) => {
+      this.openEditModal(arg.feed)
+      this.$bvModal.show('editFeed')
+    })
+
+    bus.$on('edit-category-item', (arg) => {
+      this.openCategoryEditModal(arg)
+      this.$bvModal.show('editCategory')
+    })
+
     window.api.ipcRendReceive('category-delete', (arg) => {
       const feeds = this.$store.state.Feed.feeds.filter((item) => {
         return item.category === arg.category.title

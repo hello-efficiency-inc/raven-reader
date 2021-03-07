@@ -172,10 +172,8 @@ export default {
         if (this.feed_url) {
           try {
             const isXML = await this.isContentXML(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }))
-            console.log(isXML)
             window.rss.findRss(this.feed_url).then(
               res => {
-                console.log(res)
                 this.loading = false
                 res.feedUrls.map(item => {
                   item.title = unescape(item.title)

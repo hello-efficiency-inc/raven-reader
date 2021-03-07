@@ -18,6 +18,8 @@ import PreferenceWindow from './PreferenceWindowModal'
 import SelfHostedGreader from './SelfHostedGreader'
 import Feedbin from './Feedbin'
 import Inoreader from './Inoreader'
+import ManageCategories from './ManageCategories'
+import ManageFeeds from './ManageFeeds'
 
 export default {
   registerComponents () {
@@ -40,5 +42,7 @@ export default {
     Vue.component('SelfHostedGreader', SelfHostedGreader)
     Vue.component('Feedbin', Feedbin)
     Vue.component('Inoreader', Inoreader)
+    Vue.component('ManageCategories', ManageCategories)
+    Vue.component('ManageFeeds', ManageFeeds)
   }
 }
