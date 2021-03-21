@@ -40,7 +40,6 @@
     "feather-icons": "^4.28.0",
     "fuse.js": "^6.4.1",
     "global-agent": "^2.1.12",
-    "http2": "^3.3.7",
     "i18next": "^19.8.7",
     "i18next-browser-languagedetector": "^6.0.1",
     "i18next-electron-fs-backend": "^1.3.5",
@@ -97,6 +96,8 @@
   },
   "resolutions": {
     "lovefield/js-yaml": "3.13.1",
-    "electron-icon-builder/**/yargs-parser": "13.1.2"
+    "electron-icon-builder/**/yargs-parser": "13.1.2",
+    "@postlight/mercury-parser/jquery": "3.5.0",
+    "vue-cli-plugin-electron-builder/**/minimist": "0.2.1"
   }
 }
