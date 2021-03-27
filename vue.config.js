@@ -70,6 +70,7 @@ module.exports = {
           oneClick: false
         },
         portable: {
+          // eslint-disable-next-line no-template-curly-in-string
           artifactName: 'Raven-${version}_portable.${ext}'
         },
         linux: {
