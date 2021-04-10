@@ -78,7 +78,9 @@ async function createWindow () {
   })
 
   // Maximize window on startup when not in development
-  if (!isDevelopment) win.maximize()
+  if (!isDevelopment && win !== null) {
+    win.maximize()
+  }
 
   i18nextBackend.mainBindings(ipcMain, win, fs)
 
@@ -99,10 +101,6 @@ async function createWindow () {
 
   // Load the index.html when not in development
   win.loadURL(winUrl)
-
-  win.on('closed', () => {
-    win = null
-  })
 
   const proxy = store.get('settings.proxy') ? store.get('settings.proxy') : null
   let proxyRules = 'direct://'
@@ -316,7 +314,7 @@ ipcMain.on('online-status-changed', (event, status) => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (win === null) {
+  if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
 })
@@ -355,7 +353,9 @@ app.whenReady().then(() => {
 app.on('before-quit', () => {
   app.isQuiting = true
   globalShortcut.unregisterAll()
-  tray.destroy()
+  if (typeof tray !== typeof undefined) {
+    tray.destroy()
+  }
 })
 
 // Exit cleanly on request from parent process in development mode.

@@ -26,13 +26,13 @@
       </div>
       <h6><strong>{{ article.articles.title }}</strong></h6>
       <img
-        v-if="article.articles.cover"
+        v-if="contentPreview && article.articles.cover"
         :src="article.articles.cover"
         class="img-fluid ratio-16x9 my-2"
         :alt="article.articles.title"
         loading="lazy"
       >
-      <p>{{ article.articles.contentSnippet }}</p>
+      <p v-if="contentPreview">{{ article.articles.contentSnippet }}</p>
       <p
         v-if="article.articles.favourite"
         class="text-right mb-0"
@@ -64,6 +64,11 @@ export default {
     article: {
       type: Object,
       default: null
+    }
+  },
+  computed: {
+    contentPreview () {
+      return this.$store.state.Setting.contentPreview
     }
   },
   methods: {

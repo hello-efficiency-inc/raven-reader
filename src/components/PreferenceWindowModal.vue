@@ -100,6 +100,18 @@
                 @input="saveFullArticlePreferences"
               />
             </b-form-group>
+            <b-form-group :label="getTranslatedLabel('Content preview')">
+              <b-form-radio-group
+                id="contentPreview"
+                v-model="contentPreview"
+                buttons
+                button-variant="outline-primary"
+                size="sm"
+                :options="options"
+                name="contentPreview"
+                @input="saveContentPreviewPreferences"
+              />
+            </b-form-group>
             <b-form-group :label="getTranslatedLabel('Delete all feed, category and article data')">
               <b-button
                 variant="danger"
@@ -369,6 +381,7 @@ export default {
       disableImages: 'off',
       recentlyRead: 'off',
       fullArticleDefault: 'off',
+      contentPreview: 'on',
       keepread_options: [
         { value: 1, text: '1 week' },
         { value: 2, text: '2 weeks' },
@@ -435,6 +448,7 @@ export default {
       this.disableImages = this.$store.state.Setting.disableImages ? 'on' : 'off'
       this.recentlyRead = this.$store.state.Setting.recentlyReadPreference ? 'on' : 'off'
       this.fullArticleDefault = this.$store.state.Setting.fullArticleDefault ? 'on' : 'off'
+      this.contentPreview = this.$store.state.Setting.contentPreview ? 'on' : 'off'
       if (this.$store.state.Setting.proxy) {
         this.proxy.http = this.$store.state.Setting.proxy.http
         this.proxy.https = this.$store.state.Setting.proxy.https
@@ -496,6 +510,17 @@ export default {
     recentlyReadPreferences (preference) {
       this.$store.dispatch('setRecentlyReadPreference', preference)
       this.$toasted.show('Recently Read preference changed.', {
+        theme: 'outline',
+        position: 'top-center',
+        duration: 3000
+      })
+      this.hideModal()
+    },
+    saveContentPreviewPreferences (preference) {
+      this.$store.dispatch('setContentPreviewPreference', preference).then(() => {
+        this.$store.dispatch('loadArticles')
+      })
+      this.$toasted.show('Content Preview preference changed.', {
         theme: 'outline',
         position: 'top-center',
         duration: 3000

@@ -37,6 +37,7 @@ const state = {
   disableImages: false,
   fullArticleDefault: false,
   recentlyReadPreference: false,
+  contentPreview: false,
   offline: false,
   proxy: {
     http: '',
@@ -78,6 +79,9 @@ const mutations = {
   },
   SET_THEME_OPTION (state, data) {
     state.darkMode = data
+  },
+  SET_CONTENT_PREVIEW_PREFERENCE (state, data) {
+    state.contentPreview = data
   },
   SET_FULL_ARTICLE_PREFERENCE (state, data) {
     state.fullArticleDefault = data
@@ -241,6 +245,10 @@ const actions = {
   setRecentlyReadPreference ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'settings.recentlyReadPreference', data === 'on')
     commit('SET_RECENTLY_READ_PREFERENCE', data === 'on')
+  },
+  setContentPreviewPreference ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'settings.contentPreviewPreference', data === 'on')
+    commit('SET_CONTENT_PREVIEW_PREFERENCE', data === 'on')
   },
   setFullArticlePreference ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'settings.fullArticlePreference', data === 'on')

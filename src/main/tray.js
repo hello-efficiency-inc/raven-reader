@@ -54,7 +54,9 @@ export default function createTray (mainWindow, i18nextMain) {
     tray.setContextMenu(contextMenu)
   }
   tray.on('click', () => {
-    mainWindow.show()
+    if (mainWindow !== null) {
+      mainWindow.show()
+    }
     if (process.platform === 'darwin' && !app.dock.isVisible()) {
       app.dock.show()
     }
