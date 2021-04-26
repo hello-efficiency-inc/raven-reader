@@ -153,7 +153,12 @@ export default {
         const getGroup = feedGroups.filter((feedGroup) => {
           return feedGroup.feed_ids.includes(item.id)
         })
-        const category = groups.filter(item => item.id === getGroup[0].group_id)
+        const category = groups.filter((group) => {
+          if (getGroup.length > 0) {
+            return group.id === getGroup[0].group_id
+          }
+          return false
+        })
         return {
           id: uuidstring(item.url),
           uuid: uuidstring(item.url),
@@ -162,7 +167,7 @@ export default {
           title: item.title,
           favicon: `https://www.google.com/s2/favicons?domain=${item.site_url}`,
           description: null,
-          category: category[0].title || null,
+          category: category.length > 0 ? category[0].title : null,
           source: 'fever',
           source_id: item.id
         }
@@ -208,9 +213,9 @@ export default {
         const currentArticles = db.fetchServicesArticles('fever')
         const articles = db.addArticles(transformedEntries.map(item => database.articleTable.createRow(item)))
         currentArticles.then((res) => {
-          const markRead = res.filter(item => !unreadList.split(',').includes(item.articles.source_id)).map(item => item.articles.uuid)
-          const markUnFavourite = res.filter(item => !starredList.split(',').includes(item.articles.source_id)).map(item => item.articles.uuid)
-          const markFavourite = res.filter(item => starredList.split(',').includes(item.articles.source_id)).map(item => item.articles.uuid)
+          const markRead = res.filter(item => !unreadList.split(',').includes(item.articles.source_id.toString())).map(item => item.articles.uuid)
+          const markUnFavourite = res.filter(item => !starredList.split(',').includes(item.articles.source_id.toString())).map(item => item.articles.uuid)
+          const markFavourite = res.filter(item => starredList.split(',').includes(item.articles.source_id.toString())).map(item => item.articles.uuid)
           db.markAllRead(markRead)
           db.markBulkFavourite(markFavourite)
           db.markBulkUnFavourite(markUnFavourite)

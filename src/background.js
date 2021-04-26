@@ -15,7 +15,6 @@ import {
   createCategoryMenu,
   createArticleItemMenu
 } from './main/menu'
-import createTray from './main/tray'
 import axios from 'axios'
 import os from 'os'
 import Store from 'electron-store'
@@ -45,7 +44,6 @@ const store = new Store({
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
-let tray
 let menu
 let winUrl
 let consumerKey
@@ -70,10 +68,9 @@ async function createWindow () {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       webviewTag: true,
       webSecurity: false,
-      contextIsolation: true,
-      worldSafeExecuteJavaScript: true,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      disableBlinkFeatures: 'Auxclick'
     }
   })
 
@@ -126,27 +123,12 @@ async function createWindow () {
     win = null
   })
 
-  win.on('close', (event) => {
-    if (app.isQuiting) {
-      win = null
-    } else {
-      event.preventDefault()
-      win.hide()
-      if (process.platform === 'darwin') {
-        app.dock.hide()
-      }
-      return false
-    }
-  })
-
   if (process.platform !== 'darwin') {
     globalShortcut.register('Alt+M', () => {
       const visible = win.isMenuBarVisible()
       win.setMenuBarVisibility(visible)
     })
   }
-
-  app.commandLine.appendSwitch('lang', app.getLocale())
 
   // Set up necessary bindings to update the menu items
   // based on the current language selected
@@ -155,9 +137,10 @@ async function createWindow () {
     i18nextMainBackend.off('loaded')
   })
 
+  menu = createMenu(win, i18nextMainBackend)
   i18nextMainBackend.on('languageChanged', (lng) => {
+    log.info('Language changed')
     menu = createMenu(win, i18nextMainBackend)
-    tray = createTray(win, i18nextMainBackend)
   })
 
   if (store.get('settings.start_in_trays')) { win.hide() }
@@ -271,6 +254,7 @@ if (!primaryInstance) {
   })
 }
 
+app.commandLine.appendSwitch('lang', app.getLocale())
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
 
 // Quit when all windows are closed.
@@ -353,9 +337,6 @@ app.whenReady().then(() => {
 app.on('before-quit', () => {
   app.isQuiting = true
   globalShortcut.unregisterAll()
-  if (typeof tray !== typeof undefined) {
-    tray.destroy()
-  }
 })
 
 // Exit cleanly on request from parent process in development mode.
