@@ -38,6 +38,12 @@ To use Homebrew-Cask you just need to have [Homebrew](https://brew.sh/) installe
 brew install --cask raven-reader
 ```
 
+## Install via Chocolatey (Windows) (Thanks to [@A-d-r-i](https://github.com/A-d-r-i))
+
+```
+choco install raven
+```
+
 
 ![darkscreenshot](/darkscreenshot.png)
 ![video](/video.png)
