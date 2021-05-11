@@ -1,6 +1,10 @@
 import RssParser from 'rss-parser'
 import rssFinder from 'rss-finder'
 import normalizeUrl from 'normalize-url'
+import {
+  validate
+} from 'fast-xml-parser'
+import fetch from 'node-fetch'
 
 const parser = new RssParser({
   requestOptions: {
@@ -21,6 +25,17 @@ const parser = new RssParser({
 })
 
 export default {
+  async checkXml (link) {
+    const content = await fetch(link, {
+      cors: 'no-cors',
+      referrer: '',
+      credentials: 'omit',
+      redirect: 'follow'
+    })
+    const data = await content.text()
+    const validateXml = validate(data)
+    return validateXml === true
+  },
   async parseRssUrl (url) {
     return await parser.parseURL(url)
   },

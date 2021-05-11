@@ -116,7 +116,6 @@
 <script>
 import normalizeUrl from 'normalize-url'
 import unescape from '../services/unescape'
-import { validate } from 'fast-xml-parser'
 import helper from '../services/helpers'
 
 export default {
@@ -156,22 +155,13 @@ export default {
     addCategory () {
       this.showAddCat = !this.showAddCat
     },
-    async isContentXML (link) {
-      const content = await fetch(link, {
-        mode: 'no-cors',
-        redirect: 'follow'
-      })
-      const data = await content.text()
-      const validateXml = validate(data)
-      return validateXml === true
-    },
     async fetchFeed () {
       const self = this
       this.loading = true
       if (!this.$store.state.Setting.offline) {
         if (this.feed_url) {
           try {
-            const isXML = await this.isContentXML(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }))
+            const isXML = await window.rss.checkXml(normalizeUrl(this.feed_url, { stripWWW: false, removeTrailingSlash: false }))
             window.rss.findRss(this.feed_url).then(
               res => {
                 this.loading = false
