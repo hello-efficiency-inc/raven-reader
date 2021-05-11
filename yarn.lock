@@ -2941,10 +2941,15 @@ bootstrap-vue@^2.16.0:
     portal-vue "^2.1.7"
     vue-functional-data-merge "^3.1.0"
 
-"bootstrap@>=4.5.3 <5.0.0", bootstrap@^4.5.3:
+"bootstrap@>=4.5.3 <5.0.0":
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.0.tgz#97b9f29ac98f98dfa43bf7468262d84392552fd7"
   integrity sha512-Io55IuQY3kydzHtbGvQya3H+KorS/M9rSNyfCGCg9WZ4pyT/lCxIlpJgG1GXW/PswzC84Tr2fBYi+7+jFVQQBw==
+
+bootstrap@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.0.0.tgz#97635ac0e0d6cb466700ebf0fd266bfabf352ed2"
+  integrity sha512-tmhPET9B9qCl8dCofvHeiIhi49iBt0EehmIsziZib65k1erBW1rHhj2s/2JsuQh5Pq+xz2E9bEbzp9B7xHG+VA==
 
 boxen@^5.0.0:
   version "5.0.1"
@@ -4832,14 +4837,14 @@ electron-builder@22.10.4, electron-builder@^22.2.0:
     update-notifier "^5.0.1"
     yargs "^16.2.0"
 
-electron-context-menu@^2.2.0:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/electron-context-menu/-/electron-context-menu-2.5.2.tgz#7f2383f011d0d53f282300e0d80b44e2f64c16a7"
-  integrity sha512-1cEQR6fA9ktFsRBc+eXPwvrOgAPytUD7rUV4iBAA5zTrLAPKokJ23xeMjcK2fjrDPrlFRBxcLz0KP+GUhMrSCQ==
+electron-context-menu@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/electron-context-menu/-/electron-context-menu-3.0.0.tgz#cdf6824cf22711609ea6c267dc3717fa24976bac"
+  integrity sha512-dF0INSIIpcwofaKAXtdSKkQl08s9j0SMF+Nsi6jGBam6kfx97cIOmJLUHYlBW56DQo05umts2pRIfbcDPHNh9g==
   dependencies:
     cli-truncate "^2.1.0"
-    electron-dl "^3.1.0"
-    electron-is-dev "^1.2.0"
+    electron-dl "^3.2.1"
+    electron-is-dev "^2.0.0"
 
 electron-devtools-installer@^3.1.0:
   version "3.2.0"
@@ -4851,7 +4856,7 @@ electron-devtools-installer@^3.1.0:
     tslib "^2.1.0"
     unzip-crx-3 "^0.2.0"
 
-electron-dl@^3.1.0:
+electron-dl@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/electron-dl/-/electron-dl-3.2.1.tgz#244a1316c663691f70e8aa4515cd1a401b4b5690"
   integrity sha512-k5DFjocJlXbrjshO1zeWe/Gz7HkGwCgnehHPemiyzN2B/LfLlnbIX7sCj5F+huTwZ2l+nQehTI4IR37xvCn6FQ==
@@ -4869,10 +4874,15 @@ electron-icon-builder@^2.0.1:
     icon-gen "^2.0.0"
     jimp "^0.16.1"
 
-electron-is-dev@^1.1.0, electron-is-dev@^1.2.0:
+electron-is-dev@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-1.2.0.tgz#2e5cea0a1b3ccf1c86f577cee77363ef55deb05e"
   integrity sha512-R1oD5gMBPS7PVU8gJwH6CtT0e6VSoD0+SzSnYpNm+dBkcijgA+K7VAMHDfnRq/lkKPZArpzplTW6jfiMYosdzw==
+
+electron-is-dev@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-2.0.0.tgz#833487a069b8dad21425c67a19847d9064ab19bd"
+  integrity sha512-3X99K852Yoqu9AcW50qz3ibYBWY79/pBhlMCab8ToEWS48R0T9tyxRiQhwylE7zQdXrMnx2JKqUJyMPmt5FBqA==
 
 electron-log@^4.2.2:
   version "4.3.5"
@@ -4935,10 +4945,10 @@ electron-updater@^4.3.4:
     lodash.isequal "^4.5.0"
     semver "^7.3.4"
 
-electron-util@^0.15.1:
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.15.1.tgz#caf77b50fbaaa03fba2dc3ffab70c774165c47e7"
-  integrity sha512-Kuz1e+WH/QRUuVcbhY3BiE9UYRFMi4y76YId0AyQU1mBjWb6HcRBCq4gKhILXuLXSD3IWGvYhhPpeJSusWr0zw==
+electron-util@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/electron-util/-/electron-util-0.16.0.tgz#00ef60b23aa5a47b454c07fb353bc4d203d3ceb1"
+  integrity sha512-r13cauuQ8p8d++ZVdeMDtQ2VlpblJBcpKnK7sf2tGnN8CCWyRGYerS2K5f3FiblFIQkyS0rE4tFVG0IOEc2F3A==
   dependencies:
     electron-is-dev "^1.1.0"
     new-github-issue-url "^0.2.1"
