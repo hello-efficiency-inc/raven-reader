@@ -10,7 +10,7 @@
       class="list-group-item list-group-item-action flex-column align-items-start"
       @click="handleArticle(article.articles.id)"
     >
-      <div class="d-flex flex-column w-100">
+      <div class="d-flex flex-row justify-content-between w-100">
         <p class="mb-1">
           <small><img
             v-if="article.feeds.favicon"
@@ -20,8 +20,13 @@
             class="mr-2"
           > {{ article.feeds.title }}</small>
         </p>
-        <p class="mb-2">
-          <small>{{ formatDate(article.articles) }}</small>
+        <p
+          class="mb-2"
+        >
+          <small><time
+            :title="formatString(article.articles)"
+            :datetime="formatString(article.articles)"
+          >{{ formatDate(article.articles) }}</time></small>
         </p>
       </div>
       <h6><strong>{{ article.articles.title }}</strong></h6>
@@ -49,6 +54,7 @@
 <script>
 import bus from '../services/bus'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import advanced from 'dayjs/plugin/advancedFormat'
 import timezone from 'dayjs/plugin/timezone'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -58,6 +64,10 @@ dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(advanced)
 dayjs.extend(localizedFormat)
+dayjs.extend(utc)
+
+const tz = dayjs.tz.guess()
+dayjs.tz.setDefault(tz)
 
 export default {
   props: {
@@ -72,13 +82,16 @@ export default {
     }
   },
   methods: {
+    formatString (article) {
+      return dayjs(article.pubDate).tz(tz).format('LLLL')
+    },
     formatDate (article) {
       let formatDate
       if (article.source === 'inoreader' || article.source === 'greader') {
         formatDate = dayjs.unix(article.pubDate).format('LLL')
       } else {
         formatDate = dayjs(article.pubDate)
-          .format('LLL')
+          .fromNow()
       }
       return formatDate
     },
