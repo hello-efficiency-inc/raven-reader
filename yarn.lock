@@ -4939,9 +4939,9 @@ electron-builder@^22.10.5:
     yargs "^16.2.0"
 
 electron-context-menu@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/electron-context-menu/-/electron-context-menu-3.0.0.tgz#cdf6824cf22711609ea6c267dc3717fa24976bac"
-  integrity sha512-dF0INSIIpcwofaKAXtdSKkQl08s9j0SMF+Nsi6jGBam6kfx97cIOmJLUHYlBW56DQo05umts2pRIfbcDPHNh9g==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/electron-context-menu/-/electron-context-menu-3.1.0.tgz#955a6317ee3a3ec61416f7e3ec7c919dc30b0a4e"
+  integrity sha512-U7Q7d0ovfA8UOt7RCYsJkQ7l6qKMKDg3W9kvL3gEecGfHVDcjybs695L5oTS7d+kv7C2qfADo/EY06Cl4zAh9A==
   dependencies:
     cli-truncate "^2.1.0"
     electron-dl "^3.2.1"
@@ -10758,9 +10758,9 @@ sass-loader@^10.0.5:
     semver "^7.3.2"
 
 sass@^1.26.5:
-  version "1.32.13"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.32.13.tgz#8d29c849e625a415bce71609c7cf95e15f74ed00"
-  integrity sha512-dEgI9nShraqP7cXQH+lEXVf73WOPCse0QlFzSD8k+1TcOxCMwVXfQlr0jtoluZysQOyJGnfr21dLvYKDJq8HkA==
+  version "1.33.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.33.0.tgz#a26186902ee56585b9db6751fd151237f561dbc2"
+  integrity sha512-9v0MUXnSi62FtfjqcwZ+b8B9FIxdwFEb3FPUkjEPXWd0b5KcnPGSp2XF9WrzcH1ZxedfgJVTdA3A1j4eEj53xg==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
 

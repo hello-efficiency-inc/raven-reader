@@ -78,7 +78,7 @@
             >
               <a
                 href=""
-                class="nav-link ml-1"
+                class="nav-link ml-3"
                 @click="navigateFeed(categoryfeed.id)"
               >
                 <img

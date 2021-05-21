@@ -83,12 +83,18 @@ export default {
   },
   methods: {
     formatString (article) {
-      return dayjs(article.pubDate).tz(tz).format('LLLL')
+      if (article.source === 'inoreader' || article.source === 'greader' || article.source === 'fever') {
+        return dayjs.unix(article.publishUnix).format('LLLL')
+      } else {
+        return dayjs(article.pubDate).tz(tz).format('LLLL')
+      }
     },
     formatDate (article) {
       let formatDate
-      if (article.source === 'inoreader' || article.source === 'greader') {
-        formatDate = dayjs.unix(article.pubDate).format('LLL')
+      if (article.source === 'inoreader' || article.source === 'greader' || article.source === 'fever') {
+        formatDate = dayjs.unix(article.publishUnix).fromNow()
+      } else if (article.source === 'fever') {
+        formatDate = dayjs.unix(article.pubDate).fromNow()
       } else {
         formatDate = dayjs(article.pubDate)
           .fromNow()

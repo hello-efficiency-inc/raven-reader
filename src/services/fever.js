@@ -197,7 +197,7 @@ export default {
             favourite: Boolean(item.is_saved),
             read: Boolean(item.is_read),
             keep_read: null,
-            pubDate: item.published,
+            pubDate: null,
             offline: false,
             media: null,
             podcast: false,
