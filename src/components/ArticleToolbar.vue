@@ -220,9 +220,7 @@
 <script>
 import bus from '../services/bus'
 import cheerio from '../mixins/cheerio'
-import { parseArticle } from '../parsers/article'
 import cacheService from '../services/cacheArticle'
-import axios from 'axios'
 import vClickOutside from 'v-click-outside'
 
 const markTypes = {
@@ -377,28 +375,19 @@ export default {
     },
     saveToInstapaper (url) {
       const creds = JSON.parse(this.$store.state.Setting.instapaper)
-      axios.post(`https://www.instapaper.com/api/add?url=${url}`, {
-      }, {
-        auth: {
-          username: creds.username,
-          password: creds.password
-        }
-      }).then(() => {
-        this.$toasted.show('Saved to Instapaper.', {
-          theme: 'outline',
-          position: 'top-center',
-          duration: 3000
+      window.instapaper.save(url, creds.username, creds.password)
+        .then(() => {
+          this.$toasted.show('Saved to Instapaper.', {
+            theme: 'outline',
+            position: 'top-center',
+            duration: 3000
+          })
+          this.$refs.socialshare.hide(true)
         })
-        this.$refs.socialshare.hide(true)
-      })
     },
     saveToPocket (url) {
       const credentials = JSON.parse(this.$store.state.Setting.pocket)
-      axios.post('https://getpocket.com/v3/add', {
-        url: url,
-        access_token: credentials.access_token,
-        consumer_key: credentials.consumer_key
-      }).then((data) => {
+      window.pocket.save(url, credentials).then((data) => {
         this.$toasted.show('Saved to pocket.', {
           theme: 'outline',
           position: 'top-center',
@@ -444,7 +433,7 @@ export default {
       return true
     },
     async loadFullArticle () {
-      const fullArticle = await parseArticle(this.articleItem.link)
+      const fullArticle = await window.mercury.parseArticle(this.articleItem.link)
       if (!fullArticle.error) {
         this.articleItem.fullContent = this.cleanupContent(fullArticle.content)
         this.$emit('load-full-content', this.articleItem)

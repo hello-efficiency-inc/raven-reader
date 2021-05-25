@@ -23,9 +23,13 @@ import contextMenu from 'electron-context-menu'
 import { autoUpdater } from 'electron-updater'
 import fs from 'fs'
 import path from 'path'
-import { URL } from 'url'
+import { URL, URLSearchParams } from 'url'
 import dayjs from 'dayjs'
 import i18nextMainBackend from './i18nmain.config'
+import {
+  parseArticle
+} from './main/article'
+const FormData = require('form-data')
 const i18nextBackend = require('i18next-electron-fs-backend')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -67,7 +71,6 @@ async function createWindow () {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       webviewTag: true,
-      webSecurity: false,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, 'preload.js'),
       disableBlinkFeatures: 'Auxclick'
@@ -494,6 +497,87 @@ ipcMain.handle('context-menu', (event, arg) => {
   if (arg.type === 'article') {
     createArticleItemMenu(arg.data, win, i18nextMainBackend)
   }
+})
+
+ipcMain.handle('parse-article', async (event, url) => {
+  return await parseArticle(url)
+})
+
+ipcMain.handle('instapaper-login', async (event, data) => {
+  const result = await axios.post('https://www.instapaper.com/api/authenticate', {}, {
+    auth: data
+  })
+  return result.data
+})
+
+ipcMain.handle('instapaper-save', async (event, data) => {
+  const result = await axios.post(`https://www.instapaper.com/api/add?url=${data.url}`, {}, {
+    auth: {
+      username: data.username,
+      password: data.password
+    }
+  })
+  return result.data
+})
+
+ipcMain.handle('save-pocket', async (event, data) => {
+  const result = await axios.post('https://getpocket.com/v3/add', {
+    url: data.url,
+    access_token: data.credentials.access_token,
+    consumer_key: data.credentials.consumer_key
+  })
+  return result.data
+})
+
+ipcMain.handle('fever-login', async (event, data) => {
+  const formData = new FormData()
+  formData.append('api_key', data.formData)
+  const config = {
+    url: `${data.endpoint}?api`,
+    method: 'post',
+    data: formData,
+    headers: {
+      ...formData.getHeaders()
+    }
+  }
+  const result = await axios(config)
+  return result.data
+})
+
+ipcMain.handle('fever-endpoint-execute', async (event, data) => {
+  const formData = new FormData()
+  formData.append('api_key', data.formData)
+  const result = await axios.post(data.endpoint, formData, {
+    headers: {
+      ...formData.getHeaders()
+    }
+  })
+  return result.data
+})
+
+ipcMain.handle('google-login', async (event, data) => {
+  const params = new URLSearchParams(data.formData)
+  const result = await axios.post(data.endpoint, params.toString())
+  console.log(result.data)
+  return result.data
+})
+
+ipcMain.handle('google-endpoint-fetch', async (event, data) => {
+  const result = await axios.get(data.endpoint, {
+    headers: {
+      Authorization: `GoogleLogin auth=${data.formData.auth}`
+    }
+  })
+  return result.data
+})
+
+ipcMain.handle('google-endpoint-execute', async (event, data) => {
+  const result = await axios.post(data.endpoint, data.formData.data, {
+    headers: {
+      Authorization: `GoogleLogin auth=${data.formData.auth}`
+    }
+  })
+  return result.data
 })
 
 powerMonitor.on('resume', () => {

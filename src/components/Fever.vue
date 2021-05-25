@@ -88,7 +88,6 @@
 </template>
 <script>
 import md5 from 'md5'
-import axios from 'axios'
 import db from '../services/db'
 import fever from '../services/fever'
 
@@ -144,14 +143,13 @@ export default {
     },
     loginFever () {
       this.fever_error = false
-      const formData = new FormData()
       const hash = md5(`${this.fever.username}:${this.fever.password}`)
-      formData.append('api_key', hash)
       const data = JSON.parse(JSON.stringify(this.fever))
       data.hash = hash
-      axios.post(`${this.fever.endpoint}?api`, formData)
+      window.fever.login(this.fever.endpoint, hash)
         .then(async (res) => {
-          if (!res.data.auth) {
+          console.log(res)
+          if (!res.auth) {
             this.fever_error = true
           } else {
             this.$store.dispatch('setFever', data).then(() => {
