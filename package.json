@@ -51,7 +51,7 @@
     "lovefield": "^2.1.12",
     "md5": "^2.3.0",
     "node-schedule": "^2.0.0",
-    "normalize-url": "^6.0.0",
+    "normalize-url": "^6.0.1",
     "opml-generator": "^1.1.1",
     "os-locale": "^5.0.0",
     "plyr": "^3.6.2",
