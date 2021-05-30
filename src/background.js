@@ -29,6 +29,7 @@ import i18nextMainBackend from './i18nmain.config'
 import {
   parseArticle
 } from './main/article'
+const btoa = require('btoa')
 const FormData = require('form-data')
 const i18nextBackend = require('i18next-electron-fs-backend')
 
@@ -523,8 +524,8 @@ ipcMain.handle('instapaper-save', async (event, data) => {
 ipcMain.handle('save-pocket', async (event, data) => {
   const result = await axios.post('https://getpocket.com/v3/add', {
     url: data.url,
-    access_token: data.credentials.access_token,
-    consumer_key: data.credentials.consumer_key
+    access_token: data.credential.access_token,
+    consumer_key: data.credential.consumer_key
   })
   return result.data
 })
@@ -558,7 +559,24 @@ ipcMain.handle('fever-endpoint-execute', async (event, data) => {
 ipcMain.handle('google-login', async (event, data) => {
   const params = new URLSearchParams(data.formData)
   const result = await axios.post(data.endpoint, params.toString())
-  console.log(result.data)
+  return result.data
+})
+
+ipcMain.handle('inoreader-endpoint-fetch', async (event, data) => {
+  const result = await axios.get(data.endpoint, {
+    headers: {
+      Authorization: `Bearer ${data.access_token}`
+    }
+  })
+  return result.data
+})
+
+ipcMain.handle('inoreader-endpoint-execute', async (event, data) => {
+  const result = await axios.post(data.endpoint, data.formData, {
+    headers: {
+      Authorization: `Bearer ${data.access_token}`
+    }
+  })
   return result.data
 })
 
@@ -575,6 +593,36 @@ ipcMain.handle('google-endpoint-execute', async (event, data) => {
   const result = await axios.post(data.endpoint, data.formData.data, {
     headers: {
       Authorization: `GoogleLogin auth=${data.formData.auth}`
+    }
+  })
+  return result.data
+})
+
+ipcMain.handle('feedbin-login', async (event, data) => {
+  const result = await axios.get(data.endpoint, {
+    auth: {
+      username: data.creds.email,
+      password: data.creds.password
+    }
+  })
+  return result.data
+})
+
+ipcMain.handle('feedbin-endpoint-fetch', async (event, data) => {
+  const result = await axios.get(data.endpoint, {
+    auth: {
+      username: data.creds.email,
+      password: data.creds.password
+    }
+  })
+  return result.data
+})
+
+ipcMain.handle('feedbin-endpoint-execute', async (event, data) => {
+  const result = await axios.post(data.endpoint, data.formData, {
+    auth: {
+      username: data.creds.email,
+      password: data.creds.password
     }
   })
   return result.data

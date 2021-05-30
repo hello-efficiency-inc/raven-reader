@@ -59,12 +59,10 @@ async function refreshToken (credsData) {
 
 export default {
   async getUserInfo (credsData) {
-    const data = await axios.get('https://www.inoreader.com/reader/api/0/user-info', {
-      headers: {
-        Authorization: `Bearer ${credsData.access_token}`
-      }
+    const data = await window.inoreader.fetch('https://www.inoreader.com/reader/api/0/user-info', {
+      access_token: credsData.access_token
     })
-    return data.data
+    return data
   },
   checkToken (credsData) {
     const currentTime = dayjs().valueOf()
@@ -72,12 +70,10 @@ export default {
   },
   async getSubscriptions (credsData) {
     try {
-      const subscriptions = await axios.get('https://www.inoreader.com/reader/api/0/subscription/list', {
-        headers: {
-          Authorization: `Bearer ${credsData.access_token}`
-        }
+      const subscriptions = await window.inoreader.fetch('https://www.inoreader.com/reader/api/0/subscription/list', {
+        access_token: credsData.access_token
       })
-      return subscriptions.data.subscriptions
+      return subscriptions.subscriptions
     } catch (e) {
       window.log.info(e)
     }
@@ -93,17 +89,15 @@ export default {
         } else {
           apiUrl = `https://www.inoreader.com/reader/api/0/stream/items/ids?output=json&s=user/-/state/com.google/reading-list&xt=user/-/state/com.google/read&n=1000&c=${continuation}`
         }
-        const data = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${credsData.access_token}`
-          }
+        const data = await window.inoreader.fetch(apiUrl, {
+          access_token: credsData.access_token
         })
-        if (data.data.itemRefs) {
-          ids.push(...data.data.itemRefs.map(item => {
+        if (data.itemRefs) {
+          ids.push(...data.itemRefs.map(item => {
             return item.id
           }))
         }
-        continuation = typeof data.data.continuation !== 'undefined' ? data.data.continuation : null
+        continuation = typeof data.continuation !== 'undefined' ? data.continuation : null
       }
       while (continuation !== null)
       return ids
@@ -122,17 +116,15 @@ export default {
         } else {
           apiUrl = `https://www.inoreader.com/reader/api/0/stream/items/ids?output=json&s=user/-/state/com.google/starred&n=1000&c=${continuation}`
         }
-        const data = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${credsData.access_token}`
-          }
+        const data = await window.inoreader.fetch(apiUrl, {
+          access_token: credsData.access_token
         })
-        if (data.data.itemRefs) {
-          ids.push(...data.data.itemRefs.map(item => {
+        if (data.itemRefs) {
+          ids.push(...data.itemRefs.map(item => {
             return item.id
           }))
         }
-        continuation = typeof data.data.continuation !== 'undefined' ? data.data.continuation : null
+        continuation = typeof data.continuation !== 'undefined' ? data.continuation : null
       }
       while (continuation !== null)
       return ids
@@ -149,12 +141,8 @@ export default {
         for (let k = 0; k < chunks[i].length; k++) {
           postData.append('i', chunks[i][k])
         }
-        const data = await axios.post('https://www.inoreader.com/reader/api/0/stream/items/contents?output=json', postData, {
-          headers: {
-            Authorization: `Bearer ${credsData.access_token}`
-          }
-        })
-        entries.push(...data.data.items)
+        const data = await window.inoreader.post('https://www.inoreader.com/reader/api/0/stream/items/contents?output=json', postData.toString(), credsData)
+        entries.push(...data.items)
       }
       return entries
     } catch (e) {
@@ -186,11 +174,7 @@ export default {
         postData.append('r', TAGS.FAVOURITE_TAG)
         break
     }
-    return await axios.post('https://www.inoreader.com/reader/api/0/edit-tag', postData, {
-      headers: {
-        Authorization: `Bearer ${tokenData.access_token}`
-      }
-    })
+    return await window.inoreader.post('https://www.inoreader.com/reader/api/0/edit-tag', postData.toString(), tokenData)
   },
   async syncTags (categories) {
     const currentCategories = await db.fetchCategoriesBySource('inoreader')

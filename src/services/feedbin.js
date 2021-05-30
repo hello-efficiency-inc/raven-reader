@@ -1,4 +1,3 @@
-import axios from 'axios'
 import uuidstring from 'uuid-by-string'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
@@ -23,48 +22,44 @@ function getCoverImage (postContent) {
 export default {
   async getSubscriptions (feedbinCreds) {
     try {
-      const subscriptions = await axios.get(`${feedbinCreds.endpoint}subscriptions.json?mode=extended`, {
-        auth: {
-          username: feedbinCreds.email,
-          password: feedbinCreds.password
-        }
-      })
-      return subscriptions.data
+      const subscriptions = await window.feedbin.fetch(`${feedbinCreds.endpoint}subscriptions.json?mode=extended`, feedbinCreds)
+      return subscriptions
     } catch (e) {
       window.log.info(e)
     }
   },
   async getEntries (feedbinCreds, ids) {
     const number = Number.MAX_SAFE_INTEGER
+    const perChunk = 100
+    const entries = []
+    const chunks = ids.reduce((resultArray, item, index) => {
+      const chunkIndex = Math.floor(index / perChunk)
+
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [] // start a new chunk
+      }
+
+      resultArray[chunkIndex].push(item)
+
+      return resultArray
+    }, [])
     try {
-      const entries = await axios.get(`${feedbinCreds.endpoint}entries.json?ids=${ids.join()}&per_page=${number}&mode=extended`, {
-        auth: {
-          username: feedbinCreds.email,
-          password: feedbinCreds.password
-        }
-      })
-      return entries.data
+      for (let i = 0; i < chunks.length; i++) {
+        const data = await window.feedbin.fetch(`${feedbinCreds.endpoint}entries.json?ids=${chunks[i].join()}&per_page=${number}&mode=extended`, feedbinCreds)
+        entries.push(...data)
+      }
+      return entries
     } catch (e) {
       window.log.info(e)
     }
   },
   async getUnreadEntries (feedbinCreds) {
-    const unreads = await axios.get(`${feedbinCreds.endpoint}unread_entries.json`, {
-      auth: {
-        username: feedbinCreds.email,
-        password: feedbinCreds.password
-      }
-    })
-    return unreads.data
+    const unreads = await window.feedbin.fetch(`${feedbinCreds.endpoint}unread_entries.json`, feedbinCreds)
+    return unreads
   },
   async getStarredEntries (feedbinCreds) {
-    const starred = await axios.get(`${feedbinCreds.endpoint}starred_entries.json`, {
-      auth: {
-        username: feedbinCreds.email,
-        password: feedbinCreds.password
-      }
-    })
-    return starred.data
+    const starred = await window.feedbin.fetch(`${feedbinCreds.endpoint}starred_entries.json`, feedbinCreds)
+    return starred
   },
   transformEntriesAndFeed (unread, starred, all) {
     const mapped = all.map((item) => {
@@ -75,46 +70,34 @@ export default {
     return mapped
   },
   async markItem (feedbinCreds, type, ids) {
-    let method, data, url
+    let data, url
     switch (type) {
       case 'READ':
         url = 'unread_entries/delete'
-        method = 'POST'
         data = {
           unread_entries: ids
         }
         break
       case 'UNREAD':
         url = 'unread_entries'
-        method = 'POST'
         data = {
           unread_entries: ids
         }
         break
       case 'FAVOURITE':
         url = 'starred_entries'
-        method = 'POST'
         data = {
           starred_entries: ids
         }
         break
       case 'UNFAVOURITE':
         url = 'starred_entries/delete'
-        method = 'POST'
         data = {
           starred_entries: ids
         }
         break
     }
-    return await axios({
-      method: method,
-      url: `${feedbinCreds.endpoint}${url}.json`,
-      data: data,
-      auth: {
-        username: feedbinCreds.email,
-        password: feedbinCreds.password
-      }
-    })
+    return await window.feedbin.post(`${feedbinCreds.endpoint}${url}.json`, data, feedbinCreds)
   },
   async syncItems (feedbinCreds) {
     let subscriptions = await this.getSubscriptions(feedbinCreds)

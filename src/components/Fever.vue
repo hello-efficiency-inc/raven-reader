@@ -148,7 +148,6 @@ export default {
       data.hash = hash
       window.fever.login(this.fever.endpoint, hash)
         .then(async (res) => {
-          console.log(res)
           if (!res.auth) {
             this.fever_error = true
           } else {
