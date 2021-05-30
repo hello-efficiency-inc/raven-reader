@@ -1,4 +1,3 @@
-import axios from 'axios'
 import dayjs from 'dayjs'
 import db from './db.js'
 import uuidstring from 'uuid-by-string'
@@ -33,21 +32,17 @@ function getCoverImage (postContent) {
 
 export default {
   async getUserInfo (credsData) {
-    const data = await axios.get(`${credsData.endpoint}/reader/api/0/user-info`, {
-      headers: {
-        Authorization: `GoogleLogin auth=${credsData.auth}`
-      }
+    const data = await window.greader.fetch(`${credsData.endpoint}/reader/api/0/user-info`, {
+      auth: credsData.auth
     })
-    return data.data
+    return data
   },
   async getSubscriptions (credsData) {
     try {
-      const subscriptions = await axios.get(`${credsData.endpoint}/reader/api/0/subscription/list?output=json`, {
-        headers: {
-          Authorization: `GoogleLogin auth=${credsData.auth}`
-        }
+      const subscriptions = await window.greader.fetch(`${credsData.endpoint}/reader/api/0/subscription/list?output=json`, {
+        auth: credsData.auth
       })
-      return subscriptions.data.subscriptions
+      return subscriptions.subscriptions
     } catch (e) {
       window.log.info(e)
     }
@@ -63,17 +58,15 @@ export default {
         } else {
           apiUrl = `${credsData.endpoint}/reader/api/0/stream/items/ids?output=json&s=user/-/state/com.google/reading-list&xt=user/-/state/com.google/read&n=1000&c=${continuation}`
         }
-        const data = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `GoogleLogin auth=${credsData.auth}`
-          }
+        const data = await window.greader.fetch(apiUrl, {
+          auth: credsData.auth
         })
-        if (data.data.itemRefs) {
-          ids.push(...data.data.itemRefs.map(item => {
+        if (data.itemRefs) {
+          ids.push(...data.itemRefs.map(item => {
             return item.id
           }))
         }
-        continuation = typeof data.data.continuation !== 'undefined' ? data.data.continuation : null
+        continuation = typeof data.continuation !== 'undefined' ? data.continuation : null
       }
       while (continuation !== null)
       return ids
@@ -92,17 +85,15 @@ export default {
         } else {
           apiUrl = `${credsData.endpoint}/reader/api/0/stream/items/ids?output=json&s=user/-/state/com.google/starred&n=1000&c=${continuation}`
         }
-        const data = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `GoogleLogin auth=${credsData.auth}`
-          }
+        const data = await window.greader.fetch(apiUrl, {
+          auth: credsData.auth
         })
-        if (data.data.itemRefs) {
-          ids.push(...data.data.itemRefs.map(item => {
+        if (data.itemRefs) {
+          ids.push(...data.itemRefs.map(item => {
             return item.id
           }))
         }
-        continuation = typeof data.data.continuation !== 'undefined' ? data.data.continuation : null
+        continuation = typeof data.continuation !== 'undefined' ? data.continuation : null
       }
       while (continuation !== null)
       return ids
@@ -130,12 +121,11 @@ export default {
         for (let k = 0; k < chunks[i].length; k++) {
           postData.append('i', chunks[i][k])
         }
-        const data = await axios.post(`${credsData.endpoint}/reader/api/0/stream/items/contents?output=json`, postData, {
-          headers: {
-            Authorization: `GoogleLogin auth=${credsData.auth}`
-          }
+        const data = await window.greader.post(`${credsData.endpoint}/reader/api/0/stream/items/contents?output=json`, {
+          data: postData.toString(),
+          auth: credsData.auth
         })
-        entries.push(...data.data.items)
+        entries.push(...data.items)
       }
       return entries
     } catch (e) {
@@ -161,10 +151,9 @@ export default {
         postData.append('r', TAGS.FAVOURITE_TAG)
         break
     }
-    return await axios.post(`${credsData.endpoint}/reader/api/0/edit-tag`, postData, {
-      headers: {
-        Authorization: `GoogleLogin auth=${credsData.auth}`
-      }
+    return await window.greader.post(`${credsData.endpoint}/reader/api/0/edit-tag`, {
+      auth: credsData.auth,
+      data: postData.toString()
     })
   },
   async syncTags (categories) {
@@ -247,7 +236,6 @@ export default {
           const id = credsData.endpoint.includes('theoldreader') ? last : BigInt.asIntN(64, i).toString()
           const isMedia = item.canonical && (item.alternate[0].href.includes('youtube') || item.alternate[0].href.includes('vimeo'))
           const isPodcast = item.enclosure ? checkIsPodCast(item.enclosure[0]) : false
-          console.log(item.origin.streamId)
           const feed = subscriptions.filter(feed => feed.id === item.origin.streamId)[0]
           return {
             id: isPodcast ? uuidstring(item.enclosure[0].href) : uuidstring(item.alternate[0].href),

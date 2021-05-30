@@ -5,6 +5,13 @@ import {
 import rssService from './bridge/rss'
 import electronStore from './bridge/electronstore'
 import electronService from './bridge/electron'
+import parseService from './bridge/mercury'
+import instapaperService from './bridge/instapaper'
+import pocketService from './bridge/pocket'
+import feverService from './bridge/fever'
+import greaderService from './bridge/greader'
+import inoreaderService from './bridge/inoreader'
+import feedbinService from './bridge/feedbin'
 const backend = require('i18next-electron-fs-backend')
 
 ipcRenderer.setMaxListeners(0)
@@ -44,6 +51,13 @@ contextBridge.exposeInMainWorld('electronstore', electronStore)
 contextBridge.exposeInMainWorld('rss', rssService)
 contextBridge.exposeInMainWorld('electron', electronService)
 contextBridge.exposeInMainWorld('globalagent', require('global-agent'))
+contextBridge.exposeInMainWorld('mercury', parseService)
+contextBridge.exposeInMainWorld('instapaper', instapaperService)
+contextBridge.exposeInMainWorld('pocket', pocketService)
+contextBridge.exposeInMainWorld('fever', feverService)
+contextBridge.exposeInMainWorld('greader', greaderService)
+contextBridge.exposeInMainWorld('inoreader', inoreaderService)
+contextBridge.exposeInMainWorld('feedbin', feedbinService)
 contextBridge.exposeInMainWorld('api', {
   i18nextElectronBackend: backend.preloadBindings(ipcRenderer),
   ipcRendReceiveOnce: (channel, func) => {

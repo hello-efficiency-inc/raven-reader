@@ -154,25 +154,23 @@ export default {
       const headers = new Headers()
       headers.set('Authorization', `Basic ${btoa(creds)}`)
       headers.set('Content-Type', 'application/json; charset=utf-8')
-      fetch(`${this.feedbin.endpoint}authentication.json`, {
-        method: 'GET',
-        headers: headers
-      }).then(() => {
-        this.$store.dispatch('setFeedbin', JSON.stringify(this.feedbin)).then(() => {
-          this.hideFeedbinModal()
-          this.$emit('feedbin-connected', true)
-          this.$emit('feedbin-sync', true)
-          feedbin.syncItems(JSON.parse(this.$store.state.Setting.feedbin)).then(() => {
-            this.$store.dispatch('loadFeeds')
-            this.$store.dispatch('loadArticles')
-            this.$emit('feedbin-sync', false)
-            this.$emit('preference-modal-hide')
+      window.feedbin.login(`${this.feedbin.endpoint}authentication.json`, this.feedbin)
+        .then(() => {
+          this.$store.dispatch('setFeedbin', JSON.stringify(this.feedbin)).then(() => {
+            this.hideFeedbinModal()
+            this.$emit('feedbin-connected', true)
+            this.$emit('feedbin-sync', true)
+            feedbin.syncItems(JSON.parse(this.$store.state.Setting.feedbin)).then(() => {
+              this.$store.dispatch('loadFeeds')
+              this.$store.dispatch('loadArticles')
+              this.$emit('feedbin-sync', false)
+              this.$emit('preference-modal-hide')
+            })
+            this.$store.dispatch('loadSettings')
           })
-          this.$store.dispatch('loadSettings')
+        }).catch(() => {
+          this.feedbin_error = true
         })
-      }).catch(() => {
-        this.feedbin_error = true
-      })
     }
   }
 }
