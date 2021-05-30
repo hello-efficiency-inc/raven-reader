@@ -571,6 +571,11 @@ ipcMain.handle('inoreader-endpoint-fetch', async (event, data) => {
   return result.data
 })
 
+ipcMain.handle('inoreader-endpoint-refresh', async (event, data) => {
+  const result = axios.post(data.endpoint, data.formData)
+  return result.data
+})
+
 ipcMain.handle('inoreader-endpoint-execute', async (event, data) => {
   const result = await axios.post(data.endpoint, data.formData, {
     headers: {

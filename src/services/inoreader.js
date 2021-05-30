@@ -1,4 +1,3 @@
-import axios from 'axios'
 import dayjs from 'dayjs'
 import db from './db.js'
 import store from '../store'
@@ -41,15 +40,15 @@ function getCoverImage (postContent) {
 async function refreshToken (credsData) {
   try {
     window.log.info('Refreshing Inoreader token')
-    const data = await axios.post('https://www.inoreader.com/oauth2/token', {
+    const data = await window.inoreader.refresh('https://www.inoreader.com/oauth2/token', {
       client_id: process.env.VUE_APP_INOREADER_CLIENT_ID,
       client_secret: process.env.VUE_APP_INOREADER_CLIENT_SECRET,
       grant_type: 'refresh_token',
       refresh_token: credsData.refresh_token
     })
     const currentData = JSON.parse(JSON.stringify(credsData))
-    currentData.expires_in = dayjs().add(data.data.expires_in).valueOf()
-    currentData.access_token = data.data.access_token
+    currentData.expires_in = dayjs().add(data.expires_in).valueOf()
+    currentData.access_token = data.access_token
     store.dispatch('setInoreader', JSON.stringify(currentData))
     return currentData
   } catch (e) {

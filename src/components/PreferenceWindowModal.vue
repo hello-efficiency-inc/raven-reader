@@ -348,11 +348,9 @@
 <script>
 import bus from '../services/bus'
 import db from '../services/db'
-import axios from 'axios'
 import setTheme from '../mixins/setTheme'
 import inoreader from '../services/inoreader'
 import Fever from './Fever.vue'
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:9080'
 
 export default {
   components: { Fever },
