@@ -185,6 +185,7 @@ export default {
 }
 </script>
 <style lang="scss">
+@import './node_modules/sass-rem/rem';
 
 .content-wrapper {
   overflow: hidden;
@@ -265,7 +266,7 @@ export default {
     font-size: 2em;
     color: var(--text-color);
     small {
-      font-size: 14px;
+      font-size: rem(14px);
       color: var(--h2-small-color);
     }
   }
@@ -306,7 +307,7 @@ export default {
   }
 
   h3 {
-    font-size: 22px;
+    font-size: rem(22px);
     margin-top: 15px;
     line-height: 29px;
     font-weight: 700;

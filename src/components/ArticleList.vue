@@ -214,6 +214,8 @@ export default {
 }
 </script>
 <style lang="scss">
+@import './node_modules/sass-rem/rem';
+
 .articles-inner {
   position: absolute;
   top: 0;
@@ -280,7 +282,7 @@ export default {
 .articles-list {
   position: relative;
   flex-grow: 0;
-  font-size: 14px;
+  font-size: rem(16px);
   width: 350px;
   height: 100%;
   border-right: 1px solid var(--border-color);
@@ -408,7 +410,7 @@ export default {
 .statusMsg {
   line-height: 30px;
   width: 100%;
-  font-size: 12px;
+  font-size: rem(14px);
   text-align: center;
 }
 

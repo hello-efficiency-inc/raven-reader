@@ -288,7 +288,7 @@ export default {
               : null,
             itunes: item.itunes || null,
             played: false,
-            publishUnix: dayjs(item.published).unix(),
+            publishUnix: item.published,
             feed_uuid: feed.feed_uuid,
             category: feed.categories.length > 0 ? feed.categories[0].label : null,
             source: 'inoreader',

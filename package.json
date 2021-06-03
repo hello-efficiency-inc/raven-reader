@@ -60,6 +60,7 @@
     "request": "^2.88.2",
     "rss-finder": "^2.1.4",
     "rss-parser": "^3.10.0",
+    "sass-rem": "^2.0.1",
     "splitpanes": "^2.3.6",
     "ssri": "^8.0.1",
     "uuid-by-string": "^3.0.2",

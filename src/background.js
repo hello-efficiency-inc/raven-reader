@@ -29,7 +29,6 @@ import i18nextMainBackend from './i18nmain.config'
 import {
   parseArticle
 } from './main/article'
-const btoa = require('btoa')
 const FormData = require('form-data')
 const i18nextBackend = require('i18next-electron-fs-backend')
 
@@ -120,6 +119,15 @@ async function createWindow () {
   }, () => {
     if (win) {
       win.loadURL(winUrl)
+    }
+  })
+
+  win.on('close', (event) => {
+    if (app.quitting) {
+      win = null
+    } else {
+      event.preventDefault()
+      win.hide()
     }
   })
 

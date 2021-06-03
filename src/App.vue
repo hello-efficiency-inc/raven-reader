@@ -12,6 +12,7 @@ export default {
 <style lang="scss">
 $primary: #579EAB;
 @import './node_modules/bootstrap/scss/bootstrap';
+@import './node_modules/sass-rem/rem';
 
 /* open-sans-300 - latin_cyrillic-ext */
 @font-face {
@@ -267,7 +268,7 @@ body {
   position: relative;
   flex-grow: 0;
   width: 260px;
-  font-size: 14px;
+  font-size: rem(16px);
   height: 100%;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
 }
@@ -312,7 +313,7 @@ body {
 
 .sidebar-heading {
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: rem(16px);
   text-transform: uppercase;
 }
 

@@ -92,6 +92,7 @@ export default {
     formatDate (article) {
       let formatDate
       if (article.source === 'inoreader' || article.source === 'greader' || article.source === 'fever') {
+        console.log(article)
         formatDate = dayjs.unix(article.publishUnix).fromNow()
       } else if (article.source === 'fever') {
         formatDate = dayjs.unix(article.pubDate).fromNow()
