@@ -122,15 +122,6 @@ async function createWindow () {
     }
   })
 
-  win.on('close', (event) => {
-    if (app.quitting) {
-      win = null
-    } else {
-      event.preventDefault()
-      win.hide()
-    }
-  })
-
   win.on('closed', () => {
     win = null
   })

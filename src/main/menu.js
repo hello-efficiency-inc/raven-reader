@@ -173,15 +173,6 @@ export function createMenu (mainWindow, i18nextMain) {
         }
       },
       {
-        role: 'hide'
-      },
-      {
-        role: 'hideothers'
-      },
-      {
-        role: 'unhide'
-      },
-      {
         type: 'separator'
       },
       {
@@ -218,9 +209,6 @@ export function createMenu (mainWindow, i18nextMain) {
       },
       {
         role: 'services'
-      },
-      {
-        type: 'separator'
       },
       {
         type: 'separator'
