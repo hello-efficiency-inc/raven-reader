@@ -2,7 +2,7 @@
   <ul class="nav flex-column">
     <li class="nav-item">
       <a
-        href=""
+        href="#"
         class="nav-link feed-mix-link menu-link-clickable"
         :class="{ active: isMenuItemActive('all') }"
         @click="handleMenuItem('all')"
@@ -26,7 +26,7 @@
     <li class="nav-item">
       <a
         class="nav-link feed-mix-link menu-link-clickable"
-        href=""
+        href="#"
         :class="{ active: isMenuItemActive('favourites') }"
         @click.prevent="handleMenuItem('favourites')"
       >
@@ -49,7 +49,7 @@
     <li class="nav-item">
       <a
         class="nav-link feed-mix-link menu-link-clickable"
-        href=""
+        href="#"
         :class="{ active: isMenuItemActive('unread') }"
         @click.prevent="handleMenuItem('unread')"
       >
@@ -75,7 +75,7 @@
     >
       <a
         class="nav-link feed-mix-link menu-link-clickable"
-        href=""
+        href="#"
         :class="{ active: isMenuItemActive('read') }"
         @click.prevent="handleMenuItem('read')"
       >
@@ -104,7 +104,7 @@
     >
       <a
         class="nav-link feed-mix-link menu-link-clickable"
-        href=""
+        href="#"
         :class="{ active: isMenuItemActive('played') }"
         @click.prevent="handleMenuItem('played')"
       >
@@ -130,7 +130,7 @@
     >
       <a
         class="nav-link feed-mix-link menu-link-clickable"
-        href=""
+        href="#"
         :class="{ active: isMenuItemActive('saved') }"
         @click.prevent="handleMenuItem('saved')"
       >
@@ -153,7 +153,7 @@
     <li class="nav-item">
       <a
         class="nav-link menu-link-clickable"
-        href=""
+        href="#"
         @click="showLessItems"
       >
         <template v-if="showLess">

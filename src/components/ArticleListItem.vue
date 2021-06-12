@@ -5,7 +5,7 @@
     @contextmenu.prevent="openArticleContextMenu($event, { article: article.articles })"
   >
     <a
-      href=""
+      href="#"
       :class="{ 'article-read': article.articles.read }"
       class="list-group-item list-group-item-action flex-column align-items-start"
       @click="handleArticle(article.articles.id)"

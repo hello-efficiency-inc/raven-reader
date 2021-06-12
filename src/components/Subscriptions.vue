@@ -13,7 +13,7 @@
         >
           <a
             v-if="!feeditem.type && feeditem.category === null"
-            href=""
+            href="#"
             class="nav-link"
             @click="navigateFeed(feeditem.id)"
           >
@@ -77,7 +77,7 @@
               @contextmenu.prevent="openFeedMenu($event, {feed: categoryfeed})"
             >
               <a
-                href=""
+                href="#"
                 class="nav-link ml-3"
                 @click="navigateFeed(categoryfeed.id)"
               >
