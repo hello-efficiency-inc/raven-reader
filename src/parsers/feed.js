@@ -73,8 +73,9 @@ export function ParseFeedPost (feed) {
     } else {
       item.media = null
     }
+    item.content = window.sanitize.sanitizeHtml(item.content)
     item.cover = item['media:content'] ? item['media:content'].$.url : getCoverImage(item.content)
-    item.contentSnippet = truncate(item.contentSnippet, 100)
+    item.contentSnippet = window.sanitize.sanitizeHtml(truncate(item.contentSnippet, 100))
     item.favourite = false
     item.read = false
     item.keep_read = null

@@ -1,6 +1,7 @@
 export default {
   methods: {
     cleanupContent (content) {
+      // content = window.sanitize.sanitizeHtml(content)
       const dom = new DOMParser()
       const doc = dom.parseFromString(content, 'text/html')
       doc.querySelectorAll('.enclosure').forEach(item => item.remove())
