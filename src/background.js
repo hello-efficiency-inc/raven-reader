@@ -42,7 +42,8 @@ contextMenu({
 })
 
 const store = new Store({
-  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY
+  encryptionKey: process.env.VUE_APP_ENCRYPT_KEY,
+  clearInvalidConfig: true
 })
 
 // Keep a global reference of the window object, if you don't, the window will
