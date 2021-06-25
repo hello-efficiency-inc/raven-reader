@@ -2,7 +2,8 @@ import RssParser from 'rss-parser'
 import rssFinder from 'rss-finder'
 import normalizeUrl from 'normalize-url'
 import {
-  validate
+  validate,
+  parse
 } from 'fast-xml-parser'
 import fetch from 'node-fetch'
 
@@ -11,6 +12,7 @@ const parser = new RssParser({
     rejectUnauthorized: false
   },
   defaultRSS: 2.0,
+  maxRedirects: 10,
   headers: {
     'User-Agent': 'Raven Reader'
   },
@@ -50,5 +52,10 @@ export default {
       //   feedUrl: url
       // }
     })
+  },
+  async fetchRss (url) {
+    const response = await fetch(url)
+    const responseData = await response.text()
+    return parse(responseData)
   }
 }

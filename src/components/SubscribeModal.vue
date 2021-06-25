@@ -155,6 +155,39 @@ export default {
     addCategory () {
       this.showAddCat = !this.showAddCat
     },
+    async parseXmlData (url) {
+      try {
+        const rssData = await window.rss.fetchRss(url)
+        const keys = Object.keys(rssData)
+        const rssItem = rssData[keys[0]]
+        if (rssItem) {
+          this.selected_feed = []
+          this.selected_feed.push({
+            title: 'RSS',
+            url: this.feed_url
+          })
+          this.feeddata = {
+            site: {
+              title: rssItem.channel.title,
+              favicon: `https://www.google.com/s2/favicons?domain=${rssItem.channel.link}`,
+              url: rssItem.channel.link
+            },
+            feedUrls: [{
+              title: 'RSS',
+              url: this.feed_url
+            }]
+          }
+          this.loading = false
+        } else {
+          throw Error('Nothing found')
+        }
+      } catch (err) {
+        if (err) {
+          window.log.info(err)
+        }
+        this.showError()
+      }
+    },
     async fetchFeed () {
       const self = this
       this.loading = true
@@ -173,22 +206,29 @@ export default {
                   return item
                 })
                 if (res.feedUrls.length === 0) {
-                  this.showError()
+                  this.parseXmlData(this.feed_url)
                 } else {
                   this.selected_feed = []
                   this.selected_feed.push(res.feedUrls[0])
                   this.feeddata = res
                 }
               },
-              error => {
-                if (error) {
-                  window.log.info(error)
+              async error => {
+                try {
+                  await this.parseXmlData(this.feed_url)
+                } catch (err) {
+                  if (err) {
+                    window.log.info(error)
+                  }
+                  this.showError()
                 }
-                this.showError()
+                if (error) { window.log.info(error) }
               }
             )
           } catch (e) {
-            window.log.info(e)
+            if (e) {
+              window.log.info(e)
+            }
             this.showError()
           }
         } else {

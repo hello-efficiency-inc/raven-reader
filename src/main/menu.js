@@ -4,6 +4,7 @@ import {
   MenuItem,
   clipboard
 } from 'electron'
+import i18next from 'i18next'
 const articleSelected = false
 
 export function createMenu (mainWindow, i18nextMain) {
@@ -160,7 +161,7 @@ export function createMenu (mainWindow, i18nextMain) {
     template.unshift({
       label: 'Raven Reader',
       submenu: [{
-        label: `Version ${version}`,
+        label: `${i18nextMain.t('Version')} ${version}`,
         enabled: false
       },
       {
@@ -176,7 +177,8 @@ export function createMenu (mainWindow, i18nextMain) {
         type: 'separator'
       },
       {
-        role: 'quit'
+        role: 'quit',
+        label: i18nextMain.t('Quit Raven Reader')
       }
       ]
     })
@@ -186,10 +188,11 @@ export function createMenu (mainWindow, i18nextMain) {
     template.unshift({
       label: 'Raven Reader',
       submenu: [{
-        role: 'about'
+        role: 'about',
+        label: i18nextMain.t('About Raven Reader')
       },
       {
-        label: `Version ${version}`,
+        label: `${i18nextMain.t('Version')} ${version}`,
         enabled: false
       },
       {
@@ -208,25 +211,30 @@ export function createMenu (mainWindow, i18nextMain) {
         type: 'separator'
       },
       {
-        role: 'services'
+        role: 'services',
+        label: i18nextMain.t('Services')
       },
       {
         type: 'separator'
       },
       {
-        role: 'hide'
+        role: 'hide',
+        label: i18nextMain.t('Hide')
       },
       {
-        role: 'hideothers'
+        role: 'hideothers',
+        label: i18nextMain.t('Hide Others')
       },
       {
-        role: 'unhide'
+        role: 'unhide',
+        label: i18nextMain.t('Show All')
       },
       {
         type: 'separator'
       },
       {
-        role: 'quit'
+        role: 'quit',
+        label: i18nextMain.t('Quit Raven Reader')
       }
       ]
     })
@@ -247,19 +255,23 @@ export function createMenu (mainWindow, i18nextMain) {
 
     // Window menu
     template[3].submenu = [{
-      role: 'close'
+      role: 'close',
+      label: i18nextMain.t('Close Window')
     },
     {
-      role: 'minimize'
+      role: 'minimize',
+      label: i18nextMain.t('Minimize')
     },
     {
-      role: 'zoom'
+      role: 'zoom',
+      label: i18nextMain.t('Zoom')
     },
     {
       type: 'separator'
     },
     {
-      role: 'front'
+      role: 'front',
+      label: i18nextMain.t('Bring All to Front')
     }
     ]
   }
