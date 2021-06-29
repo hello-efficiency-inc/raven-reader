@@ -115,6 +115,7 @@
     "@vue/cli-service/**/css-what": "5.0.1",
     "@vue/cli-service/**/normalize-url": "4.5.1",
     "vue-cli-plugin-electron-builder/**/minimist": "0.2.1",
-    "vue-cli-plugin-electron-builder/electron-builder": "22.10.5"
+    "vue-cli-plugin-electron-builder/electron-builder": "22.10.5",
+    "**/glob-parent": "^5.1.2"
   }
 }
