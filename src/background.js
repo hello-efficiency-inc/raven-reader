@@ -1,5 +1,5 @@
 'use strict'
-import 'v8-compile-cache'
+
 import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog, Notification, shell, powerMonitor, session } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
@@ -29,6 +29,7 @@ import i18nextMainBackend from './i18nmain.config'
 import {
   parseArticle
 } from './main/article'
+require('v8-compile-cache')
 const FormData = require('form-data')
 const i18nextBackend = require('i18next-electron-fs-backend')
 

@@ -42,6 +42,7 @@
     </splitpanes>
     <import-modal />
     <markallread-modal />
+    <mark-unread-modal />
     <preference-window />
   </div>
 </template>

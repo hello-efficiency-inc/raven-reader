@@ -28,99 +28,101 @@
             <template #title>
               <feather-icon name="sliders" /> <span class="ml-3">{{ $t('Settings') }}</span>
             </template>
-            <b-form-group :label="getTranslatedLabel('Keep read RSS items')">
-              <b-form-select
-                v-model="keepread"
-                :options="keepread_options"
-                size="sm"
-                @change="saveKeepRead"
-              />
-            </b-form-group>
-            <b-form-group :label="getTranslatedLabel('Set refresh interval for news feed')">
-              <b-form-select
-                v-model="cronjob"
-                :options="cron_options"
-                size="sm"
-                @change="saveCronjob"
-              />
-            </b-form-group>
-            <b-form-group :label="getTranslatedLabel('Choose appearance')">
-              <b-form-select
-                v-model="theme_option"
-                :options="themeOptions"
-                size="sm"
-                @change="saveAppearance"
-              />
-            </b-form-group>
-            <b-form-group :label="getTranslatedLabel('Oldest articles first')">
-              <b-form-radio-group
-                id="btnradios1"
-                v-model="oldestArticles"
-                buttons
-                button-variant="outline-primary"
-                size="sm"
-                :options="options"
-                name="sortPref"
-                @input="saveSortPreference"
-              />
-            </b-form-group>
-            <b-form-group :label="getTranslatedLabel('Disable images in Articles')">
-              <b-form-radio-group
-                id="disableImages"
-                v-model="disableImages"
-                buttons
-                button-variant="outline-primary"
-                size="sm"
-                :options="options"
-                name="imagePref"
-                @input="saveImagePreference"
-              />
-            </b-form-group>
-            <b-form-group :label="getTranslatedLabel('Automatically add to Recently Read')">
-              <b-form-radio-group
-                id="recentlyRead"
-                v-model="recentlyRead"
-                buttons
-                button-variant="outline-primary"
-                size="sm"
-                :options="options"
-                name="recentlyRead"
-                @input="recentlyReadPreferences"
-              />
-            </b-form-group>
-            <b-form-group :label="getTranslatedLabel('Full article view by default')">
-              <b-form-radio-group
-                id="fullArticle"
-                v-model="fullArticleDefault"
-                buttons
-                button-variant="outline-primary"
-                size="sm"
-                :options="options"
-                name="fullArticle"
-                @input="saveFullArticlePreferences"
-              />
-            </b-form-group>
-            <b-form-group :label="getTranslatedLabel('Content preview')">
-              <b-form-radio-group
-                id="contentPreview"
-                v-model="contentPreview"
-                buttons
-                button-variant="outline-primary"
-                size="sm"
-                :options="options"
-                name="contentPreview"
-                @input="saveContentPreviewPreferences"
-              />
-            </b-form-group>
-            <b-form-group :label="getTranslatedLabel('Delete all feed, category and article data')">
-              <b-button
-                variant="danger"
-                squared
-                @click="deleteAllData"
-              >
-                {{ $t('Clear all data') }}
-              </b-button>
-            </b-form-group>
+            <div class="overflow-auto h-50">
+              <b-form-group :label="getTranslatedLabel('Keep read RSS items')">
+                <b-form-select
+                  v-model="keepread"
+                  :options="keepread_options"
+                  size="sm"
+                  @change="saveKeepRead"
+                />
+              </b-form-group>
+              <b-form-group :label="getTranslatedLabel('Set refresh interval for news feed')">
+                <b-form-select
+                  v-model="cronjob"
+                  :options="cron_options"
+                  size="sm"
+                  @change="saveCronjob"
+                />
+              </b-form-group>
+              <b-form-group :label="getTranslatedLabel('Choose appearance')">
+                <b-form-select
+                  v-model="theme_option"
+                  :options="themeOptions"
+                  size="sm"
+                  @change="saveAppearance"
+                />
+              </b-form-group>
+              <b-form-group :label="getTranslatedLabel('Oldest articles first')">
+                <b-form-radio-group
+                  id="btnradios1"
+                  v-model="oldestArticles"
+                  buttons
+                  button-variant="outline-primary"
+                  size="sm"
+                  :options="options"
+                  name="sortPref"
+                  @input="saveSortPreference"
+                />
+              </b-form-group>
+              <b-form-group :label="getTranslatedLabel('Disable images in Articles')">
+                <b-form-radio-group
+                  id="disableImages"
+                  v-model="disableImages"
+                  buttons
+                  button-variant="outline-primary"
+                  size="sm"
+                  :options="options"
+                  name="imagePref"
+                  @input="saveImagePreference"
+                />
+              </b-form-group>
+              <b-form-group :label="getTranslatedLabel('Automatically add to Recently Read')">
+                <b-form-radio-group
+                  id="recentlyRead"
+                  v-model="recentlyRead"
+                  buttons
+                  button-variant="outline-primary"
+                  size="sm"
+                  :options="options"
+                  name="recentlyRead"
+                  @input="recentlyReadPreferences"
+                />
+              </b-form-group>
+              <b-form-group :label="getTranslatedLabel('Full article view by default')">
+                <b-form-radio-group
+                  id="fullArticle"
+                  v-model="fullArticleDefault"
+                  buttons
+                  button-variant="outline-primary"
+                  size="sm"
+                  :options="options"
+                  name="fullArticle"
+                  @input="saveFullArticlePreferences"
+                />
+              </b-form-group>
+              <b-form-group :label="getTranslatedLabel('Content preview')">
+                <b-form-radio-group
+                  id="contentPreview"
+                  v-model="contentPreview"
+                  buttons
+                  button-variant="outline-primary"
+                  size="sm"
+                  :options="options"
+                  name="contentPreview"
+                  @input="saveContentPreviewPreferences"
+                />
+              </b-form-group>
+              <b-form-group :label="getTranslatedLabel('Delete all feed, category and article data')">
+                <b-button
+                  variant="danger"
+                  squared
+                  @click="deleteAllData"
+                >
+                  {{ $t('Clear all data') }}
+                </b-button>
+              </b-form-group>
+            </div>
           </b-tab>
           <b-tab>
             <template #title>

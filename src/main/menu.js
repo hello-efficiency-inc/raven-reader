@@ -4,7 +4,6 @@ import {
   MenuItem,
   clipboard
 } from 'electron'
-import i18next from 'i18next'
 const articleSelected = false
 
 export function createMenu (mainWindow, i18nextMain) {

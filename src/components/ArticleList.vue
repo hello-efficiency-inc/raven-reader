@@ -22,32 +22,31 @@
           >
           <div class="toolsbar">
             <div class="tool">
-              <button
+              <b-dropdown
                 v-b-tooltip.hover
-                class="btn btn-toolbar"
-                type="button"
-                :title="refreshArticle"
-                :aria-label="refreshArticle"
-                @click="sync"
+                :text="actionTitle"
+                variant="link"
+                :title="actionTitle"
+                no-caret
+                toogle-class="btn-toolbar"
+                right
               >
-                <feather-icon
-                  name="refresh-cw"
-                  :class="{ 'fa-spin': syncState }"
-                />
-              </button>
-            </div>
-            <div class="tool">
-              <button
-                ref="markallread"
-                v-b-tooltip.hover
-                v-b-modal.markallread
-                class="btn btn-toolbar"
-                type="button"
-                :title="markAllRead"
-                :aria-label="markAllRead"
-              >
-                <feather-icon name="check-circle" />
-              </button>
+                <template
+                  slot="button-content"
+                  class="pt-1"
+                >
+                  <feather-icon name="more-vertical" />
+                </template>
+                <b-dropdown-item @click="sync">
+                  {{ refreshArticle }}
+                </b-dropdown-item>
+                <b-dropdown-item v-b-modal.markallread>
+                  {{ markAllRead }}
+                </b-dropdown-item>
+                <b-dropdown-item v-b-modal.markallunread>
+                  {{ $t('Mark all unread') }}
+                </b-dropdown-item>
+              </b-dropdown>
             </div>
           </div>
         </div>
@@ -139,6 +138,9 @@ export default {
     ...mapGetters([
       'filteredArticles'
     ]),
+    actionTitle () {
+      return this.$options.filters.t('Article list actions')
+    },
     markAllRead () {
       return this.$options.filters.t('Mark all as read')
     },

@@ -20,6 +20,7 @@ import Feedbin from './Feedbin'
 import Inoreader from './Inoreader'
 import ManageCategories from './ManageCategories'
 import ManageFeeds from './ManageFeeds'
+import MarkUnreadModal from './MarkUnreadModal'
 
 export default {
   registerComponents () {
@@ -44,5 +45,6 @@ export default {
     Vue.component('Inoreader', Inoreader)
     Vue.component('ManageCategories', ManageCategories)
     Vue.component('ManageFeeds', ManageFeeds)
+    Vue.component('MarkUnreadModal', MarkUnreadModal)
   }
 }

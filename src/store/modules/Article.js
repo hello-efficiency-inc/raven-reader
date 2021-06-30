@@ -98,6 +98,37 @@ const mutations = {
       inoreader.markItem(data.rootState.Setting.inoreader, data.data.type, [state.articles[index].articles.source_id])
     }
   },
+  MARK_ALL_UNREAD (state, rootState) {
+    const readArticles = state.articles.reduce((arr, item) => {
+      if (item.articles.read) {
+        arr.push(item.articles.uuid)
+      }
+      return arr
+    }, [])
+    const sourceIds = state.articles.reduce((arr, item) => {
+      if (item.articles.read) {
+        arr.push(item.articles.source_id)
+      }
+      return arr
+    }, [])
+    db.markAllunread(readArticles)
+    if (rootState.Setting.fever_connected) {
+      sourceIds.filter(item => item !== null).forEach((item) => {
+        fever.markItem(rootState.Setting.fever, 'UNREAD', item)
+      })
+    }
+    if (rootState.Setting.feedbin_connected) {
+      feedbin.markItem(rootState.Setting.feedbin, 'UNREAD', sourceIds.filter(item => item !== null))
+    }
+
+    if (rootState.Setting.selfhost_connected) {
+      greader.markItem(rootState.Setting.selfhost, 'UNREAD', sourceIds.filter(item => item !== null))
+    }
+
+    if (rootState.Setting.inoreader_connected) {
+      inoreader.markItem(rootState.Setting.inoreader, 'UNREAD', sourceIds.filter(item => item !== null))
+    }
+  },
   MARK_ALL_READ (state, rootState) {
     const unreadArticles = state.articles.reduce((arr, item) => {
       if (!item.articles.read) {
@@ -207,6 +238,9 @@ const actions = {
   },
   markAllRead ({ commit, rootState }) {
     commit('MARK_ALL_READ', rootState)
+  },
+  markAllUnread ({ commit, rootState }) {
+    commit('MARK_ALL_UNREAD', rootState)
   },
   async deleteArticle ({ dispatch, commit }, id) {
     commit('DELETE_ARTICLES', id)

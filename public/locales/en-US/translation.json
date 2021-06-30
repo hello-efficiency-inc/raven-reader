@@ -142,5 +142,9 @@
     "Close Window": "Close Window",
     "Minimize": "Minimize",
     "Zoom": "Zoom",
-    "Bring All to Front": "Bring All to Front"
+    "Bring All to Front": "Bring All to Front",
+    "Mark all articles as unread": "Mark all articles as unread",
+    "Are you sure you want to mark all articles as unread?": "Are you sure you want to mark all articles as unread?",
+    "Mark all unread": "Mark all unread",
+    "Article list actions": "Article list actions"
 }

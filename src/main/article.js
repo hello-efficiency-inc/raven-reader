@@ -2,7 +2,7 @@ import Mercury from '@postlight/mercury-parser'
 import cheerio from 'cheerio'
 import fetch from 'node-fetch'
 
-async function decodeFetchResponse(response, isHTML = false) {
+async function decodeFetchResponse (response, isHTML = false) {
   const CHARSET_RE = /charset=([^()<>@,;:\\"/[\]?.=\s]*)/i
   const buffer = await response.arrayBuffer()
   let ctype = response.headers.has('content-type') && response.headers.get('content-type')

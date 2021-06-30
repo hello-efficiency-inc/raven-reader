@@ -153,6 +153,14 @@ export default {
       .where(db.articleTable.uuid.eq(uuid))
       .exec()
   },
+  markAllunread (uuids) {
+    // Non-podcast
+    return db.database.update(db.articleTable)
+      .set(db.articleTable.read, false)
+      .set(db.articleTable.keep_read, dayjs().add(store.state.Setting.keepRead, 'week').valueOf())
+      .where(db.articleTable.uuid.in(uuids))
+      .exec()
+  },
   markAllRead (uuids) {
     // Non-podcast
     return db.database.update(db.articleTable)
