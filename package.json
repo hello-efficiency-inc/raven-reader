@@ -35,7 +35,7 @@
     "electron-context-menu": "^3.0.0",
     "electron-log": "^4.2.2",
     "electron-store": "^8.0.0",
-    "electron-updater": "^4.3.4",
+    "electron-updater": "^4.3.10",
     "electron-util": "^0.17.0",
     "fast-xml-parser": "^3.18.0",
     "feather-icons": "^4.28.0",
