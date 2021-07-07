@@ -4,7 +4,43 @@ import {
   MenuItem,
   clipboard
 } from 'electron'
+const i18nBackend = require('i18next-electron-fs-backend')
 const articleSelected = false
+
+const langMap = {
+  ca: 'Català',
+  en: 'English',
+  fr: 'Français',
+  nl: 'Nederlands',
+  ru: 'Pусский',
+  tr: 'Türk',
+  'zh-CN': '简体中文'
+}
+
+function buildLangMenu (channel, i18nextMainBackend) {
+  const langMenu = []
+  const keys = Object.keys(langMap)
+  const clickFunction = function (channel, lng, i18nextMainBackend) {
+    return function (menuItem, browserWindow, event) {
+      // Solely within the top menu
+      i18nextMainBackend.changeLanguage(lng)
+
+      // Between renderer > main process
+      browserWindow.webContents.send(channel, {
+        lng
+      })
+    }
+  }
+
+  for (let i = 0; i < keys.length; i++) {
+    langMenu.push({
+      label: langMap[keys[i]],
+      click: clickFunction(channel, keys[i], i18nextMainBackend)
+    })
+  }
+
+  return langMenu
+}
 
 export function createMenu (mainWindow, i18nextMain) {
   // Create the Application's main menu
@@ -151,6 +187,10 @@ export function createMenu (mainWindow, i18nextMain) {
       }
     }
     ]
+  },
+  {
+    label: i18nextMain.t('Language'),
+    submenu: buildLangMenu(i18nBackend.changeLanguageRequest, i18nextMain)
   }
   ]
 
