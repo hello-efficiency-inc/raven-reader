@@ -434,6 +434,7 @@ export default {
     },
     async loadFullArticle () {
       const fullArticle = await window.mercury.parseArticle(this.articleItem.link)
+      console.log(fullArticle)
       if (!fullArticle.error) {
         this.articleItem.fullContent = this.cleanupContent(fullArticle.content)
         this.$emit('load-full-content', this.articleItem)
