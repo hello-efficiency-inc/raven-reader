@@ -31,7 +31,7 @@
       </div>
       <h6><strong>{{ article.articles.title }}</strong></h6>
       <img
-        v-if="contentPreview && article.articles.cover"
+        v-if="!disableImages && article.articles.cover"
         :src="article.articles.cover"
         class="img-fluid ratio-16x9 my-2"
         :alt="article.articles.title"
@@ -77,6 +77,9 @@ export default {
     }
   },
   computed: {
+    disableImages () {
+      return this.$store.state.Setting.disableImages
+    },
     contentPreview () {
       return this.$store.state.Setting.contentPreview
     }
