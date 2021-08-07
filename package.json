@@ -55,7 +55,7 @@
     "node-schedule": "^2.0.0",
     "normalize-url": "^6.0.1",
     "opml-generator": "^1.1.1",
-    "os-locale": "^5.0.0",
+    "os-locale": "^6.0.0",
     "plyr": "^3.6.2",
     "reading-time": "^1.2.0",
     "request": "^2.88.2",
