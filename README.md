@@ -49,6 +49,10 @@ choco install raven
 ![video](/video.png)
 ![podcast](/podcast.png)
 
+## New look coming soon! Sneak peak below:
+
+![raven-newlook](/raven-newlook.png)
+
 ## Features
 
 - [x] Full Article Read
