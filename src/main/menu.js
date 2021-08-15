@@ -14,6 +14,7 @@ const langMap = {
   nl: 'Nederlands',
   ru: 'Pусский',
   tr: 'Türk',
+  pl: 'Polish',
   'zh-CN': '简体中文'
 }
 
