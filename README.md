@@ -1,3 +1,4 @@
+
 <p align="center">
     <a href="https://github.com/hello-efficiency-inc/raven-reader/">
         <img alt="raven reader logo" src="https://github.com/hello-efficiency-inc/raven-reader/blob/master/src/assets/raven-logo.svg?raw=true" width="400">
@@ -50,6 +51,8 @@ choco install raven
 ![podcast](/podcast.png)
 
 ## New look coming soon! Sneak peak below:
+
+Raven next version is coming soon. This version would be maintained for ongoing minor issues.
 
 ![raven-newlook](/raven-newlook.png)
 

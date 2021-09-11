@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "1.0.65",
+  "version": "1.0.66",
   "author": "Hello Efficiency Inc. <welcome@helloefficiency.com>",
   "description": "Simple desktop RSS Reader",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "@cliqz/adblocker-electron": "^1.20.0",
     "@panter/vue-i18next": "^0.15.2",
     "@postlight/mercury-parser": "^2.2.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.3",
     "bootstrap": "^4.0.0",
     "bootstrap-vue": "^2.16.0",
     "btoa": "^1.2.1",
