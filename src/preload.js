@@ -61,7 +61,7 @@ contextBridge.exposeInMainWorld('inoreader', inoreaderService)
 contextBridge.exposeInMainWorld('feedbin', feedbinService)
 contextBridge.exposeInMainWorld('sanitize', sanitizeService)
 contextBridge.exposeInMainWorld('api', {
-  i18nextElectronBackend: backend.preloadBindings(ipcRenderer),
+  i18nextElectronBackend: backend.preloadBindings(ipcRenderer, process),
   ipcRendReceiveOnce: (channel, func) => {
     if (validChannels.includes(channel)) {
       ipcRenderer.once(channel, (event, ...args) => func(...args))
