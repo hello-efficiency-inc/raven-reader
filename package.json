@@ -24,7 +24,7 @@
     "@cliqz/adblocker-electron": "^1.20.0",
     "@panter/vue-i18next": "^0.15.2",
     "@postlight/mercury-parser": "^2.2.0",
-    "axios": "^0.21.3",
+    "axios": "^0.22.0",
     "bootstrap": "^4.0.0",
     "bootstrap-vue": "^2.16.0",
     "btoa": "^1.2.1",
