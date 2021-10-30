@@ -102,7 +102,7 @@ Please feel free to suggest more ideas to improve this app.
 | English   |              |
 | French    |              |
 | Catalan   | [alexhoma](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3alexhoma)|
-| Turkish   | [ahmetcadirci25](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3ahmetcadirci25)|
+| Turkish   | [ahmetcadirci25](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Aahmetcadirci25)|
 | Chinese   | [@LinWhite2333](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3LinWhite2333)|
 | Dutch     | [@Vistause](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3AVistaus)    |
 | Russian   | [@vanja-san](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Avanja-san)   |
