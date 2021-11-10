@@ -7,7 +7,7 @@ async function decodeFetchResponse (response, isHTML = false) {
   const buffer = await response.arrayBuffer()
   let ctype = response.headers.has('content-type') && response.headers.get('content-type')
   let charset = (ctype && CHARSET_RE.test(ctype)) ? CHARSET_RE.exec(ctype)[1] : undefined
-  let content = (new TextDecoder(charset)).decode(buffer)
+  let content = Buffer.from(buffer, charset);
   const document = cheerio.load(content)
   if (typeof charset === typeof undefined) {
     charset = document.querySelector('meta[charset]') !== null ? document.querySelector('meta[charset]').getAttribute('charset').toLowerCase() : null
@@ -16,7 +16,7 @@ async function decodeFetchResponse (response, isHTML = false) {
       charset = ctype && CHARSET_RE.test(ctype) && CHARSET_RE.exec(ctype)[1].toLowerCase()
     }
     if (charset && charset !== 'utf-8' && charset !== 'utf8') {
-      content = (new TextDecoder(charset)).decode(buffer)
+      content = Buffer.from(buffer, charset);
     }
   }
   return content
@@ -26,7 +26,7 @@ export async function parseArticle (url) {
   const res = await fetch(url)
   const content = await decodeFetchResponse(res)
   const result = await Mercury.parse(url, {
-    html: content
+    html: Buffer.from(content, 'utf-8')
   })
   return result
 }
