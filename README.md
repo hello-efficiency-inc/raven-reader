@@ -108,6 +108,8 @@ Please feel free to suggest more ideas to improve this app.
 | Russian   | [@vanja-san](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Avanja-san)   |
 | Polish    | [@konhi](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Akonhi)|
 | Brazilian Portuguese | [@gabrielgomeso](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Agabrielgomeso)|
+| Italian | [@luverolla](https://github.com/luverolla)|
+| German | [@nebulon42](https://github.com/nebulon42)|
 
 ## Contributions
 Help make Raven Reader better by reporting bugs, PR or opening feature requests through [GitHub issues](https://github.com/hello-efficiency-inc/raven-reader/issues).
