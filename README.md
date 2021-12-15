@@ -101,13 +101,13 @@ Please feel free to suggest more ideas to improve this app.
 |-----------|--------------|
 | English   |              |
 | French    |              |
-| Catalan   | [alexhoma](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Aalexhoma)|
-| Turkish   | [ahmetcadirci25](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3ahmetcadirci25)|
-| Chinese   | [@LinWhite2333](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3ALinWhite2333)|
-| Dutch     | [@Vistause](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3AVistaus)    |
-| Russian   | [@vanja-san](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Avanja-san)   |
-| Polish    | [@konhi](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Akonhi)|
-| Brazilian Portuguese | [@gabrielgomeso](https://github.com/hello-efficiency-inc/raven-reader/issues?q=is%3Apr+author%3Agabrielgomeso)|
+| Catalan   | [alexhoma](https://github.com/alexhoma)|
+| Turkish   | [ahmetcadirci25](https://github.com/ahmetcadirci25)|
+| Chinese   | [@LinWhite2333](https://github.com/@LinWhite2333)|
+| Dutch     | [@Vistause](https://github.com/Vistause)    |
+| Russian   | [@vanja-san](https://github.com/vanja-san)   |
+| Polish    | [@konhi](https://github.com/konhi)|
+| Brazilian Portuguese | [@gabrielgomeso](https://github.com/gabrielgomeso)|
 | Italian | [@luverolla](https://github.com/luverolla)|
 | German | [@nebulon42](https://github.com/nebulon42)|
 
