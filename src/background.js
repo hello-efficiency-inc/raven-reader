@@ -3,7 +3,6 @@
 import { app, protocol, BrowserWindow, globalShortcut, nativeTheme, ipcMain, dialog, Notification, shell, powerMonitor, session } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-import { enforceMacOSAppLocation } from 'electron-util'
 import {
   ElectronBlocker
 } from '@cliqz/adblocker-electron'
@@ -335,7 +334,6 @@ app.on('ready', async () => {
 })
 
 app.whenReady().then(() => {
-  enforceMacOSAppLocation()
   store.set('isDarkMode', nativeTheme.shouldUseDarkColors)
   if (!store.has('settings.theme_option')) {
     store.set('settings.theme_option', 'system')
