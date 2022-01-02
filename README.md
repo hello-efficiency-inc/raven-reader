@@ -27,6 +27,18 @@
 </a>
 </p>
 
+## Raven for Web now available!
+
+[https://web.ravenreader.app](https://web.ravenreader.app)
+
+- Free trial for first 10 days and after that $15 USD/year (i.e $1.25/month).
+- All similar features available as desktop reader with brand new UI. And more features coming soon including support for API usage to sync with Raven Desktop app.
+- Apply LAUNCH2022 coupon code to get additional 20% off.
+
+![raven-web](/raven-web.png)
+
+Please feel free to give us any feedback or ideas either by opening discussion topic here or by emailing us at [welcome@helloefficiency.com](mailto:welcome@helloefficiency.com).
+
 ## Download
 To download, please visit https://ravenreader.app.
 
@@ -49,12 +61,6 @@ choco install raven
 ![darkscreenshot](/darkscreenshot.png)
 ![video](/video.png)
 ![podcast](/podcast.png)
-
-## New look coming soon! Sneak peak below:
-
-Raven next version is coming soon. This version would be maintained for ongoing minor issues.
-
-![raven-newlook](/raven-newlook.png)
 
 ## Features
 
