@@ -101,6 +101,18 @@
                   @input="saveFullArticlePreferences"
                 />
               </b-form-group>
+              <b-form-group :label="getTranslatedLabel('View original by default')">
+                <b-form-radio-group
+                  id="viewOriginal"
+                  v-model="viewOriginalDefault"
+                  buttons
+                  button-variant="outline-primary"
+                  size="sm"
+                  :options="options"
+                  name="viewOriginal"
+                  @input="saveViewOriginalPreferences"
+                />
+              </b-form-group>
               <b-form-group :label="getTranslatedLabel('Content preview')">
                 <b-form-radio-group
                   id="contentPreview"
@@ -381,6 +393,7 @@ export default {
       disableImages: 'off',
       recentlyRead: 'off',
       fullArticleDefault: 'off',
+      viewOriginalDefault: 'off',
       contentPreview: 'on',
       keepread_options: [
         { value: 1, text: '1 week' },
@@ -448,6 +461,7 @@ export default {
       this.disableImages = this.$store.state.Setting.disableImages ? 'on' : 'off'
       this.recentlyRead = this.$store.state.Setting.recentlyReadPreference ? 'on' : 'off'
       this.fullArticleDefault = this.$store.state.Setting.fullArticleDefault ? 'on' : 'off'
+      this.viewOriginalDefault = this.$store.state.Setting.viewOriginalDefault ? 'on' : 'off'
       this.contentPreview = this.$store.state.Setting.contentPreview ? 'on' : 'off'
       if (this.$store.state.Setting.proxy) {
         this.proxy.http = this.$store.state.Setting.proxy.http
@@ -530,6 +544,15 @@ export default {
     saveFullArticlePreferences (preference) {
       this.$store.dispatch('setFullArticlePreference', preference)
       this.$toasted.show('Full Article preference changed.', {
+        theme: 'outline',
+        position: 'top-center',
+        duration: 3000
+      })
+      this.hideModal()
+    },
+    saveViewOriginalPreferences (preference) {
+      this.$store.dispatch('setViewOriginalPreference', preference)
+      this.$toasted.show('View original preference changed.', {
         theme: 'outline',
         position: 'top-center',
         duration: 3000

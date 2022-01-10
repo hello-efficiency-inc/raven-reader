@@ -288,6 +288,10 @@ export default {
       if (this.$store.state.Setting.fullArticleDefault && this.articleItem && !this.articleItem.podcast && !this.articleItem.media) {
         this.loadFullArticle()
       }
+
+      if (this.$store.state.Setting.viewOriginalDefault && this.articleItem && !this.articleItem.podcast && !this.articleItem.media) {
+        this.openOriginal()
+      }
     }
   },
   mounted () {

@@ -385,6 +385,7 @@ ipcMain.on('get-settings', (event, arg) => {
   state.oldestArticles = store.get('settings.oldestArticles', false)
   state.disableImages = store.get('settings.imagePreference', false)
   state.fullArticleDefault = store.get('settings.fullArticlePreference', false)
+  state.viewOriginalDefault = store.get('settings.viewOriginalPreference', false)
   state.recentlyReadPreference = store.get('settings.recentlyReadPreference', false)
   state.proxy = store.get('settings.proxy', {
     http: '',

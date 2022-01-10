@@ -36,6 +36,7 @@ const state = {
   oldestArticles: false,
   disableImages: false,
   fullArticleDefault: false,
+  viewOriginalDefault: false,
   recentlyReadPreference: false,
   contentPreview: false,
   offline: false,
@@ -85,6 +86,9 @@ const mutations = {
   },
   SET_FULL_ARTICLE_PREFERENCE (state, data) {
     state.fullArticleDefault = data
+  },
+  SET_VIEW_ORIGINAL_PREFERENCE (state, data) {
+    state.viewOriginalDefault = data
   },
   SET_IMAGE_PREFERENCE (state, data) {
     state.disableImages = data
@@ -253,6 +257,10 @@ const actions = {
   setFullArticlePreference ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'settings.fullArticlePreference', data === 'on')
     commit('SET_FULL_ARTICLE_PREFERENCE', data === 'on')
+  },
+  setViewOriginalPreference ({ commit }, data) {
+    electronstore.storeSetSettingItem('set', 'settings.viewOriginalPreference', data === 'on')
+    commit('SET_VIEW_ORIGINAL_PREFERENCE', data === 'on')
   },
   async setImagePreference ({ commit }, data) {
     electronstore.storeSetSettingItem('set', 'settings.imagePreference', data === 'on')
