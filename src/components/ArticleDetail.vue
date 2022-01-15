@@ -163,6 +163,7 @@ export default {
   },
   mounted () {
     this.full = this.$store.state.Setting.fullArticleDefault
+    this.original = this.$store.state.Setting.viewOriginalDefault
     bus.$on('change-article-list', () => {
       this.resetData()
     })
