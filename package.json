@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "1.0.69",
+  "version": "1.0.70",
   "author": "Hello Efficiency Inc. <welcome@helloefficiency.com>",
   "description": "Simple desktop RSS Reader",
   "license": "MIT",
@@ -37,7 +37,7 @@
     "electron-store": "^8.0.0",
     "electron-updater": "^4.6.2",
     "electron-util": "^0.17.0",
-    "fast-xml-parser": "^4.0.1",
+    "fast-xml-parser": "^3.17.1",
     "feather-icons": "^4.28.0",
     "form-data": "^4.0.0",
     "fuse.js": "^6.4.1",
