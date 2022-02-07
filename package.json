@@ -21,7 +21,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@cliqz/adblocker-electron": "^1.20.0",
+    "@cliqz/adblocker-electron": "^1.23.4",
     "@panter/vue-i18next": "^0.15.2",
     "@postlight/mercury-parser": "^2.2.0",
     "axios": "^0.24.0",
