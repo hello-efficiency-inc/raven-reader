@@ -5099,7 +5099,7 @@ electron-builder@22.10.5, electron-builder@^22.2.0:
     update-notifier "^5.1.0"
     yargs "^16.2.0"
 
-electron-builder@^22.14.5:
+electron-builder@^22.14.13:
   version "22.14.13"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-22.14.13.tgz#fd40564685cf5422a8f8d667940af3d3776f4fb8"
   integrity sha512-3fgLxqF2TXVKiUPeg74O4V3l0l3j7ERLazo8sUbRkApw0+4iVAf2BJkHsHMaXiigsgCoEzK/F4/rB5rne/VAnw==
@@ -5251,10 +5251,10 @@ electron-util@^0.17.0:
     electron-is-dev "^1.1.0"
     new-github-issue-url "^0.2.1"
 
-electron@^16.0.4:
-  version "16.0.8"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-16.0.8.tgz#7ebd3e23c4883c239f53d8b7af1100f455ac8a02"
-  integrity sha512-znTVkl8LaGcPNdfc6SRr+6LYg2GtSCKXln/nW/PC+urBfAFnOYIuDock8QyGVFfzr5PuAa+g8YQQAboHV77D7g==
+electron@^17.0.0:
+  version "17.0.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-17.0.0.tgz#60f00f3e3c657020e807a519700213943468b4d1"
+  integrity sha512-3UXcBQMwbMWdPvGHaSdPMluHrd+/bc+K143MyvE5zVZ+S1XCHt4sau7dj6svJHns5llN0YG/c6h/vRfadIp8Zg==
   dependencies:
     "@electron/get" "^1.13.0"
     "@types/node" "^14.6.2"
@@ -5954,12 +5954,12 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
-fast-xml-parser@^3.17.1:
-  version "3.21.1"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-3.21.1.tgz#152a1d51d445380f7046b304672dd55d15c9e736"
-  integrity sha512-FTFVjYoBOZTJekiUsawGsSYV9QL0A+zDYCRj7y34IO6Jg+2IMYEtQa+bbictpdpV8dHxXywqU7C0gRDEOFtBFg==
+fast-xml-parser@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-4.0.2.tgz#23f5da4393d9f4142e26792c1e675ddbafe7029a"
+  integrity sha512-3GOSbMTZxxrPPQ+aURM7Wia10bi71HBbiG/3mOEEkRSAkRtg4m7UhMSnB2rzOhBeRHyJUWsllOfyNnjTT1b85w==
   dependencies:
-    strnum "^1.0.4"
+    strnum "^1.0.5"
 
 fastq@^1.6.0:
   version "1.13.0"
@@ -11767,7 +11767,7 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
 
-strnum@^1.0.4:
+strnum@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/strnum/-/strnum-1.0.5.tgz#5c4e829fe15ad4ff0d20c3db5ac97b73c9b072db"
   integrity sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==
