@@ -24,6 +24,7 @@ export async function parseFeed (feedUrl, category = null) {
   try {
     feed = await window.rss.parseRssUrl(feedUrl)
   } catch (e) {
+    console.error(e)
     window.log.info(e)
   }
 

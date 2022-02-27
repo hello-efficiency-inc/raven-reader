@@ -2,8 +2,8 @@ import RssParser from 'rss-parser'
 import rssFinder from 'rss-finder'
 import normalizeUrl from 'normalize-url'
 import {
-  validate,
-  parse
+  XMLValidator,
+  XMLParser
 } from 'fast-xml-parser'
 import fetch from 'node-fetch'
 
@@ -17,12 +17,7 @@ const parser = new RssParser({
     'User-Agent': 'Raven Reader'
   },
   customFields: {
-    item: [
-      'media:group',
-      'media:title',
-      'media:content',
-      'media:description'
-    ]
+    item: ['media:group', 'media:title', 'media:content', 'media:description']
   }
 })
 
@@ -35,11 +30,23 @@ export default {
       redirect: 'follow'
     })
     const data = await content.text()
-    const validateXml = validate(data)
+    const validateXml = XMLValidator.validate(data, {
+      allowBooleanAttributes: true
+    })
     return validateXml === true
   },
   async parseRssUrl (url) {
-    return await parser.parseURL(url)
+    const content = await fetch(
+      normalizeUrl(url, { stripWWW: false, removeTrailingSlash: false }),
+      {
+        cors: 'no-cors',
+        referrer: '',
+        credentials: 'omit',
+        redirect: 'follow'
+      }
+    )
+    const data = await content.text()
+    return await parser.parseString(data)
   },
   async findRss (url) {
     return await rssFinder({
@@ -54,7 +61,11 @@ export default {
     })
   },
   async fetchRss (url) {
-    const response = await fetch(url)
+    const options = {
+      ignoreAttributes: false
+    }
+    const parse = new XMLParser(options)
+    const response = await fetch(normalizeUrl(url, { stripWWW: false, removeTrailingSlash: false }))
     const responseData = await response.text()
     return parse(responseData)
   }

@@ -26,19 +26,19 @@ dayjs.locale(window.electron.currentLocale())
 Vue.config.productionTip = false
 
 // // nodejs global proxy
-const proxy = window.electronstore.getProxySettings()
-if (proxy) {
-  if (proxy.http) {
-    process.env.http_proxy = proxy.http
-  }
-  if (proxy.https) {
-    process.env.https_proxy = proxy.https
-  }
-  window.globalagent.createGlobalProxyAgent({
-    environmentVariableNamespace: '',
-    forceGlobalAgent: true
-  })
-}
+// const proxy = window.electronstore.getProxySettings()
+// if (proxy) {
+//   if (proxy.http) {
+//     process.env.http_proxy = proxy.http
+//   }
+//   if (proxy.https) {
+//     process.env.https_proxy = proxy.https
+//   }
+//   // window.globalagent.createGlobalProxyAgent({
+//   //   environmentVariableNamespace: '',
+//   //   forceGlobalAgent: true
+//   // })
+// }
 
 // ignore ssl error
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'

@@ -157,6 +157,7 @@ export default {
     },
     async parseXmlData (url) {
       try {
+        console.log(window.rss)
         const rssData = await window.rss.fetchRss(url)
         const keys = Object.keys(rssData)
         const rssItem = rssData[keys[0]]
@@ -183,6 +184,7 @@ export default {
         }
       } catch (err) {
         if (err) {
+          console.error(err)
           window.log.info(err)
         }
         this.showError()
