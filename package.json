@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "1.0.71",
+  "version": "1.0.72",
   "author": "Hello Efficiency Inc. <welcome@helloefficiency.com>",
   "description": "Simple desktop RSS Reader",
   "license": "MIT",
@@ -119,7 +119,7 @@
     "@postlight/mercury-parser/yargs-parser": "15.0.1",
     "@postlight/mercury-parser/**/nth-check": "2.0.1",
     "vue-cli-plugin-electron-builder/**/minimist": "0.2.1",
-    "vue-cli-plugin-electron-builder/electron-builder": "22.10.5",
+    "vue-cli-plugin-electron-builder/electron-builder": "22.14.13",
     "**/glob-parent": "^5.1.2",
     "@postlight/mercury-parser/**/node-fetch": "2.6.7"
   }
