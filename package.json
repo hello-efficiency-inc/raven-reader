@@ -43,7 +43,7 @@
     "fuse.js": "^6.4.1",
     "global-agent": "^3.0.0",
     "i18next": "^21.6.12",
-    "i18next-browser-languagedetector": "^6.0.1",
+    "i18next-browser-languagedetector": "^6.1.4",
     "i18next-electron-fs-backend": "^2.0.0",
     "i18next-electron-language-detector": "^0.0.10",
     "i18next-fs-backend": "^1.0.8",
