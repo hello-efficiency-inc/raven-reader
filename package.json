@@ -42,7 +42,7 @@
     "form-data": "^4.0.0",
     "fuse.js": "^6.4.1",
     "global-agent": "^3.0.0",
-    "i18next": "^21.6.16",
+    "i18next": "^21.7.1",
     "i18next-browser-languagedetector": "^6.1.4",
     "i18next-electron-fs-backend": "^2.0.0",
     "i18next-electron-language-detector": "^0.0.10",
