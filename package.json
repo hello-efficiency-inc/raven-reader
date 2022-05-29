@@ -1,7 +1,7 @@
 {
   "name": "raven-reader",
   "productName": "Raven Reader",
-  "version": "1.0.72",
+  "version": "1.0.73",
   "author": "Hello Efficiency Inc. <welcome@helloefficiency.com>",
   "description": "Simple desktop RSS Reader",
   "license": "MIT",
@@ -109,18 +109,19 @@
     "ssri": "^6.0.2",
     "jquery": "^3.6.0",
     "electron-icon-builder/**/yargs-parser": "13.1.2",
-    "vue2-perfect-scrollbar/**/css-what": "5.0.1",
-    "vue2-perfect-scrollbar/**/normalize-url": "4.5.1",
-    "@vue/cli-service/**/css-what": "5.0.1",
-    "@vue/cli-service/**/normalize-url": "4.5.1",
-    "@vue/cli-service/**/ansi-regex": "5.0.1",
     "vue-cli-plugin-electron-builder/**/ansi-regex": "5.0.1",
-    "@vue/cli-service/**/nth-check": "2.0.1",
     "@postlight/mercury-parser/yargs-parser": "15.0.1",
     "@postlight/mercury-parser/**/nth-check": "2.0.1",
+    "@postlight/mercury-parser/**/moment": "2.29.2",
+    "electron-builder/**/async": "2.6.4",
+    "electron-builder/**/ejs": "3.1.7",
+    "electron-builder/**/plist": "3.0.5",
     "vue-cli-plugin-electron-builder/**/minimist": "0.2.1",
     "vue-cli-plugin-electron-builder/electron-builder": "22.14.13",
     "**/glob-parent": "^5.1.2",
-    "@postlight/mercury-parser/**/node-fetch": "2.6.7"
+    "@postlight/mercury-parser/**/node-fetch": "2.6.7",
+    "@vue/cli-service/**/node-forge": "1.3.0",
+    "@vue/cli-service/**/ejs": "3.1.7",
+    "@vue/cli-service/**/nth-check": "2.0.1"
   }
 }
