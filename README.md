@@ -108,6 +108,14 @@ Please feel free to suggest more ideas to improve this app.
 ## Contributions
 Help make Raven Reader better by reporting bugs, PR or opening feature requests through [GitHub issues](https://github.com/hello-efficiency-inc/raven-reader/issues).
 
+## Contributors Wall
+<a href="https://github.com/hello-efficiency-inc/raven-reader/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=hello-efficiency-inc/raven-reader" />
+</a>
+
+
+_Note: It may take up to 24h for the [contrib.rocks](https://contrib.rocks/image?repo=hello-efficiency-inc/raven-reader) plugin to update because it's refreshed once a day._
+
 
 ## Developer Notes
 
