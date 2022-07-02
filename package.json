@@ -34,7 +34,7 @@
     "dayjs": "^1.11.1",
     "electron-context-menu": "^3.1.2",
     "electron-log": "^4.2.2",
-    "electron-store": "^8.0.0",
+    "electron-store": "^8.0.2",
     "electron-updater": "^4.6.2",
     "electron-util": "^0.17.0",
     "fast-xml-parser": "^4.0.7",
