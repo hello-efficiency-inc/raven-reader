@@ -33,7 +33,7 @@
     "crypto-js": "^4.0.0",
     "dayjs": "^1.11.1",
     "electron-context-menu": "^3.2.0",
-    "electron-log": "^4.2.2",
+    "electron-log": "^4.4.8",
     "electron-store": "^8.0.2",
     "electron-updater": "^4.6.2",
     "electron-util": "^0.17.0",
