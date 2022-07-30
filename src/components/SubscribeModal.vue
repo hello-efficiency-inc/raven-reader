@@ -200,6 +200,7 @@ export default {
             window.rss.findRss(this.feed_url).then(
               res => {
                 this.loading = false
+                console.log(res)
                 res.feedUrls.map(item => {
                   item.title = unescape(item.title)
                   if (isXML) {
