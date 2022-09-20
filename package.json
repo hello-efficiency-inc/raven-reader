@@ -71,7 +71,7 @@
     "v8-compile-cache": "^2.1.1",
     "vue": "^2.6.11",
     "vue-plyr": "^7.0.0-beta.1",
-    "vue-router": "^3.2.0",
+    "vue-router": "^3.6.4",
     "vue-social-sharing": "2.4.7",
     "vue-toasted": "^1.1.28",
     "vue-top-progress": "^0.7.0",
