@@ -17,7 +17,8 @@ const langMap = {
   tr: 'Türk',
   pl: 'Polish',
   'pt-br': 'Brazilian portuguese',
-  'zh-CN': '简体中文'
+  'zh-CN': '简体中文',
+  ja: '日本語'
 }
 
 function buildLangMenu (channel, i18nextMainBackend) {
