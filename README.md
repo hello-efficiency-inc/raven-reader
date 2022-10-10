@@ -106,7 +106,7 @@ Please feel free to suggest more ideas to improve this app.
 | German | [@nebulon42](https://github.com/nebulon42)|
 
 ## Contributions
-Help make Raven Reader better by reporting bugs, PR or opening feature requests through [GitHub issues](https://github.com/hello-efficiency-inc/raven-reader/issues).
+We're excited that you're wanting to help us make Raven Reader even better! Contributions of all sizes are welcome, if you'd like to work on something take a look through the current [GitHub issues](https://github.com/hello-efficiency-inc/raven-reader/issues). If it's a new feature or potential bugs, please make a new issue ticket for it and populate it accordingly.
 
 ## Contributors Wall
 <a href="https://github.com/hello-efficiency-inc/raven-reader/graphs/contributors">
