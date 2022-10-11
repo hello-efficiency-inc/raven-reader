@@ -32,14 +32,14 @@ To download, please visit https://ravenreader.app.
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/raven-reader)
 
-## Install via Homebrew (macOS)
+## Install via [Homebrew](https://formulae.brew.sh/cask/raven-reader) (macOS)
 To use Homebrew-Cask you just need to have [Homebrew](https://brew.sh/) installed.
 
 ```bash
 brew install --cask raven-reader
 ```
 
-## Install via Chocolatey (Windows) (Thanks to [@A-d-r-i](https://github.com/A-d-r-i))
+## Install via [Chocolatey](https://community.chocolatey.org/packages/raven) (Windows) (Thanks to [@A-d-r-i](https://github.com/A-d-r-i))
 
 ```
 choco install raven
