@@ -75,7 +75,7 @@
     "vue-social-sharing": "2.4.7",
     "vue-toasted": "^1.1.28",
     "vue-top-progress": "^0.7.0",
-    "vue2-perfect-scrollbar": "^1.5.0",
+    "vue2-perfect-scrollbar": "^1.5.56",
     "vuex": "^3.4.0",
     "yargs-parser": "^20.2.7"
   },
