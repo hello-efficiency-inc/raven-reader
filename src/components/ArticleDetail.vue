@@ -322,6 +322,15 @@ export default {
     border: 0;
   }
 
+  .plyr__poster {
+    display: none;
+  }
+
+  .plyr__control--overlaid,
+  .plyr__control--overlaid:hover {
+    background: transparent!important;
+}
+
   .col {
     padding-left: 0;
     padding-right: 0;
