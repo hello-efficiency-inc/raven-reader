@@ -46,6 +46,7 @@
                 <iframe
                   :src="article.media.url"
                   allowtransparency
+                  allowfullscreen
                 />
               </div>
             </vue-plyr>
