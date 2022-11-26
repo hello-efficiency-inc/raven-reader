@@ -46,6 +46,7 @@
                 <iframe
                   :src="article.media.url"
                   allowtransparency
+                  allowfullscreen
                 />
               </div>
             </vue-plyr>
@@ -320,6 +321,15 @@ export default {
     height: 500px;
     border: 0;
   }
+
+  .plyr__poster {
+    display: none;
+  }
+
+  .plyr__control--overlaid,
+  .plyr__control--overlaid:hover {
+    background: transparent!important;
+}
 
   .col {
     padding-left: 0;
