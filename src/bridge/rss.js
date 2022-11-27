@@ -29,7 +29,7 @@ export default {
       credentials: 'omit',
       redirect: 'follow'
     })
-    const data = await content.textConverted()
+    const data = await content.text()
     const validateXml = XMLValidator.validate(data, {
       allowBooleanAttributes: true
     })
@@ -45,7 +45,7 @@ export default {
         redirect: 'follow'
       }
     )
-    const data = await content.textConverted()
+    const data = await content.text()
     return await parser.parseString(data)
   },
   async findRss (url) {
@@ -66,7 +66,7 @@ export default {
     }
     const parse = new XMLParser(options)
     const response = await fetch(normalizeUrl(url, { stripWWW: false, removeTrailingSlash: false }))
-    const responseData = await response.textConverted()
+    const responseData = await response.text()
     return parse(responseData)
   }
 }
