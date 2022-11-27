@@ -70,7 +70,7 @@
     "uuid-by-string": "^4.0.0",
     "v-click-outside": "^3.0.1",
     "v8-compile-cache": "^2.1.1",
-    "vue": "^2.6.11",
+    "vue": "^2.7.13",
     "vue-plyr": "^7.0.0-beta.1",
     "vue-router": "^3.2.0",
     "vue-social-sharing": "2.4.7",
