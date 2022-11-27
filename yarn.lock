@@ -3231,10 +3231,10 @@ boolean@^3.0.1:
   resolved "https://registry.yarnpkg.com/boolean/-/boolean-3.1.4.tgz#f51a2fb5838a99e06f9b6ec1edb674de67026435"
   integrity sha512-3hx0kwU3uzG6ReQ3pnaFQPSktpBw6RHN3/ivDKEuU8g1XSfafowyvDnadjv1xp8IZqhtSukxlwv9bF6FhX8m0w==
 
-bootstrap-vue@^2.22.0:
-  version "2.22.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.22.0.tgz#2b3d7926d24af0bd289ddce7ba76b07000aab3e5"
-  integrity sha512-denjR/ae0K7Jrcqud3TrZWw0p/crtyigeGUNunWQ4t+KFi+7rzJ6j6lx1W5/gpUtSSUgNbWrXcHH4lIWXzXOOQ==
+bootstrap-vue@^2.23.1:
+  version "2.23.1"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.23.1.tgz#8f866f7cda27eb0e7e13a0bea8d55d8fc7a82199"
+  integrity sha512-SEWkG4LzmMuWjQdSYmAQk1G/oOKm37dtNfjB5kxq0YafnL2W6qUAmeDTcIZVbPiQd2OQlIkWOMPBRGySk/zGsg==
   dependencies:
     "@nuxt/opencollective" "^0.3.2"
     bootstrap "^4.6.1"

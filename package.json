@@ -26,7 +26,7 @@
     "@postlight/mercury-parser": "^2.2.0",
     "axios": "^1.1.2",
     "bootstrap": "^4.6.1",
-    "bootstrap-vue": "^2.22.0",
+    "bootstrap-vue": "^2.23.1",
     "btoa": "^1.2.1",
     "core-js": "^3.22.3",
     "cross-fetch": "^3.1.3-alpha.6",
