@@ -37,7 +37,7 @@
     "electron-store": "^8.0.0",
     "electron-updater": "^5.0.5",
     "electron-util": "^0.17.0",
-    "fast-xml-parser": "^4.0.7",
+    "fast-xml-parser": "^4.1.2",
     "feather-icons": "^4.29.0",
     "form-data": "^4.0.0",
     "fuse.js": "^6.4.1",
