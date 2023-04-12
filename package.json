@@ -60,7 +60,7 @@
     "reading-time": "^1.2.0",
     "request": "^2.88.2",
     "rss-finder": "^2.1.4",
-    "rss-parser": "^3.10.0",
+    "rss-parser": "^3.13.0",
     "sanitize-html": "^2.4.0",
     "sass-rem": "^3.0.0",
     "splitpanes": "^2.3.0",
