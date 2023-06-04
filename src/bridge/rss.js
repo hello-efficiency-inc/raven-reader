@@ -64,9 +64,9 @@ export default {
     const options = {
       ignoreAttributes: false
     }
-    const parse = new XMLParser(options)
+    const parser = new XMLParser(options)
     const response = await fetch(normalizeUrl(url, { stripWWW: false, removeTrailingSlash: false }))
     const responseData = await response.text()
-    return parse(responseData)
+    return parser.parse(responseData)
   }
 }
