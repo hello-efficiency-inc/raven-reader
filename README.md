@@ -104,6 +104,7 @@ Please feel free to suggest more ideas to improve this app.
 | Brazilian Portuguese | [@gabrielgomeso](https://github.com/gabrielgomeso)|
 | Italian | [@luverolla](https://github.com/luverolla)|
 | German | [@nebulon42](https://github.com/nebulon42)|
+| Ukrainian | [@wa4key](https://github.com/wa4key) |
 
 ## Contributions
 We're excited that you're wanting to help us make Raven Reader even better! Contributions of all sizes are welcome, if you'd like to work on something take a look through the current [GitHub issues](https://github.com/hello-efficiency-inc/raven-reader/issues). If it's a new feature or potential bugs, please make a new issue ticket for it and populate it accordingly.
