@@ -415,14 +415,13 @@ export default {
         { value: '*/10 * * * *', text: 'Every 10 minutes' },
         { value: '*/15 * * * *', text: 'Every 15 minutes' },
         { value: '*/20 * * * *', text: 'Every 20 minutes' },
-        { value: '*/25 * * * *', text: 'Every 25 minutes' },
         { value: '*/30 * * * *', text: 'Every 30 minutes' },
-        { value: '*/35 * * * *', text: 'Every 35 minutes' },
         { value: '*/40 * * * *', text: 'Every 40 minutes' },
         { value: '*/45 * * * *', text: 'Every 45 minutes' },
-        { value: '*/50 * * * *', text: 'Every 50 minutes' },
-        { value: '*/55 * * * *', text: 'Every 55 minutes' },
-        { value: '*/60 * * * *', text: 'Every 60 minutes' }
+        { value: '*/60 * * * *', text: 'Every 60 minutes' },
+        { value: '0 */4 * * *', text: 'Every 4 hours' },
+        { value: '0 */12 * * *', text: 'Every 12 hours' },
+        { value: '0 12 * * *', text: 'Once/Day' }
       ],
       options: [
         { text: 'On', value: 'on' },
