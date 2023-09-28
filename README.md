@@ -27,6 +27,9 @@
 </a>
 </p>
 
+## NOTE
+Working on the new version completely re-written. This version of Raven Reader would no longer be maintained. Stay tuned for more announcements and new repo.
+
 ## Download
 To download, please visit https://ravenreader.app.
 
