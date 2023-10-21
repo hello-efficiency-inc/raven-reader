@@ -18,6 +18,7 @@ const langMap = {
   pl: 'Polish',
   'pt-br': 'Brazilian portuguese',
   'zh-CN': '简体中文',
+  ar: 'العربية',
   ja: '日本語'
 }
 
